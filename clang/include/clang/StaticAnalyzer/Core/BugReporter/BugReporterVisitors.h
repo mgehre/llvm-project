@@ -179,7 +179,7 @@ public:
                                                  BugReporterContext &BRC,
                                                  BugReport &BR) override;
 
-  std::shared_ptr<PathDiagnosticPiece> VisitNodeImpl(const ExplodedNode *N,
+  static std::shared_ptr<PathDiagnosticPiece> VisitNodeImpl(const ExplodedNode *N,
                                                      BugReporterContext &BRC,
                                                      BugReport &BR);
 

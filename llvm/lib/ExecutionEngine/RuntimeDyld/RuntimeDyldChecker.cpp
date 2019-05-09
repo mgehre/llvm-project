@@ -585,8 +585,8 @@ private:
   // result.
   // Returns a pair containing the result of the slice operation, plus the
   // expression remaining to be parsed.
-  std::pair<EvalResult, StringRef>
-  evalSliceExpr(const std::pair<EvalResult, StringRef> &Ctx) const {
+  static std::pair<EvalResult, StringRef>
+  evalSliceExpr(const std::pair<EvalResult, StringRef> &Ctx) {
     EvalResult SubExprResult;
     StringRef RemainingExpr;
     std::tie(SubExprResult, RemainingExpr) = Ctx;
