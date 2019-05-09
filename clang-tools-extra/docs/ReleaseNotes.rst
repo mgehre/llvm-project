@@ -163,6 +163,11 @@ Improvements to clang-tidy
 
   Rewrites function signatures to use a trailing return type.
 
+- New :doc:`readability-static-method
+  <clang-tidy/checks/readability-static-method>` check.
+
+  Finds non-static member functions that can be made ``static``.
+
 Improvements to include-fixer
 -----------------------------
 

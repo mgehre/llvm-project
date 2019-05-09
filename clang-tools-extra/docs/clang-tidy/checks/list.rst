@@ -275,6 +275,7 @@ Clang-Tidy Checks
    readability-simplify-subscript-expr
    readability-static-accessed-through-instance
    readability-static-definition-in-anonymous-namespace
+   readability-static-method
    readability-string-compare
    readability-uniqueptr-delete-release
    readability-uppercase-literal-suffix

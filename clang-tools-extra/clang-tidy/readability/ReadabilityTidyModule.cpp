@@ -38,6 +38,7 @@
 #include "SimplifySubscriptExprCheck.h"
 #include "StaticAccessedThroughInstanceCheck.h"
 #include "StaticDefinitionInAnonymousNamespaceCheck.h"
+#include "StaticMethodCheck.h"
 #include "StringCompareCheck.h"
 #include "UniqueptrDeleteReleaseCheck.h"
 #include "UppercaseLiteralSuffixCheck.h"
@@ -91,6 +92,8 @@ public:
         "readability-static-accessed-through-instance");
     CheckFactories.registerCheck<StaticDefinitionInAnonymousNamespaceCheck>(
         "readability-static-definition-in-anonymous-namespace");
+    CheckFactories.registerCheck<StaticMethodCheck>(
+        "readability-static-method");
     CheckFactories.registerCheck<StringCompareCheck>(
         "readability-string-compare");
     CheckFactories.registerCheck<readability::NamedParameterCheck>(

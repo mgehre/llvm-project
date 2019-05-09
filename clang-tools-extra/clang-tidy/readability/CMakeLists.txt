@@ -32,6 +32,7 @@ add_clang_library(clangTidyReadabilityModule
   SimplifySubscriptExprCheck.cpp
   StaticAccessedThroughInstanceCheck.cpp
   StaticDefinitionInAnonymousNamespaceCheck.cpp
+  StaticMethodCheck.cpp
   StringCompareCheck.cpp
   UniqueptrDeleteReleaseCheck.cpp
   UppercaseLiteralSuffixCheck.cpp
