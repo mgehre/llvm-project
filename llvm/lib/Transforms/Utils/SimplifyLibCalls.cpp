@@ -2738,7 +2738,7 @@ void LibCallSimplifier::eraseFromParent(Instruction *I) {
 bool FortifiedLibCallSimplifier::isFortifiedCallFoldable(CallInst *CI,
                                                          unsigned ObjSizeOp,
                                                          unsigned SizeOp,
-                                                         bool isString) {
+                                                         bool isString) const {
   if (CI->getArgOperand(ObjSizeOp) == CI->getArgOperand(SizeOp))
     return true;
   if (ConstantInt *ObjSizeCI =

@@ -382,7 +382,7 @@ namespace {
       return EdgeDestinations;
     }
 
-    uint32_t getFuncChecksum() {
+    uint32_t getFuncChecksum() const {
       return FuncChecksum;
     }
 

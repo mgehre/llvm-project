@@ -4244,9 +4244,9 @@ public:
     return Expr;
   }
 
-  bool hasSeenLoopVariantSCEVUnknown() { return SeenLoopVariantSCEVUnknown; }
+  bool hasSeenLoopVariantSCEVUnknown() const { return SeenLoopVariantSCEVUnknown; }
 
-  bool hasSeenOtherLoops() { return SeenOtherLoops; }
+  bool hasSeenOtherLoops() const { return SeenOtherLoops; }
 
 private:
   explicit SCEVInitRewriter(const Loop *L, ScalarEvolution &SE)
@@ -4285,9 +4285,9 @@ public:
     return Expr;
   }
 
-  bool hasSeenLoopVariantSCEVUnknown() { return SeenLoopVariantSCEVUnknown; }
+  bool hasSeenLoopVariantSCEVUnknown() const { return SeenLoopVariantSCEVUnknown; }
 
-  bool hasSeenOtherLoops() { return SeenOtherLoops; }
+  bool hasSeenOtherLoops() const { return SeenOtherLoops; }
 
 private:
   explicit SCEVPostIncRewriter(const Loop *L, ScalarEvolution &SE)
@@ -4401,7 +4401,7 @@ public:
     return Expr;
   }
 
-  bool isValid() { return Valid; }
+  bool isValid() const { return Valid; }
 
 private:
   explicit SCEVShiftRewriter(const Loop *L, ScalarEvolution &SE)
@@ -5234,7 +5234,7 @@ static bool IsAvailableOnEntry(const Loop *L, DominatorTree &DT, const SCEV *S,
       llvm_unreachable("switch should be fully covered!");
     }
 
-    bool isDone() { return TraversalDone; }
+    bool isDone() const { return TraversalDone; }
   };
 
   CheckAvailable CA(L, BB, DT);

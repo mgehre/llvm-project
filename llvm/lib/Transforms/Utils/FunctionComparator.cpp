@@ -890,7 +890,7 @@ public:
   }
 
   // No finishing is required, because the entire hash value is used.
-  uint64_t getHash() { return Hash; }
+  uint64_t getHash() const { return Hash; }
 };
 
 } // end anonymous namespace

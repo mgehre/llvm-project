@@ -368,7 +368,7 @@ public:
   void fixVectorizedLoop();
 
   // Return true if any runtime check is added.
-  bool areSafetyChecksAdded() { return AddedSafetyChecks; }
+  bool areSafetyChecksAdded() const { return AddedSafetyChecks; }
 
   /// A type for vectorized values in the new loop. Each value from the
   /// original loop, when vectorized, is represented by UF vector values in the
@@ -436,7 +436,7 @@ public:
 
   /// Set the debug location in the builder using the debug location in
   /// the instruction.
-  void setDebugLocFromInst(IRBuilder<> &B, const Value *Ptr);
+  void setDebugLocFromInst(IRBuilder<> &B, const Value *Ptr) const;
 
   /// Fix the non-induction PHIs in the OrigPHIsToFix vector.
   void fixNonInductionPHIs(void);
@@ -755,7 +755,7 @@ static Instruction *getDebugLocFromInstOrOperands(Instruction *I) {
   return I;
 }
 
-void InnerLoopVectorizer::setDebugLocFromInst(IRBuilder<> &B, const Value *Ptr) {
+void InnerLoopVectorizer::setDebugLocFromInst(IRBuilder<> &B, const Value *Ptr) const {
   if (const Instruction *Inst = dyn_cast_or_null<Instruction>(Ptr)) {
     const DILocation *DIL = Inst->getDebugLoc();
     if (DIL && Inst->getFunction()->isDebugInfoForProfiling() &&
@@ -1207,7 +1207,7 @@ private:
 
   /// Returns true if an artificially high cost for emulated masked memrefs
   /// should be used.
-  bool useEmulatedMaskMemRefHack(Instruction *I);
+  bool useEmulatedMaskMemRefHack(Instruction *I) const;
 
   /// Create an analysis remark that explains why vectorization failed
   ///
@@ -5216,7 +5216,7 @@ LoopVectorizationCostModel::calculateRegisterUsage(ArrayRef<unsigned> VFs) {
   return RUs;
 }
 
-bool LoopVectorizationCostModel::useEmulatedMaskMemRefHack(Instruction *I){
+bool LoopVectorizationCostModel::useEmulatedMaskMemRefHack(Instruction *I) const{
   // TODO: Cost model for emulated masked load/store is completely
   // broken. This hack guides the cost model to use an artificially
   // high enough value to practically disable vectorization with such

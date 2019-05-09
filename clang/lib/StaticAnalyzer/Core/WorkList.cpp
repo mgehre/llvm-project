@@ -207,7 +207,7 @@ class UnexploredFirstPriorityQueue : public WorkList {
   using QueueItem = std::pair<WorkListUnit, QueuePriority>;
 
   struct ExplorationComparator {
-    bool operator() (const QueueItem &LHS, const QueueItem &RHS) {
+    bool operator() (const QueueItem &LHS, const QueueItem &RHS) const {
       return LHS.second < RHS.second;
     }
   };
@@ -269,7 +269,7 @@ class UnexploredFirstPriorityLocationQueue : public WorkList {
   using QueueItem = std::pair<WorkListUnit, QueuePriority>;
 
   struct ExplorationComparator {
-    bool operator() (const QueueItem &LHS, const QueueItem &RHS) {
+    bool operator() (const QueueItem &LHS, const QueueItem &RHS) const {
       return LHS.second < RHS.second;
     }
   };

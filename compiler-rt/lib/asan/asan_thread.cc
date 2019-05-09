@@ -305,7 +305,7 @@ void AsanThread::SetThreadStackAndTls(const InitOptions *options) {
 
 #endif  // !SANITIZER_FUCHSIA && !SANITIZER_RTEMS
 
-void AsanThread::ClearShadowForThreadStackAndTLS() {
+void AsanThread::ClearShadowForThreadStackAndTLS() const {
   if (stack_top_ != stack_bottom_)
     PoisonShadow(stack_bottom_, stack_top_ - stack_bottom_, 0);
   if (tls_begin_ != tls_end_) {

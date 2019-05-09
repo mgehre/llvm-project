@@ -133,10 +133,10 @@ public:
   // Mark the given address range as unchecked.
   // This is used for uninstrumented libraries like libc.
   // Any CFI check with a target in that range will pass.
-  void AddUnchecked(uptr begin, uptr end);
+  void AddUnchecked(uptr begin, uptr end) const;
   // Mark the given address range as belonging to a library with the given
   // cfi_check function.
-  void Add(uptr begin, uptr end, uptr cfi_check);
+  void Add(uptr begin, uptr end, uptr cfi_check) const;
   // Finish shadow construction. Atomically switch the current active shadow
   // region with the newly constructed one and deallocate the former.
   void Install();
@@ -147,7 +147,7 @@ void ShadowBuilder::Start() {
   VReport(1, "CFI: shadow at %zx .. %zx\n", shadow_, shadow_ + GetShadowSize());
 }
 
-void ShadowBuilder::AddUnchecked(uptr begin, uptr end) {
+void ShadowBuilder::AddUnchecked(uptr begin, uptr end) const {
   uint16_t *shadow_begin = MemToShadow(begin, shadow_);
   uint16_t *shadow_end = MemToShadow(end - 1, shadow_) + 1;
   // memset takes a byte, so our unchecked shadow value requires both bytes to
@@ -158,7 +158,7 @@ void ShadowBuilder::AddUnchecked(uptr begin, uptr end) {
          (shadow_end - shadow_begin) * sizeof(*shadow_begin));
 }
 
-void ShadowBuilder::Add(uptr begin, uptr end, uptr cfi_check) {
+void ShadowBuilder::Add(uptr begin, uptr end, uptr cfi_check) const {
   assert((cfi_check & (kShadowAlign - 1)) == 0);
 
   // Don't fill anything below cfi_check. We can not represent those addresses

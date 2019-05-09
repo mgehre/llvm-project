@@ -107,7 +107,7 @@ namespace {
   /// WARNING: Case ranges should be disjoint!
   struct CaseCmp {
     bool operator()(const LowerSwitch::CaseRange& C1,
-                    const LowerSwitch::CaseRange& C2) {
+                    const LowerSwitch::CaseRange& C2) const {
       const ConstantInt* CI1 = cast<const ConstantInt>(C1.Low);
       const ConstantInt* CI2 = cast<const ConstantInt>(C2.High);
       return CI1->getValue().slt(CI2->getValue());

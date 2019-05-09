@@ -1436,7 +1436,7 @@ void SwingSchedulerDAG::colocateNodeSets(NodeSetType &NodeSets) {
 /// a heuristic. If the MII is large and all the recurrent node-sets are small,
 /// then it's best to try to schedule all instructions together instead of
 /// starting with the recurrent node-sets.
-void SwingSchedulerDAG::checkNodeSets(NodeSetType &NodeSets) {
+void SwingSchedulerDAG::checkNodeSets(NodeSetType &NodeSets) const {
   // Look for loops with a large MII.
   if (MII < 17)
     return;

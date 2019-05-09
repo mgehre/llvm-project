@@ -577,7 +577,7 @@ unsigned DwarfLinker::shouldKeepVariableDIE(RelocationManager &RelocMgr,
                                             const DWARFDie &DIE,
                                             CompileUnit &Unit,
                                             CompileUnit::DIEInfo &MyInfo,
-                                            unsigned Flags) {
+                                            unsigned Flags) const {
   const auto *Abbrev = DIE.getAbbreviationDeclarationPtr();
 
   // Global variables with constant value can always be kept.

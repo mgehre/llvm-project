@@ -686,7 +686,7 @@ private:
 
   void initializeCallbacks(Module &M);
 
-  bool LooksLikeCodeInBug11395(Instruction *I);
+  bool LooksLikeCodeInBug11395(Instruction *I) const;
   bool GlobalIsLinkerInitialized(GlobalVariable *G);
   static bool isSafeAccess(ObjectSizeOffsetVisitor &ObjSizeVis, Value *Addr,
                     uint64_t TypeSize) ;
@@ -2630,7 +2630,7 @@ bool AddressSanitizer::runOnFunction(Function &F) {
 // Workaround for bug 11395: we don't want to instrument stack in functions
 // with large assembly blobs (32-bit only), otherwise reg alloc may crash.
 // FIXME: remove once the bug 11395 is fixed.
-bool AddressSanitizer::LooksLikeCodeInBug11395(Instruction *I) {
+bool AddressSanitizer::LooksLikeCodeInBug11395(Instruction *I) const {
   if (LongSize != 32) return false;
   CallInst *CI = dyn_cast<CallInst>(I);
   if (!CI || !CI->isInlineAsm()) return false;

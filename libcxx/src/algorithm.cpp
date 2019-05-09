@@ -76,7 +76,7 @@ __rs_default::~__rs_default()
 }
 
 __rs_default::result_type
-__rs_default::operator()()
+__rs_default::operator()() const
 {
     static mt19937 __rs_g;
     return __rs_g();

@@ -5257,7 +5257,7 @@ VerifierAnalysis::Result VerifierAnalysis::run(Function &F,
   return { llvm::verifyFunction(F, &dbgs()), false };
 }
 
-PreservedAnalyses VerifierPass::run(Module &M, ModuleAnalysisManager &AM) {
+PreservedAnalyses VerifierPass::run(Module &M, ModuleAnalysisManager &AM) const {
   auto Res = AM.getResult<VerifierAnalysis>(M);
   if (FatalErrors && (Res.IRBroken || Res.DebugInfoBroken))
     report_fatal_error("Broken module found, compilation aborted!");
@@ -5265,7 +5265,7 @@ PreservedAnalyses VerifierPass::run(Module &M, ModuleAnalysisManager &AM) {
   return PreservedAnalyses::all();
 }
 
-PreservedAnalyses VerifierPass::run(Function &F, FunctionAnalysisManager &AM) {
+PreservedAnalyses VerifierPass::run(Function &F, FunctionAnalysisManager &AM) const {
   auto res = AM.getResult<VerifierAnalysis>(F);
   if (res.IRBroken && FatalErrors)
     report_fatal_error("Broken function found, compilation aborted!");

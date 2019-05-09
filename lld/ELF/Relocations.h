@@ -170,7 +170,7 @@ public:
   uint32_t Pass = 0;
 
 private:
-  void mergeThunks(ArrayRef<OutputSection *> OutputSections);
+  void mergeThunks(ArrayRef<OutputSection *> OutputSections) const;
 
   ThunkSection *getISDThunkSec(OutputSection *OS, InputSection *IS,
                                InputSectionDescription *ISD, uint32_t Type,

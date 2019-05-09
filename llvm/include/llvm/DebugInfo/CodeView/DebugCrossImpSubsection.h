@@ -38,7 +38,7 @@ public:
   using ContextType = void;
 
   Error operator()(BinaryStreamRef Stream, uint32_t &Len,
-                   codeview::CrossModuleImportItem &Item);
+                   codeview::CrossModuleImportItem &Item) const;
 };
 
 namespace codeview {

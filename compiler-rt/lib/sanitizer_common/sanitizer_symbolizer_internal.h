@@ -94,7 +94,7 @@ class SymbolizerProcess {
  private:
   bool Restart();
   const char *SendCommandImpl(const char *command);
-  bool WriteToSymbolizer(const char *buffer, uptr length);
+  bool WriteToSymbolizer(const char *buffer, uptr length) const;
   bool StartSymbolizerSubprocess();
 
   const char *path_;

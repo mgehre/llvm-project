@@ -22,7 +22,7 @@ using namespace llvm;
 using namespace llvm::codeview;
 
 Error VarStreamArrayExtractor<InlineeSourceLine>::
-operator()(BinaryStreamRef Stream, uint32_t &Len, InlineeSourceLine &Item) {
+operator()(BinaryStreamRef Stream, uint32_t &Len, InlineeSourceLine &Item) const {
   BinaryStreamReader Reader(Stream);
 
   if (auto EC = Reader.readObject(Item.Header))

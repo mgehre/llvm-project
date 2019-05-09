@@ -2811,7 +2811,7 @@ static bool unswitchLoop(Loop &L, DominatorTree &DT, LoopInfo &LI,
 
 PreservedAnalyses SimpleLoopUnswitchPass::run(Loop &L, LoopAnalysisManager &AM,
                                               LoopStandardAnalysisResults &AR,
-                                              LPMUpdater &U) {
+                                              LPMUpdater &U) const {
   Function &F = *L.getHeader()->getParent();
   (void)F;
 

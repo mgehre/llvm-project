@@ -70,7 +70,7 @@ class Thread {
  private:
   // NOTE: There is no Thread constructor. It is allocated
   // via mmap() and *must* be valid in zero-initialized state.
-  void ClearShadowForThreadStackAndTLS();
+  void ClearShadowForThreadStackAndTLS() const;
   void Print(const char *prefix);
   uptr stack_top_;
   uptr stack_bottom_;

@@ -166,7 +166,7 @@ class DFGImpl : public PPCallbacks {
 
 private:
   bool FileMatchesDepCriteria(const char *Filename,
-                              SrcMgr::CharacteristicKind FileType);
+                              SrcMgr::CharacteristicKind FileType) const;
   void OutputDependencyFile();
 
 public:
@@ -270,7 +270,7 @@ void DependencyFileGenerator::AttachToASTReader(ASTReader &R) {
 /// FileMatchesDepCriteria - Determine whether the given Filename should be
 /// considered as a dependency.
 bool DFGImpl::FileMatchesDepCriteria(const char *Filename,
-                                     SrcMgr::CharacteristicKind FileType) {
+                                     SrcMgr::CharacteristicKind FileType) const {
   if (isSpecialFilename(Filename))
     return false;
 

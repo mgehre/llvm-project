@@ -227,7 +227,7 @@ void AllocatorOptions::SetFrom(const Flags *f, const CommonFlags *cf) {
   release_to_os_interval_ms = cf->allocator_release_to_os_interval_ms;
 }
 
-void AllocatorOptions::CopyTo(Flags *f, CommonFlags *cf) {
+void AllocatorOptions::CopyTo(Flags *f, CommonFlags *cf) const {
   f->quarantine_size_mb = quarantine_size_mb;
   f->thread_local_quarantine_size_kb = thread_local_quarantine_size_kb;
   f->redzone = min_redzone;

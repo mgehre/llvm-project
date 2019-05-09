@@ -435,7 +435,7 @@ bool PGOIndirectCallPromotionLegacyPass::runOnModule(Module &M) {
 }
 
 PreservedAnalyses PGOIndirectCallPromotion::run(Module &M,
-                                                ModuleAnalysisManager &AM) {
+                                                ModuleAnalysisManager &AM) const {
   ProfileSummaryInfo *PSI = &AM.getResult<ProfileSummaryAnalysis>(M);
 
   if (!promoteIndirectCalls(M, PSI, InLTO | ICPLTOMode,

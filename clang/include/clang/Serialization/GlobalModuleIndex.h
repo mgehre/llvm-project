@@ -183,7 +183,7 @@ public:
   bool loadedModuleFile(ModuleFile *File);
 
   /// Print statistics to standard error.
-  void printStats();
+  void printStats() const;
 
   /// Print debugging view to standard error.
   void dump();

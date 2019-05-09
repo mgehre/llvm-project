@@ -79,7 +79,7 @@ namespace {
 
 struct release
 {
-    void operator()(locale::facet* p) {p->__release_shared();}
+    void operator()(locale::facet* p) const {p->__release_shared();}
 };
 
 template <class T, class A0>

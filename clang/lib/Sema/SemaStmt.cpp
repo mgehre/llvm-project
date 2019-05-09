@@ -570,15 +570,15 @@ StmtResult Sema::BuildIfStmt(SourceLocation IfLoc, bool IsConstexpr,
 namespace {
   struct CaseCompareFunctor {
     bool operator()(const std::pair<llvm::APSInt, CaseStmt*> &LHS,
-                    const llvm::APSInt &RHS) {
+                    const llvm::APSInt &RHS) const {
       return LHS.first < RHS;
     }
     bool operator()(const std::pair<llvm::APSInt, CaseStmt*> &LHS,
-                    const std::pair<llvm::APSInt, CaseStmt*> &RHS) {
+                    const std::pair<llvm::APSInt, CaseStmt*> &RHS) const {
       return LHS.first < RHS.first;
     }
     bool operator()(const llvm::APSInt &LHS,
-                    const std::pair<llvm::APSInt, CaseStmt*> &RHS) {
+                    const std::pair<llvm::APSInt, CaseStmt*> &RHS) const {
       return LHS < RHS.first;
     }
   };
@@ -1345,7 +1345,7 @@ namespace {
         Ranges(Ranges),
         Simple(true) {}
 
-    bool isSimple() { return Simple; }
+    bool isSimple() const { return Simple; }
 
     // Replaces the method in EvaluatedExprVisitor.
     void VisitMemberExpr(MemberExpr* E) {
@@ -1488,7 +1488,7 @@ namespace {
       }
     }
 
-    bool FoundDeclInUse() { return FoundDecl; }
+    bool FoundDeclInUse() const { return FoundDecl; }
 
   };  // end class DeclMatcher
 

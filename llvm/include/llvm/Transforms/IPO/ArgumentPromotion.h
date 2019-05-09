@@ -28,7 +28,7 @@ public:
   ArgumentPromotionPass(unsigned MaxElements = 3u) : MaxElements(MaxElements) {}
 
   PreservedAnalyses run(LazyCallGraph::SCC &C, CGSCCAnalysisManager &AM,
-                        LazyCallGraph &CG, CGSCCUpdateResult &UR);
+                        LazyCallGraph &CG, CGSCCUpdateResult &UR) const;
 };
 
 } // end namespace llvm

@@ -41,7 +41,7 @@ struct AllocatorOptions {
   s32 release_to_os_interval_ms;
 
   void SetFrom(const Flags *f, const CommonFlags *cf);
-  void CopyTo(Flags *f, CommonFlags *cf);
+  void CopyTo(Flags *f, CommonFlags *cf) const;
 };
 
 void InitializeAllocator(const AllocatorOptions &options);

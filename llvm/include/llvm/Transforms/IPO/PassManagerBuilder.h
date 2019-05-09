@@ -185,7 +185,7 @@ private:
                          legacy::PassManagerBase &PM) const;
   static void addInitialAliasAnalysisPasses(legacy::PassManagerBase &PM) ;
   void addLTOOptimizationPasses(legacy::PassManagerBase &PM);
-  void addLateLTOOptimizationPasses(legacy::PassManagerBase &PM);
+  void addLateLTOOptimizationPasses(legacy::PassManagerBase &PM) const;
   void addPGOInstrPasses(legacy::PassManagerBase &MPM);
   void addFunctionSimplificationPasses(legacy::PassManagerBase &MPM);
   void addInstructionCombiningPass(legacy::PassManagerBase &MPM) const;

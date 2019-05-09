@@ -97,7 +97,7 @@ Error TpiStreamBuilder::finalize() {
   return Error::success();
 }
 
-uint32_t TpiStreamBuilder::calculateSerializedLength() {
+uint32_t TpiStreamBuilder::calculateSerializedLength() const {
   return sizeof(TpiStreamHeader) + TypeRecordBytes;
 }
 

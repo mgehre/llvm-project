@@ -274,7 +274,7 @@ void ScopedThreadLocalStateBackup::Backup() {
   va_arg_overflow_size_tls = __msan_va_arg_overflow_size_tls;
 }
 
-void ScopedThreadLocalStateBackup::Restore() {
+void ScopedThreadLocalStateBackup::Restore() const {
   // A lame implementation that only keeps essential state and resets the rest.
   __msan_va_arg_overflow_size_tls = va_arg_overflow_size_tls;
 

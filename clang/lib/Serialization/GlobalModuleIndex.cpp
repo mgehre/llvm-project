@@ -340,7 +340,7 @@ bool GlobalModuleIndex::loadedModuleFile(ModuleFile *File) {
   return Failed;
 }
 
-void GlobalModuleIndex::printStats() {
+void GlobalModuleIndex::printStats() const {
   std::fprintf(stderr, "*** Global Module Index Statistics:\n");
   if (NumIdentifierLookups) {
     fprintf(stderr, "  %u / %u identifier lookups succeeded (%f%%)\n",

@@ -195,7 +195,7 @@ public:
   static bool isInterestingAlloca(const AllocaInst &AI);
   bool tagAlloca(IRBuilder<> &IRB, AllocaInst *AI, Value *Tag);
   Value *tagPointer(IRBuilder<> &IRB, Type *Ty, Value *PtrLong, Value *Tag);
-  Value *untagPointer(IRBuilder<> &IRB, Value *PtrLong);
+  Value *untagPointer(IRBuilder<> &IRB, Value *PtrLong) const;
   bool instrumentStack(SmallVectorImpl<AllocaInst *> &Allocas,
                        SmallVectorImpl<Instruction *> &RetVec, Value *StackTag);
   Value *getNextTagWithCall(IRBuilder<> &IRB);
@@ -741,7 +741,7 @@ Value *HWAddressSanitizer::tagPointer(IRBuilder<> &IRB, Type *Ty,
 }
 
 // Remove tag from an address.
-Value *HWAddressSanitizer::untagPointer(IRBuilder<> &IRB, Value *PtrLong) {
+Value *HWAddressSanitizer::untagPointer(IRBuilder<> &IRB, Value *PtrLong) const {
   Value *UntaggedPtrLong;
   if (CompileKernel) {
     // Kernel addresses have 0xFF in the most significant byte.

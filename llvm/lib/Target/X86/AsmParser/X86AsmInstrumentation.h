@@ -53,7 +53,7 @@ protected:
 
   X86AsmInstrumentation(const MCSubtargetInfo *&STI);
 
-  unsigned GetFrameRegGeneric(const MCContext &Ctx, MCStreamer &Out);
+  unsigned GetFrameRegGeneric(const MCContext &Ctx, MCStreamer &Out) const;
 
   void EmitInstruction(MCStreamer &Out, const MCInst &Inst,
                        bool PrintSchedInfoEnabled = false);

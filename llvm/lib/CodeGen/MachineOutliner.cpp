@@ -915,7 +915,7 @@ struct MachineOutliner : public ModulePass {
   /// Populate and \p InstructionMapper with instruction-to-integer mappings.
   /// These are used to construct a suffix tree.
   void populateMapper(InstructionMapper &Mapper, Module &M,
-                      MachineModuleInfo &MMI);
+                      MachineModuleInfo &MMI) const;
 
   /// Initialize information necessary to output a size remark.
   /// FIXME: This should be handled by the pass manager, not the outliner.
@@ -1297,7 +1297,7 @@ bool MachineOutliner::outline(Module &M,
 }
 
 void MachineOutliner::populateMapper(InstructionMapper &Mapper, Module &M,
-                                     MachineModuleInfo &MMI) {
+                                     MachineModuleInfo &MMI) const {
   // Build instruction mappings for each function in the module. Start by
   // iterating over each Function in M.
   for (Function &F : M) {

@@ -90,7 +90,7 @@ SymbolKind indexSymbolKindToSymbolKind(index::SymbolKind Kind) {
 
 using ScoredSymbolInfo = std::pair<float, SymbolInformation>;
 struct ScoredSymbolGreater {
-  bool operator()(const ScoredSymbolInfo &L, const ScoredSymbolInfo &R) {
+  bool operator()(const ScoredSymbolInfo &L, const ScoredSymbolInfo &R) const {
     if (L.first != R.first)
       return L.first > R.first;
     return L.second.name < R.second.name; // Earlier name is better.

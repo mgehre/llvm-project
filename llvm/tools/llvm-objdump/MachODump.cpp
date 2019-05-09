@@ -177,7 +177,7 @@ static const Target *GetTarget(const MachOObjectFile *MachOObj,
 }
 
 struct SymbolSorter {
-  bool operator()(const SymbolRef &A, const SymbolRef &B) {
+  bool operator()(const SymbolRef &A, const SymbolRef &B) const {
     Expected<SymbolRef::Type> ATypeOrErr = A.getType();
     if (!ATypeOrErr)
       report_error(A.getObject()->getFileName(), ATypeOrErr.takeError());

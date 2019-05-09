@@ -288,7 +288,7 @@ private:
   void computeNodeFunctions(NodeSetType &NodeSets);
   void registerPressureFilter(NodeSetType &NodeSets);
   static void colocateNodeSets(NodeSetType &NodeSets);
-  void checkNodeSets(NodeSetType &NodeSets);
+  void checkNodeSets(NodeSetType &NodeSets) const;
   void groupRemainingNodes(NodeSetType &NodeSets);
   void addConnectedNodes(SUnit *SU, NodeSet &NewSet,
                          SetVector<SUnit *> &NodesAdded);

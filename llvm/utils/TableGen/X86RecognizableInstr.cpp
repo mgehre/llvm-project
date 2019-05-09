@@ -357,7 +357,7 @@ InstructionContext RecognizableInstr::insnContext() const {
   return insnContext;
 }
 
-void RecognizableInstr::adjustOperandEncoding(OperandEncoding &encoding) {
+void RecognizableInstr::adjustOperandEncoding(OperandEncoding &encoding) const {
   // The scaling factor for AVX512 compressed displacement encoding is an
   // instruction attribute.  Adjust the ModRM encoding type to include the
   // scale for compressed displacement.

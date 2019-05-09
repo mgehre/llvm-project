@@ -169,7 +169,7 @@ private:
   llvm::Error writeSingleSegmentLoadCommand(uint8_t *&lc);
   template <typename T> llvm::Error writeSegmentLoadCommands(uint8_t *&lc);
 
-  uint32_t pointerAlign(uint32_t value);
+  uint32_t pointerAlign(uint32_t value) const;
   static StringRef dyldPath();
 
   struct SegExtraInfo {
@@ -241,7 +241,7 @@ StringRef MachOFileLayout::dyldPath() {
   return "/usr/lib/dyld";
 }
 
-uint32_t MachOFileLayout::pointerAlign(uint32_t value) {
+uint32_t MachOFileLayout::pointerAlign(uint32_t value) const {
   return llvm::alignTo(value, _is64 ? 8 : 4);
 }
 

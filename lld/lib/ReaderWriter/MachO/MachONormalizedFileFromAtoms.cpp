@@ -178,14 +178,14 @@ private:
   typedef llvm::DenseMap<const Atom*, uint32_t> AtomToIndex;
   struct AtomAndIndex { const Atom *atom; uint32_t index; SymbolScope scope; };
   struct AtomSorter {
-    bool operator()(const AtomAndIndex &left, const AtomAndIndex &right);
+    bool operator()(const AtomAndIndex &left, const AtomAndIndex &right) const;
   };
   struct SegmentSorter {
-    bool operator()(const SegmentInfo *left, const SegmentInfo *right);
+    bool operator()(const SegmentInfo *left, const SegmentInfo *right) const;
     static unsigned weight(const SegmentInfo *);
   };
   struct TextSectionSorter {
-    bool operator()(const SectionInfo *left, const SectionInfo *right);
+    bool operator()(const SectionInfo *left, const SectionInfo *right) const;
     static unsigned weight(const SectionInfo *);
   };
 
@@ -489,7 +489,7 @@ unsigned Util::SegmentSorter::weight(const SegmentInfo *seg) {
 }
 
 bool Util::SegmentSorter::operator()(const SegmentInfo *left,
-                                  const SegmentInfo *right) {
+                                  const SegmentInfo *right) const {
   return (weight(left) < weight(right));
 }
 
@@ -506,7 +506,7 @@ unsigned Util::TextSectionSorter::weight(const SectionInfo *sect) {
 }
 
 bool Util::TextSectionSorter::operator()(const SectionInfo *left,
-                                         const SectionInfo *right) {
+                                         const SectionInfo *right) const {
   return (weight(left) < weight(right));
 }
 
@@ -976,7 +976,7 @@ uint16_t Util::descBits(const DefinedAtom* atom) {
 }
 
 bool Util::AtomSorter::operator()(const AtomAndIndex &left,
-                                  const AtomAndIndex &right) {
+                                  const AtomAndIndex &right) const {
   return (left.atom->name().compare(right.atom->name()) < 0);
 }
 

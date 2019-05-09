@@ -143,7 +143,7 @@ struct VectorLayout {
   VectorLayout() = default;
 
   // Return the alignment of element I.
-  uint64_t getElemAlign(unsigned I) {
+  uint64_t getElemAlign(unsigned I) const {
     return MinAlign(VecAlign, I * ElemSize);
   }
 
@@ -187,7 +187,7 @@ public:
 private:
   Scatterer scatter(Instruction *Point, Value *V);
   void gather(Instruction *Op, const ValueVector &CV);
-  bool canTransferMetadata(unsigned Kind);
+  bool canTransferMetadata(unsigned Kind) const;
   void transferMetadata(Instruction *Op, const ValueVector &CV);
   static bool getVectorLayout(Type *Ty, unsigned Alignment, VectorLayout &Layout,
                        const DataLayout &DL);
@@ -372,7 +372,7 @@ void ScalarizerVisitor::gather(Instruction *Op, const ValueVector &CV) {
 
 // Return true if it is safe to transfer the given metadata tag from
 // vector to scalar instructions.
-bool ScalarizerVisitor::canTransferMetadata(unsigned Tag) {
+bool ScalarizerVisitor::canTransferMetadata(unsigned Tag) const {
   return (Tag == LLVMContext::MD_tbaa
           || Tag == LLVMContext::MD_fpmath
           || Tag == LLVMContext::MD_tbaa_struct

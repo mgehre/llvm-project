@@ -397,7 +397,7 @@ private:
     }
   }
 
-  CompactUnwindEntry extractCompactUnwindEntry(const DefinedAtom *atom) {
+  CompactUnwindEntry extractCompactUnwindEntry(const DefinedAtom *atom) const {
     CompactUnwindEntry entry;
 
     for (const Reference *ref : *atom) {

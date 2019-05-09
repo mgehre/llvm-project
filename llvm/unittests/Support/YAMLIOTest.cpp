@@ -1316,7 +1316,7 @@ namespace yaml {
           minutes((secs - (hours*3600))/60),
           seconds(secs % 60) {
       }
-      TotalSeconds denormalize(IO &) {
+      TotalSeconds denormalize(IO &) const {
         return TotalSeconds(hours*3600 + minutes*60 + seconds);
       }
 

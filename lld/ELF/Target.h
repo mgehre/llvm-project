@@ -85,7 +85,7 @@ public:
   unsigned PageSize = 4096;
   unsigned DefaultMaxPageSize = 4096;
 
-  uint64_t getImageBase();
+  uint64_t getImageBase() const;
 
   // Offset of _GLOBAL_OFFSET_TABLE_ from base of .got or .got.plt section.
   uint64_t GotBaseSymOff = 0;

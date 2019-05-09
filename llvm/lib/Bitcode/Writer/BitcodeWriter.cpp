@@ -274,7 +274,7 @@ public:
   void write();
 
 private:
-  uint64_t bitcodeStartBit() { return BitcodeStartBit; }
+  uint64_t bitcodeStartBit() const { return BitcodeStartBit; }
 
   size_t addToStrtab(StringRef Str);
 

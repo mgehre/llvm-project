@@ -25,7 +25,7 @@ using namespace llvm::codeview;
 
 Error VarStreamArrayExtractor<CrossModuleImportItem>::
 operator()(BinaryStreamRef Stream, uint32_t &Len,
-           codeview::CrossModuleImportItem &Item) {
+           codeview::CrossModuleImportItem &Item) const {
   BinaryStreamReader Reader(Stream);
   if (Reader.bytesRemaining() < sizeof(CrossModuleImport))
     return make_error<CodeViewError>(

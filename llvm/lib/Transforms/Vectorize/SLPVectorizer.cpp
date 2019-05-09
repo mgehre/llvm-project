@@ -1004,7 +1004,7 @@ private:
       return nullptr;
     }
 
-    bool isInSchedulingRegion(ScheduleData *SD) {
+    bool isInSchedulingRegion(ScheduleData *SD) const {
       return SD->SchedulingRegionID == SchedulingRegionID;
     }
 

@@ -217,9 +217,9 @@ const classnames ClassNames[] =
 
 struct use_strcmp
 {
-    bool operator()(const collationnames& x, const char* y)
+    bool operator()(const collationnames& x, const char* y) const
         {return strcmp(x.elem_, y) < 0;}
-    bool operator()(const classnames& x, const char* y)
+    bool operator()(const classnames& x, const char* y) const
         {return strcmp(x.elem_, y) < 0;}
 };
 

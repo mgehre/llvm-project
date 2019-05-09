@@ -27,7 +27,7 @@ class LoopUnrollAndJamPass : public PassInfoMixin<LoopUnrollAndJamPass> {
 public:
   explicit LoopUnrollAndJamPass(int OptLevel = 2) : OptLevel(OptLevel) {}
   PreservedAnalyses run(Loop &L, LoopAnalysisManager &AM,
-                        LoopStandardAnalysisResults &AR, LPMUpdater &U);
+                        LoopStandardAnalysisResults &AR, LPMUpdater &U) const;
 };
 
 } // end namespace llvm

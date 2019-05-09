@@ -34,7 +34,7 @@ public:
   AlwaysInlinerPass(bool InsertLifetime = true)
       : InsertLifetime(InsertLifetime) {}
 
-  PreservedAnalyses run(Module &M, ModuleAnalysisManager &);
+  PreservedAnalyses run(Module &M, ModuleAnalysisManager &) const;
 };
 
 /// Create a legacy pass manager instance of a pass to inline and remove

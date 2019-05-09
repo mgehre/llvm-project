@@ -86,7 +86,7 @@ struct NormalizedSymbolFlag {
     Flag = static_cast<uint8_t>(F);
   }
 
-  Symbol::SymbolFlag denormalize(IO &) {
+  Symbol::SymbolFlag denormalize(IO &) const {
     return static_cast<Symbol::SymbolFlag>(Flag);
   }
 
@@ -99,7 +99,7 @@ struct NormalizedSymbolOrigin {
     Origin = static_cast<uint8_t>(O);
   }
 
-  SymbolOrigin denormalize(IO &) { return static_cast<SymbolOrigin>(Origin); }
+  SymbolOrigin denormalize(IO &) const { return static_cast<SymbolOrigin>(Origin); }
 
   uint8_t Origin = 0;
 };
@@ -119,7 +119,7 @@ struct NormalizedPosition {
     P.Column = Pos.column();
   }
 
-  Position denormalize(IO &) {
+  Position denormalize(IO &) const {
     Position Pos;
     Pos.setLine(P.Line);
     Pos.setColumn(P.Column);
@@ -259,7 +259,7 @@ struct NormalizedRefKind {
   NormalizedRefKind(IO &) {}
   NormalizedRefKind(IO &, RefKind O) { Kind = static_cast<uint8_t>(O); }
 
-  RefKind denormalize(IO &) { return static_cast<RefKind>(Kind); }
+  RefKind denormalize(IO &) const { return static_cast<RefKind>(Kind); }
 
   uint8_t Kind = 0;
 };

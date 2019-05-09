@@ -222,7 +222,7 @@ private:
 // They are not used for syntax checking, and could confuse targets
 // which don't support these options.
 struct FilterUnusedFlags {
-  bool operator() (StringRef S) {
+  bool operator() (StringRef S) const {
     return (S == "-no-integrated-as") || S.startswith("-Wa,");
   }
 };

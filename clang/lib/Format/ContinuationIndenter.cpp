@@ -1388,7 +1388,7 @@ void ContinuationIndenter::moveStatePastScopeOpener(LineState &State,
       Current.Previous->is(tok::at);
 }
 
-void ContinuationIndenter::moveStatePastScopeCloser(LineState &State) {
+void ContinuationIndenter::moveStatePastScopeCloser(LineState &State) const {
   const FormatToken &Current = *State.NextToken;
   if (!Current.closesScope())
     return;
@@ -2166,7 +2166,7 @@ unsigned ContinuationIndenter::getColumnLimit(const LineState &State) const {
   return Style.ColumnLimit - (State.Line->InPPDirective ? 2 : 0);
 }
 
-bool ContinuationIndenter::nextIsMultilineString(const LineState &State) {
+bool ContinuationIndenter::nextIsMultilineString(const LineState &State) const {
   const FormatToken &Current = *State.NextToken;
   if (!Current.isStringLiteral() || Current.is(TT_ImplicitStringLiteral))
     return false;

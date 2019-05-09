@@ -33,7 +33,7 @@ struct FileChecksumEntryHeader {
 };
 
 Error VarStreamArrayExtractor<FileChecksumEntry>::
-operator()(BinaryStreamRef Stream, uint32_t &Len, FileChecksumEntry &Item) {
+operator()(BinaryStreamRef Stream, uint32_t &Len, FileChecksumEntry &Item) const {
   BinaryStreamReader Reader(Stream);
 
   const FileChecksumEntryHeader *Header;

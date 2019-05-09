@@ -982,7 +982,7 @@ promoteArguments(Function *F, function_ref<AAResults &(Function &F)> AARGetter,
 PreservedAnalyses ArgumentPromotionPass::run(LazyCallGraph::SCC &C,
                                              CGSCCAnalysisManager &AM,
                                              LazyCallGraph &CG,
-                                             CGSCCUpdateResult &UR) {
+                                             CGSCCUpdateResult &UR) const {
   bool Changed = false, LocalChange;
 
   // Iterate until we stop promoting from this SCC.

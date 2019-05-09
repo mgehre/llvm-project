@@ -2173,7 +2173,7 @@ public:
 #endif
     OS << '\n';
   }
-  void operator=(bool OptionWasSpecified) {
+  void operator=(bool OptionWasSpecified) const {
     if (!OptionWasSpecified)
       return;
 

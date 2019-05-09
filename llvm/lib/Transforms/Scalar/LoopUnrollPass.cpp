@@ -1225,7 +1225,7 @@ Pass *llvm::createSimpleLoopUnrollPass(int OptLevel, bool OnlyWhenForced) {
 
 PreservedAnalyses LoopFullUnrollPass::run(Loop &L, LoopAnalysisManager &AM,
                                           LoopStandardAnalysisResults &AR,
-                                          LPMUpdater &Updater) {
+                                          LPMUpdater &Updater) const {
   const auto &FAM =
       AM.getResult<FunctionAnalysisManagerLoopProxy>(L, AR).getManager();
   Function *F = L.getHeader()->getParent();

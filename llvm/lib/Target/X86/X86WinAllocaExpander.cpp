@@ -50,7 +50,7 @@ private:
   void computeLowerings(MachineFunction &MF, LoweringMap& Lowerings);
 
   /// Get the appropriate lowering based on current offset and amount.
-  Lowering getLowering(int64_t CurrentOffset, int64_t AllocaAmount);
+  Lowering getLowering(int64_t CurrentOffset, int64_t AllocaAmount) const;
 
   /// Lower a WinAlloca instruction.
   void lower(MachineInstr* MI, Lowering L);
@@ -99,7 +99,7 @@ static int64_t getWinAllocaAmount(MachineInstr *MI, MachineRegisterInfo *MRI) {
 
 X86WinAllocaExpander::Lowering
 X86WinAllocaExpander::getLowering(int64_t CurrentOffset,
-                                  int64_t AllocaAmount) {
+                                  int64_t AllocaAmount) const {
   // For a non-constant amount or a large amount, we have to probe.
   if (AllocaAmount < 0 || AllocaAmount > StackProbeSize)
     return Probe;

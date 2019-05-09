@@ -63,7 +63,7 @@ private:
   /// Checks whether the call \p CI to a fortified libcall is foldable
   /// to the non-fortified version.
   bool isFortifiedCallFoldable(CallInst *CI, unsigned ObjSizeOp,
-                               unsigned SizeOp, bool isString);
+                               unsigned SizeOp, bool isString) const;
 };
 
 /// LibCallSimplifier - This class implements a collection of optimizations

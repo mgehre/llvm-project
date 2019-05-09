@@ -44,7 +44,7 @@ public:
   }
 
   // Test-harness-specific functions
-  bool wereDuplicatesInserted() { return DuplicateInserted; }
+  bool wereDuplicatesInserted() const { return DuplicateInserted; }
 
   bool wasModuleLookedUp(const Module *M) {
     return ModulesLookedUp.find(M->getModuleIdentifier())

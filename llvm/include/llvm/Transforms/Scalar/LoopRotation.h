@@ -25,7 +25,7 @@ class LoopRotatePass : public PassInfoMixin<LoopRotatePass> {
 public:
   LoopRotatePass(bool EnableHeaderDuplication = true);
   PreservedAnalyses run(Loop &L, LoopAnalysisManager &AM,
-                        LoopStandardAnalysisResults &AR, LPMUpdater &U);
+                        LoopStandardAnalysisResults &AR, LPMUpdater &U) const;
 
 private:
   const bool EnableHeaderDuplication;

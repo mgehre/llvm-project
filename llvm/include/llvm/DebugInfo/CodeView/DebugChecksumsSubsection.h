@@ -42,7 +42,7 @@ public:
   using ContextType = void;
 
   Error operator()(BinaryStreamRef Stream, uint32_t &Len,
-                   codeview::FileChecksumEntry &Item);
+                   codeview::FileChecksumEntry &Item) const;
 };
 
 namespace codeview {

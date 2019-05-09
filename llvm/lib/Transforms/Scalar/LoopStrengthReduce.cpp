@@ -1035,7 +1035,7 @@ public:
   }
 #endif
 
-  bool isLoser() {
+  bool isLoser() const {
     assert(isValid() && "invalid cost");
     return C.NumRegs == ~0u;
   }

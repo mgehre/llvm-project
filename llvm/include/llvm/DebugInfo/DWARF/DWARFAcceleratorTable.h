@@ -176,10 +176,10 @@ public:
       : DWARFAcceleratorTable(AccelSection, StringSection) {}
 
   llvm::Error extract() override;
-  uint32_t getNumBuckets();
-  uint32_t getNumHashes();
+  uint32_t getNumBuckets() const;
+  uint32_t getNumHashes() const;
   uint32_t getSizeHdr();
-  uint32_t getHeaderDataLength();
+  uint32_t getHeaderDataLength() const;
 
   /// Return the Atom description, which can be used to interpret the raw values
   /// of the Accelerator Entries in this table.

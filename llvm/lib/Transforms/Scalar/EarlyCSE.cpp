@@ -457,8 +457,8 @@ private:
     StackNode &operator=(const StackNode &) = delete;
 
     // Accessors.
-    unsigned currentGeneration() { return CurrentGeneration; }
-    unsigned childGeneration() { return ChildGeneration; }
+    unsigned currentGeneration() const { return CurrentGeneration; }
+    unsigned childGeneration() const { return ChildGeneration; }
     void childGeneration(unsigned generation) { ChildGeneration = generation; }
     DomTreeNode *node() { return Node; }
     DomTreeNode::iterator childIter() { return ChildIter; }
@@ -470,7 +470,7 @@ private:
     }
 
     DomTreeNode::iterator end() { return EndIter; }
-    bool isProcessed() { return Processed; }
+    bool isProcessed() const { return Processed; }
     void process() { Processed = true; }
 
   private:
@@ -1224,7 +1224,7 @@ bool EarlyCSE::run() {
 }
 
 PreservedAnalyses EarlyCSEPass::run(Function &F,
-                                    FunctionAnalysisManager &AM) {
+                                    FunctionAnalysisManager &AM) const {
   auto &TLI = AM.getResult<TargetLibraryAnalysis>(F);
   auto &TTI = AM.getResult<TargetIRAnalysis>(F);
   auto &DT = AM.getResult<DominatorTreeAnalysis>(F);

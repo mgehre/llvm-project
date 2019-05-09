@@ -31,7 +31,7 @@ void MsanThread::SetThreadStackAndTls() {
   CHECK(AddrIsInStack((uptr)&local));
 }
 
-void MsanThread::ClearShadowForThreadStackAndTLS() {
+void MsanThread::ClearShadowForThreadStackAndTLS() const {
   __msan_unpoison((void *)stack_bottom_, stack_top_ - stack_bottom_);
   if (tls_begin_ != tls_end_)
     __msan_unpoison((void *)tls_begin_, tls_end_ - tls_begin_);

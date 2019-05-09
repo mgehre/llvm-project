@@ -160,7 +160,7 @@ class OriginSet {
     origins_[id] = o;
     return id;
   }
-  int size() { return next_id_; }
+  int size() const { return next_id_; }
   u32 get(int id) { return origins_[id]; }
   static char asChar(int id) {
     switch (id) {

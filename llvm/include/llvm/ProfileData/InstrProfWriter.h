@@ -93,7 +93,7 @@ public:
 private:
   void addRecord(StringRef Name, uint64_t Hash, InstrProfRecord &&I,
                  uint64_t Weight, function_ref<void(Error)> Warn);
-  bool shouldEncodeData(const ProfilingData &PD);
+  bool shouldEncodeData(const ProfilingData &PD) const;
   void writeImpl(ProfOStream &OS);
 };
 

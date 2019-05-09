@@ -899,7 +899,7 @@ void PassManagerBuilder::addLTOOptimizationPasses(legacy::PassManagerBase &PM) {
 }
 
 void PassManagerBuilder::addLateLTOOptimizationPasses(
-    legacy::PassManagerBase &PM) {
+    legacy::PassManagerBase &PM) const {
   // Delete basic blocks, which optimization passes may have killed.
   PM.add(createCFGSimplificationPass());
 

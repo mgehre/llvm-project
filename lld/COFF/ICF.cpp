@@ -47,7 +47,7 @@ public:
 private:
   void segregate(size_t Begin, size_t End, bool Constant);
 
-  bool assocEquals(const SectionChunk *A, const SectionChunk *B);
+  bool assocEquals(const SectionChunk *A, const SectionChunk *B) const;
 
   bool equalsConstant(const SectionChunk *A, const SectionChunk *B);
   bool equalsVariable(const SectionChunk *A, const SectionChunk *B);
@@ -128,7 +128,7 @@ void ICF::segregate(size_t Begin, size_t End, bool Constant) {
 }
 
 // Returns true if two sections' associative children are equal.
-bool ICF::assocEquals(const SectionChunk *A, const SectionChunk *B) {
+bool ICF::assocEquals(const SectionChunk *A, const SectionChunk *B) const {
   auto ChildClasses = [&](const SectionChunk *SC) {
     std::vector<uint32_t> Classes;
     for (const SectionChunk *C : SC->children())

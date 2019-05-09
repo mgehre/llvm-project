@@ -1054,7 +1054,7 @@ void X86AsmInstrumentation::EmitInstruction(MCStreamer &Out, const MCInst &Inst,
 }
 
 unsigned X86AsmInstrumentation::GetFrameRegGeneric(const MCContext &Ctx,
-                                                   MCStreamer &Out) {
+                                                   MCStreamer &Out) const {
   if (!Out.getNumFrameInfos()) // No active dwarf frame
     return X86::NoRegister;
   const MCDwarfFrameInfo &Frame = Out.getDwarfFrameInfos().back();

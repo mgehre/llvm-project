@@ -477,7 +477,7 @@ bool SymbolizerProcess::ReadFromSymbolizer(char *buffer, uptr max_length) {
   return true;
 }
 
-bool SymbolizerProcess::WriteToSymbolizer(const char *buffer, uptr length) {
+bool SymbolizerProcess::WriteToSymbolizer(const char *buffer, uptr length) const {
   if (length == 0)
     return true;
   uptr write_len = 0;

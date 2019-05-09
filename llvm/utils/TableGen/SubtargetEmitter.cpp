@@ -64,7 +64,7 @@ class SubtargetEmitter {
 
   struct LessWriteProcResources {
     bool operator()(const MCWriteProcResEntry &LHS,
-                    const MCWriteProcResEntry &RHS) {
+                    const MCWriteProcResEntry &RHS) const {
       return LHS.ProcResourceIdx < RHS.ProcResourceIdx;
     }
   };

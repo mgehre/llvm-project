@@ -170,8 +170,8 @@ struct OutgoingValueHandler : public CallLowering::ValueHandler {
     return Res;
   }
 
-  uint64_t getStackSize() { return StackSize; }
-  uint64_t getNumXmmRegs() { return NumXMMRegs; }
+  uint64_t getStackSize() const { return StackSize; }
+  uint64_t getNumXmmRegs() const { return NumXMMRegs; }
 
 protected:
   MachineInstrBuilder &MIB;

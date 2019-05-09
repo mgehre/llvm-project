@@ -371,7 +371,7 @@ class ScopedThreadLocalStateBackup {
   ScopedThreadLocalStateBackup() { Backup(); }
   ~ScopedThreadLocalStateBackup() { Restore(); }
   void Backup();
-  void Restore();
+  void Restore() const;
  private:
   u64 va_arg_overflow_size_tls;
 };

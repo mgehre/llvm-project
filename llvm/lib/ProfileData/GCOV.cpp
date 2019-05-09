@@ -676,7 +676,7 @@ static std::string mangleCoveragePath(StringRef Filename, bool PreservePaths) {
 }
 
 std::string FileInfo::getCoveragePath(StringRef Filename,
-                                      StringRef MainFilename) {
+                                      StringRef MainFilename) const {
   if (Options.NoOutput)
     // This is probably a bug in gcov, but when -n is specified, paths aren't
     // mangled at all, and the -l and -p options are ignored. Here, we do the
@@ -692,7 +692,7 @@ std::string FileInfo::getCoveragePath(StringRef Filename,
 }
 
 std::unique_ptr<raw_ostream>
-FileInfo::openCoveragePath(StringRef CoveragePath) {
+FileInfo::openCoveragePath(StringRef CoveragePath) const {
   if (Options.NoOutput)
     return llvm::make_unique<raw_null_ostream>();
 

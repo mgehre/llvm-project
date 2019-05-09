@@ -352,7 +352,7 @@ struct Parser::ConditionDeclarationOrInitStatementState {
       : P(P), CanBeInitStatement(CanBeInitStatement),
         CanBeForRangeDecl(CanBeForRangeDecl) {}
 
-  bool resolved() {
+  bool resolved() const {
     return CanBeExpression + CanBeCondition + CanBeInitStatement +
                CanBeForRangeDecl < 2;
   }

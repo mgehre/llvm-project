@@ -268,7 +268,7 @@ public:
   /// Canonicalize whitespaces in the file. Line endings are replaced with
   /// UNIX-style '\n'.
   StringRef CanonicalizeFile(MemoryBuffer &MB,
-                             SmallVectorImpl<char> &OutputBuffer);
+                             SmallVectorImpl<char> &OutputBuffer) const;
 
   /// Check the input to FileCheck provided in the \p Buffer against the \p
   /// CheckStrings read from the check file.

@@ -37,12 +37,12 @@ private:
   static int writeSectionContent(raw_ostream &OS, WasmYAML::FunctionSection &Section);
   static int writeSectionContent(raw_ostream &OS, WasmYAML::TableSection &Section);
   static int writeSectionContent(raw_ostream &OS, WasmYAML::MemorySection &Section);
-  int writeSectionContent(raw_ostream &OS, WasmYAML::GlobalSection &Section);
-  int writeSectionContent(raw_ostream &OS, WasmYAML::EventSection &Section);
+  int writeSectionContent(raw_ostream &OS, WasmYAML::GlobalSection &Section) const;
+  int writeSectionContent(raw_ostream &OS, WasmYAML::EventSection &Section) const;
   static int writeSectionContent(raw_ostream &OS, WasmYAML::ExportSection &Section);
   static int writeSectionContent(raw_ostream &OS, WasmYAML::StartSection &Section);
   static int writeSectionContent(raw_ostream &OS, WasmYAML::ElemSection &Section);
-  int writeSectionContent(raw_ostream &OS, WasmYAML::CodeSection &Section);
+  int writeSectionContent(raw_ostream &OS, WasmYAML::CodeSection &Section) const;
   static int writeSectionContent(raw_ostream &OS, WasmYAML::DataSection &Section);
 
   // Custom section types
@@ -407,7 +407,7 @@ int WasmWriter::writeSectionContent(raw_ostream &OS,
 }
 
 int WasmWriter::writeSectionContent(raw_ostream &OS,
-                                    WasmYAML::GlobalSection &Section) {
+                                    WasmYAML::GlobalSection &Section) const {
   encodeULEB128(Section.Globals.size(), OS);
   uint32_t ExpectedIndex = NumImportedGlobals;
   for (auto &Global : Section.Globals) {
@@ -424,7 +424,7 @@ int WasmWriter::writeSectionContent(raw_ostream &OS,
 }
 
 int WasmWriter::writeSectionContent(raw_ostream &OS,
-                                    WasmYAML::EventSection &Section) {
+                                    WasmYAML::EventSection &Section) const {
   encodeULEB128(Section.Events.size(), OS);
   uint32_t ExpectedIndex = NumImportedEvents;
   for (auto &Event : Section.Events) {
@@ -455,7 +455,7 @@ int WasmWriter::writeSectionContent(raw_ostream &OS,
 }
 
 int WasmWriter::writeSectionContent(raw_ostream &OS,
-                                    WasmYAML::CodeSection &Section) {
+                                    WasmYAML::CodeSection &Section) const {
   encodeULEB128(Section.Functions.size(), OS);
   uint32_t ExpectedIndex = NumImportedFunctions;
   for (auto &Func : Section.Functions) {

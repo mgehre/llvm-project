@@ -266,7 +266,7 @@ struct CompletionCandidate {
 using ScoredBundle =
     std::pair<CompletionCandidate::Bundle, CodeCompletion::Scores>;
 struct ScoredBundleGreater {
-  bool operator()(const ScoredBundle &L, const ScoredBundle &R) {
+  bool operator()(const ScoredBundle &L, const ScoredBundle &R) const {
     if (L.second.Total != R.second.Total)
       return L.second.Total > R.second.Total;
     return L.first.front().Name <

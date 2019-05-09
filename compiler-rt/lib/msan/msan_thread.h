@@ -50,7 +50,7 @@ class MsanThread {
   // NOTE: There is no MsanThread constructor. It is allocated
   // via mmap() and *must* be valid in zero-initialized state.
   void SetThreadStackAndTls();
-  void ClearShadowForThreadStackAndTLS();
+  void ClearShadowForThreadStackAndTLS() const;
   thread_callback_t start_routine_;
   void *arg_;
   uptr stack_top_;

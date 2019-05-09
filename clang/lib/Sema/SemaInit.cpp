@@ -376,7 +376,7 @@ public:
   InitListChecker(Sema &S, const InitializedEntity &Entity,
                   InitListExpr *IL, QualType &T, bool VerifyOnly,
                   bool TreatUnavailableAsInvalid);
-  bool HadError() { return hadError; }
+  bool HadError() const { return hadError; }
 
   // Retrieves the fully-structured initializer list used for
   // semantic analysis and code generation.

@@ -35,7 +35,7 @@ class MetadataVerifier {
   bool Strict;
 
   bool verifyScalar(msgpack::Node &Node, msgpack::ScalarNode::ScalarKind SKind,
-                    function_ref<bool(msgpack::ScalarNode &)> verifyValue = {});
+                    function_ref<bool(msgpack::ScalarNode &)> verifyValue = {}) const;
   bool verifyInteger(msgpack::Node &Node);
   static bool verifyArray(msgpack::Node &Node,
                    function_ref<bool(msgpack::Node &)> verifyNode,

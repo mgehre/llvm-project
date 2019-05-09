@@ -922,7 +922,7 @@ struct Formatter {
 
   char *str_cur() { return str + str_off; }
 
-  size_t num_written_bytes(int retval) {
+  size_t num_written_bytes(int retval) const {
     if (retval < 0) {
       return 0;
     }

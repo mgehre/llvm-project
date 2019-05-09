@@ -623,7 +623,7 @@ struct MemorySanitizerLegacyPass : public FunctionPass {
 } // end anonymous namespace
 
 PreservedAnalyses MemorySanitizerPass::run(Function &F,
-                                           FunctionAnalysisManager &FAM) {
+                                           FunctionAnalysisManager &FAM) const {
   MemorySanitizer Msan(*F.getParent(), TrackOrigins, Recover, EnableKmsan);
   if (Msan.sanitizeFunction(F, FAM.getResult<TargetLibraryAnalysis>(F)))
     return PreservedAnalyses::none();

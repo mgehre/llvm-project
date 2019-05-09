@@ -292,7 +292,7 @@ private:
   void computeCallsiteToProfCountMap(Function *DuplicateFunction,
                                      DenseMap<User *, uint64_t> &SiteCountMap);
 
-  bool IsLimitReached() {
+  bool IsLimitReached() const {
     return (MaxNumPartialInlining != -1 &&
             NumPartialInlining >= MaxNumPartialInlining);
   }

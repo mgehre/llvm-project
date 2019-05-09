@@ -288,7 +288,7 @@ public:
   }
 
   /// Returns true if an error occurred while parsing.
-  bool failed() {
+  bool failed() const {
     return Failed;
   }
 

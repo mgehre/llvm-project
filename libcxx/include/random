@@ -3501,7 +3501,7 @@ public:
     ~random_device();
 
     // generating functions
-    result_type operator()();
+    result_type operator()() const;
 
     // property functions
     double entropy() const _NOEXCEPT;

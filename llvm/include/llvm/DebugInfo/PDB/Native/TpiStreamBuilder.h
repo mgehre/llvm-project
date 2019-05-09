@@ -62,7 +62,7 @@ public:
 
   Error commit(const msf::MSFLayout &Layout, WritableBinaryStreamRef Buffer);
 
-  uint32_t calculateSerializedLength();
+  uint32_t calculateSerializedLength() const;
 
 private:
   uint32_t calculateHashBufferSize() const;

@@ -52,7 +52,7 @@ public:
   PGOIndirectCallPromotion(bool IsInLTO = false, bool SamplePGO = false)
       : InLTO(IsInLTO), SamplePGO(SamplePGO) {}
 
-  PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
+  PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM) const;
 
 private:
   bool InLTO;

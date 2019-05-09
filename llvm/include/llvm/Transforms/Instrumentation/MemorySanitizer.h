@@ -36,7 +36,7 @@ struct MemorySanitizerPass : public PassInfoMixin<MemorySanitizerPass> {
       : TrackOrigins(TrackOrigins), Recover(Recover), EnableKmsan(EnableKmsan) {
   }
 
-  PreservedAnalyses run(Function &F, FunctionAnalysisManager &FAM);
+  PreservedAnalyses run(Function &F, FunctionAnalysisManager &FAM) const;
 
 private:
   int TrackOrigins;

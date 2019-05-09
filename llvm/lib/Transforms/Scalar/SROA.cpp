@@ -2398,7 +2398,7 @@ private:
     return (Ty && Align == DL.getABITypeAlignment(Ty)) ? 0 : Align;
   }
 
-  unsigned getIndex(uint64_t Offset) {
+  unsigned getIndex(uint64_t Offset) const {
     assert(VecTy && "Can only call getIndex when rewriting a vector");
     uint64_t RelOffset = Offset - NewAllocaBeginOffset;
     assert(RelOffset / ElementSize < UINT32_MAX && "Index out of bounds");

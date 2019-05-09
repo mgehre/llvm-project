@@ -3566,7 +3566,7 @@ class ASTIdentifierTableTrait {
   /// full IdentifierInfo structure written into the hash table. Notably, this
   /// doesn't check whether the name has macros defined; use PublicMacroIterator
   /// to check that.
-  bool isInterestingIdentifier(const IdentifierInfo *II, uint64_t MacroOffset) {
+  bool isInterestingIdentifier(const IdentifierInfo *II, uint64_t MacroOffset) const {
     if (MacroOffset ||
         II->isPoisoned() ||
         (IsModule ? II->hasRevertedBuiltin() : II->getObjCOrBuiltinID()) ||

@@ -446,8 +446,8 @@ struct output_iterator {
   typedef int difference_type;
   typedef value_type *pointer;
   typedef value_type &reference;
-  operator int() { return 2; }
-  operator Constructable() { return 7; }
+  operator int() const { return 2; }
+  operator Constructable() const { return 7; }
 };
 
 TYPED_TEST(SmallVectorTest, AppendRepeatedNonForwardIterator) {

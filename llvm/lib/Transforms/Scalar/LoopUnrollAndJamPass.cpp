@@ -493,7 +493,7 @@ Pass *llvm::createLoopUnrollAndJamPass(int OptLevel) {
 
 PreservedAnalyses LoopUnrollAndJamPass::run(Loop &L, LoopAnalysisManager &AM,
                                             LoopStandardAnalysisResults &AR,
-                                            LPMUpdater &) {
+                                            LPMUpdater &) const {
   const auto &FAM =
       AM.getResult<FunctionAnalysisManagerLoopProxy>(L, AR).getManager();
   Function *F = L.getHeader()->getParent();

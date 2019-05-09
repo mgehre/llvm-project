@@ -137,7 +137,7 @@ class AsanThread {
 
   void SetThreadStackAndTls(const InitOptions *options);
 
-  void ClearShadowForThreadStackAndTLS();
+  void ClearShadowForThreadStackAndTLS() const;
   FakeStack *AsyncSignalSafeLazyInitFakeStack();
 
   struct StackBounds {

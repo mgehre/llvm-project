@@ -396,7 +396,7 @@ private:
 
   unsigned tryMergeSimpleControlStatement(
       SmallVectorImpl<AnnotatedLine *>::const_iterator I,
-      SmallVectorImpl<AnnotatedLine *>::const_iterator E, unsigned Limit) {
+      SmallVectorImpl<AnnotatedLine *>::const_iterator E, unsigned Limit) const {
     if (Limit == 0)
       return 0;
     if (Style.BraceWrapping.AfterControlStatement &&

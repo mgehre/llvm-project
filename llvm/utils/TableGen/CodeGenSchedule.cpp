@@ -131,10 +131,10 @@ struct InstRegexOp : public SetTheory::Operator {
       // first, than non-pseudos. Each range is in lexicographical order
       // sorted by name. Find the sub-ranges that start with our prefix.
       struct Comp {
-        bool operator()(const CodeGenInstruction *LHS, StringRef RHS) {
+        bool operator()(const CodeGenInstruction *LHS, StringRef RHS) const {
           return LHS->TheDef->getName() < RHS;
         }
-        bool operator()(StringRef LHS, const CodeGenInstruction *RHS) {
+        bool operator()(StringRef LHS, const CodeGenInstruction *RHS) const {
           return LHS < RHS->TheDef->getName() &&
                  !RHS->TheDef->getName().startswith(LHS);
         }

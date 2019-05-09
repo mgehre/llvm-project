@@ -219,7 +219,7 @@ void InstrProfWriter::mergeRecordsFromWriter(InstrProfWriter &&IPW,
       addRecord(I.getKey(), Func.first, std::move(Func.second), 1, Warn);
 }
 
-bool InstrProfWriter::shouldEncodeData(const ProfilingData &PD) {
+bool InstrProfWriter::shouldEncodeData(const ProfilingData &PD) const {
   if (!Sparse)
     return true;
   for (const auto &Func : PD) {

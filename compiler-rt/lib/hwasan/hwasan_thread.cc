@@ -67,7 +67,7 @@ void Thread::Init(uptr stack_buffer_start, uptr stack_buffer_size) {
   }
 }
 
-void Thread::ClearShadowForThreadStackAndTLS() {
+void Thread::ClearShadowForThreadStackAndTLS() const {
   if (stack_top_ != stack_bottom_)
     TagMemory(stack_bottom_, stack_top_ - stack_bottom_, 0);
   if (tls_begin_ != tls_end_)

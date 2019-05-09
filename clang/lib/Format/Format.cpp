@@ -1510,7 +1510,7 @@ public:
     return {Result, 0};
   }
 
-  bool isObjC() { return IsObjC; }
+  bool isObjC() const { return IsObjC; }
 
 private:
   static bool

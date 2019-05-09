@@ -274,7 +274,7 @@ private:
   }
 
   // Try to interpret the argument as a type specifier, e.g. '-x'.
-  Optional<types::ID> tryParseTypeArg(const llvm::opt::Arg &Arg) {
+  Optional<types::ID> tryParseTypeArg(const llvm::opt::Arg &Arg) const {
     const llvm::opt::Option &Opt = Arg.getOption();
     using namespace driver::options;
     if (ClangCLMode) {
@@ -290,7 +290,7 @@ private:
   }
 
   // Try to interpret the argument as '-std='.
-  Optional<LangStandard::Kind> tryParseStdArg(const llvm::opt::Arg &Arg) {
+  Optional<LangStandard::Kind> tryParseStdArg(const llvm::opt::Arg &Arg) const {
     using namespace driver::options;
     if (Arg.getOption().matches(ClangCLMode ? OPT__SLASH_std : OPT_std_EQ)) {
       return llvm::StringSwitch<LangStandard::Kind>(Arg.getValue())

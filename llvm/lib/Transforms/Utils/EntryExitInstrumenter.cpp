@@ -164,7 +164,7 @@ FunctionPass *llvm::createPostInlineEntryExitInstrumenterPass() {
 }
 
 PreservedAnalyses
-llvm::EntryExitInstrumenterPass::run(Function &F, FunctionAnalysisManager &AM) {
+llvm::EntryExitInstrumenterPass::run(Function &F, FunctionAnalysisManager &AM) const {
   runOnFunction(F, PostInlining);
   PreservedAnalyses PA;
   PA.preserveSet<CFGAnalyses>();

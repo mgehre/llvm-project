@@ -32,7 +32,7 @@ struct EarlyCSEPass : PassInfoMixin<EarlyCSEPass> {
   EarlyCSEPass(bool UseMemorySSA = false) : UseMemorySSA(UseMemorySSA) {}
 
   /// Run the pass over the function.
-  PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
+  PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM) const;
 
   bool UseMemorySSA;
 };

@@ -32,7 +32,7 @@ using namespace llvm;
 
 #define DEBUG_TYPE "inline"
 
-PreservedAnalyses AlwaysInlinerPass::run(Module &M, ModuleAnalysisManager &) {
+PreservedAnalyses AlwaysInlinerPass::run(Module &M, ModuleAnalysisManager &) const {
   InlineFunctionInfo IFI;
   SmallSetVector<CallSite, 16> Calls;
   bool Changed = false;

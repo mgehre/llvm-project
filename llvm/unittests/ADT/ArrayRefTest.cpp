@@ -73,7 +73,7 @@ TEST(ArrayRefTest, AllocatorCopy) {
 
     NonAssignable(const char *Ptr) : Ptr(Ptr) {}
     NonAssignable(const NonAssignable &RHS) = default;
-    void operator=(const NonAssignable &RHS) { assert(RHS.Ptr != nullptr); }
+    void operator=(const NonAssignable &RHS) const { assert(RHS.Ptr != nullptr); }
     bool operator==(const NonAssignable &RHS) const { return Ptr == RHS.Ptr; }
   } Array3Src[] = {"hello", "world"};
   ArrayRef<NonAssignable> Array3Copy = makeArrayRef(Array3Src).copy(Alloc);

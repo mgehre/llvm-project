@@ -11,7 +11,7 @@ struct AttributeSection {
 
   AttributeSection(unsigned tag, unsigned value) : Tag(tag), Value(value) { }
 
-  void write(raw_ostream &OS) {
+  void write(raw_ostream &OS) const {
     OS.flush();
     // length = length + "aeabi\0" + TagFile + ByteSize + Tag + Value;
     // length = 17 bytes

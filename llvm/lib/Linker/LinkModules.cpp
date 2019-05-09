@@ -50,8 +50,8 @@ class ModuleLinker {
   /// to Add.
   void addLazyFor(GlobalValue &GV, const IRMover::ValueAdder &Add);
 
-  bool shouldOverrideFromSrc() { return Flags & Linker::OverrideFromSrc; }
-  bool shouldLinkOnlyNeeded() { return Flags & Linker::LinkOnlyNeeded; }
+  bool shouldOverrideFromSrc() const { return Flags & Linker::OverrideFromSrc; }
+  bool shouldLinkOnlyNeeded() const { return Flags & Linker::LinkOnlyNeeded; }
 
   bool shouldLinkFromSource(bool &LinkFromSrc, const GlobalValue &Dest,
                             const GlobalValue &Src);

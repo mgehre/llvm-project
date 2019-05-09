@@ -176,7 +176,7 @@ void TargetInfo::relaxTlsLdToLe(uint8_t *Loc, RelType Type,
   llvm_unreachable("Should not have claimed to be relaxable");
 }
 
-uint64_t TargetInfo::getImageBase() {
+uint64_t TargetInfo::getImageBase() const {
   // Use -image-base if set. Fall back to the target default if not.
   if (Config->ImageBase)
     return *Config->ImageBase;

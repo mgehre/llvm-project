@@ -125,7 +125,7 @@ public:
 
   /// Is the BB returned by getResult() one of the blocks we added to the set
   /// with addAndRememberBlock()?
-  bool resultIsRememberedBlock() { return ResultIsRemembered; }
+  bool resultIsRememberedBlock() const { return ResultIsRemembered; }
 };
 
 /// Transforms the control flow graph on one single entry/exit region

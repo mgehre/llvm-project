@@ -481,7 +481,7 @@ STATISTIC(ObjectVisitorArgument,
 STATISTIC(ObjectVisitorLoad,
           "Number of load instructions with unsolved size and offset");
 
-APInt ObjectSizeOffsetVisitor::align(APInt Size, uint64_t Align) {
+APInt ObjectSizeOffsetVisitor::align(APInt Size, uint64_t Align) const {
   if (Options.RoundToAlign && Align)
     return APInt(IntTyBits, alignTo(Size.getZExtValue(), Align));
   return Size;
@@ -538,7 +538,7 @@ SizeOffsetType ObjectSizeOffsetVisitor::compute(Value *V) {
 /// trouble with APInt size issues. This function handles resizing + overflow
 /// checks for us. Check and zext or trunc \p I depending on IntTyBits and
 /// I's value.
-bool ObjectSizeOffsetVisitor::CheckedZextOrTrunc(APInt &I) {
+bool ObjectSizeOffsetVisitor::CheckedZextOrTrunc(APInt &I) const {
   // More bits than we can handle. Checking the bit width isn't necessary, but
   // it's faster than checking active bits, and should give `false` in the
   // vast majority of cases.

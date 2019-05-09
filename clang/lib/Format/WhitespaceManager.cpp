@@ -651,14 +651,14 @@ void WhitespaceManager::storeReplacement(SourceRange Range, StringRef Text) {
 }
 
 void WhitespaceManager::appendNewlineText(std::string &Text,
-                                          unsigned Newlines) {
+                                          unsigned Newlines) const {
   for (unsigned i = 0; i < Newlines; ++i)
     Text.append(UseCRLF ? "\r\n" : "\n");
 }
 
 void WhitespaceManager::appendEscapedNewlineText(
     std::string &Text, unsigned Newlines, unsigned PreviousEndOfTokenColumn,
-    unsigned EscapedNewlineColumn) {
+    unsigned EscapedNewlineColumn) const {
   if (Newlines > 0) {
     unsigned Spaces =
         std::max<int>(1, EscapedNewlineColumn - PreviousEndOfTokenColumn - 1);

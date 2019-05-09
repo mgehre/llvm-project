@@ -37,9 +37,9 @@ public:
  ~LogWriter();
 
  // Write a character range into a log.
- void WriteAll(const char *Begin, const char *End);
+ void WriteAll(const char *Begin, const char *End) const;
 
- void Flush();
+ void Flush() const;
 
  // Returns a new log instance initialized using the flag-provided values.
  static LogWriter *Open();

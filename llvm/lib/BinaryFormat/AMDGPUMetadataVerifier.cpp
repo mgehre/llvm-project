@@ -22,7 +22,7 @@ namespace V3 {
 
 bool MetadataVerifier::verifyScalar(
     msgpack::Node &Node, msgpack::ScalarNode::ScalarKind SKind,
-    function_ref<bool(msgpack::ScalarNode &)> verifyValue) {
+    function_ref<bool(msgpack::ScalarNode &)> verifyValue) const {
   auto ScalarPtr = dyn_cast<msgpack::ScalarNode>(&Node);
   if (!ScalarPtr)
     return false;

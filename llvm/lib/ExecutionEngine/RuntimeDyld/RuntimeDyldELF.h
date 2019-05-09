@@ -116,7 +116,7 @@ private:
   // For a GOT entry referenced from SectionID, compute a relocation entry
   // that will place the final resolved value in the GOT slot
   RelocationEntry computeGOTOffsetRE(uint64_t GOTOffset, uint64_t SymbolOffset,
-                                     unsigned Type);
+                                     unsigned Type) const;
 
   // Compute the address in memory where we can find the placeholder
   void *computePlaceholderAddress(unsigned SectionID, uint64_t Offset) const;

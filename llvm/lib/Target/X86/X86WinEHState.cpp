@@ -73,7 +73,7 @@ private:
   void rewriteSetJmpCallSite(IRBuilder<> &Builder, Function &F, CallSite CS,
                              Value *State);
   int getBaseStateForBB(DenseMap<BasicBlock *, ColorVector> &BlockColors,
-                        WinEHFuncInfo &FuncInfo, BasicBlock *BB);
+                        WinEHFuncInfo &FuncInfo, BasicBlock *BB) const;
   int getStateForCallSite(DenseMap<BasicBlock *, ColorVector> &BlockColors,
                           WinEHFuncInfo &FuncInfo, CallSite CS);
 
@@ -514,7 +514,7 @@ void WinEHStatePass::rewriteSetJmpCallSite(IRBuilder<> &Builder, Function &F,
 // Figure out what state we should assign calls in this block.
 int WinEHStatePass::getBaseStateForBB(
     DenseMap<BasicBlock *, ColorVector> &BlockColors, WinEHFuncInfo &FuncInfo,
-    BasicBlock *BB) {
+    BasicBlock *BB) const {
   int BaseState = ParentBaseState;
   auto &BBColors = BlockColors[BB];
 

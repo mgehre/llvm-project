@@ -273,7 +273,7 @@ private:
                                                              uint8_t OpSize);
 
   /// Adjust the encoding type for an operand based on the instruction.
-  void adjustOperandEncoding(OperandEncoding &encoding);
+  void adjustOperandEncoding(OperandEncoding &encoding) const;
 
   /// handleOperand - Converts a single operand from the LLVM table format to
   ///   the emitted table format, handling any duplicate operands it encounters

@@ -37,7 +37,7 @@ LoopRotatePass::LoopRotatePass(bool EnableHeaderDuplication)
 
 PreservedAnalyses LoopRotatePass::run(Loop &L, LoopAnalysisManager &AM,
                                       LoopStandardAnalysisResults &AR,
-                                      LPMUpdater &) {
+                                      LPMUpdater &) const {
   int Threshold = EnableHeaderDuplication ? DefaultRotationThreshold : 0;
   const DataLayout &DL = L.getHeader()->getModule()->getDataLayout();
   const SimplifyQuery SQ = getBestSimplifyQuery(AR, DL);

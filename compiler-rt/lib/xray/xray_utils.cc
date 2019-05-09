@@ -133,7 +133,7 @@ LogWriter::~LogWriter() {
   internal_close(Fd);
 }
 
-void LogWriter::WriteAll(const char *Begin, const char *End) XRAY_NEVER_INSTRUMENT {
+void LogWriter::WriteAll(const char *Begin, const char *End) const XRAY_NEVER_INSTRUMENT {
   if (Begin == End)
     return;
   auto TotalBytes = std::distance(Begin, End);
@@ -151,7 +151,7 @@ void LogWriter::WriteAll(const char *Begin, const char *End) XRAY_NEVER_INSTRUME
   }
 }
 
-void LogWriter::Flush() XRAY_NEVER_INSTRUMENT {
+void LogWriter::Flush() const XRAY_NEVER_INSTRUMENT {
   fsync(Fd);
 }
 

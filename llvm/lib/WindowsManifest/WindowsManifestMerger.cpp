@@ -41,15 +41,15 @@ public:
 
 private:
   static void errorCallback(void *Ctx, const char *Format, ...);
-  Error getParseError();
+  Error getParseError() const;
 #if LLVM_LIBXML2_ENABLED
   xmlDocPtr CombinedDoc = nullptr;
   std::vector<xmlDocPtr> MergedDocs;
 
   bool Merged = false;
   struct XmlDeleter {
-    void operator()(xmlChar *Ptr) { xmlFree(Ptr); }
-    void operator()(xmlDoc *Ptr) { xmlFreeDoc(Ptr); }
+    void operator()(xmlChar *Ptr) const { xmlFree(Ptr); }
+    void operator()(xmlDoc *Ptr) const { xmlFreeDoc(Ptr); }
   };
   int BufferSize = 0;
   std::unique_ptr<xmlChar, XmlDeleter> Buffer;
@@ -723,7 +723,7 @@ void WindowsManifestMerger::WindowsManifestMergerImpl::errorCallback(
   Merger->ParseErrorOccurred = true;
 }
 
-Error WindowsManifestMerger::WindowsManifestMergerImpl::getParseError() {
+Error WindowsManifestMerger::WindowsManifestMergerImpl::getParseError() const {
   if (!ParseErrorOccurred)
     return Error::success();
   return make_error<WindowsManifestError>("invalid xml document");

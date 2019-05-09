@@ -102,7 +102,7 @@ private:
   /// Update 'State' according to the next token being one of "(<{[".
   void moveStatePastScopeOpener(LineState &State, bool Newline);
   /// Update 'State' according to the next token being one of ")>}]".
-  void moveStatePastScopeCloser(LineState &State);
+  void moveStatePastScopeCloser(LineState &State) const;
   /// Update 'State' with the next token opening a nested block.
   void moveStateToNewBlock(LineState &State);
 
@@ -187,7 +187,7 @@ private:
   ///
   /// This includes implicitly concatenated strings, strings that will be broken
   /// by clang-format and string literals with escaped newlines.
-  bool nextIsMultilineString(const LineState &State);
+  bool nextIsMultilineString(const LineState &State) const;
 
   FormatStyle Style;
   const AdditionalKeywords &Keywords;

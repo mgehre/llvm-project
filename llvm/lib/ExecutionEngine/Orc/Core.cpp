@@ -118,13 +118,13 @@ llvm::raw_ostream &operator<<(llvm::raw_ostream &OS,
 }
 
 struct PrintSymbolFlagsMapElemsMatchingCLOpts {
-  bool operator()(const orc::SymbolFlagsMap::value_type &KV) {
+  bool operator()(const orc::SymbolFlagsMap::value_type &KV) const {
     return flagsMatchCLOpts(KV.second);
   }
 };
 
 struct PrintSymbolMapElemsMatchingCLOpts {
-  bool operator()(const orc::SymbolMap::value_type &KV) {
+  bool operator()(const orc::SymbolMap::value_type &KV) const {
     return flagsMatchCLOpts(KV.second.getFlags());
   }
 };

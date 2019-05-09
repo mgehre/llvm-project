@@ -3571,7 +3571,7 @@ class ToolSelector final {
   /// null will be returned.
   const JobAction *getPrevDependentAction(const ActionList &Inputs,
                                           ActionList &SavedOffloadAction,
-                                          bool CanBeCollapsed = true) {
+                                          bool CanBeCollapsed = true) const {
     // An option can be collapsed only if it has a single input.
     if (Inputs.size() != 1)
       return nullptr;

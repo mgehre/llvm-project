@@ -41,7 +41,7 @@ template <> struct MappingTraits<tooling::Range> {
     NormalizedRange(const IO &, const tooling::Range &R)
         : Offset(R.getOffset()), Length(R.getLength()) {}
 
-    tooling::Range denormalize(const IO &) {
+    tooling::Range denormalize(const IO &) const {
       return tooling::Range(Offset, Length);
     }
 

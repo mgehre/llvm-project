@@ -80,10 +80,10 @@ llvm::Error AppleAcceleratorTable::extract() {
   return Error::success();
 }
 
-uint32_t AppleAcceleratorTable::getNumBuckets() { return Hdr.BucketCount; }
-uint32_t AppleAcceleratorTable::getNumHashes() { return Hdr.HashCount; }
+uint32_t AppleAcceleratorTable::getNumBuckets() const { return Hdr.BucketCount; }
+uint32_t AppleAcceleratorTable::getNumHashes() const { return Hdr.HashCount; }
 uint32_t AppleAcceleratorTable::getSizeHdr() { return sizeof(Hdr); }
-uint32_t AppleAcceleratorTable::getHeaderDataLength() {
+uint32_t AppleAcceleratorTable::getHeaderDataLength() const {
   return Hdr.HeaderDataLength;
 }
 

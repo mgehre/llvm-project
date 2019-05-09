@@ -239,7 +239,7 @@ private:
 
   unsigned shouldKeepVariableDIE(RelocationManager &RelocMgr,
                                  const DWARFDie &DIE, CompileUnit &Unit,
-                                 CompileUnit::DIEInfo &MyInfo, unsigned Flags);
+                                 CompileUnit::DIEInfo &MyInfo, unsigned Flags) const;
 
   unsigned shouldKeepSubprogramDIE(RelocationManager &RelocMgr,
                                    RangesTy &Ranges, const DWARFDie &DIE,

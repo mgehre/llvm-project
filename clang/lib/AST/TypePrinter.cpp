@@ -114,14 +114,14 @@ namespace {
     void print(QualType T, raw_ostream &OS, StringRef PlaceHolder);
 
     static bool canPrefixQualifiers(const Type *T, bool &NeedARCStrongQualifier);
-    void spaceBeforePlaceHolder(raw_ostream &OS);
+    void spaceBeforePlaceHolder(raw_ostream &OS) const;
     void printTypeSpec(NamedDecl *D, raw_ostream &OS);
 
     void printBefore(QualType T, raw_ostream &OS);
     void printAfter(QualType T, raw_ostream &OS);
     void AppendScope(DeclContext *DC, raw_ostream &OS);
     void printTag(TagDecl *T, raw_ostream &OS);
-    void printFunctionAfter(const FunctionType::ExtInfo &Info, raw_ostream &OS);
+    void printFunctionAfter(const FunctionType::ExtInfo &Info, raw_ostream &OS) const;
 #define ABSTRACT_TYPE(CLASS, PARENT)
 #define TYPE(CLASS, PARENT) \
     void print##CLASS##Before(const CLASS##Type *T, raw_ostream &OS); \
@@ -157,7 +157,7 @@ static void AppendTypeQualList(raw_ostream &OS, unsigned TypeQuals,
   }
 }
 
-void TypePrinter::spaceBeforePlaceHolder(raw_ostream &OS) {
+void TypePrinter::spaceBeforePlaceHolder(raw_ostream &OS) const {
   if (!HasEmptyPlaceHolder)
     OS << ' ';
 }
@@ -835,7 +835,7 @@ void TypePrinter::printFunctionProtoAfter(const FunctionProtoType *T,
 }
 
 void TypePrinter::printFunctionAfter(const FunctionType::ExtInfo &Info,
-                                     raw_ostream &OS) {
+                                     raw_ostream &OS) const {
   if (!InsideCCAttribute) {
     switch (Info.getCC()) {
     case CC_C:

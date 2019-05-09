@@ -34,7 +34,7 @@ public:
       : OptLevel(OptLevel), OnlyWhenForced(OnlyWhenForced) {}
 
   PreservedAnalyses run(Loop &L, LoopAnalysisManager &AM,
-                        LoopStandardAnalysisResults &AR, LPMUpdater &U);
+                        LoopStandardAnalysisResults &AR, LPMUpdater &U) const;
 };
 
 /// A set of parameters used to control various transforms performed by the

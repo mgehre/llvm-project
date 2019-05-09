@@ -1835,7 +1835,7 @@ void RuntimeDyldELF::resolveGOTOffsetRelocation(unsigned SectionID,
 
 RelocationEntry RuntimeDyldELF::computeGOTOffsetRE(uint64_t GOTOffset,
                                                    uint64_t SymbolOffset,
-                                                   uint32_t Type) {
+                                                   uint32_t Type) const {
   return RelocationEntry(GOTSectionID, GOTOffset, Type, SymbolOffset);
 }
 

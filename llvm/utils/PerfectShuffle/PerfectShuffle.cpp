@@ -124,7 +124,7 @@ struct Operator {
   const char *getName() const { return Name; }
   unsigned getCost() const { return Cost; }
 
-  unsigned short getTransformedMask(unsigned short LHSMask, unsigned RHSMask) {
+  unsigned short getTransformedMask(unsigned short LHSMask, unsigned RHSMask) const {
     // Extract the elements from LHSMask and RHSMask, as appropriate.
     unsigned Result = 0;
     for (unsigned i = 0; i != 4; ++i) {

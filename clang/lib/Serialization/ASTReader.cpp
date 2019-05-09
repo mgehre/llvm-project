@@ -1699,7 +1699,7 @@ unsigned HeaderFileInfoTrait::ComputeHash(internal_key_ref ikey) {
 }
 
 HeaderFileInfoTrait::internal_key_type
-HeaderFileInfoTrait::GetInternalKey(const FileEntry *FE) {
+HeaderFileInfoTrait::GetInternalKey(const FileEntry *FE) const {
   internal_key_type ikey = {FE->getSize(),
                             M.HasTimestamps ? FE->getModificationTime() : 0,
                             FE->getName(), /*Imported*/ false};

@@ -140,8 +140,8 @@ class VerifierPass : public PassInfoMixin<VerifierPass> {
 public:
   explicit VerifierPass(bool FatalErrors = true) : FatalErrors(FatalErrors) {}
 
-  PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
-  PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
+  PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM) const;
+  PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM) const;
 };
 
 } // end namespace llvm

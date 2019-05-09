@@ -1225,7 +1225,7 @@ static void forEachInputSectionDescription(
 // in the Sections vector, and recalculate the InputSection output section
 // offsets.
 // This may invalidate any output section offsets stored outside of InputSection
-void ThunkCreator::mergeThunks(ArrayRef<OutputSection *> OutputSections) {
+void ThunkCreator::mergeThunks(ArrayRef<OutputSection *> OutputSections) const {
   forEachInputSectionDescription(
       OutputSections, [&](OutputSection *OS, InputSectionDescription *ISD) {
         if (ISD->ThunkSections.empty())

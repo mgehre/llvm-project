@@ -67,7 +67,7 @@ public:
   SimpleLoopUnswitchPass(bool NonTrivial = false) : NonTrivial(NonTrivial) {}
 
   PreservedAnalyses run(Loop &L, LoopAnalysisManager &AM,
-                        LoopStandardAnalysisResults &AR, LPMUpdater &U);
+                        LoopStandardAnalysisResults &AR, LPMUpdater &U) const;
 };
 
 /// Create the legacy pass object for the simple loop unswitcher.

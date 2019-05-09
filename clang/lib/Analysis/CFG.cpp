@@ -274,7 +274,7 @@ public:
 
     int distance(const_iterator L);
     const_iterator shared_parent(const_iterator L);
-    bool pointsToFirstDeclaredVar() { return VarIter == 1; }
+    bool pointsToFirstDeclaredVar() const { return VarIter == 1; }
   };
 
 private:

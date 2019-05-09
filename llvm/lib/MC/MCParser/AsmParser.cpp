@@ -278,7 +278,7 @@ private:
                    SMLoc L);
 
   /// Are macros enabled in the parser?
-  bool areMacrosEnabled() {return MacrosEnabledFlag;}
+  bool areMacrosEnabled() const {return MacrosEnabledFlag;}
 
   /// Control a flag in the parser that enables or disables macros.
   void setMacrosEnabled(bool Flag) {MacrosEnabledFlag = Flag;}

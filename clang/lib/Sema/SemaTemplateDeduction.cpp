@@ -821,7 +821,7 @@ public:
 
   /// Determine whether this pack has already been partially expanded into a
   /// sequence of (prior) function parameters / template arguments.
-  bool isPartiallyExpanded() { return IsPartiallyExpanded; }
+  bool isPartiallyExpanded() const { return IsPartiallyExpanded; }
 
   /// Determine whether this pack expansion scope has a known, fixed arity.
   /// This happens if it involves a pack from an outer template that has

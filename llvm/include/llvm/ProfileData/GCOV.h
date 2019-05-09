@@ -446,8 +446,8 @@ public:
              StringRef GCDAFile);
 
 protected:
-  std::string getCoveragePath(StringRef Filename, StringRef MainFilename);
-  std::unique_ptr<raw_ostream> openCoveragePath(StringRef CoveragePath);
+  std::string getCoveragePath(StringRef Filename, StringRef MainFilename) const;
+  std::unique_ptr<raw_ostream> openCoveragePath(StringRef CoveragePath) const;
   static void printFunctionSummary(raw_ostream &OS, const FunctionVector &Funcs) ;
   static void printBlockInfo(raw_ostream &OS, const GCOVBlock &Block,
                       uint32_t LineIndex, uint32_t &BlockNo) ;

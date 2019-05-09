@@ -350,11 +350,11 @@ private:
           MemExpr(false) {}
 
     void addImm(int64_t imm) { Imm += imm; }
-    short getBracCount() { return BracCount; }
-    bool isMemExpr() { return MemExpr; }
-    unsigned getBaseReg() { return BaseReg; }
-    unsigned getIndexReg() { return IndexReg; }
-    unsigned getScale() { return Scale; }
+    short getBracCount() const { return BracCount; }
+    bool isMemExpr() const { return MemExpr; }
+    unsigned getBaseReg() const { return BaseReg; }
+    unsigned getIndexReg() const { return IndexReg; }
+    unsigned getScale() const { return Scale; }
     const MCExpr *getSym() { return Sym; }
     StringRef getSymName() { return SymName; }
     int64_t getImm() { return Imm + IC.execute(); }

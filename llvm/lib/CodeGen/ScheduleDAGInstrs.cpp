@@ -598,7 +598,7 @@ public:
 
   /// To keep NumNodes up to date, insert() is used instead of
   /// this operator w/ push_back().
-  ValueType &operator[](const SUList &Key) {
+  ValueType &operator[](const SUList &Key) const {
     llvm_unreachable("Don't use. Use insert() instead."); };
 
   /// Adds SU to the SUList of V. If Map grows huge, reduce its size by calling

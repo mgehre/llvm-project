@@ -55,7 +55,7 @@ private:
   Error writeExportTrie(raw_ostream &OS);
 
   void dumpExportEntry(raw_ostream &OS, MachOYAML::ExportEntry &Entry);
-  void ZeroToOffset(raw_ostream &OS, size_t offset);
+  void ZeroToOffset(raw_ostream &OS, size_t offset) const;
 
   MachOYAML::Object &Obj;
   bool is64Bit;
@@ -207,7 +207,7 @@ void Fill(raw_ostream &OS, size_t Size, uint32_t Data) {
   OS.write(reinterpret_cast<char *>(FillData.data()), Size);
 }
 
-void MachOWriter::ZeroToOffset(raw_ostream &OS, size_t Offset) {
+void MachOWriter::ZeroToOffset(raw_ostream &OS, size_t Offset) const {
   auto currOffset = OS.tell() - fileStart;
   if (currOffset < Offset)
     ZeroFillBytes(OS, Offset - currOffset);
@@ -487,7 +487,7 @@ private:
   Error writeFatHeader(raw_ostream &OS);
   Error writeFatArchs(raw_ostream &OS);
 
-  void ZeroToOffset(raw_ostream &OS, size_t offset);
+  void ZeroToOffset(raw_ostream &OS, size_t offset) const;
 
   yaml::YamlObjectFile &ObjectFile;
   uint64_t fileStart;
@@ -573,7 +573,7 @@ Error UniversalWriter::writeFatArchs(raw_ostream &OS) {
   return Error::success();
 }
 
-void UniversalWriter::ZeroToOffset(raw_ostream &OS, size_t Offset) {
+void UniversalWriter::ZeroToOffset(raw_ostream &OS, size_t Offset) const {
   auto currOffset = OS.tell() - fileStart;
   if (currOffset < Offset)
     ZeroFillBytes(OS, Offset - currOffset);

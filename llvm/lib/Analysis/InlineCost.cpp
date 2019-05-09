@@ -295,8 +295,8 @@ public:
 
   InlineResult analyzeCall(CallSite CS);
 
-  int getThreshold() { return Threshold; }
-  int getCost() { return Cost; }
+  int getThreshold() const { return Threshold; }
+  int getCost() const { return Cost; }
 
   // Keep a bunch of stats about the cost savings found so we can print them
   // out when debugging.

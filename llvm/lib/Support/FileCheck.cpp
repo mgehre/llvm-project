@@ -525,7 +525,7 @@ size_t FileCheckPattern::FindRegexVarEnd(StringRef Str, SourceMgr &SM) {
 /// UNIX-style '\n'.
 StringRef
 llvm::FileCheck::CanonicalizeFile(MemoryBuffer &MB,
-                                  SmallVectorImpl<char> &OutputBuffer) {
+                                  SmallVectorImpl<char> &OutputBuffer) const {
   OutputBuffer.reserve(MB.getBufferSize());
 
   for (const char *Ptr = MB.getBufferStart(), *End = MB.getBufferEnd();

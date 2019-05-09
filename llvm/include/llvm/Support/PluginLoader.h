@@ -21,7 +21,7 @@
 
 namespace llvm {
   struct PluginLoader {
-    void operator=(const std::string &Filename);
+    void operator=(const std::string &Filename) const;
     static unsigned getNumPlugins();
     static std::string& getPlugin(unsigned num);
   };

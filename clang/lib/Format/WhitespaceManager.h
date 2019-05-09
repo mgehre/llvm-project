@@ -195,10 +195,10 @@ private:
 
   /// Stores \p Text as the replacement for the whitespace in \p Range.
   void storeReplacement(SourceRange Range, StringRef Text);
-  void appendNewlineText(std::string &Text, unsigned Newlines);
+  void appendNewlineText(std::string &Text, unsigned Newlines) const;
   void appendEscapedNewlineText(std::string &Text, unsigned Newlines,
                                 unsigned PreviousEndOfTokenColumn,
-                                unsigned EscapedNewlineColumn);
+                                unsigned EscapedNewlineColumn) const;
   void appendIndentText(std::string &Text, unsigned IndentLevel,
                         unsigned Spaces, unsigned WhitespaceStartColumn);
 

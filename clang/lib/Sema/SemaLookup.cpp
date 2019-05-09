@@ -71,15 +71,15 @@ namespace {
 
     // Sort by the pointer value of the common ancestor.
     struct Comparator {
-      bool operator()(const UnqualUsingEntry &L, const UnqualUsingEntry &R) {
+      bool operator()(const UnqualUsingEntry &L, const UnqualUsingEntry &R) const {
         return L.getCommonAncestor() < R.getCommonAncestor();
       }
 
-      bool operator()(const UnqualUsingEntry &E, const DeclContext *DC) {
+      bool operator()(const UnqualUsingEntry &E, const DeclContext *DC) const {
         return E.getCommonAncestor() < DC;
       }
 
-      bool operator()(const DeclContext *DC, const UnqualUsingEntry &E) {
+      bool operator()(const DeclContext *DC, const UnqualUsingEntry &E) const {
         return DC < E.getCommonAncestor();
       }
     };

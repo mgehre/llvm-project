@@ -93,7 +93,7 @@ random_device::~random_device()
 }
 
 unsigned
-random_device::operator()()
+random_device::operator()() const
 {
     unsigned r;
     size_t n = sizeof(r);

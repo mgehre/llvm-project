@@ -7450,8 +7450,8 @@ public:
   iterator vector_begin() { return VectorTypes.begin(); }
   iterator vector_end() { return VectorTypes.end(); }
 
-  bool hasNonRecordTypes() { return HasNonRecordTypes; }
-  bool hasArithmeticOrEnumeralTypes() { return HasArithmeticOrEnumeralTypes; }
+  bool hasNonRecordTypes() const { return HasNonRecordTypes; }
+  bool hasArithmeticOrEnumeralTypes() const { return HasArithmeticOrEnumeralTypes; }
   bool hasNullPtrType() const { return HasNullPtrType; }
 };
 

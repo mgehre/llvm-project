@@ -2968,7 +2968,7 @@ public:
     __rs_default(const __rs_default&);
     ~__rs_default();
 
-    result_type operator()();
+    result_type operator()() const;
 
     static _LIBCPP_CONSTEXPR result_type min() {return _Min;}
     static _LIBCPP_CONSTEXPR result_type max() {return _Max;}

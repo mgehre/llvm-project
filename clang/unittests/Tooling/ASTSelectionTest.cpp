@@ -19,7 +19,7 @@ namespace {
 struct FileLocation {
   unsigned Line, Column;
 
-  SourceLocation translate(const SourceManager &SM) {
+  SourceLocation translate(const SourceManager &SM) const {
     return SM.translateLineCol(SM.getMainFileID(), Line, Column);
   }
 };

@@ -91,7 +91,7 @@ TEST(ErrorOr, ImplicitConversionNoAmbiguity) {
   struct CastsToErrorCode {
     CastsToErrorCode() = default;
     CastsToErrorCode(std::error_code) {}
-    operator std::error_code() { return errc::invalid_argument; }
+    operator std::error_code() const { return errc::invalid_argument; }
   } casts_to_error_code;
   ErrorOr<CastsToErrorCode> x1(casts_to_error_code);
   ErrorOr<CastsToErrorCode> x2 = casts_to_error_code;
