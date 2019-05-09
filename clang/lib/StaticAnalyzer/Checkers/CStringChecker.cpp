@@ -122,7 +122,7 @@ public:
 
   void evalStdCopy(CheckerContext &C, const CallExpr *CE) const;
   void evalStdCopyBackward(CheckerContext &C, const CallExpr *CE) const;
-  void evalStdCopyCommon(CheckerContext &C, const CallExpr *CE) const;
+  static void evalStdCopyCommon(CheckerContext &C, const CallExpr *CE);
   void evalMemset(CheckerContext &C, const CallExpr *CE) const;
   void evalBzero(CheckerContext &C, const CallExpr *CE) const;
 
@@ -2103,17 +2103,17 @@ void CStringChecker::evalStrsep(CheckerContext &C, const CallExpr *CE) const {
 }
 
 // These should probably be moved into a C++ standard library checker.
-void CStringChecker::evalStdCopy(CheckerContext &C, const CallExpr *CE) const {
+void CStringChecker::evalStdCopy(CheckerContext &C, const CallExpr *CE) const { //NOLINT
   evalStdCopyCommon(C, CE);
 }
 
-void CStringChecker::evalStdCopyBackward(CheckerContext &C,
+void CStringChecker::evalStdCopyBackward(CheckerContext &C, //NOLINT
     const CallExpr *CE) const {
   evalStdCopyCommon(C, CE);
 }
 
 void CStringChecker::evalStdCopyCommon(CheckerContext &C,
-    const CallExpr *CE) const {
+    const CallExpr *CE) {
   if (CE->getNumArgs() < 3)
     return;
 

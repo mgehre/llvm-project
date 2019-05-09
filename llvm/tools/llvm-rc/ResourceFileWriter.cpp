@@ -586,7 +586,7 @@ Error ResourceFileWriter::writeResource(
 
 // --- NullResource helpers. --- //
 
-Error ResourceFileWriter::writeNullBody(const RCResource *) {
+Error ResourceFileWriter::writeNullBody(const RCResource *) { // NOLINT
   return Error::success();
 }
 

@@ -1142,12 +1142,12 @@ bool ResultBuilder::IsNestedNameSpecifier(const NamedDecl *ND) const {
 }
 
 /// Determines whether the given declaration is an enumeration.
-bool ResultBuilder::IsEnum(const NamedDecl *ND) const {
+bool ResultBuilder::IsEnum(const NamedDecl *ND) const { //NOLINT
   return isa<EnumDecl>(ND);
 }
 
 /// Determines whether the given declaration is a class or struct.
-bool ResultBuilder::IsClassOrStruct(const NamedDecl *ND) const {
+bool ResultBuilder::IsClassOrStruct(const NamedDecl *ND) const { //NOLINT
   // Allow us to find class templates, too.
   if (const auto *ClassTemplate = dyn_cast<ClassTemplateDecl>(ND))
     ND = ClassTemplate->getTemplatedDecl();
@@ -1161,7 +1161,7 @@ bool ResultBuilder::IsClassOrStruct(const NamedDecl *ND) const {
 }
 
 /// Determines whether the given declaration is a union.
-bool ResultBuilder::IsUnion(const NamedDecl *ND) const {
+bool ResultBuilder::IsUnion(const NamedDecl *ND) const { //NOLINT
   // Allow us to find class templates, too.
   if (const auto *ClassTemplate = dyn_cast<ClassTemplateDecl>(ND))
     ND = ClassTemplate->getTemplatedDecl();
@@ -1173,18 +1173,18 @@ bool ResultBuilder::IsUnion(const NamedDecl *ND) const {
 }
 
 /// Determines whether the given declaration is a namespace.
-bool ResultBuilder::IsNamespace(const NamedDecl *ND) const {
+bool ResultBuilder::IsNamespace(const NamedDecl *ND) const { //NOLINT
   return isa<NamespaceDecl>(ND);
 }
 
 /// Determines whether the given declaration is a namespace or
 /// namespace alias.
-bool ResultBuilder::IsNamespaceOrAlias(const NamedDecl *ND) const {
+bool ResultBuilder::IsNamespaceOrAlias(const NamedDecl *ND) const { //NOLINT
   return isa<NamespaceDecl>(ND->getUnderlyingDecl());
 }
 
 /// Determines whether the given declaration is a type.
-bool ResultBuilder::IsType(const NamedDecl *ND) const {
+bool ResultBuilder::IsType(const NamedDecl *ND) const { //NOLINT
   ND = ND->getUnderlyingDecl();
   return isa<TypeDecl>(ND) || isa<ObjCInterfaceDecl>(ND);
 }
@@ -1192,7 +1192,7 @@ bool ResultBuilder::IsType(const NamedDecl *ND) const {
 /// Determines which members of a class should be visible via
 /// "." or "->".  Only value declarations, nested name specifiers, and
 /// using declarations thereof should show up.
-bool ResultBuilder::IsMember(const NamedDecl *ND) const {
+bool ResultBuilder::IsMember(const NamedDecl *ND) const { //NOLINT
   ND = ND->getUnderlyingDecl();
   return isa<ValueDecl>(ND) || isa<FunctionTemplateDecl>(ND) ||
          isa<ObjCPropertyDecl>(ND);
@@ -1267,13 +1267,13 @@ bool ResultBuilder::IsObjCCollection(const NamedDecl *ND) const {
          (SemaRef.getLangOpts().CPlusPlus && T->isRecordType());
 }
 
-bool ResultBuilder::IsImpossibleToSatisfy(const NamedDecl *ND) const {
+bool ResultBuilder::IsImpossibleToSatisfy(const NamedDecl *ND) const { //NOLINT
   return false;
 }
 
 /// Determines whether the given declaration is an Objective-C
 /// instance variable.
-bool ResultBuilder::IsObjCIvar(const NamedDecl *ND) const {
+bool ResultBuilder::IsObjCIvar(const NamedDecl *ND) const { //NOLINT
   return isa<ObjCIvarDecl>(ND);
 }
 

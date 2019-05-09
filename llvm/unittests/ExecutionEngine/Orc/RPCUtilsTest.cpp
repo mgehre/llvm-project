@@ -361,7 +361,7 @@ TEST(DummyRPC, TestAsyncIntIntHandlerMethod) {
 
   class Dummy {
   public:
-    Error handler(std::function<Error(Expected<int32_t>)> SendResult,
+    Error handler(std::function<Error(Expected<int32_t>)> SendResult, // NOLINT
              int32_t X) {
       EXPECT_EQ(X, 21) << "Server int(int) receieved unexpected result";
       return SendResult(2 * X);

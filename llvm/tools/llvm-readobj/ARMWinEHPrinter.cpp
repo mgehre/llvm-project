@@ -513,7 +513,7 @@ bool Decoder::opcode_11111110(const uint8_t *OC, unsigned &Offset,
   return true;
 }
 
-bool Decoder::opcode_11111111(const uint8_t *OC, unsigned &Offset,
+bool Decoder::opcode_11111111(const uint8_t *OC, unsigned &Offset, // NOLINT
                               unsigned Length, bool Prologue) {
   ++Offset;
   return true;

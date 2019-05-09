@@ -235,12 +235,12 @@ void ExprInspectionChecker::analyzerGetExtent(const CallExpr *CE,
   C.addTransition(State);
 }
 
-void ExprInspectionChecker::analyzerPrintState(const CallExpr *CE,
+void ExprInspectionChecker::analyzerPrintState(const CallExpr *CE, // NOLINT
                                                CheckerContext &C) const {
   C.getState()->dump();
 }
 
-void ExprInspectionChecker::analyzerWarnOnDeadSymbol(const CallExpr *CE,
+void ExprInspectionChecker::analyzerWarnOnDeadSymbol(const CallExpr *CE, // NOLINT
                                                      CheckerContext &C) const {
   if (CE->getNumArgs() == 0)
     return;
@@ -290,7 +290,7 @@ void ExprInspectionChecker::checkEndAnalysis(ExplodedGraph &G, BugReporter &BR,
   ReachedStats.clear();
 }
 
-void ExprInspectionChecker::analyzerCrash(const CallExpr *CE,
+void ExprInspectionChecker::analyzerCrash(const CallExpr *CE, // NOLINT
                                           CheckerContext &C) const {
   LLVM_BUILTIN_TRAP;
 }

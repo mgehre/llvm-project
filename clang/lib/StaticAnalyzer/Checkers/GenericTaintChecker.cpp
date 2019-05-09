@@ -523,7 +523,7 @@ GenericTaintChecker::TaintPropagationRule::process(const CallExpr *CE,
 
 // If argument 0 (file descriptor) is tainted, all arguments except for arg 0
 // and arg 1 should get taint.
-ProgramStateRef GenericTaintChecker::preFscanf(const CallExpr *CE,
+ProgramStateRef GenericTaintChecker::preFscanf(const CallExpr *CE, //NOLINT
                                                CheckerContext &C) const {
   assert(CE->getNumArgs() >= 2);
   ProgramStateRef State = C.getState();
@@ -541,7 +541,7 @@ ProgramStateRef GenericTaintChecker::preFscanf(const CallExpr *CE,
 }
 
 // If argument 0(protocol domain) is network, the return value should get taint.
-ProgramStateRef GenericTaintChecker::postSocket(const CallExpr *CE,
+ProgramStateRef GenericTaintChecker::postSocket(const CallExpr *CE, //NOLINT
                                                 CheckerContext &C) const {
   ProgramStateRef State = C.getState();
   if (CE->getNumArgs() < 3)
@@ -557,7 +557,7 @@ ProgramStateRef GenericTaintChecker::postSocket(const CallExpr *CE,
   return State;
 }
 
-ProgramStateRef GenericTaintChecker::postScanf(const CallExpr *CE,
+ProgramStateRef GenericTaintChecker::postScanf(const CallExpr *CE, //NOLINT
                                                CheckerContext &C) const {
   ProgramStateRef State = C.getState();
   if (CE->getNumArgs() < 2)
@@ -575,7 +575,7 @@ ProgramStateRef GenericTaintChecker::postScanf(const CallExpr *CE,
   return State;
 }
 
-ProgramStateRef GenericTaintChecker::postRetTaint(const CallExpr *CE,
+ProgramStateRef GenericTaintChecker::postRetTaint(const CallExpr *CE, //NOLINT
                                                   CheckerContext &C) const {
   return C.getState()->addTaint(CE, C.getLocationContext());
 }

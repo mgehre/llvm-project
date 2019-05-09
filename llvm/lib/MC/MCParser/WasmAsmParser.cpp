@@ -78,7 +78,7 @@ public:
     return false;
   }
 
-  bool parseSectionDirectiveText(StringRef, SMLoc) {
+  bool parseSectionDirectiveText(StringRef, SMLoc) { // NOLINT
     // FIXME: .text currently no-op.
     return false;
   }
