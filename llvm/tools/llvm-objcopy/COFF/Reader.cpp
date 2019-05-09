@@ -110,7 +110,7 @@ Error COFFReader::readSymbols(Object &Obj, bool IsBigObj) const {
   return Error::success();
 }
 
-Error COFFReader::setRelocTargets(Object &Obj) const {
+Error COFFReader::setRelocTargets(Object &Obj) {
   std::vector<const Symbol *> RawSymbolTable;
   for (const Symbol &Sym : Obj.getSymbols()) {
     RawSymbolTable.push_back(&Sym);

@@ -75,7 +75,7 @@ struct Counter {
 
   void start();         // Starts the measurement of the event.
   void stop();          // Stops the measurement of the event.
-  int64_t read() const; // Return the current value of the counter.
+  static int64_t read() ; // Return the current value of the counter.
 
 private:
 #ifdef HAVE_LIBPFM

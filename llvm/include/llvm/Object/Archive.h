@@ -240,7 +240,7 @@ public:
   bool isThin() const { return IsThin; }
 
   child_iterator child_begin(Error &Err, bool SkipInternal = true) const;
-  child_iterator child_end() const;
+  static child_iterator child_end() ;
   iterator_range<child_iterator> children(Error &Err,
                                           bool SkipInternal = true) const {
     return make_range(child_begin(Err, SkipInternal), child_end());

@@ -86,8 +86,8 @@ TEST(RegisterCustomCheckers, RegisterChecker) {
 
 class LocIncDecChecker : public Checker<check::Location> {
 public:
-  void checkLocation(SVal Loc, bool IsLoad, const Stmt *S,
-                     CheckerContext &C) const {
+  static void checkLocation(SVal Loc, bool IsLoad, const Stmt *S,
+                     CheckerContext &C) {
     auto UnaryOp = dyn_cast<UnaryOperator>(S);
     if (UnaryOp && !IsLoad)
       EXPECT_FALSE(UnaryOp->isIncrementOp());

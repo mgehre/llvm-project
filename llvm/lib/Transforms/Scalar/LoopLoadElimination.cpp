@@ -167,7 +167,7 @@ public:
   ///
   /// Note that no candidate is returned if LAA has failed to analyze the loop
   /// (e.g. if it's not bottom-tested, contains volatile memops, etc.)
-  std::forward_list<StoreToLoadForwardingCandidate>
+  static std::forward_list<StoreToLoadForwardingCandidate>
   findStoreToLoadDependences(const LoopAccessInfo &LAI) {
     std::forward_list<StoreToLoadForwardingCandidate> Candidates;
 

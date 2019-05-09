@@ -222,9 +222,9 @@ private:
   using IEdgeKey = std::pair<PBQP::GraphBase::NodeId, PBQP::GraphBase::NodeId>;
   using IEdgeCache = DenseSet<IEdgeKey>;
 
-  bool haveDisjointAllowedRegs(const PBQPRAGraph &G, PBQPRAGraph::NodeId NId,
+  static bool haveDisjointAllowedRegs(const PBQPRAGraph &G, PBQPRAGraph::NodeId NId,
                                PBQPRAGraph::NodeId MId,
-                               const DisjointAllowedRegsCache &D) const {
+                               const DisjointAllowedRegsCache &D) {
     const auto *NRegs = &G.getNodeMetadata(NId).getAllowedRegs();
     const auto *MRegs = &G.getNodeMetadata(MId).getAllowedRegs();
 
@@ -237,7 +237,7 @@ private:
     return D.count(IKey(MRegs, NRegs)) > 0;
   }
 
-  void setDisjointAllowedRegs(const PBQPRAGraph &G, PBQPRAGraph::NodeId NId,
+  static void setDisjointAllowedRegs(const PBQPRAGraph &G, PBQPRAGraph::NodeId NId,
                               PBQPRAGraph::NodeId MId,
                               DisjointAllowedRegsCache &D) {
     const auto *NRegs = &G.getNodeMetadata(NId).getAllowedRegs();
@@ -395,7 +395,7 @@ private:
   // interference. This case occurs frequently between integer and floating
   // point registers for example.
   // return true iff both nodes interferes.
-  bool createInterferenceEdge(PBQPRAGraph &G,
+  static bool createInterferenceEdge(PBQPRAGraph &G,
                               PBQPRAGraph::NodeId NId, PBQPRAGraph::NodeId MId,
                               IMatrixCache &C) {
     const TargetRegisterInfo &TRI =
@@ -502,7 +502,7 @@ public:
   }
 
 private:
-  void addVirtRegCoalesce(
+  static void addVirtRegCoalesce(
                     PBQPRAGraph::RawMatrix &CostMat,
                     const PBQPRAGraph::NodeMetadata::AllowedRegVector &Allowed1,
                     const PBQPRAGraph::NodeMetadata::AllowedRegVector &Allowed2,

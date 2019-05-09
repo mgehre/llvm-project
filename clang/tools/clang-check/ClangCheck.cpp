@@ -134,7 +134,7 @@ public:
 
 class ClangCheckActionFactory {
 public:
-  std::unique_ptr<clang::ASTConsumer> newASTConsumer() {
+  static std::unique_ptr<clang::ASTConsumer> newASTConsumer() {
     if (ASTList)
       return clang::CreateASTDeclNodeLister();
     if (ASTDump)

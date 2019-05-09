@@ -1135,7 +1135,7 @@ namespace {
     }
 
     // RecursiveASTVisitor setup.
-    bool shouldWalkTypesOfTypeLocs() const { return false; }
+    static bool shouldWalkTypesOfTypeLocs() { return false; }
 
     bool VisitAttributedStmt(AttributedStmt *S) {
       if (asFallThroughAttr(S))
@@ -1150,7 +1150,7 @@ namespace {
 
     // We don't want to traverse local type declarations. We analyze their
     // methods separately.
-    bool TraverseDecl(Decl *D) { return true; }
+    static bool TraverseDecl(Decl *D) { return true; }
 
     // We analyze lambda bodies separately. Skip them here.
     bool TraverseLambdaExpr(LambdaExpr *LE) {

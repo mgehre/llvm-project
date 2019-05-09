@@ -34,7 +34,7 @@ class FunctionPass;
 /// `instcombine` pass instead.
 class InstSimplifyPass : public PassInfoMixin<InstSimplifyPass> {
 public:
-  PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
+  static PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
 };
 
 /// Create a legacy pass that does instruction simplification on each

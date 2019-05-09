@@ -182,7 +182,7 @@ void ModuleSymbolTable::printSymbolName(raw_ostream &OS, Symbol S) const {
   Mang.getNameWithPrefix(OS, GV, false);
 }
 
-uint32_t ModuleSymbolTable::getSymbolFlags(Symbol S) const {
+uint32_t ModuleSymbolTable::getSymbolFlags(Symbol S) {
   if (S.is<AsmSymbol *>())
     return S.get<AsmSymbol *>()->second;
 

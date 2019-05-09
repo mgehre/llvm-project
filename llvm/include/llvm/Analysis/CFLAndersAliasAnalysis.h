@@ -98,7 +98,7 @@ class CFLAndersAA : public AnalysisInfoMixin<CFLAndersAA> {
 public:
   using Result = CFLAndersAAResult;
 
-  CFLAndersAAResult run(Function &F, FunctionAnalysisManager &AM);
+  static CFLAndersAAResult run(Function &F, FunctionAnalysisManager &AM);
 };
 
 /// Legacy wrapper pass to provide the CFLAndersAAResult object.

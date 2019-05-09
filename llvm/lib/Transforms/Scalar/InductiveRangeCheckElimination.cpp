@@ -202,7 +202,7 @@ public:
 
   /// This is the value the condition of the branch needs to evaluate to for the
   /// branch to take the hot successor (see (1) above).
-  bool getPassingDirection() { return true; }
+  static bool getPassingDirection() { return true; }
 
   /// Computes a range for the induction variable (IndVar) in which the range
   /// check is redundant and can be constant-folded away.  The induction
@@ -589,9 +589,9 @@ class LoopConstrainer {
   // `changeIterationSpaceEnd' and is the preheader to the loop denoted by `LS'.
   // This function rewrites the PHI nodes in `LS.Header' to start with the
   // correct value.
-  void rewriteIncomingValuesForPHIs(
+  static void rewriteIncomingValuesForPHIs(
       LoopStructure &LS, BasicBlock *ContinuationBlockAndPreheader,
-      const LoopConstrainer::RewrittenRangeInfo &RRI) const;
+      const LoopConstrainer::RewrittenRangeInfo &RRI) ;
 
   // Even though we do not preserve any passes at this time, we at least need to
   // keep the parent loop structure consistent.  The `LPPassManager' seems to
@@ -1321,7 +1321,7 @@ LoopConstrainer::RewrittenRangeInfo LoopConstrainer::changeIterationSpaceEnd(
 
 void LoopConstrainer::rewriteIncomingValuesForPHIs(
     LoopStructure &LS, BasicBlock *ContinuationBlock,
-    const LoopConstrainer::RewrittenRangeInfo &RRI) const {
+    const LoopConstrainer::RewrittenRangeInfo &RRI) {
   unsigned PHIIndex = 0;
   for (PHINode &PN : LS.Header->phis())
     for (unsigned i = 0, e = PN.getNumIncomingValues(); i < e; ++i)

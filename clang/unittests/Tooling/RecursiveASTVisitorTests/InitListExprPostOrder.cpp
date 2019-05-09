@@ -16,7 +16,7 @@ namespace {
 class InitListExprPostOrderVisitor
     : public ExpectedLocationVisitor<InitListExprPostOrderVisitor> {
 public:
-  bool shouldTraversePostOrder() const { return true; }
+  static bool shouldTraversePostOrder() { return true; }
 
   bool VisitInitListExpr(InitListExpr *ILE) {
     Match(ILE->isSemanticForm() ? "semantic" : "syntactic", ILE->getBeginLoc());

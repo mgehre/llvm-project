@@ -469,8 +469,8 @@ private:
   }
 
   // Performs a point lookup into a nonempty index, returning a longest match.
-  SubstringAndIndex longestMatch(StringRef Key,
-                                 ArrayRef<SubstringAndIndex> Idx) const {
+  static SubstringAndIndex longestMatch(StringRef Key,
+                                 ArrayRef<SubstringAndIndex> Idx) {
     assert(!Idx.empty());
     // Longest substring match will be adjacent to a direct lookup.
     auto It =

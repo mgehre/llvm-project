@@ -48,8 +48,8 @@ public:
   QualType getType() const { return getCanonicalTypeInternal(); }
   TypeSourceInfo *getTypeSourceInfo() const { return DeclInfo; }
 
-  void getAsStringInternal(std::string &Str,
-                           const PrintingPolicy &Policy) const;
+  static void getAsStringInternal(std::string &Str,
+                           const PrintingPolicy &Policy) ;
 
   static bool classof(const Type *T) {
     return T->getTypeClass() == (TypeClass)LocInfo;

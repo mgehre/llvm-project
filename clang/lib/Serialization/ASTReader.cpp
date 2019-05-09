@@ -7222,7 +7222,7 @@ ASTReader::getGlobalDeclID(ModuleFile &F, LocalDeclID LocalID) const {
 }
 
 bool ASTReader::isDeclIDFromModule(serialization::GlobalDeclID ID,
-                                   ModuleFile &M) const {
+                                   ModuleFile &M) {
   // Predefined decls aren't from any module.
   if (ID < NUM_PREDEF_DECL_IDS)
     return false;

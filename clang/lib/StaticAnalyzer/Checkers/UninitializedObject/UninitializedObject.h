@@ -280,7 +280,7 @@ private:
 
   /// Checks the region of a union object, and returns true if no field is
   /// initialized within the region.
-  bool isUnionUninit(const TypedValueRegion *R);
+  static bool isUnionUninit(const TypedValueRegion *R);
 
   /// Checks a region of a non-union object, and returns true if an
   /// uninitialized field is found within the region.

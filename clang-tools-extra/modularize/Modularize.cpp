@@ -549,27 +549,27 @@ public:
       : SM(SM), Entities(Entities), PP(PP), PPTracker(PPTracker),
         HadErrors(HadErrors) {}
 
-  bool TraverseStmt(Stmt *S) { return true; }
-  bool TraverseType(QualType T) { return true; }
-  bool TraverseTypeLoc(TypeLoc TL) { return true; }
-  bool TraverseNestedNameSpecifier(NestedNameSpecifier *NNS) { return true; }
-  bool TraverseNestedNameSpecifierLoc(NestedNameSpecifierLoc NNS) {
+  static bool TraverseStmt(Stmt *S) { return true; }
+  static bool TraverseType(QualType T) { return true; }
+  static bool TraverseTypeLoc(TypeLoc TL) { return true; }
+  static bool TraverseNestedNameSpecifier(NestedNameSpecifier *NNS) { return true; }
+  static bool TraverseNestedNameSpecifierLoc(NestedNameSpecifierLoc NNS) {
     return true;
   }
-  bool TraverseDeclarationNameInfo(DeclarationNameInfo NameInfo) {
+  static bool TraverseDeclarationNameInfo(DeclarationNameInfo NameInfo) {
     return true;
   }
-  bool TraverseTemplateName(TemplateName Template) { return true; }
-  bool TraverseTemplateArgument(const TemplateArgument &Arg) { return true; }
-  bool TraverseTemplateArgumentLoc(const TemplateArgumentLoc &ArgLoc) {
+  static bool TraverseTemplateName(TemplateName Template) { return true; }
+  static bool TraverseTemplateArgument(const TemplateArgument &Arg) { return true; }
+  static bool TraverseTemplateArgumentLoc(const TemplateArgumentLoc &ArgLoc) {
     return true;
   }
-  bool TraverseTemplateArguments(const TemplateArgument *Args,
+  static bool TraverseTemplateArguments(const TemplateArgument *Args,
                                  unsigned NumArgs) {
     return true;
   }
-  bool TraverseConstructorInitializer(CXXCtorInitializer *Init) { return true; }
-  bool TraverseLambdaCapture(LambdaExpr *LE, const LambdaCapture *C,
+  static bool TraverseConstructorInitializer(CXXCtorInitializer *Init) { return true; }
+  static bool TraverseLambdaCapture(LambdaExpr *LE, const LambdaCapture *C,
                              Expr *Init) {
     return true;
   }
@@ -737,43 +737,43 @@ class CompileCheckVisitor
 public:
   CompileCheckVisitor() {}
 
-  bool TraverseStmt(Stmt *S) { return true; }
-  bool TraverseType(QualType T) { return true; }
-  bool TraverseTypeLoc(TypeLoc TL) { return true; }
-  bool TraverseNestedNameSpecifier(NestedNameSpecifier *NNS) { return true; }
-  bool TraverseNestedNameSpecifierLoc(NestedNameSpecifierLoc NNS) {
+  static bool TraverseStmt(Stmt *S) { return true; }
+  static bool TraverseType(QualType T) { return true; }
+  static bool TraverseTypeLoc(TypeLoc TL) { return true; }
+  static bool TraverseNestedNameSpecifier(NestedNameSpecifier *NNS) { return true; }
+  static bool TraverseNestedNameSpecifierLoc(NestedNameSpecifierLoc NNS) {
     return true;
   }
-  bool TraverseDeclarationNameInfo(DeclarationNameInfo NameInfo) {
+  static bool TraverseDeclarationNameInfo(DeclarationNameInfo NameInfo) {
     return true;
   }
-  bool TraverseTemplateName(TemplateName Template) { return true; }
-  bool TraverseTemplateArgument(const TemplateArgument &Arg) { return true; }
-  bool TraverseTemplateArgumentLoc(const TemplateArgumentLoc &ArgLoc) {
+  static bool TraverseTemplateName(TemplateName Template) { return true; }
+  static bool TraverseTemplateArgument(const TemplateArgument &Arg) { return true; }
+  static bool TraverseTemplateArgumentLoc(const TemplateArgumentLoc &ArgLoc) {
     return true;
   }
-  bool TraverseTemplateArguments(const TemplateArgument *Args,
+  static bool TraverseTemplateArguments(const TemplateArgument *Args,
     unsigned NumArgs) {
     return true;
   }
-  bool TraverseConstructorInitializer(CXXCtorInitializer *Init) { return true; }
-  bool TraverseLambdaCapture(LambdaExpr *LE, const LambdaCapture *C,
+  static bool TraverseConstructorInitializer(CXXCtorInitializer *Init) { return true; }
+  static bool TraverseLambdaCapture(LambdaExpr *LE, const LambdaCapture *C,
                              Expr *Init) {
     return true;
   }
 
   // Check 'extern "*" {}' block for #include directives.
-  bool VisitLinkageSpecDecl(LinkageSpecDecl *D) {
+  static bool VisitLinkageSpecDecl(LinkageSpecDecl *D) {
     return true;
   }
 
   // Check 'namespace (name) {}' block for #include directives.
-  bool VisitNamespaceDecl(const NamespaceDecl *D) {
+  static bool VisitNamespaceDecl(const NamespaceDecl *D) {
     return true;
   }
 
   // Collect definition entities.
-  bool VisitNamedDecl(NamedDecl *ND) {
+  static bool VisitNamedDecl(NamedDecl *ND) {
     return true;
   }
 };

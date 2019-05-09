@@ -370,13 +370,13 @@ public:
       : AA(AA), AC(AC), TLI(TLI), DT(DT), PV(PV) {}
 
   /// Handle invalidation in the new PM.
-  bool invalidate(Function &F, const PreservedAnalyses &PA,
+  static bool invalidate(Function &F, const PreservedAnalyses &PA,
                   FunctionAnalysisManager::Invalidator &Inv);
 
   /// Some methods limit the number of instructions they will examine.
   /// The return value of this method is the default limit that will be
   /// used if no limit is explicitly passed in.
-  unsigned getDefaultBlockScanLimit() const;
+  static unsigned getDefaultBlockScanLimit() ;
 
   /// Returns the instruction on which a memory operation depends.
   ///
@@ -514,7 +514,7 @@ class MemoryDependenceAnalysis
 public:
   using Result = MemoryDependenceResults;
 
-  MemoryDependenceResults run(Function &F, FunctionAnalysisManager &AM);
+  static MemoryDependenceResults run(Function &F, FunctionAnalysisManager &AM);
 };
 
 /// A wrapper analysis pass for the legacy pass manager that exposes a \c

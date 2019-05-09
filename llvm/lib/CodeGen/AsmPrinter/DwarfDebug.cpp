@@ -474,7 +474,7 @@ template <typename Func> static void forBothCUs(DwarfCompileUnit &CU, Func F) {
       F(*SkelCU);
 }
 
-bool DwarfDebug::shareAcrossDWOCUs() const {
+bool DwarfDebug::shareAcrossDWOCUs() {
   return SplitDwarfCrossCuReferences;
 }
 
@@ -561,7 +561,7 @@ void DwarfDebug::constructCallSiteEntryDIEs(const DISubprogram &SP,
   }
 }
 
-void DwarfDebug::addGnuPubAttributes(DwarfCompileUnit &U, DIE &D) const {
+void DwarfDebug::addGnuPubAttributes(DwarfCompileUnit &U, DIE &D) {
   if (!U.hasDwarfPubSections())
     return;
 

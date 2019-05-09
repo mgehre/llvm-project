@@ -100,7 +100,7 @@ public:
   void checkPostObjCMessage(const ObjCMethodCall &M, CheckerContext &C) const;
   void checkPostCall(const CallEvent &Call, CheckerContext &C) const;
   void checkPreCall(const CallEvent &Call, CheckerContext &C) const;
-  void checkDeadSymbols(SymbolReaper &SR, CheckerContext &C) const;
+  static void checkDeadSymbols(SymbolReaper &SR, CheckerContext &C) ;
   void checkEvent(ImplicitNullDerefEvent Event) const;
 
   void printState(raw_ostream &Out, ProgramStateRef State, const char *NL,
@@ -450,7 +450,7 @@ void NullabilityChecker::reportBugIfInvariantHolds(StringRef Msg,
 
 /// Cleaning up the program state.
 void NullabilityChecker::checkDeadSymbols(SymbolReaper &SR,
-                                          CheckerContext &C) const {
+                                          CheckerContext &C) {
   ProgramStateRef State = C.getState();
   NullabilityMapTy Nullabilities = State->get<NullabilityMap>();
   for (NullabilityMapTy::iterator I = Nullabilities.begin(),

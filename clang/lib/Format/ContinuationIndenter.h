@@ -97,7 +97,7 @@ private:
   /// Update 'State' according to the next token's fake left parentheses.
   void moveStatePastFakeLParens(LineState &State, bool Newline);
   /// Update 'State' according to the next token's fake r_parens.
-  void moveStatePastFakeRParens(LineState &State);
+  static void moveStatePastFakeRParens(LineState &State);
 
   /// Update 'State' according to the next token being one of "(<{[".
   void moveStatePastScopeOpener(LineState &State, bool Newline);

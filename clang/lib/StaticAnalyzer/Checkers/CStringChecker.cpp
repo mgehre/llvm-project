@@ -60,16 +60,16 @@ public:
 
   bool evalCall(const CallExpr *CE, CheckerContext &C) const;
   void checkPreStmt(const DeclStmt *DS, CheckerContext &C) const;
-  void checkLiveSymbols(ProgramStateRef state, SymbolReaper &SR) const;
-  void checkDeadSymbols(SymbolReaper &SR, CheckerContext &C) const;
+  static void checkLiveSymbols(ProgramStateRef state, SymbolReaper &SR) ;
+  static void checkDeadSymbols(SymbolReaper &SR, CheckerContext &C) ;
 
-  ProgramStateRef
+  static ProgramStateRef
     checkRegionChanges(ProgramStateRef state,
                        const InvalidatedSymbols *,
                        ArrayRef<const MemRegion *> ExplicitRegions,
                        ArrayRef<const MemRegion *> Regions,
                        const LocationContext *LCtx,
-                       const CallEvent *Call) const;
+                       const CallEvent *Call) ;
 
   typedef void (CStringChecker::*FnCheck)(CheckerContext &,
                                           const CallExpr *) const;
@@ -145,10 +145,10 @@ public:
                         SVal Buf,
                         bool hypothetical = false) const;
 
-  const StringLiteral *getCStringLiteral(CheckerContext &C,
+  static const StringLiteral *getCStringLiteral(CheckerContext &C,
                                          ProgramStateRef &state,
                                          const Expr *expr,
-                                         SVal val) const;
+                                         SVal val) ;
 
   static ProgramStateRef InvalidateBuffer(CheckerContext &C,
                                           ProgramStateRef state,
@@ -827,7 +827,7 @@ SVal CStringChecker::getCStringLength(CheckerContext &C, ProgramStateRef &state,
 }
 
 const StringLiteral *CStringChecker::getCStringLiteral(CheckerContext &C,
-  ProgramStateRef &state, const Expr *expr, SVal val) const {
+  ProgramStateRef &state, const Expr *expr, SVal val) {
 
   // Get the memory region pointed to by the val.
   const MemRegion *bufRegion = val.getAsRegion();
@@ -2392,7 +2392,7 @@ CStringChecker::checkRegionChanges(ProgramStateRef state,
     ArrayRef<const MemRegion *> ExplicitRegions,
     ArrayRef<const MemRegion *> Regions,
     const LocationContext *LCtx,
-    const CallEvent *Call) const {
+    const CallEvent *Call) {
   CStringLengthTy Entries = state->get<CStringLength>();
   if (Entries.isEmpty())
     return state;
@@ -2441,7 +2441,7 @@ CStringChecker::checkRegionChanges(ProgramStateRef state,
 }
 
 void CStringChecker::checkLiveSymbols(ProgramStateRef state,
-    SymbolReaper &SR) const {
+    SymbolReaper &SR) {
   // Mark all symbols in our string length map as valid.
   CStringLengthTy Entries = state->get<CStringLength>();
 
@@ -2456,7 +2456,7 @@ void CStringChecker::checkLiveSymbols(ProgramStateRef state,
 }
 
 void CStringChecker::checkDeadSymbols(SymbolReaper &SR,
-    CheckerContext &C) const {
+    CheckerContext &C) {
   ProgramStateRef state = C.getState();
   CStringLengthTy Entries = state->get<CStringLength>();
   if (Entries.isEmpty())

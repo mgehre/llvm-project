@@ -2715,7 +2715,7 @@ void AsmPrinter::EmitMachineConstantPoolValue(MachineConstantPoolValue *MCPV) {
   llvm_unreachable("Target does not support EmitMachineConstantPoolValue");
 }
 
-void AsmPrinter::printOffset(int64_t Offset, raw_ostream &OS) const {
+void AsmPrinter::printOffset(int64_t Offset, raw_ostream &OS) {
   if (Offset > 0)
     OS << '+' << Offset;
   else if (Offset < 0)

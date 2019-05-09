@@ -740,7 +740,7 @@ public:
   /// Check if there is no type index which is obviously not handled by the
   /// LegalizeRuleSet in any way at all.
   /// \pre Type indices of the opcode form a dense [0, \p NumTypeIdxs) set.
-  bool verifyTypeIdxsCoverage(unsigned NumTypeIdxs) const;
+  static bool verifyTypeIdxsCoverage(unsigned NumTypeIdxs) ;
 
   /// Apply the ruleset to the given LegalityQuery.
   LegalizeActionStep apply(const LegalityQuery &Query) const;
@@ -751,7 +751,7 @@ public:
   LegalizerInfo();
   virtual ~LegalizerInfo() = default;
 
-  unsigned getOpcodeIdxForOpcode(unsigned Opcode) const;
+  static unsigned getOpcodeIdxForOpcode(unsigned Opcode) ;
   unsigned getActionDefinitionsIdx(unsigned Opcode) const;
 
   /// Compute any ancillary tables needed to quickly decide how an operation

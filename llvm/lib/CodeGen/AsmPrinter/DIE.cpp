@@ -470,7 +470,7 @@ void DIEExpr::EmitValue(const AsmPrinter *AP, dwarf::Form Form) const {
 
 /// SizeOf - Determine size of expression value in bytes.
 ///
-unsigned DIEExpr::SizeOf(const AsmPrinter *AP, dwarf::Form Form) const {
+unsigned DIEExpr::SizeOf(const AsmPrinter *AP, dwarf::Form Form) {
   if (Form == dwarf::DW_FORM_data4) return 4;
   if (Form == dwarf::DW_FORM_sec_offset) return 4;
   if (Form == dwarf::DW_FORM_strp) return 4;
@@ -496,7 +496,7 @@ void DIELabel::EmitValue(const AsmPrinter *AP, dwarf::Form Form) const {
 
 /// SizeOf - Determine size of label value in bytes.
 ///
-unsigned DIELabel::SizeOf(const AsmPrinter *AP, dwarf::Form Form) const {
+unsigned DIELabel::SizeOf(const AsmPrinter *AP, dwarf::Form Form) {
   if (Form == dwarf::DW_FORM_data4) return 4;
   if (Form == dwarf::DW_FORM_sec_offset) return 4;
   if (Form == dwarf::DW_FORM_strp) return 4;
@@ -518,7 +518,7 @@ void DIEDelta::EmitValue(const AsmPrinter *AP, dwarf::Form Form) const {
 
 /// SizeOf - Determine size of delta value in bytes.
 ///
-unsigned DIEDelta::SizeOf(const AsmPrinter *AP, dwarf::Form Form) const {
+unsigned DIEDelta::SizeOf(const AsmPrinter *AP, dwarf::Form Form) {
   if (Form == dwarf::DW_FORM_data4) return 4;
   if (Form == dwarf::DW_FORM_sec_offset) return 4;
   if (Form == dwarf::DW_FORM_strp) return 4;
@@ -781,7 +781,7 @@ void DIEBlock::print(raw_ostream &O) const {
 // DIELocList Implementation
 //===----------------------------------------------------------------------===//
 
-unsigned DIELocList::SizeOf(const AsmPrinter *AP, dwarf::Form Form) const {
+unsigned DIELocList::SizeOf(const AsmPrinter *AP, dwarf::Form Form) {
   if (Form == dwarf::DW_FORM_data4)
     return 4;
   if (Form == dwarf::DW_FORM_sec_offset)

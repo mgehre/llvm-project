@@ -170,7 +170,7 @@ public:
 
   // InstVisitor methods.  They return true if the instruction was scalarized,
   // false if nothing changed.
-  bool visitInstruction(Instruction &I) { return false; }
+  static bool visitInstruction(Instruction &I) { return false; }
   bool visitSelectInst(SelectInst &SI);
   bool visitICmpInst(ICmpInst &ICI);
   bool visitFCmpInst(FCmpInst &FCI);
@@ -189,7 +189,7 @@ private:
   void gather(Instruction *Op, const ValueVector &CV);
   bool canTransferMetadata(unsigned Kind);
   void transferMetadata(Instruction *Op, const ValueVector &CV);
-  bool getVectorLayout(Type *Ty, unsigned Alignment, VectorLayout &Layout,
+  static bool getVectorLayout(Type *Ty, unsigned Alignment, VectorLayout &Layout,
                        const DataLayout &DL);
   bool finish();
 

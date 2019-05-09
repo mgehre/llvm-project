@@ -31,7 +31,7 @@ struct Metadata {
 
 struct MsanMapUnmapCallback {
   void OnMap(uptr p, uptr size) const {}
-  void OnUnmap(uptr p, uptr size) const {
+  static void OnUnmap(uptr p, uptr size) {
     __msan_unpoison((void *)p, size);
 
     // We are about to unmap a chunk of user memory.

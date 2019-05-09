@@ -583,9 +583,9 @@ protected:
   /// For pointer induction, returns StartValue[Index * StepValue].
   /// FIXME: The newly created binary instructions should contain nsw/nuw
   /// flags, which can be found from the original scalar operations.
-  Value *emitTransformedIndex(IRBuilder<> &B, Value *Index, ScalarEvolution *SE,
+  static Value *emitTransformedIndex(IRBuilder<> &B, Value *Index, ScalarEvolution *SE,
                               const DataLayout &DL,
-                              const InductionDescriptor &ID) const;
+                              const InductionDescriptor &ID) ;
 
   /// Add additional metadata to \p To that was not present on \p Orig.
   ///
@@ -2615,7 +2615,7 @@ void InnerLoopVectorizer::emitMemRuntimeChecks(Loop *L, BasicBlock *Bypass) {
 
 Value *InnerLoopVectorizer::emitTransformedIndex(
     IRBuilder<> &B, Value *Index, ScalarEvolution *SE, const DataLayout &DL,
-    const InductionDescriptor &ID) const {
+    const InductionDescriptor &ID) {
 
   SCEVExpander Exp(*SE, DL, "induction");
   auto Step = ID.getStep();

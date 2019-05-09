@@ -1682,7 +1682,7 @@ public:
                         Destroyer *destroyer,
                         bool checkZeroLength, bool useEHCleanup);
 
-  Destroyer *getDestroyer(QualType::DestructionKind destructionKind);
+  static Destroyer *getDestroyer(QualType::DestructionKind destructionKind);
 
   /// Determines whether an EH cleanup is required to destroy a type
   /// with the given destruction kind.
@@ -2660,7 +2660,7 @@ public:
 
   /// Determine whether the given initializer is trivial in the sense
   /// that it requires no code to be generated.
-  bool isTrivialInitializer(const Expr *Init);
+  static bool isTrivialInitializer(const Expr *Init);
 
   /// EmitAutoVarDecl - Emit an auto variable declaration.
   ///
@@ -2795,7 +2795,7 @@ public:
   /// There's no particular reason why this shouldn't apply to
   /// l-values, it's just that no existing peepholes work on pointers.
   PeepholeProtection protectFromPeepholes(RValue rvalue);
-  void unprotectFromPeepholes(PeepholeProtection protection);
+  static void unprotectFromPeepholes(PeepholeProtection protection);
 
   void EmitAlignmentAssumptionCheck(llvm::Value *Ptr, QualType Ty,
                                     SourceLocation Loc,
@@ -3738,7 +3738,7 @@ public:
                             const char *name,
                             unsigned shift = 0, bool rightshift = false);
   llvm::Value *EmitNeonSplat(llvm::Value *V, llvm::Constant *Idx);
-  llvm::Value *EmitNeonShiftVector(llvm::Value *V, llvm::Type *Ty,
+  static llvm::Value *EmitNeonShiftVector(llvm::Value *V, llvm::Type *Ty,
                                    bool negateForRightShift);
   llvm::Value *EmitNeonRShiftImm(llvm::Value *Vec, llvm::Value *Amt,
                                  llvm::Type *Ty, bool usgn, const char *name);

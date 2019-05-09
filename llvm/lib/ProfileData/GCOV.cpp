@@ -824,7 +824,7 @@ void FileInfo::print(raw_ostream &InfoOS, StringRef MainFilename,
 
 /// printFunctionSummary - Print function and block summary.
 void FileInfo::printFunctionSummary(raw_ostream &OS,
-                                    const FunctionVector &Funcs) const {
+                                    const FunctionVector &Funcs) {
   for (const GCOVFunction *Func : Funcs) {
     uint64_t EntryCount = Func->getEntryCount();
     uint32_t BlocksExec = 0;
@@ -841,7 +841,7 @@ void FileInfo::printFunctionSummary(raw_ostream &OS,
 
 /// printBlockInfo - Output counts for each block.
 void FileInfo::printBlockInfo(raw_ostream &OS, const GCOVBlock &Block,
-                              uint32_t LineIndex, uint32_t &BlockNo) const {
+                              uint32_t LineIndex, uint32_t &BlockNo) {
   if (Block.getCount() == 0)
     OS << "    $$$$$:";
   else

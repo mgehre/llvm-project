@@ -3333,7 +3333,7 @@ namespace {
       return super::Visit(e->IgnoreParens());
     }
 
-    ACCResult VisitStmt(Stmt *s) {
+    static ACCResult VisitStmt(Stmt *s) {
       return ACC_invalid;
     }
 

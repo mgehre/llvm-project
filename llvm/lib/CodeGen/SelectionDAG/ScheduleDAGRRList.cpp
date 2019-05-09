@@ -1625,7 +1625,7 @@ namespace {
 class RegReductionPQBase;
 
 struct queue_sort {
-  bool isReady(SUnit* SU, unsigned CurCycle) const { return true; }
+  static bool isReady(SUnit* SU, unsigned CurCycle) { return true; }
 };
 
 #ifndef NDEBUG
@@ -1774,7 +1774,7 @@ public:
 
   unsigned getNodePriority(const SUnit *SU) const;
 
-  unsigned getNodeOrdering(const SUnit *SU) const {
+  static unsigned getNodeOrdering(const SUnit *SU) {
     if (!SU->getNode()) return 0;
 
     return SU->getNode()->getIROrder();

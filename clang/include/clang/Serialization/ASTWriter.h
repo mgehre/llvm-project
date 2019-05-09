@@ -485,7 +485,7 @@ private:
   void WriteTypeAbbrevs();
   void WriteType(QualType T);
 
-  bool isLookupResultExternal(StoredDeclsList &Result, DeclContext *DC);
+  static bool isLookupResultExternal(StoredDeclsList &Result, DeclContext *DC);
   bool isLookupResultEntirelyExternal(StoredDeclsList &Result, DeclContext *DC);
 
   void GenerateNameLookupTable(const DeclContext *DC,
@@ -577,10 +577,10 @@ public:
   void AddToken(const Token &Tok, RecordDataImpl &Record);
 
   /// Emit a source location.
-  void AddSourceLocation(SourceLocation Loc, RecordDataImpl &Record);
+  static void AddSourceLocation(SourceLocation Loc, RecordDataImpl &Record);
 
   /// Emit a source range.
-  void AddSourceRange(SourceRange Range, RecordDataImpl &Record);
+  static void AddSourceRange(SourceRange Range, RecordDataImpl &Record);
 
   /// Emit a reference to an identifier.
   void AddIdentifierRef(const IdentifierInfo *II, RecordDataImpl &Record);
@@ -636,7 +636,7 @@ public:
   unsigned getAnonymousDeclarationNumber(const NamedDecl *D);
 
   /// Add a string to the given record.
-  void AddString(StringRef Str, RecordDataImpl &Record);
+  static void AddString(StringRef Str, RecordDataImpl &Record);
 
   /// Convert a path from this build process into one that is appropriate
   /// for emission in the module file.
@@ -650,7 +650,7 @@ public:
                           StringRef Path);
 
   /// Add a version tuple to the given record
-  void AddVersionTuple(const VersionTuple &Version, RecordDataImpl &Record);
+  static void AddVersionTuple(const VersionTuple &Version, RecordDataImpl &Record);
 
   /// Retrieve or create a submodule ID for this module, or return 0 if
   /// the submodule is neither local (a submodle of the currently-written module)

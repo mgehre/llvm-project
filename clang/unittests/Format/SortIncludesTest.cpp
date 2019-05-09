@@ -20,7 +20,7 @@ namespace {
 
 class SortIncludesTest : public ::testing::Test {
 protected:
-  std::vector<tooling::Range> GetCodeRange(StringRef Code) {
+  static std::vector<tooling::Range> GetCodeRange(StringRef Code) {
     return std::vector<tooling::Range>(1, tooling::Range(0, Code.size()));
   }
 

@@ -125,7 +125,7 @@ struct format_xray_record : public FormatAdapter<XRayRecord> {
   }
 
 private:
-  Twine DecodeRecordType(uint16_t recordType) {
+  static Twine DecodeRecordType(uint16_t recordType) {
     switch (recordType) {
     case 0:
       return Twine("Fn Entry");
@@ -448,7 +448,7 @@ public:
 
   bool isEmpty() const { return Roots.empty(); }
 
-  void printStack(raw_ostream &OS, const StackTrieNode *Top,
+  static void printStack(raw_ostream &OS, const StackTrieNode *Top,
                   FuncIdConversionHelper &FN) {
     // Traverse the pointers up to the parent, noting the sums, then print
     // in reverse order (callers at top, callees down bottom).
@@ -600,7 +600,7 @@ public:
     OS << " " << GetValueForStack<AggType>(Node) << "\n";
   }
 
-  void print(raw_ostream &OS, FuncIdConversionHelper &FN,
+  static void print(raw_ostream &OS, FuncIdConversionHelper &FN,
              RootVector RootValues) {
     // Go through each of the roots, and traverse the call stack, producing the
     // aggregates as you go along. Remember these aggregates and stacks, and

@@ -190,7 +190,7 @@ EmitCopyFromReg(SDNode *Node, unsigned ResNo, bool IsClone, bool IsCloned,
 /// getDstOfCopyToRegUse - If the only use of the specified result number of
 /// node is a CopyToReg, return its destination register. Return 0 otherwise.
 unsigned InstrEmitter::getDstOfOnlyCopyToRegUse(SDNode *Node,
-                                                unsigned ResNo) const {
+                                                unsigned ResNo) {
   if (!Node->hasOneUse())
     return 0;
 

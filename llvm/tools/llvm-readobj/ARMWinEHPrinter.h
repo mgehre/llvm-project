@@ -127,14 +127,14 @@ class Decoder {
 
   void printRegisters(const std::pair<uint16_t, uint32_t> &RegisterMask);
 
-  ErrorOr<object::SectionRef>
+  static ErrorOr<object::SectionRef>
   getSectionContaining(const object::COFFObjectFile &COFF, uint64_t Address);
 
-  ErrorOr<object::SymbolRef>
+  static ErrorOr<object::SymbolRef>
   getSymbol(const object::COFFObjectFile &COFF, uint64_t Address,
             bool FunctionOnly = false);
 
-  ErrorOr<object::SymbolRef>
+  static ErrorOr<object::SymbolRef>
   getRelocatedSymbol(const object::COFFObjectFile &COFF,
                      const object::SectionRef &Section, uint64_t Offset);
 

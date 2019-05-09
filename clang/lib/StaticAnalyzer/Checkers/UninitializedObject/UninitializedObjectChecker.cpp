@@ -46,7 +46,7 @@ public:
       : BT_uninitField(new BuiltinBug(this, "Uninitialized fields")) {}
 
   void checkEndFunction(const ReturnStmt *RS, CheckerContext &C) const;
-  void checkDeadSymbols(SymbolReaper &SR, CheckerContext &C) const;
+  static void checkDeadSymbols(SymbolReaper &SR, CheckerContext &C) ;
 };
 
 /// A basic field type, that is not a pointer or a reference, it's dynamic and
@@ -202,7 +202,7 @@ void UninitializedObjectChecker::checkEndFunction(
 }
 
 void UninitializedObjectChecker::checkDeadSymbols(SymbolReaper &SR,
-                                                  CheckerContext &C) const {
+                                                  CheckerContext &C) {
   ProgramStateRef State = C.getState();
   for (const MemRegion *R : State->get<AnalyzedRegions>()) {
     if (!SR.isLiveRegion(R))

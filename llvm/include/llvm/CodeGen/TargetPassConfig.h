@@ -169,8 +169,8 @@ public:
   /// If hasLimitedCodeGenPipeline is true, this method
   /// returns a string with the name of the options, separated
   /// by \p Separator that caused this pipeline to be limited.
-  std::string
-  getLimitedCodeGenPipelineReason(const char *Separator = "/") const;
+  static std::string
+  getLimitedCodeGenPipelineReason(const char *Separator = "/") ;
 
   void setDisableVerify(bool Disable) { setOpt(DisableVerify, Disable); }
 
@@ -212,7 +212,7 @@ public:
 
   /// Return true if the default global register allocator is in use and
   /// has not be overriden on the command line with '-regalloc=...'
-  bool usingDefaultRegAlloc() const;
+  static bool usingDefaultRegAlloc() ;
 
   /// High level function that adds all passes necessary to go from llvm IR
   /// representation to the MI representation.
@@ -321,7 +321,7 @@ public:
 
 protected:
   // Helper to verify the analysis is really immutable.
-  void setOpt(bool &Opt, bool Val);
+  static void setOpt(bool &Opt, bool Val);
 
   /// Methods with trivial inline returns are convenient points in the common
   /// codegen pass pipeline where targets may insert passes. Methods with

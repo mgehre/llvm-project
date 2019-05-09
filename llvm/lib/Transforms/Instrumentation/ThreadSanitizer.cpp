@@ -101,11 +101,11 @@ private:
   bool instrumentLoadOrStore(Instruction *I, const DataLayout &DL);
   bool instrumentAtomic(Instruction *I, const DataLayout &DL);
   bool instrumentMemIntrinsic(Instruction *I);
-  void chooseInstructionsToInstrument(SmallVectorImpl<Instruction *> &Local,
+  static void chooseInstructionsToInstrument(SmallVectorImpl<Instruction *> &Local,
                                       SmallVectorImpl<Instruction *> &All,
                                       const DataLayout &DL);
-  bool addrPointsToConstantData(Value *Addr);
-  int getMemoryAccessFuncIndex(Value *Addr, const DataLayout &DL);
+  static bool addrPointsToConstantData(Value *Addr);
+  static int getMemoryAccessFuncIndex(Value *Addr, const DataLayout &DL);
   void InsertRuntimeIgnores(Function &F);
 
   Type *IntptrTy;

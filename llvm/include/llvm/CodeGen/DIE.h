@@ -208,7 +208,7 @@ public:
   const MCExpr *getValue() const { return Expr; }
 
   void EmitValue(const AsmPrinter *AP, dwarf::Form Form) const;
-  unsigned SizeOf(const AsmPrinter *AP, dwarf::Form Form) const;
+  static unsigned SizeOf(const AsmPrinter *AP, dwarf::Form Form) ;
 
   void print(raw_ostream &O) const;
 };
@@ -225,7 +225,7 @@ public:
   const MCSymbol *getValue() const { return Label; }
 
   void EmitValue(const AsmPrinter *AP, dwarf::Form Form) const;
-  unsigned SizeOf(const AsmPrinter *AP, dwarf::Form Form) const;
+  static unsigned SizeOf(const AsmPrinter *AP, dwarf::Form Form) ;
 
   void print(raw_ostream &O) const;
 };
@@ -241,7 +241,7 @@ public:
   DIEDelta(const MCSymbol *Hi, const MCSymbol *Lo) : LabelHi(Hi), LabelLo(Lo) {}
 
   void EmitValue(const AsmPrinter *AP, dwarf::Form Form) const;
-  unsigned SizeOf(const AsmPrinter *AP, dwarf::Form Form) const;
+  static unsigned SizeOf(const AsmPrinter *AP, dwarf::Form Form) ;
 
   void print(raw_ostream &O) const;
 };
@@ -320,7 +320,7 @@ public:
   size_t getValue() const { return Index; }
 
   void EmitValue(const AsmPrinter *AP, dwarf::Form Form) const;
-  unsigned SizeOf(const AsmPrinter *AP, dwarf::Form Form) const;
+  static unsigned SizeOf(const AsmPrinter *AP, dwarf::Form Form) ;
 
   void print(raw_ostream &O) const;
 };

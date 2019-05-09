@@ -1802,7 +1802,7 @@ bool MemoryDependenceResults::invalidate(Function &F, const PreservedAnalyses &P
   return false;
 }
 
-unsigned MemoryDependenceResults::getDefaultBlockScanLimit() const {
+unsigned MemoryDependenceResults::getDefaultBlockScanLimit() {
   return BlockScanLimit;
 }
 

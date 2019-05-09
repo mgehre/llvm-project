@@ -248,7 +248,7 @@ class LoopPredication {
   BasicBlock *Preheader;
   LoopICmp LatchCheck;
 
-  bool isSupportedStep(const SCEV* Step);
+  static bool isSupportedStep(const SCEV* Step);
   Optional<LoopICmp> parseLoopICmp(ICmpInst *ICI) {
     return parseLoopICmp(ICI->getPredicate(), ICI->getOperand(0),
                          ICI->getOperand(1));

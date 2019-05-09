@@ -721,7 +721,7 @@ llvm::ConstantInt *CodeGenModule::getSize(CharUnits size) {
 }
 
 void CodeGenModule::setGlobalVisibility(llvm::GlobalValue *GV,
-                                        const NamedDecl *D) const {
+                                        const NamedDecl *D) {
   if (GV->hasDLLImportStorageClass())
     return;
   // Internal definitions always have default visibility.
@@ -825,7 +825,7 @@ void CodeGenModule::setDLLImportDLLExport(llvm::GlobalValue *GV,
 }
 
 void CodeGenModule::setDLLImportDLLExport(llvm::GlobalValue *GV,
-                                          const NamedDecl *D) const {
+                                          const NamedDecl *D) {
   if (D && D->isExternallyVisible()) {
     if (D->hasAttr<DLLImportAttr>())
       GV->setDLLStorageClass(llvm::GlobalVariable::DLLImportStorageClass);
@@ -2302,7 +2302,7 @@ namespace {
       : public RecursiveASTVisitor<DLLImportFunctionVisitor> {
     bool SafeToInline = true;
 
-    bool shouldVisitImplicitCode() const { return true; }
+    static bool shouldVisitImplicitCode() { return true; }
 
     bool VisitVarDecl(VarDecl *VD) {
       if (VD->getTLSKind()) {

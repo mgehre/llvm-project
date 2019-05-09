@@ -1317,9 +1317,9 @@ SVal SimpleSValBuilder::simplifySVal(ProgramStateRef State, SVal V) {
           S, SVB.evalBinOp(State, S->getOpcode(), LHS, RHS, S->getType()));
     }
 
-    SVal VisitSymExpr(SymbolRef S) { return nonloc::SymbolVal(S); }
+    static SVal VisitSymExpr(SymbolRef S) { return nonloc::SymbolVal(S); }
 
-    SVal VisitMemRegion(const MemRegion *R) { return loc::MemRegionVal(R); }
+    static SVal VisitMemRegion(const MemRegion *R) { return loc::MemRegionVal(R); }
 
     SVal VisitNonLocSymbolVal(nonloc::SymbolVal V) {
       // Simplification is much more costly than computing complexity.
@@ -1327,7 +1327,7 @@ SVal SimpleSValBuilder::simplifySVal(ProgramStateRef State, SVal V) {
       return Visit(V.getSymbol());
     }
 
-    SVal VisitSVal(SVal V) { return V; }
+    static SVal VisitSVal(SVal V) { return V; }
   };
 
   // A crude way of preventing this function from calling itself from evalBinOp.

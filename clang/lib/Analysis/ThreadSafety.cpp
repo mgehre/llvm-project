@@ -979,9 +979,9 @@ public:
   }
 
 private:
-  void lock(FactSet &FSet, FactManager &FactMan, const CapabilityExpr &Cp,
+  static void lock(FactSet &FSet, FactManager &FactMan, const CapabilityExpr &Cp,
             LockKind kind, SourceLocation loc, ThreadSafetyHandler *Handler,
-            StringRef DiagKind) const {
+            StringRef DiagKind) {
     if (!FSet.findLock(FactMan, Cp)) {
       FSet.removeLock(FactMan, !Cp);
       FSet.addLock(FactMan,
@@ -991,9 +991,9 @@ private:
     }
   }
 
-  void unlock(FactSet &FSet, FactManager &FactMan, const CapabilityExpr &Cp,
+  static void unlock(FactSet &FSet, FactManager &FactMan, const CapabilityExpr &Cp,
               SourceLocation loc, ThreadSafetyHandler *Handler,
-              StringRef DiagKind) const {
+              StringRef DiagKind) {
     if (FSet.findLock(FactMan, Cp)) {
       FSet.removeLock(FactMan, Cp);
       FSet.addLock(FactMan, llvm::make_unique<LockableFactEntry>(

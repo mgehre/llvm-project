@@ -142,15 +142,15 @@ class IndVarSimplify {
 
   bool simplifyAndExtend(Loop *L, SCEVExpander &Rewriter, LoopInfo *LI);
 
-  bool canLoopBeDeleted(Loop *L, SmallVector<RewritePhi, 8> &RewritePhiSet);
+  static bool canLoopBeDeleted(Loop *L, SmallVector<RewritePhi, 8> &RewritePhiSet);
   bool rewriteLoopExitValues(Loop *L, SCEVExpander &Rewriter);
-  bool rewriteFirstIterationLoopExitValues(Loop *L);
-  bool hasHardUserWithinLoop(const Loop *L, const Instruction *I) const;
+  static bool rewriteFirstIterationLoopExitValues(Loop *L);
+  static bool hasHardUserWithinLoop(const Loop *L, const Instruction *I) ;
 
   bool linearFunctionTestReplace(Loop *L, const SCEV *BackedgeTakenCount,
                                  PHINode *IndVar, SCEVExpander &Rewriter);
 
-  bool sinkUnusedInvariants(Loop *L);
+  static bool sinkUnusedInvariants(Loop *L);
 
 public:
   IndVarSimplify(LoopInfo *LI, ScalarEvolution *SE, DominatorTree *DT,
@@ -525,7 +525,7 @@ struct RewritePhi {
 // As a side effect, reduces the amount of IV processing within the loop.
 //===----------------------------------------------------------------------===//
 
-bool IndVarSimplify::hasHardUserWithinLoop(const Loop *L, const Instruction *I) const {
+bool IndVarSimplify::hasHardUserWithinLoop(const Loop *L, const Instruction *I) {
   SmallPtrSet<const Instruction *, 8> Visited;
   SmallVector<const Instruction *, 8> WorkList;
   Visited.insert(I);

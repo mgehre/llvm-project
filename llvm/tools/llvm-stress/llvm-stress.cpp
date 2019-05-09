@@ -74,7 +74,7 @@ public:
   parser(Option &O) : basic_parser(O) {}
 
   // Parse options as IR types. Return true on error.
-  bool parse(Option &O, StringRef, StringRef Arg, Type *&Value) {
+  static bool parse(Option &O, StringRef, StringRef Arg, Type *&Value) {
     if      (Arg == "half")      Value = Type::getHalfTy(Context);
     else if (Arg == "fp128")     Value = Type::getFP128Ty(Context);
     else if (Arg == "x86_fp80")  Value = Type::getX86_FP80Ty(Context);

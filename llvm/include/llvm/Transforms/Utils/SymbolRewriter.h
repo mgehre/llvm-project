@@ -94,21 +94,21 @@ using RewriteDescriptorList = std::list<std::unique_ptr<RewriteDescriptor>>;
 
 class RewriteMapParser {
 public:
-  bool parse(const std::string &MapFile, RewriteDescriptorList *Descriptors);
+  static bool parse(const std::string &MapFile, RewriteDescriptorList *Descriptors);
 
 private:
-  bool parse(std::unique_ptr<MemoryBuffer> &MapFile, RewriteDescriptorList *DL);
-  bool parseEntry(yaml::Stream &Stream, yaml::KeyValueNode &Entry,
+  static bool parse(std::unique_ptr<MemoryBuffer> &MapFile, RewriteDescriptorList *DL);
+  static bool parseEntry(yaml::Stream &Stream, yaml::KeyValueNode &Entry,
                   RewriteDescriptorList *DL);
-  bool parseRewriteFunctionDescriptor(yaml::Stream &Stream,
+  static bool parseRewriteFunctionDescriptor(yaml::Stream &Stream,
                                       yaml::ScalarNode *Key,
                                       yaml::MappingNode *Value,
                                       RewriteDescriptorList *DL);
-  bool parseRewriteGlobalVariableDescriptor(yaml::Stream &Stream,
+  static bool parseRewriteGlobalVariableDescriptor(yaml::Stream &Stream,
                                             yaml::ScalarNode *Key,
                                             yaml::MappingNode *Value,
                                             RewriteDescriptorList *DL);
-  bool parseRewriteGlobalAliasDescriptor(yaml::Stream &YS, yaml::ScalarNode *K,
+  static bool parseRewriteGlobalAliasDescriptor(yaml::Stream &YS, yaml::ScalarNode *K,
                                          yaml::MappingNode *V,
                                          RewriteDescriptorList *DL);
 };

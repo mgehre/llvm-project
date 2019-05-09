@@ -486,7 +486,7 @@ public:
                       Distribution &Dist);
 
   /// Compute the loop scale for a loop.
-  void computeLoopScale(LoopData &Loop);
+  static void computeLoopScale(LoopData &Loop);
 
   /// Adjust the mass of all headers in an irreducible loop.
   ///

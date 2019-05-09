@@ -103,7 +103,7 @@ namespace llvm {
 /// any need to consider simplifications or other transformations.
 struct SpeculateAroundPHIsPass : PassInfoMixin<SpeculateAroundPHIsPass> {
   /// Run the pass over the function.
-  PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
+  static PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
 };
 
 } // end namespace llvm

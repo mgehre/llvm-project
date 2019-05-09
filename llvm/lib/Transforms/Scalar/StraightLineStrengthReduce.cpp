@@ -171,12 +171,12 @@ private:
   bool isBasisFor(const Candidate &Basis, const Candidate &C);
 
   // Returns whether the candidate can be folded into an addressing mode.
-  bool isFoldable(const Candidate &C, TargetTransformInfo *TTI,
+  static bool isFoldable(const Candidate &C, TargetTransformInfo *TTI,
                   const DataLayout *DL);
 
   // Returns true if C is already in a simplest form and not worth being
   // rewritten.
-  bool isSimplestForm(const Candidate &C);
+  static bool isSimplestForm(const Candidate &C);
 
   // Checks whether I is in a candidate form. If so, adds all the matching forms
   // to Candidates, and tries to find the immediate basis for each of them.

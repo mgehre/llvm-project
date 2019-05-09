@@ -23,7 +23,7 @@ class ClangDocSerializeTestVisitor
   EmittedInfoList &EmittedInfos;
   bool Public;
 
-  comments::FullComment *getComment(const NamedDecl *D) const {
+  static comments::FullComment *getComment(const NamedDecl *D) {
     if (RawComment *Comment =
             D->getASTContext().getRawCommentForDeclNoCache(D)) {
       Comment->setAttached();

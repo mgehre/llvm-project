@@ -33,7 +33,7 @@ public:
   PostDominatorTree() = default;
   explicit PostDominatorTree(Function &F) { recalculate(F); }
   /// Handle invalidation explicitly.
-  bool invalidate(Function &F, const PreservedAnalyses &PA,
+  static bool invalidate(Function &F, const PreservedAnalyses &PA,
                   FunctionAnalysisManager::Invalidator &);
 };
 
@@ -50,7 +50,7 @@ public:
 
   /// Run the analysis pass over a function and produce a post dominator
   ///        tree.
-  PostDominatorTree run(Function &F, FunctionAnalysisManager &);
+  static PostDominatorTree run(Function &F, FunctionAnalysisManager &);
 };
 
 /// Printer pass for the \c PostDominatorTree.

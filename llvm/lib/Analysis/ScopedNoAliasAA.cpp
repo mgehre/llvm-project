@@ -136,7 +136,7 @@ static void collectMDInDomain(const MDNode *List, const MDNode *Domain,
 }
 
 bool ScopedNoAliasAAResult::mayAliasInScopes(const MDNode *Scopes,
-                                             const MDNode *NoAlias) const {
+                                             const MDNode *NoAlias) {
   if (!Scopes || !NoAlias)
     return true;
 

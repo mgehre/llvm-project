@@ -575,7 +575,7 @@ public:
 private:
   ValueTable VN;
 
-  bool isInstructionBlacklisted(Instruction *I) {
+  static bool isInstructionBlacklisted(Instruction *I) {
     // These instructions may change or break semantics if moved.
     if (isa<PHINode>(I) || I->isEHPad() || isa<AllocaInst>(I) ||
         I->getType()->isTokenTy())
@@ -591,7 +591,7 @@ private:
       ModelledPHISet &NeededPHIs, SmallPtrSetImpl<Value *> &PHIContents);
 
   /// Create a ModelledPHI for each PHI in BB, adding to PHIs.
-  void analyzeInitialPHIs(BasicBlock *BB, ModelledPHISet &PHIs,
+  static void analyzeInitialPHIs(BasicBlock *BB, ModelledPHISet &PHIs,
                           SmallPtrSetImpl<Value *> &PHIContents) {
     for (PHINode &PN : BB->phis()) {
       auto MPHI = ModelledPHI(&PN);
@@ -607,10 +607,10 @@ private:
 
   /// Perform the actual mechanics of sinking an instruction from Blocks into
   /// BBEnd, which is their only successor.
-  void sinkLastInstruction(ArrayRef<BasicBlock *> Blocks, BasicBlock *BBEnd);
+  static void sinkLastInstruction(ArrayRef<BasicBlock *> Blocks, BasicBlock *BBEnd);
 
   /// Remove PHIs that all have the same incoming value.
-  void foldPointlessPHINodes(BasicBlock *BB) {
+  static void foldPointlessPHINodes(BasicBlock *BB) {
     auto I = BB->begin();
     while (PHINode *PN = dyn_cast<PHINode>(I++)) {
       if (!llvm::all_of(PN->incoming_values(), [&](const Value *V) {

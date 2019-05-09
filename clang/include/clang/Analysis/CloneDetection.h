@@ -262,7 +262,7 @@ public:
 /// through a more detailed analysis.
 class RecursiveCloneTypeIIHashConstraint {
 public:
-  void constrain(std::vector<CloneDetector::CloneGroup> &Sequences);
+  static void constrain(std::vector<CloneDetector::CloneGroup> &Sequences);
 };
 
 /// This constraint moves clones into clone groups of type II by comparing them.
@@ -273,7 +273,7 @@ public:
 /// slow to efficiently handle large amounts of clones.
 class RecursiveCloneTypeIIVerifyConstraint {
 public:
-  void constrain(std::vector<CloneDetector::CloneGroup> &Sequences);
+  static void constrain(std::vector<CloneDetector::CloneGroup> &Sequences);
 };
 
 /// Ensures that every clone has at least the given complexity.
@@ -325,7 +325,7 @@ public:
 
 /// Ensures that no clone group fully contains another clone group.
 struct OnlyLargestCloneConstraint {
-  void constrain(std::vector<CloneDetector::CloneGroup> &Result);
+  static void constrain(std::vector<CloneDetector::CloneGroup> &Result);
 };
 
 struct FilenamePatternConstraint {
@@ -439,7 +439,7 @@ public:
 
 /// Ensures that all clones reference variables in the same pattern.
 struct MatchingVariablePatternConstraint {
-  void constrain(std::vector<CloneDetector::CloneGroup> &CloneGroups);
+  static void constrain(std::vector<CloneDetector::CloneGroup> &CloneGroups);
 };
 
 } // end namespace clang

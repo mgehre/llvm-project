@@ -165,7 +165,7 @@ private:
   void printDelayImportedSymbols(
       const DelayImportDirectoryEntryRef &I,
       iterator_range<imported_symbol_iterator> Range);
-  ErrorOr<const coff_resource_dir_entry &>
+  static ErrorOr<const coff_resource_dir_entry &>
   getResourceDirectoryTableEntry(const coff_resource_dir_table &Table,
                                  uint32_t Index);
 

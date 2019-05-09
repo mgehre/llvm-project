@@ -61,7 +61,7 @@ public:
 
     // FIXME: Scan the map once in the visitor's constructor and do a direct
     // lookup by region.
-    bool isSymbolTracked(ProgramStateRef State, SymbolRef Sym) {
+    static bool isSymbolTracked(ProgramStateRef State, SymbolRef Sym) {
       RawPtrMapTy Map = State->get<RawPtrMap>();
       for (const auto Entry : Map) {
         if (Entry.second.contains(Sym))
@@ -93,15 +93,15 @@ public:
 
   /// Mark pointer symbols associated with the given memory region released
   /// in the program state.
-  void markPtrSymbolsReleased(const CallEvent &Call, ProgramStateRef State,
+  static void markPtrSymbolsReleased(const CallEvent &Call, ProgramStateRef State,
                               const MemRegion *ObjRegion,
-                              CheckerContext &C) const;
+                              CheckerContext &C) ;
 
   /// Standard library functions that take a non-const `basic_string` argument by
   /// reference may invalidate its inner pointers. Check for these cases and
   /// mark the pointers released.
-  void checkFunctionArguments(const CallEvent &Call, ProgramStateRef State,
-                              CheckerContext &C) const;
+  static void checkFunctionArguments(const CallEvent &Call, ProgramStateRef State,
+                              CheckerContext &C) ;
 
   /// Record the connection between raw pointers referring to a container
   /// object's inner buffer and the object's memory region in the program state.
@@ -109,7 +109,7 @@ public:
   void checkPostCall(const CallEvent &Call, CheckerContext &C) const;
 
   /// Clean up the program state map.
-  void checkDeadSymbols(SymbolReaper &SymReaper, CheckerContext &C) const;
+  static void checkDeadSymbols(SymbolReaper &SymReaper, CheckerContext &C) ;
 };
 
 } // end anonymous namespace
@@ -134,7 +134,7 @@ bool InnerPointerChecker::isInvalidatingMemberFunction(
 void InnerPointerChecker::markPtrSymbolsReleased(const CallEvent &Call,
                                                  ProgramStateRef State,
                                                  const MemRegion *MR,
-                                                 CheckerContext &C) const {
+                                                 CheckerContext &C) {
   if (const PtrSet *PS = State->get<RawPtrMap>(MR)) {
     const Expr *Origin = Call.getOriginExpr();
     for (const auto Symbol : *PS) {
@@ -150,7 +150,7 @@ void InnerPointerChecker::markPtrSymbolsReleased(const CallEvent &Call,
 
 void InnerPointerChecker::checkFunctionArguments(const CallEvent &Call,
                                                  ProgramStateRef State,
-                                                 CheckerContext &C) const {
+                                                 CheckerContext &C) {
   if (const auto *FC = dyn_cast<AnyFunctionCall>(&Call)) {
     const FunctionDecl *FD = FC->getDecl();
     if (!FD || !FD->isInStdNamespace())
@@ -233,7 +233,7 @@ void InnerPointerChecker::checkPostCall(const CallEvent &Call,
 }
 
 void InnerPointerChecker::checkDeadSymbols(SymbolReaper &SymReaper,
-                                           CheckerContext &C) const {
+                                           CheckerContext &C) {
   ProgramStateRef State = C.getState();
   PtrSet::Factory &F = State->getStateManager().get_context<PtrSet>();
   RawPtrMapTy RPM = State->get<RawPtrMap>();

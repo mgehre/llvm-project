@@ -96,7 +96,7 @@ struct CGRecordLowering {
   CGRecordLowering(CodeGenTypes &Types, const RecordDecl *D, bool Packed);
   // Short helper routines.
   /// Constructs a MemberInfo instance from an offset and llvm::Type *.
-  MemberInfo StorageInfo(CharUnits Offset, llvm::Type *Data) {
+  static MemberInfo StorageInfo(CharUnits Offset, llvm::Type *Data) {
     return MemberInfo(Offset, MemberInfo::Field, Data);
   }
 

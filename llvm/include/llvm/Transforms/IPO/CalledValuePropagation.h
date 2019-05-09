@@ -28,7 +28,7 @@ namespace llvm {
 class CalledValuePropagationPass
     : public PassInfoMixin<CalledValuePropagationPass> {
 public:
-  PreservedAnalyses run(Module &M, ModuleAnalysisManager &);
+  static PreservedAnalyses run(Module &M, ModuleAnalysisManager &);
 };
 } // namespace llvm
 

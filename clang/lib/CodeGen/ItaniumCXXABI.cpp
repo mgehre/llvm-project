@@ -64,7 +64,7 @@ public:
 
   bool classifyReturnType(CGFunctionInfo &FI) const override;
 
-  bool passClassIndirect(const CXXRecordDecl *RD) const {
+  static bool passClassIndirect(const CXXRecordDecl *RD) {
     return !canCopyArgument(RD);
   }
 

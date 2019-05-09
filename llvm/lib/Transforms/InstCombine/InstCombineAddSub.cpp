@@ -80,7 +80,7 @@ namespace {
     bool isMinusTwo() const { return isInt() && IntVal == -2; }
 
   private:
-    bool insaneIntVal(int V) { return V > 4 || V < -4; }
+    static bool insaneIntVal(int V) { return V > 4 || V < -4; }
 
     APFloat *getFpValPtr()
       { return reinterpret_cast<APFloat *>(&FpValBuf.buffer[0]); }
@@ -107,7 +107,7 @@ namespace {
     // Construct an APFloat from a signed integer.
     // TODO: We should get rid of this function when APFloat can be constructed
     //       from an *SIGNED* integer.
-    APFloat createAPFloatFromInt(const fltSemantics &Sem, int Val);
+    static APFloat createAPFloatFromInt(const fltSemantics &Sem, int Val);
 
     bool IsFp = false;
 
@@ -190,7 +190,7 @@ namespace {
     Value *createAddendVal(const FAddend &A, bool& NeedNeg);
 
     /// Return the number of instructions needed to emit the N-ary addition.
-    unsigned calcInstrNumber(const AddendVect& Vect);
+    static unsigned calcInstrNumber(const AddendVect& Vect);
 
     Value *createFSub(Value *Opnd0, Value *Opnd1);
     Value *createFAdd(Value *Opnd0, Value *Opnd1);

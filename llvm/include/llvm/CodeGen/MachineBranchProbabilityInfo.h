@@ -46,29 +46,29 @@ public:
   }
 
   // Return edge probability.
-  BranchProbability getEdgeProbability(const MachineBasicBlock *Src,
-                                       const MachineBasicBlock *Dst) const;
+  static BranchProbability getEdgeProbability(const MachineBasicBlock *Src,
+                                       const MachineBasicBlock *Dst) ;
 
   // Same as above, but using a const_succ_iterator from Src. This is faster
   // when the iterator is already available.
-  BranchProbability
+  static BranchProbability
   getEdgeProbability(const MachineBasicBlock *Src,
-                     MachineBasicBlock::const_succ_iterator Dst) const;
+                     MachineBasicBlock::const_succ_iterator Dst) ;
 
   // A 'Hot' edge is an edge which probability is >= 80%.
-  bool isEdgeHot(const MachineBasicBlock *Src,
-                 const MachineBasicBlock *Dst) const;
+  static bool isEdgeHot(const MachineBasicBlock *Src,
+                 const MachineBasicBlock *Dst) ;
 
   // Return a hot successor for the block BB or null if there isn't one.
   // NB: This routine's complexity is linear on the number of successors.
-  MachineBasicBlock *getHotSucc(MachineBasicBlock *MBB) const;
+  static MachineBasicBlock *getHotSucc(MachineBasicBlock *MBB) ;
 
   // Print value between 0 (0% probability) and 1 (100% probability),
   // however the value is never equal to 0, and can be 1 only iff SRC block
   // has only one successor.
-  raw_ostream &printEdgeProbability(raw_ostream &OS,
+  static raw_ostream &printEdgeProbability(raw_ostream &OS,
                                     const MachineBasicBlock *Src,
-                                    const MachineBasicBlock *Dst) const;
+                                    const MachineBasicBlock *Dst) ;
 };
 
 }

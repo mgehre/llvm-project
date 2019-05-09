@@ -249,7 +249,7 @@ class GuardWideningImpl {
   /// them into \p CombinedChecks.  Return true on success (i.e. all of checks
   /// in \p Checks were combined into \p CombinedChecks).  Clobbers \p Checks
   /// and \p CombinedChecks on success and on failure.
-  bool combineRangeChecks(SmallVectorImpl<RangeCheck> &Checks,
+  static bool combineRangeChecks(SmallVectorImpl<RangeCheck> &Checks,
                           SmallVectorImpl<RangeCheck> &CombinedChecks);
 
   /// Can we compute the logical AND of \p Cond0 and \p Cond1 for the price of

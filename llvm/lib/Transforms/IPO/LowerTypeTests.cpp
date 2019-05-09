@@ -390,7 +390,7 @@ class LowerTypeTestsModule {
   void importTypeTest(CallInst *CI);
   void importFunction(Function *F, bool isDefinition);
 
-  BitSetInfo
+  static BitSetInfo
   buildBitSet(Metadata *TypeId,
               const DenseMap<GlobalTypeMember *, uint64_t> &GlobalLayout);
   ByteArrayInfo *createByteArray(BitSetInfo &BSI);
@@ -407,10 +407,10 @@ class LowerTypeTestsModule {
                                        ArrayRef<GlobalTypeMember *> Globals);
   unsigned getJumpTableEntrySize();
   Type *getJumpTableEntryType();
-  void createJumpTableEntry(raw_ostream &AsmOS, raw_ostream &ConstraintOS,
+  static void createJumpTableEntry(raw_ostream &AsmOS, raw_ostream &ConstraintOS,
                             Triple::ArchType JumpTableArch,
                             SmallVectorImpl<Value *> &AsmArgs, Function *Dest);
-  void verifyTypeMDNode(GlobalObject *GO, MDNode *Type);
+  static void verifyTypeMDNode(GlobalObject *GO, MDNode *Type);
   void buildBitSetsFromFunctions(ArrayRef<Metadata *> TypeIds,
                                  ArrayRef<GlobalTypeMember *> Functions);
   void buildBitSetsFromFunctionsNative(ArrayRef<Metadata *> TypeIds,
@@ -434,11 +434,11 @@ class LowerTypeTestsModule {
   /// the block. 'This's use list is expected to have at least one element.
   /// Unlike replaceAllUsesWith this function skips blockaddr and direct call
   /// uses.
-  void replaceCfiUses(Function *Old, Value *New, bool IsDefinition);
+  static void replaceCfiUses(Function *Old, Value *New, bool IsDefinition);
 
   /// replaceDirectCalls - Go through the uses list for this definition and
   /// replace each use, which is a direct function call.
-  void replaceDirectCalls(Value *Old, Value *New);
+  static void replaceDirectCalls(Value *Old, Value *New);
 
 public:
   LowerTypeTestsModule(Module &M, ModuleSummaryIndex *ExportSummary,

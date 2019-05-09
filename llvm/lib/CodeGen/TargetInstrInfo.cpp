@@ -44,7 +44,7 @@ TargetInstrInfo::~TargetInstrInfo() {
 const TargetRegisterClass*
 TargetInstrInfo::getRegClass(const MCInstrDesc &MCID, unsigned OpNum,
                              const TargetRegisterInfo *TRI,
-                             const MachineFunction &MF) const {
+                             const MachineFunction &MF) {
   if (OpNum >= MCID.getNumOperands())
     return nullptr;
 
@@ -993,7 +993,7 @@ bool TargetInstrInfo::isSchedulingBoundary(const MachineInstr &MI,
 
 // Provide a global flag for disabling the PreRA hazard recognizer that targets
 // may choose to honor.
-bool TargetInstrInfo::usePreRAHazardRecognizer() const {
+bool TargetInstrInfo::usePreRAHazardRecognizer() {
   return !DisableHazardRecognizer;
 }
 

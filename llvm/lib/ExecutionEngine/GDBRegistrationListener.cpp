@@ -111,7 +111,7 @@ private:
   /// Deregister the debug info for the given object file from the debugger
   /// and delete any temporary copies.  This private method does not remove
   /// the function from Map so that it can be called while iterating over Map.
-  void deregisterObjectInternal(RegisteredObjectBufferMap::iterator I);
+  static void deregisterObjectInternal(RegisteredObjectBufferMap::iterator I);
 };
 
 /// Lock used to serialize all jit registration events, since they

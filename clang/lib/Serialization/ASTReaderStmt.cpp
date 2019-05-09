@@ -127,7 +127,7 @@ namespace clang {
     void ReadExplicitTemplateArgumentList(ASTTemplateArgumentListInfo &ArgList,
                                           unsigned NumTemplateArgs);
 
-    void VisitStmt(Stmt *S);
+    static void VisitStmt(Stmt *S);
 #define STMT(Type, Base) \
     void Visit##Type(Type *);
 #include "clang/AST/StmtNodes.inc"

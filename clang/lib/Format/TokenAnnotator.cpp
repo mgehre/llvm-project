@@ -1115,7 +1115,7 @@ public:
   }
 
 private:
-  bool isClosureImportStatement(const FormatToken &Tok) {
+  static bool isClosureImportStatement(const FormatToken &Tok) {
     // FIXME: Closure-library specific stuff should not be hard-coded but be
     // configurable.
     return Tok.TokenText == "goog" && Tok.Next && Tok.Next->is(tok::period) &&
@@ -1639,7 +1639,7 @@ private:
     return TT_PointerOrReference;
   }
 
-  TokenType determinePlusMinusCaretUsage(const FormatToken &Tok) {
+  static TokenType determinePlusMinusCaretUsage(const FormatToken &Tok) {
     const FormatToken *PrevToken = Tok.getPreviousNonComment();
     if (!PrevToken)
       return TT_UnaryOperator;
@@ -1663,7 +1663,7 @@ private:
   }
 
   /// Determine whether ++/-- are pre- or post-increments/-decrements.
-  TokenType determineIncrementUsage(const FormatToken &Tok) {
+  static TokenType determineIncrementUsage(const FormatToken &Tok) {
     const FormatToken *PrevToken = Tok.getPreviousNonComment();
     if (!PrevToken || PrevToken->is(TT_CastRParen))
       return TT_UnaryOperator;

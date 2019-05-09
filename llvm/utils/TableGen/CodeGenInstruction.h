@@ -370,7 +370,7 @@ template <typename T> class ArrayRef;
 
     CodeGenInstAlias(Record *R, CodeGenTarget &T);
 
-    bool tryAliasOpMatch(DagInit *Result, unsigned AliasOpNo,
+    static bool tryAliasOpMatch(DagInit *Result, unsigned AliasOpNo,
                          Record *InstOpRec, bool hasSubOps, ArrayRef<SMLoc> Loc,
                          CodeGenTarget &T, ResultOperand &ResOp);
   };

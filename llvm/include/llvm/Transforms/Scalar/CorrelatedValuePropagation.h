@@ -18,7 +18,7 @@ class Function;
 
 struct CorrelatedValuePropagationPass
     : PassInfoMixin<CorrelatedValuePropagationPass> {
-  PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
+  static PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
 };
 
 } // end namespace llvm

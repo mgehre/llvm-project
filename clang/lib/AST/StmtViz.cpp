@@ -18,7 +18,7 @@
 
 using namespace clang;
 
-void Stmt::viewAST() const {
+void Stmt::viewAST() {
 #ifndef NDEBUG
   llvm::ViewGraph(this,"AST");
 #else

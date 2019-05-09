@@ -117,7 +117,7 @@ public:
 
   bool ShouldGenerateLocation(const NamedDecl *D);
 
-  bool isLocal(const NamedDecl *D) {
+  static bool isLocal(const NamedDecl *D) {
     return D->getParentFunctionOrMethod() != nullptr;
   }
 

@@ -196,7 +196,7 @@ private:
   ///
   /// @param o  - The output stream to which the context table should be written.
   /// @param i  - The indent level for use with the stream.
-  void emitContextTable(raw_ostream &o, uint32_t &i) const;
+  static void emitContextTable(raw_ostream &o, uint32_t &i) ;
 
   /// emitContextDecisions - Prints all four ContextDecision structures using
   ///   emitContextDecision().

@@ -98,7 +98,7 @@ public:
   }
 
   /// Utility functions to print decimal/hexadecimal values.
-  format_object<int64_t> formatDec(int64_t Value) const;
+  static format_object<int64_t> formatDec(int64_t Value) ;
   format_object<int64_t> formatHex(int64_t Value) const;
   format_object<uint64_t> formatHex(uint64_t Value) const;
 };

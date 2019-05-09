@@ -47,11 +47,11 @@ class PointerArithChecker
           check::PreStmt<ArraySubscriptExpr>, check::PreStmt<CastExpr>,
           check::PostStmt<CastExpr>, check::PostStmt<CXXNewExpr>,
           check::PostStmt<CallExpr>, check::DeadSymbols> {
-  AllocKind getKindOfNewOp(const CXXNewExpr *NE, const FunctionDecl *FD) const;
-  const MemRegion *getArrayRegion(const MemRegion *Region, bool &Polymorphic,
-                                  AllocKind &AKind, CheckerContext &C) const;
-  const MemRegion *getPointedRegion(const MemRegion *Region,
-                                    CheckerContext &C) const;
+  static AllocKind getKindOfNewOp(const CXXNewExpr *NE, const FunctionDecl *FD) ;
+  static const MemRegion *getArrayRegion(const MemRegion *Region, bool &Polymorphic,
+                                  AllocKind &AKind, CheckerContext &C) ;
+  static const MemRegion *getPointedRegion(const MemRegion *Region,
+                                    CheckerContext &C) ;
   void reportPointerArithMisuse(const Expr *E, CheckerContext &C,
                                 bool PointedNeeded = false) const;
   void initAllocIdentifiers(ASTContext &C) const;
@@ -64,9 +64,9 @@ public:
   void checkPreStmt(const UnaryOperator *UOp, CheckerContext &C) const;
   void checkPreStmt(const BinaryOperator *BOp, CheckerContext &C) const;
   void checkPreStmt(const ArraySubscriptExpr *SubExpr, CheckerContext &C) const;
-  void checkPreStmt(const CastExpr *CE, CheckerContext &C) const;
-  void checkPostStmt(const CastExpr *CE, CheckerContext &C) const;
-  void checkPostStmt(const CXXNewExpr *NE, CheckerContext &C) const;
+  static void checkPreStmt(const CastExpr *CE, CheckerContext &C) ;
+  static void checkPostStmt(const CastExpr *CE, CheckerContext &C) ;
+  static void checkPostStmt(const CXXNewExpr *NE, CheckerContext &C) ;
   void checkPostStmt(const CallExpr *CE, CheckerContext &C) const;
   void checkDeadSymbols(SymbolReaper &SR, CheckerContext &C) const;
 };
@@ -89,7 +89,7 @@ void PointerArithChecker::checkDeadSymbols(SymbolReaper &SR,
 }
 
 AllocKind PointerArithChecker::getKindOfNewOp(const CXXNewExpr *NE,
-                                              const FunctionDecl *FD) const {
+                                              const FunctionDecl *FD) {
   // This checker try not to assume anything about placement and overloaded
   // new to avoid false positives.
   if (isa<CXXMethodDecl>(FD))
@@ -104,7 +104,7 @@ AllocKind PointerArithChecker::getKindOfNewOp(const CXXNewExpr *NE,
 
 const MemRegion *
 PointerArithChecker::getPointedRegion(const MemRegion *Region,
-                                      CheckerContext &C) const {
+                                      CheckerContext &C) {
   assert(Region);
   ProgramStateRef State = C.getState();
   SVal S = State->getSVal(Region);
@@ -118,7 +118,7 @@ PointerArithChecker::getPointedRegion(const MemRegion *Region,
 const MemRegion *PointerArithChecker::getArrayRegion(const MemRegion *Region,
                                                      bool &Polymorphic,
                                                      AllocKind &AKind,
-                                                     CheckerContext &C) const {
+                                                     CheckerContext &C) {
   assert(Region);
   while (Region->getKind() == MemRegion::Kind::CXXBaseObjectRegionKind) {
     Region = Region->getAs<CXXBaseObjectRegion>()->getSuperRegion();
@@ -239,7 +239,7 @@ void PointerArithChecker::checkPostStmt(const CallExpr *CE,
 }
 
 void PointerArithChecker::checkPostStmt(const CXXNewExpr *NE,
-                                        CheckerContext &C) const {
+                                        CheckerContext &C) {
   const FunctionDecl *FD = NE->getOperatorNew();
   if (!FD)
     return;
@@ -256,7 +256,7 @@ void PointerArithChecker::checkPostStmt(const CXXNewExpr *NE,
 }
 
 void PointerArithChecker::checkPostStmt(const CastExpr *CE,
-                                        CheckerContext &C) const {
+                                        CheckerContext &C) {
   if (CE->getCastKind() != CastKind::CK_BitCast)
     return;
 
@@ -274,7 +274,7 @@ void PointerArithChecker::checkPostStmt(const CastExpr *CE,
 }
 
 void PointerArithChecker::checkPreStmt(const CastExpr *CE,
-                                       CheckerContext &C) const {
+                                       CheckerContext &C) {
   if (CE->getCastKind() != CastKind::CK_ArrayToPointerDecay)
     return;
 

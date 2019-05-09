@@ -1985,7 +1985,7 @@ bool MachOObjectFile::isSectionBSS(DataRefImpl Sec) const {
           SectionType == MachO::S_GB_ZEROFILL);
 }
 
-unsigned MachOObjectFile::getSectionID(SectionRef Sec) const {
+unsigned MachOObjectFile::getSectionID(SectionRef Sec) {
   return Sec.getRawDataRefImpl().d.a;
 }
 
@@ -4171,17 +4171,17 @@ bool MachOObjectFile::getPlainRelocationExternal(
 }
 
 bool MachOObjectFile::getScatteredRelocationScattered(
-    const MachO::any_relocation_info &RE) const {
+    const MachO::any_relocation_info &RE) {
   return RE.r_word0 >> 31;
 }
 
 uint32_t MachOObjectFile::getScatteredRelocationValue(
-    const MachO::any_relocation_info &RE) const {
+    const MachO::any_relocation_info &RE) {
   return RE.r_word1;
 }
 
 uint32_t MachOObjectFile::getScatteredRelocationType(
-    const MachO::any_relocation_info &RE) const {
+    const MachO::any_relocation_info &RE) {
   return (RE.r_word0 >> 24) & 0xf;
 }
 

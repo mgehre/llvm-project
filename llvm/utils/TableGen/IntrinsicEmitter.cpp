@@ -36,19 +36,19 @@ public:
 
   void run(raw_ostream &OS, bool Enums);
 
-  void EmitPrefix(raw_ostream &OS);
+  static void EmitPrefix(raw_ostream &OS);
 
-  void EmitEnumInfo(const CodeGenIntrinsicTable &Ints, raw_ostream &OS);
-  void EmitTargetInfo(const CodeGenIntrinsicTable &Ints, raw_ostream &OS);
-  void EmitIntrinsicToNameTable(const CodeGenIntrinsicTable &Ints,
+  static void EmitEnumInfo(const CodeGenIntrinsicTable &Ints, raw_ostream &OS);
+  static void EmitTargetInfo(const CodeGenIntrinsicTable &Ints, raw_ostream &OS);
+  static void EmitIntrinsicToNameTable(const CodeGenIntrinsicTable &Ints,
                                 raw_ostream &OS);
-  void EmitIntrinsicToOverloadTable(const CodeGenIntrinsicTable &Ints,
+  static void EmitIntrinsicToOverloadTable(const CodeGenIntrinsicTable &Ints,
                                     raw_ostream &OS);
-  void EmitGenerator(const CodeGenIntrinsicTable &Ints, raw_ostream &OS);
+  static void EmitGenerator(const CodeGenIntrinsicTable &Ints, raw_ostream &OS);
   void EmitAttributes(const CodeGenIntrinsicTable &Ints, raw_ostream &OS);
   void EmitIntrinsicToBuiltinMap(const CodeGenIntrinsicTable &Ints, bool IsGCC,
                                  raw_ostream &OS);
-  void EmitSuffix(raw_ostream &OS);
+  static void EmitSuffix(raw_ostream &OS);
 };
 } // End anonymous namespace
 

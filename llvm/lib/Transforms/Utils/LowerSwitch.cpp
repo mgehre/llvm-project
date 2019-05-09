@@ -98,9 +98,9 @@ namespace {
                               Value *Val, BasicBlock *Predecessor,
                               BasicBlock *OrigBlock, BasicBlock *Default,
                               const std::vector<IntRange> &UnreachableRanges);
-    BasicBlock *newLeafBlock(CaseRange &Leaf, Value *Val, BasicBlock *OrigBlock,
+    static BasicBlock *newLeafBlock(CaseRange &Leaf, Value *Val, BasicBlock *OrigBlock,
                              BasicBlock *Default);
-    unsigned Clusterify(CaseVector &Cases, SwitchInst *SI);
+    static unsigned Clusterify(CaseVector &Cases, SwitchInst *SI);
   };
 
   /// The comparison function for sorting the switch case values in the vector.

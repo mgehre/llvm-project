@@ -31,7 +31,7 @@ static struct AsanDeactivatedFlags {
   bool coverage;
   const char *coverage_dir;
 
-  void RegisterActivationFlags(FlagParser *parser, Flags *f, CommonFlags *cf) {
+  static void RegisterActivationFlags(FlagParser *parser, Flags *f, CommonFlags *cf) {
 #define ASAN_ACTIVATION_FLAG(Type, Name) \
   RegisterFlag(parser, #Name, "", &f->Name);
 #define COMMON_ACTIVATION_FLAG(Type, Name) \

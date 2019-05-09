@@ -292,37 +292,37 @@ public:
   void printState(raw_ostream &Out, ProgramStateRef State,
                   const char *NL, const char *Sep) const override;
 
-  void checkBind(SVal loc, SVal val, const Stmt *S, CheckerContext &C) const;
-  void checkPostStmt(const BlockExpr *BE, CheckerContext &C) const;
-  void checkPostStmt(const CastExpr *CE, CheckerContext &C) const;
+  static void checkBind(SVal loc, SVal val, const Stmt *S, CheckerContext &C) ;
+  static void checkPostStmt(const BlockExpr *BE, CheckerContext &C) ;
+  static void checkPostStmt(const CastExpr *CE, CheckerContext &C) ;
 
   void checkPostStmt(const ObjCArrayLiteral *AL, CheckerContext &C) const;
   void checkPostStmt(const ObjCDictionaryLiteral *DL, CheckerContext &C) const;
-  void checkPostStmt(const ObjCBoxedExpr *BE, CheckerContext &C) const;
+  static void checkPostStmt(const ObjCBoxedExpr *BE, CheckerContext &C) ;
 
-  void checkPostStmt(const ObjCIvarRefExpr *IRE, CheckerContext &C) const;
+  static void checkPostStmt(const ObjCIvarRefExpr *IRE, CheckerContext &C) ;
 
   void checkPostCall(const CallEvent &Call, CheckerContext &C) const;
 
   void checkSummary(const RetainSummary &Summ, const CallEvent &Call,
                     CheckerContext &C) const;
 
-  void processSummaryOfInlined(const RetainSummary &Summ,
+  static void processSummaryOfInlined(const RetainSummary &Summ,
                                const CallEvent &Call,
-                               CheckerContext &C) const;
+                               CheckerContext &C) ;
 
   bool evalCall(const CallExpr *CE, CheckerContext &C) const;
 
-  ProgramStateRef evalAssume(ProgramStateRef state, SVal Cond,
-                                 bool Assumption) const;
+  static ProgramStateRef evalAssume(ProgramStateRef state, SVal Cond,
+                                 bool Assumption) ;
 
-  ProgramStateRef
+  static ProgramStateRef
   checkRegionChanges(ProgramStateRef state,
                      const InvalidatedSymbols *invalidated,
                      ArrayRef<const MemRegion *> ExplicitRegions,
                      ArrayRef<const MemRegion *> Regions,
                      const LocationContext* LCtx,
-                     const CallEvent *Call) const;
+                     const CallEvent *Call) ;
 
   ExplodedNode* checkReturnWithRetEffect(const ReturnStmt *S, CheckerContext &C,
                                 ExplodedNode *Pred, RetEffect RE, RefVal X,
@@ -332,9 +332,9 @@ public:
   void checkBeginFunction(CheckerContext &C) const;
   void checkEndFunction(const ReturnStmt *RS, CheckerContext &C) const;
 
-  ProgramStateRef updateSymbol(ProgramStateRef state, SymbolRef sym,
+  static ProgramStateRef updateSymbol(ProgramStateRef state, SymbolRef sym,
                                RefVal V, ArgEffect E, RefVal::Kind &hasErr,
-                               CheckerContext &C) const;
+                               CheckerContext &C) ;
 
   void processNonLeakError(ProgramStateRef St, SourceRange ErrorRange,
                            RefVal::Kind ErrorKind, SymbolRef Sym,
@@ -342,9 +342,9 @@ public:
 
   void processObjCLiterals(CheckerContext &C, const Expr *Ex) const;
 
-  ProgramStateRef handleSymbolDeath(ProgramStateRef state,
+  static ProgramStateRef handleSymbolDeath(ProgramStateRef state,
                                     SymbolRef sid, RefVal V,
-                                    SmallVectorImpl<SymbolRef> &Leaked) const;
+                                    SmallVectorImpl<SymbolRef> &Leaked) ;
 
   ProgramStateRef
   handleAutoreleaseCounts(ProgramStateRef state, ExplodedNode *Pred,

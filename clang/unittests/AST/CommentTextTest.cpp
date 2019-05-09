@@ -28,7 +28,7 @@ namespace clang {
 
 class CommentTextTest : public ::testing::Test {
 protected:
-  std::string formatComment(llvm::StringRef CommentText) {
+  static std::string formatComment(llvm::StringRef CommentText) {
     SourceManagerForFile FileSourceMgr("comment-test.cpp", CommentText);
     SourceManager& SourceMgr = FileSourceMgr.get();
 

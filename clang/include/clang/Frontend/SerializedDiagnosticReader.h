@@ -70,11 +70,11 @@ private:
   enum class Cursor;
 
   /// Read to the next record or block to process.
-  llvm::ErrorOr<Cursor> skipUntilRecordOrBlock(llvm::BitstreamCursor &Stream,
+  static llvm::ErrorOr<Cursor> skipUntilRecordOrBlock(llvm::BitstreamCursor &Stream,
                                                unsigned &BlockOrRecordId);
 
   /// Read a metadata block from \c Stream.
-  std::error_code readMetaBlock(llvm::BitstreamCursor &Stream);
+  static std::error_code readMetaBlock(llvm::BitstreamCursor &Stream);
 
   /// Read a diagnostic block from \c Stream.
   std::error_code readDiagnosticBlock(llvm::BitstreamCursor &Stream);

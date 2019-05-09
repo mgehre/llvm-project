@@ -220,7 +220,7 @@ private:
   using CaseBitsVector = std::vector<CaseBits>;
 
   /// Sort Clusters and merge adjacent cases.
-  void sortAndRangeify(CaseClusterVector &Clusters);
+  static void sortAndRangeify(CaseClusterVector &Clusters);
 
   /// CaseBlock - This structure is used to communicate between
   /// SelectionDAGBuilder and SDISel for the code generation of additional basic
@@ -323,12 +323,12 @@ private:
   };
 
   /// Return the range of value in [First..Last].
-  uint64_t getJumpTableRange(const CaseClusterVector &Clusters, unsigned First,
-                             unsigned Last) const;
+  static uint64_t getJumpTableRange(const CaseClusterVector &Clusters, unsigned First,
+                             unsigned Last) ;
 
   /// Return the number of cases in [First..Last].
-  uint64_t getJumpTableNumCases(const SmallVectorImpl<unsigned> &TotalCases,
-                                unsigned First, unsigned Last) const;
+  static uint64_t getJumpTableNumCases(const SmallVectorImpl<unsigned> &TotalCases,
+                                unsigned First, unsigned Last) ;
 
   /// Build a jump table cluster from Clusters[First..Last]. Returns false if it
   /// decides it's not a good idea.
@@ -569,7 +569,7 @@ private:
     /// Add a successor machine basic block to ParentMBB. If the successor mbb
     /// has not been created yet (i.e. if SuccMBB = 0), then the machine basic
     /// block will be created. Assign a large weight if IsLikely is true.
-    MachineBasicBlock *AddSuccessorMBB(const BasicBlock *BB,
+    static MachineBasicBlock *AddSuccessorMBB(const BasicBlock *BB,
                                        MachineBasicBlock *ParentMBB,
                                        bool IsLikely,
                                        MachineBasicBlock *SuccMBB = nullptr);
@@ -720,7 +720,7 @@ public:
                                     MachineBasicBlock *SwitchBB,
                                     BranchProbability TProb, BranchProbability FProb,
                                     bool InvertCond);
-  bool ShouldEmitAsBranches(const std::vector<CaseBlock> &Cases);
+  static bool ShouldEmitAsBranches(const std::vector<CaseBlock> &Cases);
   bool isExportableFromCurrentBlock(const Value *V, const BasicBlock *FromBB);
   void CopyToExportRegsIfNeeded(const Value *V);
   void ExportFromCurrentBlock(const Value *V);
@@ -821,7 +821,7 @@ private:
   void visitIndirectBr(const IndirectBrInst &I);
   void visitUnreachable(const UnreachableInst &I);
   void visitCleanupRet(const CleanupReturnInst &I);
-  void visitCatchSwitch(const CatchSwitchInst &I);
+  static void visitCatchSwitch(const CatchSwitchInst &I);
   void visitCatchRet(const CatchReturnInst &I);
   void visitCatchPad(const CatchPadInst &I);
   void visitCleanupPad(const CleanupPadInst &CPI);
@@ -852,7 +852,7 @@ public:
 private:
   // These all get lowered before this pass.
   void visitInvoke(const InvokeInst &I);
-  void visitResume(const ResumeInst &I);
+  static void visitResume(const ResumeInst &I);
 
   void visitUnary(const User &I, unsigned Opcode);
   void visitFNeg(const User &I) { visitUnary(I, ISD::FNEG); }
@@ -915,7 +915,7 @@ private:
   void visitAtomicCmpXchg(const AtomicCmpXchgInst &I);
   void visitAtomicRMW(const AtomicRMWInst &I);
   void visitFence(const FenceInst &I);
-  void visitPHI(const PHINode &I);
+  static void visitPHI(const PHINode &I);
   void visitCall(const CallInst &I);
   bool visitMemCmpCall(const CallInst &I);
   bool visitMemPCpyCall(const CallInst &I);

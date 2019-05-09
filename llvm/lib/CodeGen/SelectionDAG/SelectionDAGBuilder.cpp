@@ -9437,7 +9437,7 @@ void SelectionDAGBuilder::updateDAGForMaybeTailCall(SDValue MaybeTC) {
 
 uint64_t
 SelectionDAGBuilder::getJumpTableRange(const CaseClusterVector &Clusters,
-                                       unsigned First, unsigned Last) const {
+                                       unsigned First, unsigned Last) {
   assert(Last >= First);
   const APInt &LowCase = Clusters[First].Low->getValue();
   const APInt &HighCase = Clusters[Last].High->getValue();
@@ -9452,7 +9452,7 @@ SelectionDAGBuilder::getJumpTableRange(const CaseClusterVector &Clusters,
 
 uint64_t SelectionDAGBuilder::getJumpTableNumCases(
     const SmallVectorImpl<unsigned> &TotalCases, unsigned First,
-    unsigned Last) const {
+    unsigned Last) {
   assert(Last >= First);
   assert(TotalCases[Last] >= TotalCases[First]);
   uint64_t NumCases =

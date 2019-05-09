@@ -76,14 +76,14 @@ protected:
   ///
   /// The latter overload is suitable for computing the offset of a
   /// sythesized ivar.
-  uint64_t ComputeIvarBaseOffset(CodeGen::CodeGenModule &CGM,
+  static uint64_t ComputeIvarBaseOffset(CodeGen::CodeGenModule &CGM,
                                  const ObjCInterfaceDecl *OID,
                                  const ObjCIvarDecl *Ivar);
-  uint64_t ComputeIvarBaseOffset(CodeGen::CodeGenModule &CGM,
+  static uint64_t ComputeIvarBaseOffset(CodeGen::CodeGenModule &CGM,
                                  const ObjCImplementationDecl *OID,
                                  const ObjCIvarDecl *Ivar);
 
-  LValue EmitValueForIvarAtOffset(CodeGen::CodeGenFunction &CGF,
+  static LValue EmitValueForIvarAtOffset(CodeGen::CodeGenFunction &CGF,
                                   const ObjCInterfaceDecl *OID,
                                   llvm::Value *BaseValue,
                                   const ObjCIvarDecl *Ivar,
@@ -102,14 +102,14 @@ protected:
                         llvm::Constant *endCatchFn,
                         llvm::Constant *exceptionRethrowFn);
 
-  void EmitInitOfCatchParam(CodeGenFunction &CGF, llvm::Value *exn,
+  static void EmitInitOfCatchParam(CodeGenFunction &CGF, llvm::Value *exn,
                             const VarDecl *paramDecl);
 
   /// Emits an \@synchronize() statement, using the \p syncEnterFn and
   /// \p syncExitFn arguments as the functions called to lock and unlock
   /// the object.  This function can be called by subclasses that use
   /// zero-cost exception handling.
-  void EmitAtSynchronizedStmt(CodeGenFunction &CGF,
+  static void EmitAtSynchronizedStmt(CodeGenFunction &CGF,
                             const ObjCAtSynchronizedStmt &S,
                             llvm::Function *syncEnterFn,
                             llvm::Function *syncExitFn);
@@ -302,7 +302,7 @@ public:
 
   // FIXME: This probably shouldn't be here, but the code to compute
   // it is here.
-  unsigned ComputeBitfieldBitOffset(CodeGen::CodeGenModule &CGM,
+  static unsigned ComputeBitfieldBitOffset(CodeGen::CodeGenModule &CGM,
                                     const ObjCInterfaceDecl *ID,
                                     const ObjCIvarDecl *Ivar);
 };

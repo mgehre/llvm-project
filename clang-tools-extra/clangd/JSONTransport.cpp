@@ -102,7 +102,7 @@ public:
 
 private:
   // Dispatches incoming message to Handler onNotify/onCall/onReply.
-  bool handleMessage(llvm::json::Value Message, MessageHandler &Handler);
+  static bool handleMessage(llvm::json::Value Message, MessageHandler &Handler);
   // Writes outgoing message to Out stream.
   void sendMessage(llvm::json::Value Message) {
     std::string S;

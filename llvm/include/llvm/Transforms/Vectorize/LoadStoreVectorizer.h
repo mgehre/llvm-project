@@ -16,7 +16,7 @@ namespace llvm {
 
 class LoadStoreVectorizerPass : public PassInfoMixin<LoadStoreVectorizerPass> {
 public:
-  PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
+  static PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
 };
 
 /// Create a legacy pass manager instance of the LoadStoreVectorizer pass

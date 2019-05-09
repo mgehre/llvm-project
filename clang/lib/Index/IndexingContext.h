@@ -50,7 +50,7 @@ public:
 
   void setASTContext(ASTContext &ctx) { Ctx = &ctx; }
 
-  bool shouldIndex(const Decl *D);
+  static bool shouldIndex(const Decl *D);
 
   const LangOptions &getLangOpts() const;
 
@@ -119,7 +119,7 @@ public:
   bool indexDeclGroupRef(DeclGroupRef DG);
 
 private:
-  bool shouldIgnoreIfImplicit(const Decl *D);
+  static bool shouldIgnoreIfImplicit(const Decl *D);
 
   bool handleDeclOccurrence(const Decl *D, SourceLocation Loc,
                             bool IsRef, const Decl *Parent,

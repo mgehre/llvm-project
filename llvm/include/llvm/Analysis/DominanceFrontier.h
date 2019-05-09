@@ -150,7 +150,7 @@ public:
       DominanceFrontierBase<BasicBlock, false>::const_iterator;
 
   /// Handle invalidation explicitly.
-  bool invalidate(Function &F, const PreservedAnalyses &PA,
+  static bool invalidate(Function &F, const PreservedAnalyses &PA,
                   FunctionAnalysisManager::Invalidator &);
 };
 
@@ -192,7 +192,7 @@ public:
   using Result = DominanceFrontier;
 
   /// Run the analysis pass over a function and produce a dominator tree.
-  DominanceFrontier run(Function &F, FunctionAnalysisManager &AM);
+  static DominanceFrontier run(Function &F, FunctionAnalysisManager &AM);
 };
 
 /// Printer pass for the \c DominanceFrontier.

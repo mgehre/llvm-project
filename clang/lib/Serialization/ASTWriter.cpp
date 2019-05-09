@@ -1952,7 +1952,7 @@ namespace {
     using hash_value_type = unsigned;
     using offset_type = unsigned;
 
-    hash_value_type ComputeHash(key_type_ref key) {
+    static hash_value_type ComputeHash(key_type_ref key) {
       // The hash is based only on size/time of the file, so that the reader can
       // match even when symlinking or excess path elements ("foo/../", "../")
       // change the form of the name. However, complete path is still the key.
@@ -1976,7 +1976,7 @@ namespace {
       return std::make_pair(KeyLen, DataLen);
     }
 
-    void EmitKey(raw_ostream& Out, key_type_ref key, unsigned KeyLen) {
+    static void EmitKey(raw_ostream& Out, key_type_ref key, unsigned KeyLen) {
       using namespace llvm::support;
 
       endian::Writer LE(Out, little);
@@ -3295,7 +3295,7 @@ public:
     return serialization::ComputeHash(Sel);
   }
 
-  std::pair<unsigned, unsigned>
+  static std::pair<unsigned, unsigned>
     EmitKeyDataLength(raw_ostream& Out, Selector Sel,
                       data_type_ref Methods) {
     using namespace llvm::support;
@@ -3849,7 +3849,7 @@ public:
     return a == b;
   }
 
-  hash_value_type ComputeHash(DeclarationNameKey Name) {
+  static hash_value_type ComputeHash(DeclarationNameKey Name) {
     return Name.getHash();
   }
 
@@ -3862,7 +3862,7 @@ public:
     endian::write<uint32_t>(Out, Writer.getChain()->getModuleFileID(F), little);
   }
 
-  std::pair<unsigned, unsigned> EmitKeyDataLength(raw_ostream &Out,
+  static std::pair<unsigned, unsigned> EmitKeyDataLength(raw_ostream &Out,
                                                   DeclarationNameKey Name,
                                                   data_type_ref Lookup) {
     using namespace llvm::support;

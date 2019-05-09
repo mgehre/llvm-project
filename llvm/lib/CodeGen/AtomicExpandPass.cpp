@@ -74,7 +74,7 @@ namespace {
     LoadInst *convertAtomicLoadToIntegerType(LoadInst *LI);
     bool tryExpandAtomicLoad(LoadInst *LI);
     bool expandAtomicLoadToLL(LoadInst *LI);
-    bool expandAtomicLoadToCmpXchg(LoadInst *LI);
+    static bool expandAtomicLoadToCmpXchg(LoadInst *LI);
     StoreInst *convertAtomicStoreToIntegerType(StoreInst *SI);
     bool expandAtomicStore(StoreInst *SI);
     bool tryExpandAtomicRMW(AtomicRMWInst *AI);
@@ -102,7 +102,7 @@ namespace {
     bool tryExpandAtomicCmpXchg(AtomicCmpXchgInst *CI);
 
     bool expandAtomicCmpXchg(AtomicCmpXchgInst *CI);
-    bool isIdempotentRMW(AtomicRMWInst *RMWI);
+    static bool isIdempotentRMW(AtomicRMWInst *RMWI);
     bool simplifyIdempotentRMW(AtomicRMWInst *RMWI);
 
     bool expandAtomicOpToLibcall(Instruction *I, unsigned Size, unsigned Align,

@@ -88,12 +88,12 @@ namespace diagtool {
 
     typedef group_iterator<GroupRecord> subgroup_iterator;
     subgroup_iterator subgroup_begin() const;
-    subgroup_iterator subgroup_end() const;
+    static subgroup_iterator subgroup_end() ;
     llvm::iterator_range<subgroup_iterator> subgroups() const;
 
     typedef group_iterator<DiagnosticRecord> diagnostics_iterator;
     diagnostics_iterator diagnostics_begin() const;
-    diagnostics_iterator diagnostics_end() const;
+    static diagnostics_iterator diagnostics_end() ;
     llvm::iterator_range<diagnostics_iterator> diagnostics() const;
 
     bool operator<(llvm::StringRef Other) const {

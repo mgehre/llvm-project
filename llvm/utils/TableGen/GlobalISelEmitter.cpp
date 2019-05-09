@@ -2991,7 +2991,7 @@ private:
   Optional<CodeGenCoverage> RuleCoverage;
 
   void gatherOpcodeValues();
-  void gatherTypeIDValues();
+  static void gatherTypeIDValues();
   void gatherNodeEquivs();
 
   Record *findNodeEquiv(Record *N) const;
@@ -3019,7 +3019,7 @@ private:
   Expected<action_iterator>
   createInstructionRenderer(action_iterator InsertPt, RuleMatcher &M,
                             const TreePatternNode *Dst);
-  void importExplicitDefRenderers(BuildMIAction &DstMIBuilder);
+  static void importExplicitDefRenderers(BuildMIAction &DstMIBuilder);
   Expected<action_iterator>
   importExplicitUseRenderers(action_iterator InsertPt, RuleMatcher &M,
                              BuildMIAction &DstMIBuilder,
@@ -3028,11 +3028,11 @@ private:
   importExplicitUseRenderer(action_iterator InsertPt, RuleMatcher &Rule,
                             BuildMIAction &DstMIBuilder,
                             TreePatternNode *DstChild);
-  Error importDefaultOperandRenderers(BuildMIAction &DstMIBuilder,
-                                      DagInit *DefaultOps) const;
-  Error
+  static Error importDefaultOperandRenderers(BuildMIAction &DstMIBuilder,
+                                      DagInit *DefaultOps) ;
+  static Error
   importImplicitDefRenderers(BuildMIAction &DstMIBuilder,
-                             const std::vector<Record *> &ImplicitDefs) const;
+                             const std::vector<Record *> &ImplicitDefs) ;
 
   void emitCxxPredicateFns(raw_ostream &OS, StringRef CodeFieldName,
                            StringRef TypeIdentifier, StringRef ArgType,
@@ -3049,7 +3049,7 @@ private:
 
   void declareSubtargetFeature(Record *Predicate);
 
-  MatchTable buildMatchTable(MutableArrayRef<RuleMatcher> Rules, bool Optimize,
+  static MatchTable buildMatchTable(MutableArrayRef<RuleMatcher> Rules, bool Optimize,
                              bool WithCoverage);
 
 public:
@@ -3790,7 +3790,7 @@ Expected<action_iterator> GlobalISelEmitter::importExplicitUseRenderers(
 }
 
 Error GlobalISelEmitter::importDefaultOperandRenderers(
-    BuildMIAction &DstMIBuilder, DagInit *DefaultOps) const {
+    BuildMIAction &DstMIBuilder, DagInit *DefaultOps) {
   for (const auto *DefaultOp : DefaultOps->getArgs()) {
     // Look through ValueType operators.
     if (const DagInit *DefaultDagOp = dyn_cast<DagInit>(DefaultOp)) {
@@ -3819,7 +3819,7 @@ Error GlobalISelEmitter::importDefaultOperandRenderers(
 
 Error GlobalISelEmitter::importImplicitDefRenderers(
     BuildMIAction &DstMIBuilder,
-    const std::vector<Record *> &ImplicitDefs) const {
+    const std::vector<Record *> &ImplicitDefs) {
   if (!ImplicitDefs.empty())
     return failedImport("Pattern defines a physical register");
   return Error::success();

@@ -43,9 +43,9 @@ public:
   void run(raw_ostream &o);
 
 private:
-  int getVariableBit(const std::string &VarName, BitsInit *BI, int bit);
-  std::string getInstructionCase(Record *R, CodeGenTarget &Target);
-  void AddCodeToMergeInOperand(Record *R, BitsInit *BI,
+  static int getVariableBit(const std::string &VarName, BitsInit *BI, int bit);
+  static std::string getInstructionCase(Record *R, CodeGenTarget &Target);
+  static void AddCodeToMergeInOperand(Record *R, BitsInit *BI,
                                const std::string &VarName,
                                unsigned &NumberedOp,
                                std::set<unsigned> &NamedOpIndices,

@@ -153,7 +153,7 @@ public:
   void visitCallSite(CallSite CS);
   void visitCallInst(CallInst &I) { visitCallSite (CallSite (&I)); }
   void visitInvokeInst(InvokeInst &I) { visitCallSite (CallSite (&I)); }
-  void visitUnreachableInst(UnreachableInst &I);
+  static void visitUnreachableInst(UnreachableInst &I);
 
   void visitShl(BinaryOperator &I);
   void visitLShr(BinaryOperator &I);
@@ -197,7 +197,7 @@ private:  // Helper functions
   void *getPointerToFunction(Function *F) override { return (void*)F; }
 
   void initializeExecutionEngine() { }
-  void initializeExternalFunctions();
+  static void initializeExternalFunctions();
   GenericValue getConstantExprValue(ConstantExpr *CE, ExecutionContext &SF);
   GenericValue getOperandValue(Value *V, ExecutionContext &SF);
   GenericValue executeTruncInst(Value *SrcVal, Type *DstTy,

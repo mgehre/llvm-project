@@ -102,7 +102,7 @@ protected:
                         ObjSectionToIDMap &ObjSectionToID);
 
   /// Make the RelocationValueRef addend PC-relative.
-  void makeValueAddendPCRel(RelocationValueRef &Value,
+  static void makeValueAddendPCRel(RelocationValueRef &Value,
                             const relocation_iterator &RI,
                             unsigned OffsetToNextPC);
 

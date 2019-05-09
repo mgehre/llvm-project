@@ -444,7 +444,7 @@ namespace clang {
     bool IsStructuralMatch(VarDecl *FromVar, VarDecl *ToVar,
                            bool Complain = true);
     bool IsStructuralMatch(EnumDecl *FromEnum, EnumDecl *ToRecord);
-    bool IsStructuralMatch(EnumConstantDecl *FromEC, EnumConstantDecl *ToEC);
+    static bool IsStructuralMatch(EnumConstantDecl *FromEC, EnumConstantDecl *ToEC);
     bool IsStructuralMatch(FunctionTemplateDecl *From,
                            FunctionTemplateDecl *To);
     bool IsStructuralMatch(FunctionDecl *From, FunctionDecl *To);

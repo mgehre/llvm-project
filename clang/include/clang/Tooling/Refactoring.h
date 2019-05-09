@@ -66,7 +66,7 @@ public:
 
 private:
   /// Write all refactored files to disk.
-  int saveRewrittenFiles(Rewriter &Rewrite);
+  static int saveRewrittenFiles(Rewriter &Rewrite);
 
 private:
   std::map<std::string, Replacements> FileToReplaces;

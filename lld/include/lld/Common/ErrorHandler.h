@@ -96,7 +96,7 @@ public:
   void error(const Twine &Msg);
   LLVM_ATTRIBUTE_NORETURN void fatal(const Twine &Msg);
   void log(const Twine &Msg);
-  void message(const Twine &Msg);
+  static void message(const Twine &Msg);
   void warn(const Twine &Msg);
 
   std::unique_ptr<llvm::FileOutputBuffer> OutputBuffer;

@@ -19854,7 +19854,7 @@ SDValue X86TargetLowering::LowerSETCC(SDValue Op, SelectionDAG &DAG) const {
   return DAG.getNode(X86ISD::SETCC, dl, MVT::i8, X86CC, EFLAGS);
 }
 
-SDValue X86TargetLowering::LowerSETCCCARRY(SDValue Op, SelectionDAG &DAG) const {
+SDValue X86TargetLowering::LowerSETCCCARRY(SDValue Op, SelectionDAG &DAG) {
   SDValue LHS = Op.getOperand(0);
   SDValue RHS = Op.getOperand(1);
   SDValue Carry = Op.getOperand(2);
@@ -23066,14 +23066,14 @@ SDValue X86TargetLowering::lowerEH_SJLJ_SETJMP(SDValue Op,
 }
 
 SDValue X86TargetLowering::lowerEH_SJLJ_LONGJMP(SDValue Op,
-                                                SelectionDAG &DAG) const {
+                                                SelectionDAG &DAG) {
   SDLoc DL(Op);
   return DAG.getNode(X86ISD::EH_SJLJ_LONGJMP, DL, MVT::Other,
                      Op.getOperand(0), Op.getOperand(1));
 }
 
 SDValue X86TargetLowering::lowerEH_SJLJ_SETUP_DISPATCH(SDValue Op,
-                                                       SelectionDAG &DAG) const {
+                                                       SelectionDAG &DAG) {
   SDLoc DL(Op);
   return DAG.getNode(X86ISD::EH_SJLJ_SETUP_DISPATCH, DL, MVT::Other,
                      Op.getOperand(0));
@@ -26205,7 +26205,7 @@ static SDValue LowerMGATHER(SDValue Op, const X86Subtarget &Subtarget,
 }
 
 SDValue X86TargetLowering::LowerGC_TRANSITION_START(SDValue Op,
-                                                    SelectionDAG &DAG) const {
+                                                    SelectionDAG &DAG) {
   // TODO: Eventually, the lowering of these nodes should be informed by or
   // deferred to the GC strategy for the function in which they appear. For
   // now, however, they must be lowered to something. Since they are logically
@@ -26226,7 +26226,7 @@ SDValue X86TargetLowering::LowerGC_TRANSITION_START(SDValue Op,
 }
 
 SDValue X86TargetLowering::LowerGC_TRANSITION_END(SDValue Op,
-                                                  SelectionDAG &DAG) const {
+                                                  SelectionDAG &DAG) {
   // TODO: Eventually, the lowering of these nodes should be informed by or
   // deferred to the GC strategy for the function in which they appear. For
   // now, however, they must be lowered to something. Since they are logically

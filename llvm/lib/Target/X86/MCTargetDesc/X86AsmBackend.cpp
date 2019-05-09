@@ -501,7 +501,7 @@ class DarwinX86AsmBackend : public X86AsmBackend {
   unsigned StackDivide;                  ///< Amount to adjust stack size by.
 protected:
   /// Size of a "push" instruction for the given register.
-  unsigned PushInstrSize(unsigned Reg) const {
+  static unsigned PushInstrSize(unsigned Reg) {
     switch (Reg) {
       case X86::EBX:
       case X86::ECX:

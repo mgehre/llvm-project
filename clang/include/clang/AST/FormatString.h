@@ -357,7 +357,7 @@ public:
     return length + UsesDotPrefix;
   }
 
-  ArgType getArgType(ASTContext &Ctx) const;
+  static ArgType getArgType(ASTContext &Ctx) ;
 
   void toString(raw_ostream &os) const;
 

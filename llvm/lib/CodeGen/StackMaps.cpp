@@ -245,7 +245,7 @@ void StackMaps::print(raw_ostream &OS) {
 
 /// Create a live-out register record for the given register Reg.
 StackMaps::LiveOutReg
-StackMaps::createLiveOutReg(unsigned Reg, const TargetRegisterInfo *TRI) const {
+StackMaps::createLiveOutReg(unsigned Reg, const TargetRegisterInfo *TRI) {
   unsigned DwarfRegNum = getDwarfRegNum(Reg, TRI);
   unsigned Size = TRI->getSpillSize(*TRI->getMinimalPhysRegClass(Reg));
   return LiveOutReg(Reg, DwarfRegNum, Size);

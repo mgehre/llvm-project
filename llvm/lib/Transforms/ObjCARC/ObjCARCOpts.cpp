@@ -490,9 +490,9 @@ namespace {
                                    ARCInstKind &Class);
     void OptimizeIndividualCalls(Function &F);
 
-    void CheckForCFGHazards(const BasicBlock *BB,
+    static void CheckForCFGHazards(const BasicBlock *BB,
                             DenseMap<const BasicBlock *, BBState> &BBStates,
-                            BBState &MyStates) const;
+                            BBState &MyStates) ;
     bool VisitInstructionBottomUp(Instruction *Inst, BasicBlock *BB,
                                   BlotMapVector<Value *, RRInfo> &Retains,
                                   BBState &MyStates);
@@ -1077,7 +1077,7 @@ static void CheckForCanReleaseCFGHazard(const Sequence SuccSSeq,
 void
 ObjCARCOpt::CheckForCFGHazards(const BasicBlock *BB,
                                DenseMap<const BasicBlock *, BBState> &BBStates,
-                               BBState &MyStates) const {
+                               BBState &MyStates) {
   // If any top-down local-use or possible-dec has a succ which is earlier in
   // the sequence, forget it.
   for (auto I = MyStates.top_down_ptr_begin(), E = MyStates.top_down_ptr_end();

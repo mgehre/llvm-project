@@ -269,7 +269,7 @@ const RegisterBankInfo::InstructionMapping &RegBankSelect::findBestMapping(
 
 void RegBankSelect::tryAvoidingSplit(
     RegBankSelect::RepairingPlacement &RepairPt, const MachineOperand &MO,
-    const RegisterBankInfo::ValueMapping &ValMapping) const {
+    const RegisterBankInfo::ValueMapping &ValMapping) {
   const MachineInstr &MI = *MO.getParent();
   assert(RepairPt.hasSplit() && "We should not have to adjust for split");
   // Splitting should only occur for PHIs or between terminators,

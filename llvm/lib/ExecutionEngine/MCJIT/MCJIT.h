@@ -195,11 +195,11 @@ class MCJIT : public ExecutionEngine {
   // perform lookup of pre-compiled code to avoid re-compilation.
   ObjectCache *ObjCache;
 
-  Function *FindFunctionNamedInModulePtrSet(StringRef FnName,
+  static Function *FindFunctionNamedInModulePtrSet(StringRef FnName,
                                             ModulePtrSet::iterator I,
                                             ModulePtrSet::iterator E);
 
-  GlobalVariable *FindGlobalVariableNamedInModulePtrSet(StringRef Name,
+  static GlobalVariable *FindGlobalVariableNamedInModulePtrSet(StringRef Name,
                                                         bool AllowInternal,
                                                         ModulePtrSet::iterator I,
                                                         ModulePtrSet::iterator E);

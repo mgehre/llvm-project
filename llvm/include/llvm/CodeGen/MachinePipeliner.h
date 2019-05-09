@@ -281,13 +281,13 @@ private:
   void updatePhiDependences();
   void changeDependences();
   unsigned calculateResMII();
-  unsigned calculateRecMII(NodeSetType &RecNodeSets);
+  static unsigned calculateRecMII(NodeSetType &RecNodeSets);
   void findCircuits(NodeSetType &NodeSets);
-  void fuseRecs(NodeSetType &NodeSets);
-  void removeDuplicateNodes(NodeSetType &NodeSets);
+  static void fuseRecs(NodeSetType &NodeSets);
+  static void removeDuplicateNodes(NodeSetType &NodeSets);
   void computeNodeFunctions(NodeSetType &NodeSets);
   void registerPressureFilter(NodeSetType &NodeSets);
-  void colocateNodeSets(NodeSetType &NodeSets);
+  static void colocateNodeSets(NodeSetType &NodeSets);
   void checkNodeSets(NodeSetType &NodeSets);
   void groupRemainingNodes(NodeSetType &NodeSets);
   void addConnectedNodes(SUnit *SU, NodeSet &NewSet,

@@ -599,7 +599,7 @@ bool TargetInfo::validateOutputConstraint(ConstraintInfo &Info) const {
 
 bool TargetInfo::resolveSymbolicName(const char *&Name,
                                      ArrayRef<ConstraintInfo> OutputConstraints,
-                                     unsigned &Index) const {
+                                     unsigned &Index) {
   assert(*Name == '[' && "Symbolic name did not start with '['");
   Name++;
   const char *Start = Name;
@@ -737,7 +737,7 @@ bool TargetInfo::validateInputConstraint(
   return true;
 }
 
-void TargetInfo::CheckFixedPointBits() const {
+void TargetInfo::CheckFixedPointBits() {
   // Check that the number of fractional and integral bits (and maybe sign) can
   // fit into the bits given for a fixed point type.
   assert(ShortAccumScale + getShortAccumIBits() + 1 <= ShortAccumWidth);

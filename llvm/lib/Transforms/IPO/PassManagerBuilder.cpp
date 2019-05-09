@@ -210,7 +210,7 @@ void PassManagerBuilder::addExtensionsToPM(ExtensionPointTy ETy,
 }
 
 void PassManagerBuilder::addInitialAliasAnalysisPasses(
-    legacy::PassManagerBase &PM) const {
+    legacy::PassManagerBase &PM) {
   switch (UseCFLAA) {
   case CFLAAType::Steensgaard:
     PM.add(createCFLSteensAAWrapperPass());

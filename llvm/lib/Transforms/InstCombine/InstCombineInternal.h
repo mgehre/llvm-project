@@ -412,7 +412,7 @@ public:
   Instruction *visitExtractElementInst(ExtractElementInst &EI);
   Instruction *visitShuffleVectorInst(ShuffleVectorInst &SVI);
   Instruction *visitExtractValueInst(ExtractValueInst &EV);
-  Instruction *visitLandingPadInst(LandingPadInst &LI);
+  static Instruction *visitLandingPadInst(LandingPadInst &LI);
   Instruction *visitVAStartInst(VAStartInst &I);
   Instruction *visitVACopyInst(VACopyInst &I);
 
@@ -437,7 +437,7 @@ public:
 private:
   bool shouldChangeType(unsigned FromBitWidth, unsigned ToBitWidth) const;
   bool shouldChangeType(Type *From, Type *To) const;
-  Value *dyn_castNegVal(Value *V) const;
+  static Value *dyn_castNegVal(Value *V) ;
   Type *FindElementAtOffset(PointerType *PtrTy, int64_t Offset,
                             SmallVectorImpl<Value *> &NewIndices);
 
@@ -770,7 +770,7 @@ private:
   /// Return true if we matched a three way compare idiom. The LHS, RHS, Less,
   /// Equal and Greater values are saved in the matching process and returned to
   /// the caller.
-  bool matchThreeWayIntCompare(SelectInst *SI, Value *&LHS, Value *&RHS,
+  static bool matchThreeWayIntCompare(SelectInst *SI, Value *&LHS, Value *&RHS,
                                ConstantInt *&Less, ConstantInt *&Equal,
                                ConstantInt *&Greater);
 
@@ -842,7 +842,7 @@ private:
 
   /// Helper function for FoldPHIArgXIntoPHI() to set debug location for the
   /// folded operation.
-  void PHIArgMergedDebugLoc(Instruction *Inst, PHINode &PN);
+  static void PHIArgMergedDebugLoc(Instruction *Inst, PHINode &PN);
 
   Instruction *foldGEPICmp(GEPOperator *GEPLHS, Value *RHS,
                            ICmpInst::Predicate Cond, Instruction &I);
@@ -853,7 +853,7 @@ private:
                                             ConstantInt *AndCst = nullptr);
   Instruction *foldFCmpIntToFPConst(FCmpInst &I, Instruction *LHSI,
                                     Constant *RHSC);
-  Instruction *foldICmpAddOpConst(Value *X, const APInt &C,
+  static Instruction *foldICmpAddOpConst(Value *X, const APInt &C,
                                   ICmpInst::Predicate Pred);
   Instruction *foldICmpWithCastAndCast(ICmpInst &ICI);
 
@@ -878,13 +878,13 @@ private:
                                    const APInt &C);
   Instruction *foldICmpOrConstant(ICmpInst &Cmp, BinaryOperator *Or,
                                   const APInt &C);
-  Instruction *foldICmpMulConstant(ICmpInst &Cmp, BinaryOperator *Mul,
+  static Instruction *foldICmpMulConstant(ICmpInst &Cmp, BinaryOperator *Mul,
                                    const APInt &C);
   Instruction *foldICmpShlConstant(ICmpInst &Cmp, BinaryOperator *Shl,
                                    const APInt &C);
   Instruction *foldICmpShrConstant(ICmpInst &Cmp, BinaryOperator *Shr,
                                    const APInt &C);
-  Instruction *foldICmpUDivConstant(ICmpInst &Cmp, BinaryOperator *UDiv,
+  static Instruction *foldICmpUDivConstant(ICmpInst &Cmp, BinaryOperator *UDiv,
                                     const APInt &C);
   Instruction *foldICmpDivConstant(ICmpInst &Cmp, BinaryOperator *Div,
                                    const APInt &C);

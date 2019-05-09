@@ -150,7 +150,7 @@ bool MacroArgs::invokedWithVariadicArgument(const MacroInfo *const MI) const {
 /// ArgNeedsPreexpansion - If we can prove that the argument won't be affected
 /// by pre-expansion, return false.  Otherwise, conservatively return true.
 bool MacroArgs::ArgNeedsPreexpansion(const Token *ArgTok,
-                                     Preprocessor &PP) const {
+                                     Preprocessor &PP) {
   // If there are no identifiers in the argument list, or if the identifiers are
   // known to not be macros, pre-expansion won't modify it.
   for (; ArgTok->isNot(tok::eof); ++ArgTok)

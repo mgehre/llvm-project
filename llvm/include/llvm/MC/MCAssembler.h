@@ -195,10 +195,10 @@ private:
 
   bool relaxPaddingFragment(MCAsmLayout &Layout, MCPaddingFragment &PF);
 
-  bool relaxLEB(MCAsmLayout &Layout, MCLEBFragment &IF);
+  static bool relaxLEB(MCAsmLayout &Layout, MCLEBFragment &IF);
 
   bool relaxDwarfLineAddr(MCAsmLayout &Layout, MCDwarfLineAddrFragment &DF);
-  bool relaxDwarfCallFrameFragment(MCAsmLayout &Layout,
+  static bool relaxDwarfCallFrameFragment(MCAsmLayout &Layout,
                                    MCDwarfCallFrameFragment &DF);
   bool relaxCVInlineLineTable(MCAsmLayout &Layout,
                               MCCVInlineLineTableFragment &DF);
@@ -239,7 +239,7 @@ public:
   /// in the symbol table, or whether it can be discarded by the assembler. This
   /// also effects whether the assembler treats the label as potentially
   /// defining a separate atom.
-  bool isSymbolLinkerVisible(const MCSymbol &SD) const;
+  static bool isSymbolLinkerVisible(const MCSymbol &SD) ;
 
   /// Emit the section contents to \p OS.
   void writeSectionData(raw_ostream &OS, const MCSection *Section,

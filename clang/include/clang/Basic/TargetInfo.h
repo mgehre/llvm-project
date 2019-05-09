@@ -922,9 +922,9 @@ public:
   validateAsmConstraint(const char *&Name,
                         TargetInfo::ConstraintInfo &info) const = 0;
 
-  bool resolveSymbolicName(const char *&Name,
+  static bool resolveSymbolicName(const char *&Name,
                            ArrayRef<ConstraintInfo> OutputConstraints,
-                           unsigned &Index) const;
+                           unsigned &Index) ;
 
   // Constraint parm will be left pointing at the last character of
   // the constraint.  In practice, it won't be changed unless the
@@ -1351,7 +1351,7 @@ protected:
  private:
   // Assert the values for the fractional and integral bits for each fixed point
   // type follow the restrictions given in clause 6.2.6.3 of N1169.
-  void CheckFixedPointBits() const;
+  static void CheckFixedPointBits() ;
 };
 
 }  // end namespace clang

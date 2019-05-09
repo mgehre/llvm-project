@@ -271,7 +271,7 @@ public:
     void __invalidate_all(void* __c);
     __c_node* __find_c_and_lock(void* __c) const;
     __c_node* __find_c(void* __c) const;
-    void unlock() const;
+    static void unlock() ;
 
     void swap(void* __c1, void* __c2);
 

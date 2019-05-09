@@ -18,7 +18,7 @@ struct TypeNameVisitor : TestVisitor<TypeNameVisitor> {
 
   // ValueDecls are the least-derived decl with both a qualtype and a
   // name.
-  bool traverseDecl(Decl *D) {
+  static bool traverseDecl(Decl *D) {
     return true;  // Always continue
   }
 

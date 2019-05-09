@@ -64,16 +64,16 @@ private:
                           llvm::opt::ArgStringList &CmdArgs) const;
   void AddSparcTargetArgs(const llvm::opt::ArgList &Args,
                           llvm::opt::ArgStringList &CmdArgs) const;
-  void AddSystemZTargetArgs(const llvm::opt::ArgList &Args,
-                            llvm::opt::ArgStringList &CmdArgs) const;
+  static void AddSystemZTargetArgs(const llvm::opt::ArgList &Args,
+                            llvm::opt::ArgStringList &CmdArgs) ;
   void AddX86TargetArgs(const llvm::opt::ArgList &Args,
                         llvm::opt::ArgStringList &CmdArgs) const;
-  void AddHexagonTargetArgs(const llvm::opt::ArgList &Args,
-                            llvm::opt::ArgStringList &CmdArgs) const;
+  static void AddHexagonTargetArgs(const llvm::opt::ArgList &Args,
+                            llvm::opt::ArgStringList &CmdArgs) ;
   void AddLanaiTargetArgs(const llvm::opt::ArgList &Args,
                           llvm::opt::ArgStringList &CmdArgs) const;
-  void AddWebAssemblyTargetArgs(const llvm::opt::ArgList &Args,
-                                llvm::opt::ArgStringList &CmdArgs) const;
+  static void AddWebAssemblyTargetArgs(const llvm::opt::ArgList &Args,
+                                llvm::opt::ArgStringList &CmdArgs) ;
 
   enum RewriteKind { RK_None, RK_Fragile, RK_NonFragile };
 

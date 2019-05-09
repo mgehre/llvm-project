@@ -104,10 +104,10 @@ namespace {
     bool runOnMachineFunction(MachineFunction &Fn) override;
 
   private:
-    bool enablePostRAScheduler(
+    static bool enablePostRAScheduler(
         const TargetSubtargetInfo &ST, CodeGenOpt::Level OptLevel,
         TargetSubtargetInfo::AntiDepBreakMode &Mode,
-        TargetSubtargetInfo::RegClassVector &CriticalPathRCs) const;
+        TargetSubtargetInfo::RegClassVector &CriticalPathRCs) ;
   };
   char PostRAScheduler::ID = 0;
 
@@ -267,7 +267,7 @@ bool PostRAScheduler::enablePostRAScheduler(
     const TargetSubtargetInfo &ST,
     CodeGenOpt::Level OptLevel,
     TargetSubtargetInfo::AntiDepBreakMode &Mode,
-    TargetSubtargetInfo::RegClassVector &CriticalPathRCs) const {
+    TargetSubtargetInfo::RegClassVector &CriticalPathRCs) {
   Mode = ST.getAntiDepBreakMode();
   ST.getCriticalPathRCs(CriticalPathRCs);
 

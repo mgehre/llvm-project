@@ -165,7 +165,7 @@ private:
     }
   }
 
-  void writeObjCClassName(const ObjCInterfaceDecl *D, raw_ostream &OS) {
+  static void writeObjCClassName(const ObjCInterfaceDecl *D, raw_ostream &OS) {
     OS << getClassSymbolPrefix(ObjCClass, D->getASTContext());
     OS << D->getObjCRuntimeNameAsString();
   }

@@ -5473,10 +5473,10 @@ namespace {
                         const DeclaratorChunk &Chunk)
         : Context(Context), State(State), Chunk(Chunk) {}
 
-    void VisitQualifiedTypeLoc(QualifiedTypeLoc TL) {
+    static void VisitQualifiedTypeLoc(QualifiedTypeLoc TL) {
       llvm_unreachable("qualified type locs not expected here!");
     }
-    void VisitDecayedTypeLoc(DecayedTypeLoc TL) {
+    static void VisitDecayedTypeLoc(DecayedTypeLoc TL) {
       llvm_unreachable("decayed type locs not expected here!");
     }
 
@@ -5584,7 +5584,7 @@ namespace {
       TL.setKWLoc(Chunk.Loc);
     }
 
-    void VisitTypeLoc(TypeLoc TL) {
+    static void VisitTypeLoc(TypeLoc TL) {
       llvm_unreachable("unsupported TypeLoc kind in declarator!");
     }
   };
@@ -5707,7 +5707,7 @@ ParsedType Sema::CreateParsedType(QualType T, TypeSourceInfo *TInfo) {
 }
 
 void LocInfoType::getAsStringInternal(std::string &Str,
-                                      const PrintingPolicy &Policy) const {
+                                      const PrintingPolicy &Policy) {
   llvm_unreachable("LocInfoType leaked into the type system; an opaque TypeTy*"
          " was used directly instead of getting the QualType through"
          " GetTypeFromParser");

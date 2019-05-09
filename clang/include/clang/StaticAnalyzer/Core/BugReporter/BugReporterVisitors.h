@@ -183,30 +183,30 @@ public:
                                                      BugReporterContext &BRC,
                                                      BugReport &BR);
 
-  std::shared_ptr<PathDiagnosticPiece>
+  static std::shared_ptr<PathDiagnosticPiece>
   VisitTerminator(const Stmt *Term, const ExplodedNode *N,
                   const CFGBlock *srcBlk, const CFGBlock *dstBlk, BugReport &R,
                   BugReporterContext &BRC);
 
-  std::shared_ptr<PathDiagnosticPiece>
+  static std::shared_ptr<PathDiagnosticPiece>
   VisitTrueTest(const Expr *Cond, bool tookTrue, BugReporterContext &BRC,
                 BugReport &R, const ExplodedNode *N);
 
-  std::shared_ptr<PathDiagnosticPiece>
+  static std::shared_ptr<PathDiagnosticPiece>
   VisitTrueTest(const Expr *Cond, const DeclRefExpr *DR, const bool tookTrue,
                 BugReporterContext &BRC, BugReport &R, const ExplodedNode *N);
 
-  std::shared_ptr<PathDiagnosticPiece>
+  static std::shared_ptr<PathDiagnosticPiece>
   VisitTrueTest(const Expr *Cond, const BinaryOperator *BExpr,
                 const bool tookTrue, BugReporterContext &BRC, BugReport &R,
                 const ExplodedNode *N);
 
-  std::shared_ptr<PathDiagnosticPiece>
+  static std::shared_ptr<PathDiagnosticPiece>
   VisitConditionVariable(StringRef LhsString, const Expr *CondVarExpr,
                          const bool tookTrue, BugReporterContext &BRC,
                          BugReport &R, const ExplodedNode *N);
 
-  bool patternMatch(const Expr *Ex,
+  static bool patternMatch(const Expr *Ex,
                     const Expr *ParentEx,
                     raw_ostream &Out,
                     BugReporterContext &BRC,

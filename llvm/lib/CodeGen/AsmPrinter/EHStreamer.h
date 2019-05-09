@@ -76,7 +76,7 @@ protected:
                            SmallVectorImpl<ActionEntry> &Actions,
                            SmallVectorImpl<unsigned> &FirstActions);
 
-  void computePadMap(const SmallVectorImpl<const LandingPadInfo *> &LandingPads,
+  static void computePadMap(const SmallVectorImpl<const LandingPadInfo *> &LandingPads,
                      RangeMapType &PadMap);
 
   /// Compute the call-site table.  The entry for an invoke has a try-range

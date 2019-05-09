@@ -217,12 +217,12 @@ private:
                            /// refer to __eh_frame entry.
   };
 
-  void applyFixupFinal(const Reference &ref, uint8_t *location,
+  static void applyFixupFinal(const Reference &ref, uint8_t *location,
                        uint64_t fixupAddress, uint64_t targetAddress,
                        uint64_t inAtomAddress, uint64_t imageBaseAddress,
                        FindAddressForAtom findSectionAddress);
 
-  void applyFixupRelocatable(const Reference &ref, uint8_t *location,
+  static void applyFixupRelocatable(const Reference &ref, uint8_t *location,
                              uint64_t fixupAddress, uint64_t targetAddress,
                              uint64_t inAtomAddress, bool targetUnnamed);
 

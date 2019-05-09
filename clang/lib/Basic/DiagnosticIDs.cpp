@@ -420,7 +420,7 @@ DiagnosticIDs::getDiagnosticLevel(unsigned DiagID, SourceLocation Loc,
 /// diagnostic state. Can be null in order to query the latest state.
 diag::Severity
 DiagnosticIDs::getDiagnosticSeverity(unsigned DiagID, SourceLocation Loc,
-                                     const DiagnosticsEngine &Diag) const {
+                                     const DiagnosticsEngine &Diag) {
   assert(getBuiltinDiagClass(DiagID) != CLASS_NOTE);
 
   // Specific non-error diagnostics may be mapped to various levels from ignored
@@ -570,7 +570,7 @@ static bool getDiagnosticsInGroup(diag::Flavor Flavor,
 
 bool
 DiagnosticIDs::getDiagnosticsInGroup(diag::Flavor Flavor, StringRef Group,
-                                     SmallVectorImpl<diag::kind> &Diags) const {
+                                     SmallVectorImpl<diag::kind> &Diags) {
   auto Found = std::lower_bound(std::begin(OptionTable), std::end(OptionTable),
                                 Group,
                                 [](const WarningOption &LHS, StringRef RHS) {
@@ -703,7 +703,7 @@ bool DiagnosticIDs::ProcessDiag(DiagnosticsEngine &Diag) const {
   return true;
 }
 
-void DiagnosticIDs::EmitDiag(DiagnosticsEngine &Diag, Level DiagLevel) const {
+void DiagnosticIDs::EmitDiag(DiagnosticsEngine &Diag, Level DiagLevel) {
   Diagnostic Info(&Diag);
   assert(DiagLevel != DiagnosticIDs::Ignored && "Cannot emit ignored diagnostics!");
 

@@ -135,8 +135,8 @@ private:
   void MarkLive(const Function &F);
   void PropagateLiveness(const RetOrArg &RA);
   bool RemoveDeadStuffFromFunction(Function *F);
-  bool DeleteDeadVarargs(Function &Fn);
-  bool RemoveDeadArgumentsFromCallers(Function &Fn);
+  static bool DeleteDeadVarargs(Function &Fn);
+  static bool RemoveDeadArgumentsFromCallers(Function &Fn);
 };
 
 } // end namespace llvm

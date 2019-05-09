@@ -308,10 +308,10 @@ public:
   ///     FMA213 #1, #2, #3
   /// results into instruction with adjusted opcode:
   ///     FMA231 #3, #2, #1
-  unsigned
+  static unsigned
   getFMA3OpcodeToCommuteOperands(const MachineInstr &MI, unsigned SrcOpIdx1,
                                  unsigned SrcOpIdx2,
-                                 const X86InstrFMA3Group &FMA3Group) const;
+                                 const X86InstrFMA3Group &FMA3Group) ;
 
   // Branch analysis.
   bool isUnpredicatedTerminator(const MachineInstr &MI) const override;
@@ -452,12 +452,12 @@ public:
   /// would clobber the EFLAGS condition register. Note the result may be
   /// conservative. If it cannot definitely determine the safety after visiting
   /// a few instructions in each direction it assumes it's not safe.
-  bool isSafeToClobberEFLAGS(MachineBasicBlock &MBB,
-                             MachineBasicBlock::iterator I) const;
+  static bool isSafeToClobberEFLAGS(MachineBasicBlock &MBB,
+                             MachineBasicBlock::iterator I) ;
 
   /// True if MI has a condition code def, e.g. EFLAGS, that is
   /// not marked dead.
-  bool hasLiveCondCodeDef(MachineInstr &MI) const;
+  static bool hasLiveCondCodeDef(MachineInstr &MI) ;
 
   /// getGlobalBaseReg - Return a virtual register initialized with the
   /// the global base register value. Output instructions required to
@@ -602,8 +602,8 @@ private:
 
   /// isFrameOperand - Return true and the FrameIndex if the specified
   /// operand and follow operands form a reference to the stack frame.
-  bool isFrameOperand(const MachineInstr &MI, unsigned int Op,
-                      int &FrameIndex) const;
+  static bool isFrameOperand(const MachineInstr &MI, unsigned int Op,
+                      int &FrameIndex) ;
 
   /// Returns true iff the routine could find two commutable operands in the
   /// given machine instruction with 3 vector inputs.
@@ -622,10 +622,10 @@ private:
   /// commutable with the operand#1.
   ///
   /// If IsIntrinsic is set, operand 1 will be ignored for commuting.
-  bool findThreeSrcCommutedOpIndices(const MachineInstr &MI,
+  static bool findThreeSrcCommutedOpIndices(const MachineInstr &MI,
                                      unsigned &SrcOpIdx1,
                                      unsigned &SrcOpIdx2,
-                                     bool IsIntrinsic = false) const;
+                                     bool IsIntrinsic = false) ;
 };
 
 } // namespace llvm

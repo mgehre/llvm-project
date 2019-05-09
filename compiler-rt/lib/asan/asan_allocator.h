@@ -115,8 +115,8 @@ class AsanChunkFifoList: public IntrusiveList<AsanChunk> {
 };
 
 struct AsanMapUnmapCallback {
-  void OnMap(uptr p, uptr size) const;
-  void OnUnmap(uptr p, uptr size) const;
+  static void OnMap(uptr p, uptr size) ;
+  static void OnUnmap(uptr p, uptr size) ;
 };
 
 #if SANITIZER_CAN_USE_ALLOCATOR64

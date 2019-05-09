@@ -156,7 +156,7 @@ private:
   MDNode *createHintMetadata(StringRef Name, unsigned V) const;
 
   /// Matches metadata with hint name.
-  bool matchesHintMetadataName(MDNode *Node, ArrayRef<Hint> HintTypes);
+  static bool matchesHintMetadataName(MDNode *Node, ArrayRef<Hint> HintTypes);
 
   /// Sets current hints into loop metadata, keeping other values intact.
   void writeHintsToMetadata(ArrayRef<Hint> HintTypes);

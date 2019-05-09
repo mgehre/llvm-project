@@ -135,9 +135,9 @@ private:
   SmallVector<const VarDecl *, 4> BaseDecls;
 
   /// Emits lvalue for shared expression.
-  LValue emitSharedLValue(CodeGenFunction &CGF, const Expr *E);
+  static LValue emitSharedLValue(CodeGenFunction &CGF, const Expr *E);
   /// Emits upper bound for shared expression (if array section).
-  LValue emitSharedLValueUB(CodeGenFunction &CGF, const Expr *E);
+  static LValue emitSharedLValueUB(CodeGenFunction &CGF, const Expr *E);
   /// Performs aggregate initialization.
   /// \param N Number of reduction item in the common list.
   /// \param PrivateAddr Address of the corresponding private item.
@@ -249,7 +249,7 @@ protected:
   /// } else {
   ///   ElseGen();
   /// }
-  void emitOMPIfClause(CodeGenFunction &CGF, const Expr *Cond,
+  static void emitOMPIfClause(CodeGenFunction &CGF, const Expr *Cond,
                        const RegionCodeGenTy &ThenGen,
                        const RegionCodeGenTy &ElseGen);
 
@@ -272,8 +272,8 @@ protected:
   virtual StringRef getOutlinedHelperName() const { return ".omp_outlined."; }
 
   /// Emits \p Callee function call with arguments \p Args with location \p Loc.
-  void emitCall(CodeGenFunction &CGF, SourceLocation Loc, llvm::Value *Callee,
-                ArrayRef<llvm::Value *> Args = llvm::None) const;
+  static void emitCall(CodeGenFunction &CGF, SourceLocation Loc, llvm::Value *Callee,
+                ArrayRef<llvm::Value *> Args = llvm::None) ;
 
   /// Emits address of the word in a memory where current thread id is
   /// stored.
@@ -1227,7 +1227,7 @@ public:
                                      ArrayRef<const Expr *> ReductionOps);
 
   /// Emits single reduction combiner
-  void emitSingleReductionCombiner(CodeGenFunction &CGF,
+  static void emitSingleReductionCombiner(CodeGenFunction &CGF,
                                    const Expr *ReductionOp,
                                    const Expr *PrivateRef,
                                    const DeclRefExpr *LHS,

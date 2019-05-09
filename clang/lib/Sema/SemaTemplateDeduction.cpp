@@ -4337,7 +4337,7 @@ namespace {
       return Result;
     }
 
-    ExprResult TransformLambdaExpr(LambdaExpr *E) {
+    static ExprResult TransformLambdaExpr(LambdaExpr *E) {
       // Lambdas never need to be transformed.
       return E;
     }

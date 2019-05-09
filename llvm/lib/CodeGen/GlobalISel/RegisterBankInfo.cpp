@@ -67,7 +67,7 @@ RegisterBankInfo::RegisterBankInfo(RegisterBank **RegBanks,
 #endif // NDEBUG
 }
 
-bool RegisterBankInfo::verify(const TargetRegisterInfo &TRI) const {
+bool RegisterBankInfo::verify(const TargetRegisterInfo &TRI) {
 #ifndef NDEBUG
   for (unsigned Idx = 0, End = getNumRegBanks(); Idx != End; ++Idx) {
     const RegisterBank &RegBank = getRegBank(Idx);
@@ -481,7 +481,7 @@ LLVM_DUMP_METHOD void RegisterBankInfo::PartialMapping::dump() const {
 }
 #endif
 
-bool RegisterBankInfo::PartialMapping::verify() const {
+bool RegisterBankInfo::PartialMapping::verify() {
   assert(RegBank && "Register bank not set");
   assert(Length && "Empty mapping");
   assert((StartIdx <= getHighBitIdx()) && "Overflow, switch to APInt?");

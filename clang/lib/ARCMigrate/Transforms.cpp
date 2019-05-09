@@ -241,7 +241,7 @@ public:
   RemovablesCollector(ExprSet &removables)
   : Removables(removables) { }
 
-  bool shouldWalkTypesOfTypeLocs() const { return false; }
+  static bool shouldWalkTypesOfTypeLocs() { return false; }
 
   bool TraverseStmtExpr(StmtExpr *E) {
     CompoundStmt *S = E->getSubStmt();
@@ -322,7 +322,7 @@ class ASTTransform : public RecursiveASTVisitor<ASTTransform> {
 public:
   ASTTransform(MigrationContext &MigrateCtx) : MigrateCtx(MigrateCtx) { }
 
-  bool shouldWalkTypesOfTypeLocs() const { return false; }
+  static bool shouldWalkTypesOfTypeLocs() { return false; }
 
   bool TraverseObjCImplementationDecl(ObjCImplementationDecl *D) {
     ObjCImplementationContext ImplCtx(MigrateCtx, D);

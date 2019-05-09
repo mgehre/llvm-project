@@ -614,7 +614,7 @@ private:
   }
 
   /// Checks if the \p Level is valid for use in a fold expression.
-  bool isFoldOperator(prec::Level Level) const;
+  static bool isFoldOperator(prec::Level Level) ;
 
   /// Checks if the \p Kind is a valid operator for fold expressions.
   bool isFoldOperator(tok::TokenKind Kind) const;
@@ -826,7 +826,7 @@ private:
   bool TryKeywordIdentFallback(bool DisableKeyword);
 
   /// Get the TemplateIdAnnotation from the token.
-  TemplateIdAnnotation *takeTemplateIdAnnotation(const Token &tok);
+  static TemplateIdAnnotation *takeTemplateIdAnnotation(const Token &tok);
 
   /// TentativeParsingAction - An object that is used as a kind of "tentative
   /// parsing transaction". It gets instantiated to mark the token position and
@@ -1369,7 +1369,7 @@ private:
 
   Sema::ParsingClassState
   PushParsingClass(Decl *TagOrTemplate, bool TopLevelClass, bool IsInterface);
-  void DeallocateParsedClasses(ParsingClass *Class);
+  static void DeallocateParsedClasses(ParsingClass *Class);
   void PopParsingClass(Sema::ParsingClassState);
 
   enum CachedInitKind {
@@ -2090,7 +2090,7 @@ private:
                         const ParsedTemplateInfo &TemplateInfo,
                         AccessSpecifier AS, DeclSpecContext DSC,
                         ParsedAttributesWithRange &Attrs);
-  DeclSpecContext
+  static DeclSpecContext
   getDeclSpecContextFromDeclaratorContext(DeclaratorContext Context);
   void ParseDeclarationSpecifiers(
       DeclSpec &DS,
@@ -2126,7 +2126,7 @@ private:
   /// isKnownToBeTypeSpecifier - Return true if we know that the specified token
   /// is definitely a type-specifier.  Return false if it isn't part of a type
   /// specifier or if we're not sure.
-  bool isKnownToBeTypeSpecifier(const Token &Tok) const;
+  static bool isKnownToBeTypeSpecifier(const Token &Tok) ;
 
   /// Return true if we know that we are definitely looking at a
   /// decl-specifier, and isn't part of an expression such as a function-style
@@ -2261,7 +2261,7 @@ private:
   /// \returns \c TPR_true if this token starts an expression, \c TPR_false if
   /// this token starts a type-specifier-seq, or \c TPR_ambiguous if it cannot
   /// tell.
-  TPResult isExpressionOrTypeSpecifierSimple(tok::TokenKind Kind);
+  static TPResult isExpressionOrTypeSpecifierSimple(tok::TokenKind Kind);
 
   /// isCXXDeclarationSpecifier - Returns TPResult::True if it is a
   /// declaration specifier, TPResult::False if it is not,
@@ -2345,7 +2345,7 @@ private:
   void DiagnoseMisplacedCXX11Attribute(ParsedAttributesWithRange &Attrs,
                                        SourceLocation CorrectLocation);
 
-  void stripTypeAttributesOffDeclSpec(ParsedAttributesWithRange &Attrs,
+  static void stripTypeAttributesOffDeclSpec(ParsedAttributesWithRange &Attrs,
                                       DeclSpec &DS, Sema::TagUseKind TUK);
 
   // FixItLoc = possible correct location for the attributes

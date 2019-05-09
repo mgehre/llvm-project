@@ -89,7 +89,7 @@ class GISelCSEInfo : public GISelChangeObserver {
   // Only used in asserts.
   DenseMap<unsigned, unsigned> OpcodeHitTable;
 
-  bool isUniqueMachineInstValid(const UniqueMachineInstr &UMI) const;
+  static bool isUniqueMachineInstValid(const UniqueMachineInstr &UMI) ;
 
   void invalidateUniqueMachineInstr(UniqueMachineInstr *UMI);
 

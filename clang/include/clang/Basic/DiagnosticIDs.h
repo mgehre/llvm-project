@@ -292,8 +292,8 @@ public:
   ///
   /// \param[out] Diags - On return, the diagnostics in the group.
   /// \returns \c true if the given group is unknown, \c false otherwise.
-  bool getDiagnosticsInGroup(diag::Flavor Flavor, StringRef Group,
-                             SmallVectorImpl<diag::kind> &Diags) const;
+  static bool getDiagnosticsInGroup(diag::Flavor Flavor, StringRef Group,
+                             SmallVectorImpl<diag::kind> &Diags) ;
 
   /// Get the set of all diagnostic IDs.
   static void getAllDiagnostics(diag::Flavor Flavor,
@@ -316,9 +316,9 @@ private:
   getDiagnosticLevel(unsigned DiagID, SourceLocation Loc,
                      const DiagnosticsEngine &Diag) const LLVM_READONLY;
 
-  diag::Severity
+  static diag::Severity
   getDiagnosticSeverity(unsigned DiagID, SourceLocation Loc,
-                        const DiagnosticsEngine &Diag) const LLVM_READONLY;
+                        const DiagnosticsEngine &Diag) LLVM_READONLY;
 
   /// Used to report a diagnostic that is finally fully formed.
   ///
@@ -328,7 +328,7 @@ private:
 
   /// Used to emit a diagnostic that is finally fully formed,
   /// ignoring suppression.
-  void EmitDiag(DiagnosticsEngine &Diag, Level DiagLevel) const;
+  static void EmitDiag(DiagnosticsEngine &Diag, Level DiagLevel) ;
 
   /// Whether the diagnostic may leave the AST in a state where some
   /// invariants can break.

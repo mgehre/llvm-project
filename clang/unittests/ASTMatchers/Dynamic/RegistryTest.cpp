@@ -21,13 +21,13 @@ using ast_matchers::internal::Matcher;
 
 class RegistryTest : public ::testing::Test {
 public:
-  std::vector<ParserValue> Args() { return std::vector<ParserValue>(); }
-  std::vector<ParserValue> Args(const VariantValue &Arg1) {
+  static std::vector<ParserValue> Args() { return std::vector<ParserValue>(); }
+  static std::vector<ParserValue> Args(const VariantValue &Arg1) {
     std::vector<ParserValue> Out(1);
     Out[0].Value = Arg1;
     return Out;
   }
-  std::vector<ParserValue> Args(const VariantValue &Arg1,
+  static std::vector<ParserValue> Args(const VariantValue &Arg1,
                                 const VariantValue &Arg2) {
     std::vector<ParserValue> Out(2);
     Out[0].Value = Arg1;
@@ -35,11 +35,11 @@ public:
     return Out;
   }
 
-  llvm::Optional<MatcherCtor> lookupMatcherCtor(StringRef MatcherName) {
+  static llvm::Optional<MatcherCtor> lookupMatcherCtor(StringRef MatcherName) {
     return Registry::lookupMatcherCtor(MatcherName);
   }
 
-  VariantMatcher constructMatcher(StringRef MatcherName,
+  static VariantMatcher constructMatcher(StringRef MatcherName,
                                   Diagnostics *Error = nullptr) {
     Diagnostics DummyError;
     if (!Error) Error = &DummyError;
@@ -51,7 +51,7 @@ public:
     return Out;
   }
 
-  VariantMatcher constructMatcher(StringRef MatcherName,
+  static VariantMatcher constructMatcher(StringRef MatcherName,
                                   const VariantValue &Arg1,
                                   Diagnostics *Error = nullptr) {
     Diagnostics DummyError;
@@ -64,7 +64,7 @@ public:
     return Out;
   }
 
-  VariantMatcher constructMatcher(StringRef MatcherName,
+  static VariantMatcher constructMatcher(StringRef MatcherName,
                                   const VariantValue &Arg1,
                                   const VariantValue &Arg2,
                                   Diagnostics *Error = nullptr) {
@@ -81,13 +81,13 @@ public:
 
   typedef std::vector<MatcherCompletion> CompVector;
 
-  CompVector getCompletions() {
+  static CompVector getCompletions() {
     std::vector<std::pair<MatcherCtor, unsigned> > Context;
     return Registry::getMatcherCompletions(
         Registry::getAcceptedCompletionTypes(Context));
   }
 
-  CompVector getCompletions(StringRef MatcherName1, unsigned ArgNo1) {
+  static CompVector getCompletions(StringRef MatcherName1, unsigned ArgNo1) {
     std::vector<std::pair<MatcherCtor, unsigned> > Context;
     llvm::Optional<MatcherCtor> Ctor = lookupMatcherCtor(MatcherName1);
     if (!Ctor)
@@ -97,7 +97,7 @@ public:
         Registry::getAcceptedCompletionTypes(Context));
   }
 
-  CompVector getCompletions(StringRef MatcherName1, unsigned ArgNo1,
+  static CompVector getCompletions(StringRef MatcherName1, unsigned ArgNo1,
                             StringRef MatcherName2, unsigned ArgNo2) {
     std::vector<std::pair<MatcherCtor, unsigned> > Context;
     llvm::Optional<MatcherCtor> Ctor = lookupMatcherCtor(MatcherName1);
@@ -112,7 +112,7 @@ public:
         Registry::getAcceptedCompletionTypes(Context));
   }
 
-  bool hasCompletion(const CompVector &Comps, StringRef TypedText,
+  static bool hasCompletion(const CompVector &Comps, StringRef TypedText,
                      StringRef MatcherDecl = StringRef()) {
     for (CompVector::const_iterator I = Comps.begin(), E = Comps.end(); I != E;
          ++I) {

@@ -137,7 +137,7 @@ public:
   getDirectControlFlowXRefs(const Instr &InstrMeta) const;
 
   // Returns whether this instruction uses a register operand.
-  bool usesRegisterOperand(const Instr &InstrMeta) const;
+  static bool usesRegisterOperand(const Instr &InstrMeta) ;
 
   // Returns the list of indirect instructions.
   const std::set<uint64_t> &getIndirectInstructions() const;

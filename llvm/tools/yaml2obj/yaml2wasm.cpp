@@ -28,28 +28,28 @@ public:
   int writeWasm(raw_ostream &OS);
 
 private:
-  int writeRelocSection(raw_ostream &OS, WasmYAML::Section &Sec,
+  static int writeRelocSection(raw_ostream &OS, WasmYAML::Section &Sec,
                         uint32_t SectionIndex);
 
-  int writeSectionContent(raw_ostream &OS, WasmYAML::CustomSection &Section);
-  int writeSectionContent(raw_ostream &OS, WasmYAML::TypeSection &Section);
+  static int writeSectionContent(raw_ostream &OS, WasmYAML::CustomSection &Section);
+  static int writeSectionContent(raw_ostream &OS, WasmYAML::TypeSection &Section);
   int writeSectionContent(raw_ostream &OS, WasmYAML::ImportSection &Section);
-  int writeSectionContent(raw_ostream &OS, WasmYAML::FunctionSection &Section);
-  int writeSectionContent(raw_ostream &OS, WasmYAML::TableSection &Section);
-  int writeSectionContent(raw_ostream &OS, WasmYAML::MemorySection &Section);
+  static int writeSectionContent(raw_ostream &OS, WasmYAML::FunctionSection &Section);
+  static int writeSectionContent(raw_ostream &OS, WasmYAML::TableSection &Section);
+  static int writeSectionContent(raw_ostream &OS, WasmYAML::MemorySection &Section);
   int writeSectionContent(raw_ostream &OS, WasmYAML::GlobalSection &Section);
   int writeSectionContent(raw_ostream &OS, WasmYAML::EventSection &Section);
-  int writeSectionContent(raw_ostream &OS, WasmYAML::ExportSection &Section);
-  int writeSectionContent(raw_ostream &OS, WasmYAML::StartSection &Section);
-  int writeSectionContent(raw_ostream &OS, WasmYAML::ElemSection &Section);
+  static int writeSectionContent(raw_ostream &OS, WasmYAML::ExportSection &Section);
+  static int writeSectionContent(raw_ostream &OS, WasmYAML::StartSection &Section);
+  static int writeSectionContent(raw_ostream &OS, WasmYAML::ElemSection &Section);
   int writeSectionContent(raw_ostream &OS, WasmYAML::CodeSection &Section);
-  int writeSectionContent(raw_ostream &OS, WasmYAML::DataSection &Section);
+  static int writeSectionContent(raw_ostream &OS, WasmYAML::DataSection &Section);
 
   // Custom section types
-  int writeSectionContent(raw_ostream &OS, WasmYAML::DylinkSection &Section);
-  int writeSectionContent(raw_ostream &OS, WasmYAML::NameSection &Section);
-  int writeSectionContent(raw_ostream &OS, WasmYAML::LinkingSection &Section);
-  int writeSectionContent(raw_ostream &OS, WasmYAML::ProducersSection &Section);
+  static int writeSectionContent(raw_ostream &OS, WasmYAML::DylinkSection &Section);
+  static int writeSectionContent(raw_ostream &OS, WasmYAML::NameSection &Section);
+  static int writeSectionContent(raw_ostream &OS, WasmYAML::LinkingSection &Section);
+  static int writeSectionContent(raw_ostream &OS, WasmYAML::ProducersSection &Section);
   WasmYAML::Object &Obj;
   uint32_t NumImportedFunctions = 0;
   uint32_t NumImportedGlobals = 0;

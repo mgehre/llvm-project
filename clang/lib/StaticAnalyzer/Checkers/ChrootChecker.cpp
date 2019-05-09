@@ -55,8 +55,8 @@ public:
   void checkPreStmt(const CallExpr *CE, CheckerContext &C) const;
 
 private:
-  void Chroot(CheckerContext &C, const CallExpr *CE) const;
-  void Chdir(CheckerContext &C, const CallExpr *CE) const;
+  static void Chroot(CheckerContext &C, const CallExpr *CE) ;
+  static void Chdir(CheckerContext &C, const CallExpr *CE) ;
 };
 
 } // end anonymous namespace
@@ -84,7 +84,7 @@ bool ChrootChecker::evalCall(const CallExpr *CE, CheckerContext &C) const {
   return false;
 }
 
-void ChrootChecker::Chroot(CheckerContext &C, const CallExpr *CE) const {
+void ChrootChecker::Chroot(CheckerContext &C, const CallExpr *CE) {
   ProgramStateRef state = C.getState();
   ProgramStateManager &Mgr = state->getStateManager();
 
@@ -94,7 +94,7 @@ void ChrootChecker::Chroot(CheckerContext &C, const CallExpr *CE) const {
   C.addTransition(state);
 }
 
-void ChrootChecker::Chdir(CheckerContext &C, const CallExpr *CE) const {
+void ChrootChecker::Chdir(CheckerContext &C, const CallExpr *CE) {
   ProgramStateRef state = C.getState();
   ProgramStateManager &Mgr = state->getStateManager();
 

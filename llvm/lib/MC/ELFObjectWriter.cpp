@@ -181,7 +181,7 @@ public:
 
   void writeHeader(const MCAssembler &Asm);
 
-  void writeSymbol(SymbolTableWriter &Writer, uint32_t StringIndex,
+  static void writeSymbol(SymbolTableWriter &Writer, uint32_t StringIndex,
                    ELFSymbolData &MSD, const MCAsmLayout &Layout);
 
   // Start and end offset of each section

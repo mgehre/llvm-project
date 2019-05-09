@@ -23,7 +23,7 @@ llvm::ModulePass *createDebugifyModulePass();
 llvm::FunctionPass *createDebugifyFunctionPass();
 
 struct NewPMDebugifyPass : public llvm::PassInfoMixin<NewPMDebugifyPass> {
-  llvm::PreservedAnalyses run(llvm::Module &M, llvm::ModuleAnalysisManager &AM);
+  static llvm::PreservedAnalyses run(llvm::Module &M, llvm::ModuleAnalysisManager &AM);
 };
 
 /// Track how much `debugify` information has been lost.
@@ -69,7 +69,7 @@ createCheckDebugifyFunctionPass(bool Strip = false,
 
 struct NewPMCheckDebugifyPass
     : public llvm::PassInfoMixin<NewPMCheckDebugifyPass> {
-  llvm::PreservedAnalyses run(llvm::Module &M, llvm::ModuleAnalysisManager &AM);
+  static llvm::PreservedAnalyses run(llvm::Module &M, llvm::ModuleAnalysisManager &AM);
 };
 
 #endif // LLVM_TOOLS_OPT_DEBUGIFY_H

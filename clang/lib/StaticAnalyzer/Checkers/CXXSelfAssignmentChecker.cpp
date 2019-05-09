@@ -30,13 +30,13 @@ namespace {
 class CXXSelfAssignmentChecker : public Checker<check::BeginFunction> {
 public:
   CXXSelfAssignmentChecker();
-  void checkBeginFunction(CheckerContext &C) const;
+  static void checkBeginFunction(CheckerContext &C) ;
 };
 }
 
 CXXSelfAssignmentChecker::CXXSelfAssignmentChecker() {}
 
-void CXXSelfAssignmentChecker::checkBeginFunction(CheckerContext &C) const {
+void CXXSelfAssignmentChecker::checkBeginFunction(CheckerContext &C) {
   if (!C.inTopFrame())
     return;
   const auto *LCtx = C.getLocationContext();

@@ -44,10 +44,10 @@ public:
 private:
   template <typename T> bool mapDecl(const T *D);
 
-  int getLine(const NamedDecl *D, const ASTContext &Context) const;
-  StringRef getFile(const NamedDecl *D, const ASTContext &Context) const;
-  comments::FullComment *getComment(const NamedDecl *D,
-                                    const ASTContext &Context) const;
+  static int getLine(const NamedDecl *D, const ASTContext &Context) ;
+  static StringRef getFile(const NamedDecl *D, const ASTContext &Context) ;
+  static comments::FullComment *getComment(const NamedDecl *D,
+                                    const ASTContext &Context) ;
 
   ClangDocContext CDCtx;
 };

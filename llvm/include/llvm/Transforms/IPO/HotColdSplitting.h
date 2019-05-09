@@ -22,7 +22,7 @@ class Module;
 /// Pass to outline cold regions.
 class HotColdSplittingPass : public PassInfoMixin<HotColdSplittingPass> {
 public:
-  PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
+  static PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
 };
 
 } // end namespace llvm

@@ -25,7 +25,7 @@ class NameAnonGlobalPass : public PassInfoMixin<NameAnonGlobalPass> {
 public:
   NameAnonGlobalPass() = default;
 
-  PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
+  static PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
 };
 
 } // end namespace llvm

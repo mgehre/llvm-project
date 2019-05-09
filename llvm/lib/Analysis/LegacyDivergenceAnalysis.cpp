@@ -106,7 +106,7 @@ private:
   void exploreSyncDependency(Instruction *TI);
   // Computes the influence region from Start to End. This region includes all
   // basic blocks on any simple path from Start to End.
-  void computeInfluenceRegion(BasicBlock *Start, BasicBlock *End,
+  static void computeInfluenceRegion(BasicBlock *Start, BasicBlock *End,
                               DenseSet<BasicBlock *> &InfluenceRegion);
   // Finds all users of I that are outside the influence region, and add these
   // users to Worklist.

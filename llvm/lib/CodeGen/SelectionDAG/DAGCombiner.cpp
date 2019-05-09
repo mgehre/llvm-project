@@ -398,7 +398,7 @@ namespace {
     SDValue visitMSTORE(SDNode *N);
     SDValue visitMGATHER(SDNode *N);
     SDValue visitMSCATTER(SDNode *N);
-    SDValue visitFP_TO_FP16(SDNode *N);
+    static SDValue visitFP_TO_FP16(SDNode *N);
     SDValue visitFP16_TO_FP(SDNode *N);
 
     SDValue visitFADDForFMACombine(SDNode *N);
@@ -570,7 +570,7 @@ namespace {
     /// operands. RootNode is the predecessor to all stores calculated
     /// by getStoreMergeCandidates and is used to prune the dependency check.
     /// \return True if safe to merge.
-    bool checkMergeStoreCandidatesForDependencies(
+    static bool checkMergeStoreCandidatesForDependencies(
         SmallVectorImpl<MemOpLink> &StoreNodes, unsigned NumStores,
         SDNode *RootNode);
 

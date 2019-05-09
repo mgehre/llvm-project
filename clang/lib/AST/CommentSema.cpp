@@ -1113,7 +1113,7 @@ StringRef Sema::correctTypoInTParamReference(
 }
 
 InlineCommandComment::RenderKind
-Sema::getInlineCommandRenderKind(StringRef Name) const {
+Sema::getInlineCommandRenderKind(StringRef Name) {
   assert(Traits.getCommandInfo(Name)->IsInlineCommand);
 
   return llvm::StringSwitch<InlineCommandComment::RenderKind>(Name)

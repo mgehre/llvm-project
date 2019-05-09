@@ -198,7 +198,7 @@ void Scheduler::cycleEvent(SmallVectorImpl<ResourceRef> &Freed,
   promoteToReadySet(Ready);
 }
 
-bool Scheduler::mustIssueImmediately(const InstRef &IR) const {
+bool Scheduler::mustIssueImmediately(const InstRef &IR) {
   const InstrDesc &Desc = IR.getInstruction()->getDesc();
   if (Desc.isZeroLatency())
     return true;

@@ -24,7 +24,7 @@ class ControlHeightReductionPass :
       public PassInfoMixin<ControlHeightReductionPass> {
 public:
   ControlHeightReductionPass();
-  PreservedAnalyses run(Function &F, FunctionAnalysisManager &FAM);
+  static PreservedAnalyses run(Function &F, FunctionAnalysisManager &FAM);
 };
 } // end namespace llvm
 

@@ -123,7 +123,7 @@ private:
 /// The function importing pass
 class FunctionImportPass : public PassInfoMixin<FunctionImportPass> {
 public:
-  PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
+  static PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
 };
 
 /// Compute all the imports and exports for every module in the Index.

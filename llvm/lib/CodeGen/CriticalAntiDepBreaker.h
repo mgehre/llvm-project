@@ -97,7 +97,7 @@ class LLVM_LIBRARY_VISIBILITY CriticalAntiDepBreaker : public AntiDepBreaker {
   private:
     void PrescanInstruction(MachineInstr &MI);
     void ScanInstruction(MachineInstr &MI, unsigned Count);
-    bool isNewRegClobberedByRefs(RegRefIter RegRefBegin,
+    static bool isNewRegClobberedByRefs(RegRefIter RegRefBegin,
                                  RegRefIter RegRefEnd,
                                  unsigned NewReg);
     unsigned findSuitableFreeRegister(RegRefIter RegRefBegin,

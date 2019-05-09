@@ -58,7 +58,7 @@ namespace clang {
     void VisitDecl(Decl *D);
     void VisitPragmaCommentDecl(PragmaCommentDecl *D);
     void VisitPragmaDetectMismatchDecl(PragmaDetectMismatchDecl *D);
-    void VisitTranslationUnitDecl(TranslationUnitDecl *D);
+    static void VisitTranslationUnitDecl(TranslationUnitDecl *D);
     void VisitNamedDecl(NamedDecl *D);
     void VisitLabelDecl(LabelDecl *LD);
     void VisitNamespaceDecl(NamespaceDecl *D);
@@ -193,7 +193,7 @@ namespace clang {
     decltype(T::PartialSpecializations) &getPartialSpecializations(T *Common) {
       return Common->PartialSpecializations;
     }
-    ArrayRef<Decl> getPartialSpecializations(FunctionTemplateDecl::Common *) {
+    static ArrayRef<Decl> getPartialSpecializations(FunctionTemplateDecl::Common *) {
       return None;
     }
 

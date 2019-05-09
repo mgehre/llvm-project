@@ -47,13 +47,13 @@ public:
   // The flag to determine if pure virtual functions should be issued only.
   DefaultBool IsPureOnly;
 
-  void checkBeginFunction(CheckerContext &C) const;
-  void checkEndFunction(const ReturnStmt *RS, CheckerContext &C) const;
+  static void checkBeginFunction(CheckerContext &C) ;
+  static void checkEndFunction(const ReturnStmt *RS, CheckerContext &C) ;
   void checkPreCall(const CallEvent &Call, CheckerContext &C) const;
 
 private:
-  void registerCtorDtorCallInState(bool IsBeginFunction,
-                                   CheckerContext &C) const;
+  static void registerCtorDtorCallInState(bool IsBeginFunction,
+                                   CheckerContext &C) ;
   void reportBug(StringRef Msg, bool PureError, const MemRegion *Reg,
                  CheckerContext &C) const;
 
@@ -160,13 +160,13 @@ static bool isVirtualCall(const CallExpr *CE) {
 }
 
 // The BeginFunction callback when enter a constructor or a destructor.
-void VirtualCallChecker::checkBeginFunction(CheckerContext &C) const {
+void VirtualCallChecker::checkBeginFunction(CheckerContext &C) {
   registerCtorDtorCallInState(true, C);
 }
 
 // The EndFunction callback when leave a constructor or a destructor.
 void VirtualCallChecker::checkEndFunction(const ReturnStmt *RS,
-                                          CheckerContext &C) const {
+                                          CheckerContext &C) {
   registerCtorDtorCallInState(false, C);
 }
 
@@ -217,7 +217,7 @@ void VirtualCallChecker::checkPreCall(const CallEvent &Call,
 }
 
 void VirtualCallChecker::registerCtorDtorCallInState(bool IsBeginFunction,
-                                                     CheckerContext &C) const {
+                                                     CheckerContext &C) {
   const auto *LCtx = C.getLocationContext();
   const auto *MD = dyn_cast_or_null<CXXMethodDecl>(LCtx->getDecl());
   if (!MD)

@@ -153,7 +153,7 @@ class DominatorTree : public DominatorTreeBase<BasicBlock, false> {
   }
 
   /// Handle invalidation explicitly.
-  bool invalidate(Function &F, const PreservedAnalyses &PA,
+  static bool invalidate(Function &F, const PreservedAnalyses &PA,
                   FunctionAnalysisManager::Invalidator &);
 
   // Ensure base-class overloads are visible.
@@ -181,8 +181,8 @@ class DominatorTree : public DominatorTreeBase<BasicBlock, false> {
   bool isReachableFromEntry(const Use &U) const;
 
   // Pop up a GraphViz/gv window with the Dominator Tree rendered using `dot`.
-  void viewGraph(const Twine &Name, const Twine &Title);
-  void viewGraph();
+  static void viewGraph(const Twine &Name, const Twine &Title);
+  static void viewGraph();
 };
 
 //===-------------------------------------
@@ -237,7 +237,7 @@ public:
   using Result = DominatorTree;
 
   /// Run the analysis pass over a function and produce a dominator tree.
-  DominatorTree run(Function &F, FunctionAnalysisManager &);
+  static DominatorTree run(Function &F, FunctionAnalysisManager &);
 };
 
 /// Printer pass for the \c DominatorTree.
@@ -253,7 +253,7 @@ public:
 
 /// Verifier pass for the \c DominatorTree.
 struct DominatorTreeVerifierPass : PassInfoMixin<DominatorTreeVerifierPass> {
-  PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
+  static PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
 };
 
 /// Legacy analysis pass which computes a \c DominatorTree.

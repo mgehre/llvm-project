@@ -1527,7 +1527,7 @@ void X86TargetInfo::getCPUSpecificCPUDispatchFeatures(
   WholeList.split(Features, ',', /*MaxSplit=*/-1, /*KeepEmpty=*/false);
 }
 
-std::string X86TargetInfo::getCPUKindCanonicalName(CPUKind Kind) const {
+std::string X86TargetInfo::getCPUKindCanonicalName(CPUKind Kind) {
   switch (Kind) {
   case CK_Generic:
     return "";
@@ -1777,7 +1777,7 @@ void X86TargetInfo::fillValidCPUList(SmallVectorImpl<StringRef> &Values) const {
 #include "clang/Basic/X86Target.def"
 }
 
-X86TargetInfo::CPUKind X86TargetInfo::getCPUKind(StringRef CPU) const {
+X86TargetInfo::CPUKind X86TargetInfo::getCPUKind(StringRef CPU) {
   return llvm::StringSwitch<CPUKind>(CPU)
 #define PROC(ENUM, STRING, IS64BIT) .Case(STRING, CK_##ENUM)
 #define PROC_ALIAS(ENUM, ALIAS) .Case(ALIAS, CK_##ENUM)

@@ -381,7 +381,7 @@ private:
     return 0;
   }
 
-  unsigned
+  static unsigned
   tryMergeSimplePPDirective(SmallVectorImpl<AnnotatedLine *>::const_iterator I,
                             SmallVectorImpl<AnnotatedLine *>::const_iterator E,
                             unsigned Limit) {
@@ -421,7 +421,7 @@ private:
     return 1;
   }
 
-  unsigned
+  static unsigned
   tryMergeShortCaseLabels(SmallVectorImpl<AnnotatedLine *>::const_iterator I,
                           SmallVectorImpl<AnnotatedLine *>::const_iterator E,
                           unsigned Limit) {
@@ -610,7 +610,7 @@ private:
 
   /// Returns the modified column limit for \p I if it is inside a macro and
   /// needs a trailing '\'.
-  unsigned
+  static unsigned
   limitConsideringMacros(SmallVectorImpl<AnnotatedLine *>::const_iterator I,
                          SmallVectorImpl<AnnotatedLine *>::const_iterator E,
                          unsigned Limit) {
@@ -621,14 +621,14 @@ private:
     return Limit;
   }
 
-  bool nextTwoLinesFitInto(SmallVectorImpl<AnnotatedLine *>::const_iterator I,
+  static bool nextTwoLinesFitInto(SmallVectorImpl<AnnotatedLine *>::const_iterator I,
                            unsigned Limit) {
     if (I[1]->First->MustBreakBefore || I[2]->First->MustBreakBefore)
       return false;
     return 1 + I[1]->Last->TotalLength + 1 + I[2]->Last->TotalLength <= Limit;
   }
 
-  bool containsMustBreak(const AnnotatedLine *Line) {
+  static bool containsMustBreak(const AnnotatedLine *Line) {
     for (const FormatToken *Tok = Line->First; Tok; Tok = Tok->Next) {
       if (Tok->MustBreakBefore)
         return true;
@@ -636,7 +636,7 @@ private:
     return false;
   }
 
-  void join(AnnotatedLine &A, const AnnotatedLine &B) {
+  static void join(AnnotatedLine &A, const AnnotatedLine &B) {
     assert(!A.Last->Next);
     assert(!B.First->Previous);
     if (B.Affected)

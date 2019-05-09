@@ -192,7 +192,7 @@ int X86InstrInfo::getSPAdjust(const MachineInstr &MI) const {
 /// Return true and the FrameIndex if the specified
 /// operand and follow operands form a reference to the stack frame.
 bool X86InstrInfo::isFrameOperand(const MachineInstr &MI, unsigned int Op,
-                                  int &FrameIndex) const {
+                                  int &FrameIndex) {
   if (MI.getOperand(Op + X86::AddrBaseReg).isFI() &&
       MI.getOperand(Op + X86::AddrScaleAmt).isImm() &&
       MI.getOperand(Op + X86::AddrIndexReg).isReg() &&
@@ -591,7 +591,7 @@ bool X86InstrInfo::isReallyTriviallyReMaterializable(const MachineInstr &MI,
 }
 
 bool X86InstrInfo::isSafeToClobberEFLAGS(MachineBasicBlock &MBB,
-                                         MachineBasicBlock::iterator I) const {
+                                         MachineBasicBlock::iterator I) {
   MachineBasicBlock::iterator E = MBB.end();
 
   // For compile time consideration, if we are not able to determine the
@@ -706,7 +706,7 @@ void X86InstrInfo::reMaterialize(MachineBasicBlock &MBB,
 }
 
 /// True if MI has a condition code def, e.g. EFLAGS, that is not marked dead.
-bool X86InstrInfo::hasLiveCondCodeDef(MachineInstr &MI) const {
+bool X86InstrInfo::hasLiveCondCodeDef(MachineInstr &MI) {
   for (unsigned i = 0, e = MI.getNumOperands(); i != e; ++i) {
     MachineOperand &MO = MI.getOperand(i);
     if (MO.isReg() && MO.isDef() &&
@@ -1304,7 +1304,7 @@ static unsigned getThreeSrcCommuteCase(uint64_t TSFlags, unsigned SrcOpIdx1,
 
 unsigned X86InstrInfo::getFMA3OpcodeToCommuteOperands(
     const MachineInstr &MI, unsigned SrcOpIdx1, unsigned SrcOpIdx2,
-    const X86InstrFMA3Group &FMA3Group) const {
+    const X86InstrFMA3Group &FMA3Group) {
 
   unsigned Opc = MI.getOpcode();
 
@@ -1823,7 +1823,7 @@ bool
 X86InstrInfo::findThreeSrcCommutedOpIndices(const MachineInstr &MI,
                                             unsigned &SrcOpIdx1,
                                             unsigned &SrcOpIdx2,
-                                            bool IsIntrinsic) const {
+                                            bool IsIntrinsic) {
   uint64_t TSFlags = MI.getDesc().TSFlags;
 
   unsigned FirstCommutableVecOp = 1;
@@ -7568,7 +7568,7 @@ namespace {
 
     // Replace the TLS_base_addr instruction I with a copy from
     // TLSBaseAddrReg, returning the new instruction.
-    MachineInstr *ReplaceTLSBaseAddrCall(MachineInstr &I,
+    static MachineInstr *ReplaceTLSBaseAddrCall(MachineInstr &I,
                                          unsigned TLSBaseAddrReg) {
       MachineFunction *MF = I.getParent()->getParent();
       const X86Subtarget &STI = MF->getSubtarget<X86Subtarget>();
@@ -7589,7 +7589,7 @@ namespace {
 
     // Create a virtual register in *TLSBaseAddrReg, and populate it by
     // inserting a copy instruction after I. Returns the new instruction.
-    MachineInstr *SetRegister(MachineInstr &I, unsigned *TLSBaseAddrReg) {
+    static MachineInstr *SetRegister(MachineInstr &I, unsigned *TLSBaseAddrReg) {
       MachineFunction *MF = I.getParent()->getParent();
       const X86Subtarget &STI = MF->getSubtarget<X86Subtarget>();
       const bool is64Bit = STI.is64Bit();

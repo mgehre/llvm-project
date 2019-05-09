@@ -896,7 +896,7 @@ protected:
 
   /// GetNameForMethod - Return a name for the given method.
   /// \param[out] NameOut - The return value.
-  void GetNameForMethod(const ObjCMethodDecl *OMD,
+  static void GetNameForMethod(const ObjCMethodDecl *OMD,
                         const ObjCContainerDecl *CD,
                         SmallVectorImpl<char> &NameOut);
 
@@ -971,13 +971,13 @@ protected:
                            CharUnits BytePos, bool &HasUnion,
                            bool ByrefLayout);
 
-  uint64_t InlineLayoutInstruction(SmallVectorImpl<unsigned char> &Layout);
+  static uint64_t InlineLayoutInstruction(SmallVectorImpl<unsigned char> &Layout);
 
   llvm::Constant *getBitmapBlockLayout(bool ComputeByrefLayout);
 
   /// GetIvarLayoutName - Returns a unique constant for the given
   /// ivar layout bitmap.
-  llvm::Constant *GetIvarLayoutName(IdentifierInfo *Ident,
+  static llvm::Constant *GetIvarLayoutName(IdentifierInfo *Ident,
                                     const ObjCCommonTypesHelper &ObjCTypes);
 
   /// EmitPropertyList - Emit the given property list. The return
@@ -1001,7 +1001,7 @@ protected:
 
   /// Return a reference to the given Class using runtime calls rather than
   /// by a symbol reference.
-  llvm::Value *EmitClassRefViaRuntime(CodeGenFunction &CGF,
+  static llvm::Value *EmitClassRefViaRuntime(CodeGenFunction &CGF,
                                       const ObjCInterfaceDecl *ID,
                                       ObjCCommonTypesHelper &ObjCTypes);
 
@@ -1507,9 +1507,9 @@ private:
   llvm::Constant *GetInterfaceEHType(const ObjCInterfaceDecl *ID,
                                      ForDefinition_t IsForDefinition);
 
-  StringRef getMetaclassSymbolPrefix() const { return "OBJC_METACLASS_$_"; }
+  static StringRef getMetaclassSymbolPrefix() { return "OBJC_METACLASS_$_"; }
 
-  StringRef getClassSymbolPrefix() const { return "OBJC_CLASS_$_"; }
+  static StringRef getClassSymbolPrefix() { return "OBJC_CLASS_$_"; }
 
   void GetClassSizeInfo(const ObjCImplementationDecl *OID,
                         uint32_t &InstanceStart,
@@ -1530,7 +1530,7 @@ private:
   /// class implementation is "non-lazy".
   bool ImplementationIsNonLazy(const ObjCImplDecl *OD) const;
 
-  bool IsIvarOffsetKnownIdempotent(const CodeGen::CodeGenFunction &CGF,
+  static bool IsIvarOffsetKnownIdempotent(const CodeGen::CodeGenFunction &CGF,
                                    const ObjCIvarDecl *IV) {
     // Annotate the load as an invariant load iff inside an instance method
     // and ivar belongs to instance method's class and one of its super class.
@@ -1550,7 +1550,7 @@ private:
     return false;
   }
 
-  bool isClassLayoutKnownStatically(const ObjCInterfaceDecl *ID) {
+  static bool isClassLayoutKnownStatically(const ObjCInterfaceDecl *ID) {
     // NSObject is a fixed size. If we can see the @implementation of a class
     // which inherits from NSObject then we know that all it's offsets also must
     // be fixed. FIXME: Can we do this if see a chain of super classes with

@@ -1139,7 +1139,7 @@ class llvm::vfs::RedirectingFileSystemParser {
     return true;
   }
 
-  RedirectingFileSystem::Entry *
+  static RedirectingFileSystem::Entry *
   lookupOrCreateEntry(RedirectingFileSystem *FS, StringRef Name,
                       RedirectingFileSystem::Entry *ParentEntry = nullptr) {
     if (!ParentEntry) { // Look for a existent root
@@ -1818,8 +1818,8 @@ class JSONWriter {
 
   unsigned getDirIndent() { return 4 * DirStack.size(); }
   unsigned getFileIndent() { return 4 * (DirStack.size() + 1); }
-  bool containedIn(StringRef Parent, StringRef Path);
-  StringRef containedPart(StringRef Parent, StringRef Path);
+  static bool containedIn(StringRef Parent, StringRef Path);
+  static StringRef containedPart(StringRef Parent, StringRef Path);
   void startDirectory(StringRef Path);
   void endDirectory();
   void writeEntry(StringRef VPath, StringRef RPath);

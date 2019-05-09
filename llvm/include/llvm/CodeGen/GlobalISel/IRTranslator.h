@@ -220,7 +220,7 @@ private:
   bool translateKnownIntrinsic(const CallInst &CI, Intrinsic::ID ID,
                                MachineIRBuilder &MIRBuilder);
 
-  bool translateInlineAsm(const CallInst &CI, MachineIRBuilder &MIRBuilder);
+  static bool translateInlineAsm(const CallInst &CI, MachineIRBuilder &MIRBuilder);
 
   // FIXME: temporary function to expose previous interface to call lowering
   // until it is refactored.

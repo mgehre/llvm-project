@@ -120,7 +120,7 @@ private:
   // Emit remarks.
   MachineOptimizationRemarkEmitter *ORE = nullptr;
 
-  void calculateCallFrameInfo(MachineFunction &MF);
+  static void calculateCallFrameInfo(MachineFunction &MF);
   void calculateSaveRestoreBlocks(MachineFunction &MF);
   void spillCalleeSavedRegs(MachineFunction &MF);
 

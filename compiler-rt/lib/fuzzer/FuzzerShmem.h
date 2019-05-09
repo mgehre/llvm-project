@@ -24,7 +24,7 @@ class SharedMemoryRegion {
  public:
   bool Create(const char *Name);
   bool Open(const char *Name);
-  bool Destroy(const char *Name);
+  static bool Destroy(const char *Name);
   uint8_t *GetData() { return Data; }
   void PostServer() {Post(0);}
   void WaitServer() {Wait(0);}
@@ -52,8 +52,8 @@ private:
 
   static const size_t kShmemSize = 1 << 22;
   bool IAmServer;
-  std::string Path(const char *Name);
-  std::string SemName(const char *Name, int Idx);
+  static std::string Path(const char *Name);
+  static std::string SemName(const char *Name, int Idx);
   void Post(int Idx);
   void Wait(int Idx);
 

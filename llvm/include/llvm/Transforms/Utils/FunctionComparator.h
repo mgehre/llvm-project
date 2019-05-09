@@ -320,20 +320,20 @@ protected:
   /// 6. For all other cases put llvm_unreachable.
   int cmpTypes(Type *TyL, Type *TyR) const;
 
-  int cmpNumbers(uint64_t L, uint64_t R) const;
-  int cmpAPInts(const APInt &L, const APInt &R) const;
-  int cmpAPFloats(const APFloat &L, const APFloat &R) const;
-  int cmpMem(StringRef L, StringRef R) const;
+  static int cmpNumbers(uint64_t L, uint64_t R) ;
+  static int cmpAPInts(const APInt &L, const APInt &R) ;
+  static int cmpAPFloats(const APFloat &L, const APFloat &R) ;
+  static int cmpMem(StringRef L, StringRef R) ;
 
   // The two functions undergoing comparison.
   const Function *FnL, *FnR;
 
 private:
-  int cmpOrderings(AtomicOrdering L, AtomicOrdering R) const;
+  static int cmpOrderings(AtomicOrdering L, AtomicOrdering R) ;
   int cmpInlineAsm(const InlineAsm *L, const InlineAsm *R) const;
-  int cmpAttrs(const AttributeList L, const AttributeList R) const;
-  int cmpRangeMetadata(const MDNode *L, const MDNode *R) const;
-  int cmpOperandBundlesSchema(const Instruction *L, const Instruction *R) const;
+  static int cmpAttrs(const AttributeList L, const AttributeList R) ;
+  static int cmpRangeMetadata(const MDNode *L, const MDNode *R) ;
+  static int cmpOperandBundlesSchema(const Instruction *L, const Instruction *R) ;
 
   /// Compare two GEPs for equivalent pointer arithmetic.
   /// Parts to be compared for each comparison stage,

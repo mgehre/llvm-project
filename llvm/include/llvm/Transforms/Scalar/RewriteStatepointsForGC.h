@@ -28,9 +28,9 @@ class TargetTransformInfo;
 class TargetLibraryInfo;
 
 struct RewriteStatepointsForGC : public PassInfoMixin<RewriteStatepointsForGC> {
-  PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
+  static PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
 
-  bool runOnFunction(Function &F, DominatorTree &, TargetTransformInfo &,
+  static bool runOnFunction(Function &F, DominatorTree &, TargetTransformInfo &,
                      const TargetLibraryInfo &);
 };
 

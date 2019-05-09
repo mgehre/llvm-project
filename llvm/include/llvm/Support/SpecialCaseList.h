@@ -145,8 +145,8 @@ protected:
 
   // Helper method for derived classes to search by Prefix, Query, and Category
   // once they have already resolved a section entry.
-  unsigned inSectionBlame(const SectionEntries &Entries, StringRef Prefix,
-                          StringRef Query, StringRef Category) const;
+  static unsigned inSectionBlame(const SectionEntries &Entries, StringRef Prefix,
+                          StringRef Query, StringRef Category) ;
 };
 
 }  // namespace llvm

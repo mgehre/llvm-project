@@ -189,7 +189,7 @@ struct CoverageMappingTest : ::testing::TestWithParam<std::pair<bool, bool>> {
         LS, CS, LE, CE));
   }
 
-  std::string writeCoverageRegions(InputFunctionCoverageData &Data) {
+  static std::string writeCoverageRegions(InputFunctionCoverageData &Data) {
     SmallVector<unsigned, 8> FileIDs(Data.ReverseVirtualFileMapping.size());
     for (const auto &E : Data.ReverseVirtualFileMapping)
       FileIDs[E.second] = E.first;

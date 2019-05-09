@@ -30,8 +30,8 @@ class ARMAttributeParser {
   };
   static const DisplayHandler DisplayRoutines[];
 
-  uint64_t ParseInteger(const uint8_t *Data, uint32_t &Offset);
-  StringRef ParseString(const uint8_t *Data, uint32_t &Offset);
+  static uint64_t ParseInteger(const uint8_t *Data, uint32_t &Offset);
+  static StringRef ParseString(const uint8_t *Data, uint32_t &Offset);
 
   void IntegerAttribute(ARMBuildAttrs::AttrType Tag, const uint8_t *Data,
                         uint32_t &Offset);
@@ -115,7 +115,7 @@ class ARMAttributeParser {
 
   void ParseAttributeList(const uint8_t *Data, uint32_t &Offset,
                           uint32_t Length);
-  void ParseIndexList(const uint8_t *Data, uint32_t &Offset,
+  static void ParseIndexList(const uint8_t *Data, uint32_t &Offset,
                       SmallVectorImpl<uint8_t> &IndexList);
   void ParseSubsection(const uint8_t *Data, uint32_t Length);
 public:

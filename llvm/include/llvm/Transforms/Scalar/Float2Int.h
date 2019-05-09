@@ -30,11 +30,11 @@ public:
   bool runImpl(Function &F);
 
 private:
-  void findRoots(Function &F, SmallPtrSet<Instruction *, 8> &Roots);
+  static void findRoots(Function &F, SmallPtrSet<Instruction *, 8> &Roots);
   void seen(Instruction *I, ConstantRange R);
-  ConstantRange badRange();
-  ConstantRange unknownRange();
-  ConstantRange validateRange(ConstantRange R);
+  static ConstantRange badRange();
+  static ConstantRange unknownRange();
+  static ConstantRange validateRange(ConstantRange R);
   void walkBackwards(const SmallPtrSetImpl<Instruction *> &Roots);
   void walkForwards();
   bool validateAndTransform();

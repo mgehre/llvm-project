@@ -671,7 +671,7 @@ void Instruction::setSuccessor(unsigned idx, BasicBlock *B) {
   llvm_unreachable("not a terminator");
 }
 
-Instruction *Instruction::cloneImpl() const {
+Instruction *Instruction::cloneImpl() {
   llvm_unreachable("Subclass of Instruction failed to implement cloneImpl");
 }
 

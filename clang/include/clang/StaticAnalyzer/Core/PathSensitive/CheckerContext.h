@@ -222,13 +222,13 @@ public:
 
   /// Returns the word that should be used to refer to the declaration
   /// in the report.
-  StringRef getDeclDescription(const Decl *D);
+  static StringRef getDeclDescription(const Decl *D);
 
   /// Get the declaration of the called function (path-sensitive).
   const FunctionDecl *getCalleeDecl(const CallExpr *CE) const;
 
   /// Get the name of the called function (path-sensitive).
-  StringRef getCalleeName(const FunctionDecl *FunDecl) const;
+  static StringRef getCalleeName(const FunctionDecl *FunDecl) ;
 
   /// Get the identifier of the called function (path-sensitive).
   const IdentifierInfo *getCalleeIdentifier(const CallExpr *CE) const {

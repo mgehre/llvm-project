@@ -487,7 +487,7 @@ struct DevirtModule {
 
   // Returns the global symbol name that is used to export information about the
   // given vtable slot and list of arguments.
-  std::string getGlobalName(VTableSlot Slot, ArrayRef<uint64_t> Args,
+  static std::string getGlobalName(VTableSlot Slot, ArrayRef<uint64_t> Args,
                             StringRef Name);
 
   bool shouldExportConstantsAsAbsoluteSymbols();

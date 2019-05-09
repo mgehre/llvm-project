@@ -27,7 +27,7 @@ namespace {
 /// Lexical scope for OpenMP executable constructs, that handles correct codegen
 /// for captured expressions.
 class OMPLexicalScope : public CodeGenFunction::LexicalScope {
-  void emitPreInitStmt(CodeGenFunction &CGF, const OMPExecutableDirective &S) {
+  static void emitPreInitStmt(CodeGenFunction &CGF, const OMPExecutableDirective &S) {
     for (const auto *C : S.clauses()) {
       if (const auto *CPI = OMPClauseWithPreInit::get(C)) {
         if (const auto *PreInit =
@@ -89,7 +89,7 @@ public:
 /// Lexical scope for OpenMP parallel construct, that handles correct codegen
 /// for captured expressions.
 class OMPParallelScope final : public OMPLexicalScope {
-  bool EmitPreInitStmt(const OMPExecutableDirective &S) {
+  static bool EmitPreInitStmt(const OMPExecutableDirective &S) {
     OpenMPDirectiveKind Kind = S.getDirectiveKind();
     return !(isOpenMPTargetExecutionDirective(Kind) ||
              isOpenMPLoopBoundSharingDirective(Kind)) &&
@@ -105,7 +105,7 @@ public:
 /// Lexical scope for OpenMP teams construct, that handles correct codegen
 /// for captured expressions.
 class OMPTeamsScope final : public OMPLexicalScope {
-  bool EmitPreInitStmt(const OMPExecutableDirective &S) {
+  static bool EmitPreInitStmt(const OMPExecutableDirective &S) {
     OpenMPDirectiveKind Kind = S.getDirectiveKind();
     return !isOpenMPTargetExecutionDirective(Kind) &&
            isOpenMPTeamsDirective(Kind);
@@ -120,7 +120,7 @@ public:
 /// Private scope for OpenMP loop-based directives, that supports capturing
 /// of used expression from loop statement.
 class OMPLoopScope : public CodeGenFunction::RunCleanupsScope {
-  void emitPreInitStmt(CodeGenFunction &CGF, const OMPLoopDirective &S) {
+  static void emitPreInitStmt(CodeGenFunction &CGF, const OMPLoopDirective &S) {
     CodeGenFunction::OMPMapVars PreCondVars;
     for (const auto *E : S.counters()) {
       const auto *VD = cast<VarDecl>(cast<DeclRefExpr>(E)->getDecl());

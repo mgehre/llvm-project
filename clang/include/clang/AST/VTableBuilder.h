@@ -532,7 +532,7 @@ private:
 
   void computeVTableRelatedInformation(const CXXRecordDecl *RD) override;
 
-  void dumpMethodLocations(const CXXRecordDecl *RD,
+  static void dumpMethodLocations(const CXXRecordDecl *RD,
                            const MethodVFTableLocationsTy &NewMethods,
                            raw_ostream &);
 

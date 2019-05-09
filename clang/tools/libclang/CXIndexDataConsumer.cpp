@@ -47,7 +47,7 @@ public:
     return true;
   }
 
-  bool VisitMSPropertyDecl(const MSPropertyDecl *D) {
+  static bool VisitMSPropertyDecl(const MSPropertyDecl *D) {
     return true;
   }
 
@@ -114,11 +114,11 @@ public:
     return true;
   }
 
-  bool VisitUsingDecl(const UsingDecl *D) {
+  static bool VisitUsingDecl(const UsingDecl *D) {
     return true;
   }
 
-  bool VisitUsingDirectiveDecl(const UsingDirectiveDecl *D) {
+  static bool VisitUsingDirectiveDecl(const UsingDirectiveDecl *D) {
     return true;
   }
 
@@ -372,7 +372,7 @@ CXIndexDataConsumer::CXXBasesListInfo::CXXBasesListInfo(const CXXRecordDecl *D,
 }
 
 SourceLocation CXIndexDataConsumer::CXXBasesListInfo::getBaseLoc(
-                                           const CXXBaseSpecifier &Base) const {
+                                           const CXXBaseSpecifier &Base) {
   SourceLocation Loc = Base.getSourceRange().getBegin();
   TypeLoc TL;
   if (Base.getTypeSourceInfo())
@@ -1072,7 +1072,7 @@ const NamedDecl *CXIndexDataConsumer::getEntityDecl(const NamedDecl *D) const {
 }
 
 const DeclContext *
-CXIndexDataConsumer::getEntityContainer(const Decl *D) const {
+CXIndexDataConsumer::getEntityContainer(const Decl *D) {
   const DeclContext *DC = dyn_cast<DeclContext>(D);
   if (DC)
     return DC;

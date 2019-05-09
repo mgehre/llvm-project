@@ -127,7 +127,7 @@ public:
   bool run();
 
 private:
-  unsigned getPointerAddressSpace(Value *I);
+  static unsigned getPointerAddressSpace(Value *I);
 
   unsigned getAlignment(LoadInst *LI) const {
     unsigned Align = LI->getAlignment();
@@ -157,20 +157,20 @@ private:
 
   /// After vectorization, reorder the instructions that I depends on
   /// (the instructions defining its operands), to ensure they dominate I.
-  void reorder(Instruction *I);
+  static void reorder(Instruction *I);
 
   /// Returns the first and the last instructions in Chain.
-  std::pair<BasicBlock::iterator, BasicBlock::iterator>
+  static std::pair<BasicBlock::iterator, BasicBlock::iterator>
   getBoundaryInstrs(ArrayRef<Instruction *> Chain);
 
   /// Erases the original instructions after vectorizing.
-  void eraseInstructions(ArrayRef<Instruction *> Chain);
+  static void eraseInstructions(ArrayRef<Instruction *> Chain);
 
   /// "Legalize" the vector type that would be produced by combining \p
   /// ElementSizeBits elements in \p Chain. Break into two pieces such that the
   /// total size of each piece is 1, 2 or a multiple of 4 bytes. \p Chain is
   /// expected to have more than 4 elements.
-  std::pair<ArrayRef<Instruction *>, ArrayRef<Instruction *>>
+  static std::pair<ArrayRef<Instruction *>, ArrayRef<Instruction *>>
   splitOddVectorElts(ArrayRef<Instruction *> Chain, unsigned ElementSizeBits);
 
   /// Finds the largest prefix of Chain that's vectorizable, checking for

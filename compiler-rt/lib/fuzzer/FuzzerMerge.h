@@ -65,7 +65,7 @@ struct Merger {
   bool Parse(const std::string &Str, bool ParseCoverage);
   void ParseOrExit(std::istream &IS, bool ParseCoverage);
   void PrintSummary(std::ostream &OS);
-  Set<uint32_t> ParseSummary(std::istream &IS);
+  static Set<uint32_t> ParseSummary(std::istream &IS);
   size_t Merge(const Set<uint32_t> &InitialFeatures,
                Vector<std::string> *NewFiles);
   size_t Merge(Vector<std::string> *NewFiles) {

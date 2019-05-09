@@ -81,7 +81,7 @@ static bool needsLeadingZero(uint64_t Value)
   return false;
 }
 
-format_object<int64_t> MCInstPrinter::formatDec(int64_t Value) const {
+format_object<int64_t> MCInstPrinter::formatDec(int64_t Value) {
   return format("%" PRId64, Value);
 }
 

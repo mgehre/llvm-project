@@ -20,7 +20,7 @@ namespace {
 
 class TrigramIndexTest : public ::testing::Test {
 protected:
-  std::unique_ptr<TrigramIndex> makeTrigramIndex(
+  static std::unique_ptr<TrigramIndex> makeTrigramIndex(
       std::vector<std::string> Rules) {
     std::unique_ptr<TrigramIndex> TI =
         make_unique<TrigramIndex>();

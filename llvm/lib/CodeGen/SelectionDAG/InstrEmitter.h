@@ -45,8 +45,8 @@ class LLVM_LIBRARY_VISIBILITY InstrEmitter {
 
   /// getDstOfCopyToRegUse - If the only use of the specified result number of
   /// node is a CopyToReg, return its destination register. Return 0 otherwise.
-  unsigned getDstOfOnlyCopyToRegUse(SDNode *Node,
-                                    unsigned ResNo) const;
+  static unsigned getDstOfOnlyCopyToRegUse(SDNode *Node,
+                                    unsigned ResNo) ;
 
   void CreateVirtualRegisters(SDNode *Node,
                               MachineInstrBuilder &MIB,

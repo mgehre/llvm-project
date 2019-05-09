@@ -192,7 +192,7 @@ bool switchesFormatting(const FormatToken &Token) {
 
 unsigned
 BreakableToken::getLengthAfterCompression(unsigned RemainingTokenColumns,
-                                              Split Split) const {
+                                              Split Split) {
   // Example: consider the content
   // lala  lala
   // - RemainingTokenColumns is the original number of columns, 10;

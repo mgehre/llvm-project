@@ -106,7 +106,7 @@ public:
   /// A private function to help implement the statistic generation functions;
   template <typename U>
   void getStats(U begin, U end, GraphRenderer::TimeStat &S);
-  void updateMaxStats(const TimeStat &S, TimeStat &M);
+  static void updateMaxStats(const TimeStat &S, TimeStat &M);
 
   /// Calculates latency statistics for each edge and stores the data in the
   /// Graph

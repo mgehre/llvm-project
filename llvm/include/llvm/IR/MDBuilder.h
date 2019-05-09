@@ -42,7 +42,7 @@ public:
   MDString *createString(StringRef Str);
 
   /// Return the given constant as metadata.
-  ConstantAsMetadata *createConstant(Constant *C);
+  static ConstantAsMetadata *createConstant(Constant *C);
 
   //===------------------------------------------------------------------===//
   // FPMath metadata.

@@ -233,7 +233,7 @@ public:
       CheckVarDecl(VD, DR, Val, dsk, Live);
   }
 
-  bool isIncrement(VarDecl *VD, const BinaryOperator* B) {
+  static bool isIncrement(VarDecl *VD, const BinaryOperator* B) {
     if (B->isCompoundAssignmentOp())
       return true;
 

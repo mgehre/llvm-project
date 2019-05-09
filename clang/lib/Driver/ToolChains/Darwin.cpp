@@ -164,7 +164,7 @@ void darwin::MachOTool::AddMachOArch(const ArgList &Args,
     CmdArgs.push_back("-force_cpusubtype_ALL");
 }
 
-bool darwin::Linker::NeedsTempPath(const InputInfoList &Inputs) const {
+bool darwin::Linker::NeedsTempPath(const InputInfoList &Inputs) {
   // We only need to generate a temp path for LTO if we aren't compiling object
   // files. When compiling source files, we run 'dsymutil' after linking. We
   // don't run 'dsymutil' when compiling object files.

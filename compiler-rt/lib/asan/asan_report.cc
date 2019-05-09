@@ -188,7 +188,7 @@ class ScopedInErrorReport {
     }
   }
 
-  void ReportError(const ErrorDescription &description) {
+  static void ReportError(const ErrorDescription &description) {
     // Can only report one error per ScopedInErrorReport.
     CHECK_EQ(current_error_.kind, kErrorKindInvalid);
     current_error_ = description;

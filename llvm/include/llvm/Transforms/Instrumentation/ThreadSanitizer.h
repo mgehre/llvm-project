@@ -27,7 +27,7 @@ FunctionPass *createThreadSanitizerLegacyPassPass();
 /// inserts calls to runtime library functions. If the functions aren't declared
 /// yet, the pass inserts the declarations. Otherwise the existing globals are
 struct ThreadSanitizerPass : public PassInfoMixin<ThreadSanitizerPass> {
-  PreservedAnalyses run(Function &F, FunctionAnalysisManager &FAM);
+  static PreservedAnalyses run(Function &F, FunctionAnalysisManager &FAM);
 };
 } // namespace llvm
 #endif /* LLVM_TRANSFORMS_INSTRUMENTATION_THREADSANITIZER_H */

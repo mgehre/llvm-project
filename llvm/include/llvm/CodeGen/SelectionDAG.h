@@ -330,7 +330,7 @@ private:
 
   /// Implementation of setSubgraphColor.
   /// Return whether we had to truncate the search.
-  bool setSubgraphColorHelper(SDNode *N, const char *Color,
+  static bool setSubgraphColorHelper(SDNode *N, const char *Color,
                               DenseSet<SDNode *> &visited,
                               int level, bool &printed);
 
@@ -408,8 +408,8 @@ public:
   OptimizationRemarkEmitter &getORE() const { return *ORE; }
 
   /// Pop up a GraphViz/gv window with the DAG rendered using 'dot'.
-  void viewGraph(const std::string &Title);
-  void viewGraph();
+  static void viewGraph(const std::string &Title);
+  static void viewGraph();
 
 #ifndef NDEBUG
   std::map<const SDNode *, std::string> NodeGraphAttrs;
@@ -417,20 +417,20 @@ public:
 
   /// Clear all previously defined node graph attributes.
   /// Intended to be used from a debugging tool (eg. gdb).
-  void clearGraphAttrs();
+  static void clearGraphAttrs();
 
   /// Set graph attributes for a node. (eg. "color=red".)
-  void setGraphAttrs(const SDNode *N, const char *Attrs);
+  static void setGraphAttrs(const SDNode *N, const char *Attrs);
 
   /// Get graph attributes for a node. (eg. "color=red".)
   /// Used from getNodeAttributes.
-  const std::string getGraphAttrs(const SDNode *N) const;
+  static const std::string getGraphAttrs(const SDNode *N) ;
 
   /// Convenience for setting node color attribute.
-  void setGraphColor(const SDNode *N, const char *Color);
+  static void setGraphColor(const SDNode *N, const char *Color);
 
   /// Convenience for setting subgraph color attribute.
-  void setSubgraphColor(SDNode *N, const char *Color);
+  static void setSubgraphColor(SDNode *N, const char *Color);
 
   using allnodes_const_iterator = ilist<SDNode>::const_iterator;
 
@@ -543,7 +543,7 @@ public:
   void DeleteNode(SDNode *N);
 
   /// Return an SDVTList that represents the list of values specified.
-  SDVTList getVTList(EVT VT);
+  static SDVTList getVTList(EVT VT);
   SDVTList getVTList(EVT VT1, EVT VT2);
   SDVTList getVTList(EVT VT1, EVT VT2, EVT VT3);
   SDVTList getVTList(EVT VT1, EVT VT2, EVT VT3, EVT VT4);
@@ -846,7 +846,7 @@ public:
   }
 
   /// Return true if the result of this operation is always undefined.
-  bool isUndef(unsigned Opcode, ArrayRef<SDValue> Ops);
+  static bool isUndef(unsigned Opcode, ArrayRef<SDValue> Ops);
 
   /// Return an UNDEF node. UNDEF does not have a useful SDLoc.
   SDValue getUNDEF(EVT VT) {
@@ -1499,7 +1499,7 @@ public:
 
   /// Test whether the given floating point SDValue is known to never be
   /// positive or negative zero.
-  bool isKnownNeverZeroFloat(SDValue Op) const;
+  static bool isKnownNeverZeroFloat(SDValue Op) ;
 
   /// Test whether the given SDValue is known to contain non-zero value(s).
   bool isKnownNeverZero(SDValue Op) const;
@@ -1507,7 +1507,7 @@ public:
   /// Test whether two SDValues are known to compare equal. This
   /// is true if they are the same value, or if one is negative zero and the
   /// other positive zero.
-  bool isEqualTo(SDValue A, SDValue B) const;
+  static bool isEqualTo(SDValue A, SDValue B) ;
 
   /// Return true if A and B have no common bits set. As an example, this can
   /// allow an 'add' to be transformed into an 'or'.
@@ -1531,7 +1531,7 @@ public:
   /// CandidateBinOps and on success /p BinOp will contain the matching opcode.
   /// Returns the vector that is being reduced on, or SDValue() if a reduction
   /// was not matched.
-  SDValue matchBinOpReduction(SDNode *Extract, ISD::NodeType &BinOp,
+  static SDValue matchBinOpReduction(SDNode *Extract, ISD::NodeType &BinOp,
                               ArrayRef<ISD::NodeType> CandidateBinOps);
 
   /// Utility function used by legalize and lowering to
@@ -1588,7 +1588,7 @@ public:
   SDNode *isConstantIntBuildVectorOrConstantInt(SDValue N);
 
   /// Test whether the given value is a constant FP or similar node.
-  SDNode *isConstantFPBuildVectorOrConstantFP(SDValue N);
+  static SDNode *isConstantFPBuildVectorOrConstantFP(SDValue N);
 
   /// \returns true if \p N is any kind of constant or build_vector of
   /// constants, int or float. If a vector, it may not necessarily be a splat.

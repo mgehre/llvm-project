@@ -101,7 +101,7 @@ class ModuleLinker {
 
   /// Drop GV if it is a member of a comdat that we are dropping.
   /// This can happen with COFF's largest selection kind.
-  void dropReplacedComdat(GlobalValue &GV,
+  static void dropReplacedComdat(GlobalValue &GV,
                           const DenseSet<const Comdat *> &ReplacedDstComdats);
 
   bool linkIfNeeded(GlobalValue &GV);

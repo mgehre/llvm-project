@@ -753,7 +753,7 @@ protected:
 
 private:
   /// Create a copy of this instruction.
-  Instruction *cloneImpl() const;
+  static Instruction *cloneImpl() ;
 };
 
 inline void ilist_alloc_traits<Instruction>::deleteNode(Instruction *V) {

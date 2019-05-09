@@ -84,7 +84,7 @@ class FixupLEAPass : public MachineFunctionPass {
 
   /// Determine if an instruction references a machine register
   /// and, if so, whether it reads or writes the register.
-  RegUsageState usesRegister(MachineOperand &p, MachineBasicBlock::iterator I);
+  static RegUsageState usesRegister(MachineOperand &p, MachineBasicBlock::iterator I);
 
   /// Step backwards through a basic block, looking
   /// for an instruction which writes a register within

@@ -128,7 +128,7 @@ class TextTokenRetokenizer {
     }
   }
 
-  void formTokenWithChars(Token &Result,
+  static void formTokenWithChars(Token &Result,
                           SourceLocation Loc,
                           const char *TokBegin,
                           unsigned TokLength,

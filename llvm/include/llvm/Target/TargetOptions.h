@@ -128,7 +128,7 @@ namespace llvm {
 
     /// DisableFramePointerElim - This returns true if frame pointer elimination
     /// optimization should be disabled for the given machine function.
-    bool DisableFramePointerElim(const MachineFunction &MF) const;
+    static bool DisableFramePointerElim(const MachineFunction &MF) ;
 
     /// UnsafeFPMath - This flag is enabled when the
     /// -enable-unsafe-fp-math flag is specified on the command line.  When

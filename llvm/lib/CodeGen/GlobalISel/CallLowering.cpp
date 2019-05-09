@@ -111,7 +111,7 @@ CallLowering::setArgFlags<CallInst>(CallLowering::ArgInfo &Arg, unsigned OpIdx,
 
 bool CallLowering::handleAssignments(MachineIRBuilder &MIRBuilder,
                                      ArrayRef<ArgInfo> Args,
-                                     ValueHandler &Handler) const {
+                                     ValueHandler &Handler) {
   MachineFunction &MF = MIRBuilder.getMF();
   const Function &F = MF.getFunction();
   const DataLayout &DL = F.getParent()->getDataLayout();

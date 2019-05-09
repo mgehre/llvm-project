@@ -61,7 +61,7 @@ protected:
   }
 
   /// Issue a diagnostic about unsupported features in the ABI.
-  void ErrorUnsupportedABI(CodeGenFunction &CGF, StringRef S);
+  static void ErrorUnsupportedABI(CodeGenFunction &CGF, StringRef S);
 
   /// Get a null value for unsupported member pointers.
   llvm::Constant *GetBogusMemberPointer(QualType T);
@@ -76,7 +76,7 @@ protected:
   /// Loads the incoming C++ this pointer as it was passed by the caller.
   llvm::Value *loadIncomingCXXThis(CodeGenFunction &CGF);
 
-  void setCXXABIThisValue(CodeGenFunction &CGF, llvm::Value *ThisPtr);
+  static void setCXXABIThisValue(CodeGenFunction &CGF, llvm::Value *ThisPtr);
 
   ASTContext &getContext() const { return CGM.getContext(); }
 
@@ -139,7 +139,7 @@ public:
 
   /// Returns true if C++ allows us to copy the memory of an object of type RD
   /// when it is passed as an argument.
-  bool canCopyArgument(const CXXRecordDecl *RD) const;
+  static bool canCopyArgument(const CXXRecordDecl *RD) ;
 
   /// Returns how an argument of the given record type should be passed.
   virtual RecordArgABI getRecordArgABI(const CXXRecordDecl *RD) const = 0;

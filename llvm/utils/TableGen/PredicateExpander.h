@@ -54,8 +54,8 @@ public:
   void decreaseIndentLevel() { --IndentLevel; }
 
   using RecVec = std::vector<Record *>;
-  void expandTrue(raw_ostream &OS);
-  void expandFalse(raw_ostream &OS);
+  static void expandTrue(raw_ostream &OS);
+  static void expandFalse(raw_ostream &OS);
   void expandCheckImmOperand(raw_ostream &OS, int OpIndex, int ImmVal,
                              StringRef FunctionMapper);
   void expandCheckImmOperand(raw_ostream &OS, int OpIndex, StringRef ImmVal,

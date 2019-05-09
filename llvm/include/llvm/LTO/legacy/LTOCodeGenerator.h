@@ -190,7 +190,7 @@ struct LTOCodeGenerator {
   void DiagnosticHandler(const DiagnosticInfo &DI);
 
 private:
-  void initializeLTOPasses();
+  static void initializeLTOPasses();
 
   /// Verify the merged module on first call.
   ///

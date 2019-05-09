@@ -76,7 +76,7 @@ public:
     return TargetInfo::SystemZBuiltinVaList;
   }
 
-  int getISARevision(StringRef Name) const;
+  static int getISARevision(StringRef Name) ;
 
   bool isValidCPUName(StringRef Name) const override {
     return getISARevision(Name) != -1;

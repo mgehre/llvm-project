@@ -448,9 +448,9 @@ public:
 protected:
   std::string getCoveragePath(StringRef Filename, StringRef MainFilename);
   std::unique_ptr<raw_ostream> openCoveragePath(StringRef CoveragePath);
-  void printFunctionSummary(raw_ostream &OS, const FunctionVector &Funcs) const;
-  void printBlockInfo(raw_ostream &OS, const GCOVBlock &Block,
-                      uint32_t LineIndex, uint32_t &BlockNo) const;
+  static void printFunctionSummary(raw_ostream &OS, const FunctionVector &Funcs) ;
+  static void printBlockInfo(raw_ostream &OS, const GCOVBlock &Block,
+                      uint32_t LineIndex, uint32_t &BlockNo) ;
   void printBranchInfo(raw_ostream &OS, const GCOVBlock &Block,
                        GCOVCoverage &Coverage, uint32_t &EdgeNo);
   void printUncondBranchInfo(raw_ostream &OS, uint32_t &EdgeNo,

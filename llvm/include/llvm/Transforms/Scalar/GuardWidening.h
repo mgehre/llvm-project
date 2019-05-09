@@ -24,7 +24,7 @@ namespace llvm {
 class Function;
 
 struct GuardWideningPass : public PassInfoMixin<GuardWideningPass> {
-  PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
+  static PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
 };
 }
 

@@ -433,7 +433,7 @@ class Baserel {
 public:
   Baserel(uint32_t V, uint8_t Ty) : RVA(V), Type(Ty) {}
   explicit Baserel(uint32_t V) : Baserel(V, getDefaultType()) {}
-  uint8_t getDefaultType();
+  static uint8_t getDefaultType();
 
   uint32_t RVA;
   uint8_t Type;

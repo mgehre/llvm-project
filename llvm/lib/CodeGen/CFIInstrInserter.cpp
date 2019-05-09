@@ -92,7 +92,7 @@ class CFIInstrInserter : public MachineFunctionPass {
   /// Calculate cfa offset and register values valid at basic block exit by
   /// checking the block for CFI instructions. Block's incoming CFA info remains
   /// the same.
-  void calculateOutgoingCFAInfo(MBBCFAInfo &MBBInfo);
+  static void calculateOutgoingCFAInfo(MBBCFAInfo &MBBInfo);
   /// Update in/out cfa offset and register values for successors of the basic
   /// block.
   void updateSuccCFAInfo(MBBCFAInfo &MBBInfo);
@@ -109,7 +109,7 @@ class CFIInstrInserter : public MachineFunctionPass {
     return -MBBVector[MBB->getNumber()].IncomingCFAOffset;
   }
 
-  void report(const MBBCFAInfo &Pred, const MBBCFAInfo &Succ);
+  static void report(const MBBCFAInfo &Pred, const MBBCFAInfo &Succ);
   /// Go through each MBB in a function and check that outgoing offset and
   /// register of its predecessors match incoming offset and register of that
   /// MBB, as well as that incoming offset and register of its successors match

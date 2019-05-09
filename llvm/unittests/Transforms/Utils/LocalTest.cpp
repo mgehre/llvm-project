@@ -524,7 +524,7 @@ struct SalvageDebugInfoTest : ::testing::Test {
     ASSERT_TRUE(F);
   }
 
-  bool doesDebugValueDescribeX(const DbgValueInst &DI) {
+  static bool doesDebugValueDescribeX(const DbgValueInst &DI) {
     const auto &CI = *cast<ConstantInt>(DI.getValue());
     if (CI.isZero())
       return DI.getExpression()->getElements().equals(
@@ -534,7 +534,7 @@ struct SalvageDebugInfoTest : ::testing::Test {
     return false;
   }
 
-  bool doesDebugValueDescribeY(const DbgValueInst &DI) {
+  static bool doesDebugValueDescribeY(const DbgValueInst &DI) {
     const auto &CI = *cast<ConstantInt>(DI.getValue());
     if (CI.isZero())
       return DI.getExpression()->getElements().equals(

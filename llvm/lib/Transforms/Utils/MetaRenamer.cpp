@@ -143,7 +143,7 @@ namespace {
       return true;
     }
 
-    bool runOnFunction(Function &F) {
+    static bool runOnFunction(Function &F) {
       for (auto AI = F.arg_begin(), AE = F.arg_end(); AI != AE; ++AI)
         if (!AI->getType()->isVoidTy())
           AI->setName("arg");

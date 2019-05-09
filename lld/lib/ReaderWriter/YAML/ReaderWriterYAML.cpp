@@ -856,7 +856,7 @@ template <> struct MappingTraits<const lld::DefinedAtom *> {
     void bind(const RefNameResolver &);
 
     // Extract current File object from YAML I/O parsing context
-    const lld::File &fileFromContext(IO &io) {
+    static const lld::File &fileFromContext(IO &io) {
       YamlContext *info = reinterpret_cast<YamlContext *>(io.getContext());
       assert(info != nullptr);
       assert(info->_file != nullptr);
@@ -1022,7 +1022,7 @@ template <> struct MappingTraits<const lld::UndefinedAtom *> {
     }
 
     // Extract current File object from YAML I/O parsing context
-    const lld::File &fileFromContext(IO &io) {
+    static const lld::File &fileFromContext(IO &io) {
       YamlContext *info = reinterpret_cast<YamlContext *>(io.getContext());
       assert(info != nullptr);
       assert(info->_file != nullptr);
@@ -1091,7 +1091,7 @@ template <> struct MappingTraits<const lld::SharedLibraryAtom *> {
     }
 
     // Extract current File object from YAML I/O parsing context
-    const lld::File &fileFromContext(IO &io) {
+    static const lld::File &fileFromContext(IO &io) {
       YamlContext *info = reinterpret_cast<YamlContext *>(io.getContext());
       assert(info != nullptr);
       assert(info->_file != nullptr);
@@ -1164,7 +1164,7 @@ template <> struct MappingTraits<const lld::AbsoluteAtom *> {
     }
 
     // Extract current File object from YAML I/O parsing context
-    const lld::File &fileFromContext(IO &io) {
+    static const lld::File &fileFromContext(IO &io) {
       YamlContext *info = reinterpret_cast<YamlContext *>(io.getContext());
       assert(info != nullptr);
       assert(info->_file != nullptr);

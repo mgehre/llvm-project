@@ -147,7 +147,7 @@ class SafeStack {
   Value *getStackGuard(IRBuilder<> &IRB, Function &F);
 
   /// Load stack guard from the frame and check if it has changed.
-  void checkStackGuard(IRBuilder<> &IRB, Function &F, ReturnInst &RI,
+  static void checkStackGuard(IRBuilder<> &IRB, Function &F, ReturnInst &RI,
                        AllocaInst *StackGuardSlot, Value *StackGuard);
 
   /// Find all static allocas, dynamic allocas, return instructions and
@@ -200,7 +200,7 @@ class SafeStack {
   bool IsAccessSafe(Value *Addr, uint64_t Size, const Value *AllocaPtr,
                     uint64_t AllocaSize);
 
-  bool ShouldInlinePointerAddress(CallSite &CS);
+  static bool ShouldInlinePointerAddress(CallSite &CS);
   void TryInlinePointerAddress();
 
 public:

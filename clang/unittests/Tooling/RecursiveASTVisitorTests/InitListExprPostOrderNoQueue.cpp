@@ -16,7 +16,7 @@ namespace {
 class InitListExprPostOrderNoQueueVisitor
     : public ExpectedLocationVisitor<InitListExprPostOrderNoQueueVisitor> {
 public:
-  bool shouldTraversePostOrder() const { return true; }
+  static bool shouldTraversePostOrder() { return true; }
 
   bool TraverseInitListExpr(InitListExpr *ILE) {
     return ExpectedLocationVisitor::TraverseInitListExpr(ILE);

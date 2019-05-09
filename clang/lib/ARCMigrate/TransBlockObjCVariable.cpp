@@ -102,7 +102,7 @@ public:
   }
 
 private:
-  bool isImplicitStrong(QualType ty) {
+  static bool isImplicitStrong(QualType ty) {
     if (isa<AttributedType>(ty.getTypePtr()))
       return false;
     return ty.getLocalQualifiers().getObjCLifetime() == Qualifiers::OCL_Strong;

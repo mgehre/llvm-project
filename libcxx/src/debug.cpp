@@ -356,7 +356,7 @@ __libcpp_db::__find_c(void* __c) const
 }
 
 void
-__libcpp_db::unlock() const
+__libcpp_db::unlock() 
 {
 #ifndef _LIBCPP_HAS_NO_THREADS
     mut().unlock();

@@ -33,7 +33,7 @@ private:
   unsigned countArgumentExpansions(const MacroInfo *MI,
                                    const IdentifierInfo *Arg) const;
 
-  bool hasSideEffects(const Token *ResultArgToks) const;
+  static bool hasSideEffects(const Token *ResultArgToks) ;
 };
 } // End of anonymous namespace.
 
@@ -164,7 +164,7 @@ unsigned MacroRepeatedPPCallbacks::countArgumentExpansions(
 }
 
 bool MacroRepeatedPPCallbacks::hasSideEffects(
-    const Token *ResultArgToks) const {
+    const Token *ResultArgToks) {
   for (; ResultArgToks->isNot(tok::eof); ++ResultArgToks) {
     if (ResultArgToks->isOneOf(tok::plusplus, tok::minusminus))
       return true;

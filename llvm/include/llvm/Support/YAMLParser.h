@@ -92,7 +92,7 @@ public:
   ~Stream();
 
   document_iterator begin();
-  document_iterator end();
+  static document_iterator end();
   void skip();
   bool failed();
 

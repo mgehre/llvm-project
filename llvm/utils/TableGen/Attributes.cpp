@@ -28,9 +28,9 @@ private:
   void emitConversionFn(raw_ostream &OS);
   void emitFnAttrCompatCheck(raw_ostream &OS, bool IsStringAttr);
 
-  void printEnumAttrClasses(raw_ostream &OS,
+  static void printEnumAttrClasses(raw_ostream &OS,
                             const std::vector<Record *> &Records);
-  void printStrBoolAttrClasses(raw_ostream &OS,
+  static void printStrBoolAttrClasses(raw_ostream &OS,
                                const std::vector<Record *> &Records);
 
   RecordKeeper &Records;

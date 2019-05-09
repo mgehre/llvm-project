@@ -386,7 +386,7 @@ Corpus::intersect(std::vector<std::unique_ptr<Iterator>> Children) const {
 }
 
 std::unique_ptr<Iterator>
-Corpus::unionOf(std::vector<std::unique_ptr<Iterator>> Children) const {
+Corpus::unionOf(std::vector<std::unique_ptr<Iterator>> Children) {
   std::vector<std::unique_ptr<Iterator>> RealChildren;
   for (auto &Child : Children) {
     switch (Child->kind()) {
@@ -419,12 +419,12 @@ std::unique_ptr<Iterator> Corpus::all() const {
   return llvm::make_unique<TrueIterator>(Size);
 }
 
-std::unique_ptr<Iterator> Corpus::none() const {
+std::unique_ptr<Iterator> Corpus::none() {
   return llvm::make_unique<FalseIterator>();
 }
 
 std::unique_ptr<Iterator> Corpus::boost(std::unique_ptr<Iterator> Child,
-                                        float Factor) const {
+                                        float Factor) {
   if (Factor == 1)
     return Child;
   if (Child->kind() == Iterator::Kind::False)
@@ -433,7 +433,7 @@ std::unique_ptr<Iterator> Corpus::boost(std::unique_ptr<Iterator> Child,
 }
 
 std::unique_ptr<Iterator> Corpus::limit(std::unique_ptr<Iterator> Child,
-                                        size_t Limit) const {
+                                        size_t Limit) {
   if (Child->kind() == Iterator::Kind::False)
     return Child;
   return llvm::make_unique<LimitIterator>(std::move(Child), Limit);

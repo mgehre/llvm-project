@@ -32,14 +32,14 @@ class NoReturnFunctionChecker : public Checker< check::PostCall,
   mutable Selector HandleFailureInFunctionSel;
   mutable Selector HandleFailureInMethodSel;
 public:
-  void checkPostCall(const CallEvent &CE, CheckerContext &C) const;
+  static void checkPostCall(const CallEvent &CE, CheckerContext &C) ;
   void checkPostObjCMessage(const ObjCMethodCall &msg, CheckerContext &C) const;
 };
 
 }
 
 void NoReturnFunctionChecker::checkPostCall(const CallEvent &CE,
-                                            CheckerContext &C) const {
+                                            CheckerContext &C) {
   bool BuildSinks = false;
 
   if (const FunctionDecl *FD = dyn_cast_or_null<FunctionDecl>(CE.getDecl()))

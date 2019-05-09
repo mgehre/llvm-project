@@ -58,7 +58,7 @@ TEST(ExplicitConstructorCheckTest, RemoveExplicitWithMacros) {
 
 class GlobalNamesInHeadersCheckTest : public ::testing::Test {
 protected:
-  bool runCheckOnCode(const std::string &Code, const std::string &Filename) {
+  static bool runCheckOnCode(const std::string &Code, const std::string &Filename) {
     static const char *const Header = "namespace std {\n"
                                       "class string {};\n"
                                       "}  // namespace std\n"

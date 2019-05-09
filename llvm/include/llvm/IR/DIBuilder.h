@@ -550,7 +550,7 @@ namespace llvm {
 
     /// Create unspecified parameter type
     /// for a subroutine type.
-    DIBasicType *createUnspecifiedParameter();
+    static DIBasicType *createUnspecifiedParameter();
 
     /// Get a DINodeArray, create one if required.
     DINodeArray getOrCreateArray(ArrayRef<Metadata *> Elements);

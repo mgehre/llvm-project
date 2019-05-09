@@ -192,7 +192,7 @@ public:
                                    uint64_t *TypeSize, unsigned *Alignment,
                                    Value **MaybeMask);
 
-  bool isInterestingAlloca(const AllocaInst &AI);
+  static bool isInterestingAlloca(const AllocaInst &AI);
   bool tagAlloca(IRBuilder<> &IRB, AllocaInst *AI, Value *Tag);
   Value *tagPointer(IRBuilder<> &IRB, Type *Ty, Value *PtrLong, Value *Tag);
   Value *untagPointer(IRBuilder<> &IRB, Value *PtrLong);
@@ -217,13 +217,13 @@ private:
   // to the run-time w/o adding extra executable code in every function.
   // We do this by creating a separate section with {PC,Descr} pairs and passing
   // the section beg/end to __hwasan_init_frames() at module init time.
-  std::string createFrameString(ArrayRef<AllocaInst*> Allocas);
+  static std::string createFrameString(ArrayRef<AllocaInst*> Allocas);
   void createFrameGlobal(Function &F, const std::string &FrameString);
   // Get the section name for frame descriptions. Currently ELF-only.
-  const char *getFrameSection() { return "__hwasan_frames"; }
-  const char *getFrameSectionBeg() { return  "__start___hwasan_frames"; }
-  const char *getFrameSectionEnd() { return  "__stop___hwasan_frames"; }
-  GlobalVariable *createFrameSectionBound(Module &M, Type *Ty,
+  static const char *getFrameSection() { return "__hwasan_frames"; }
+  static const char *getFrameSectionBeg() { return  "__start___hwasan_frames"; }
+  static const char *getFrameSectionEnd() { return  "__stop___hwasan_frames"; }
+  static GlobalVariable *createFrameSectionBound(Module &M, Type *Ty,
                                           const char *Name) {
     auto GV = new GlobalVariable(M, Ty, false, GlobalVariable::ExternalLinkage,
                                  nullptr, Name);

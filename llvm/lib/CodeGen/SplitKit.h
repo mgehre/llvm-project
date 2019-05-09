@@ -349,7 +349,7 @@ private:
   /// interval @p LI. The interval @p LI is assumed to contain such a subrange.
   /// This function is used to find corresponding subranges between the
   /// original interval and the new intervals.
-  LiveInterval::SubRange &getSubRangeForMask(LaneBitmask LM, LiveInterval &LI);
+  static LiveInterval::SubRange &getSubRangeForMask(LaneBitmask LM, LiveInterval &LI);
 
   /// Add a segment to the interval LI for the value number VNI. If LI has
   /// subranges, corresponding segments will be added to them as well, but

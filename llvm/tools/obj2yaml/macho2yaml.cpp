@@ -31,7 +31,7 @@ class MachODumper {
   void dumpLoadCommands(std::unique_ptr<MachOYAML::Object> &Y);
   void dumpLinkEdit(std::unique_ptr<MachOYAML::Object> &Y);
   void dumpRebaseOpcodes(std::unique_ptr<MachOYAML::Object> &Y);
-  void dumpBindOpcodes(std::vector<MachOYAML::BindOpcode> &BindOpcodes,
+  static void dumpBindOpcodes(std::vector<MachOYAML::BindOpcode> &BindOpcodes,
                        ArrayRef<uint8_t> OpcodeBuffer, bool Lazy = false);
   void dumpExportTrie(std::unique_ptr<MachOYAML::Object> &Y);
   void dumpSymbols(std::unique_ptr<MachOYAML::Object> &Y);

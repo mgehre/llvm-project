@@ -22,7 +22,7 @@ namespace llvm {
 
 class IRCEPass : public PassInfoMixin<IRCEPass> {
 public:
-  PreservedAnalyses run(Loop &L, LoopAnalysisManager &AM,
+  static PreservedAnalyses run(Loop &L, LoopAnalysisManager &AM,
                         LoopStandardAnalysisResults &AR, LPMUpdater &U);
 };
 

@@ -70,7 +70,7 @@ bool MapASTVisitor::VisitFunctionDecl(const FunctionDecl *D) {
 }
 
 comments::FullComment *
-MapASTVisitor::getComment(const NamedDecl *D, const ASTContext &Context) const {
+MapASTVisitor::getComment(const NamedDecl *D, const ASTContext &Context) {
   RawComment *Comment = Context.getRawCommentForDeclNoCache(D);
   // FIXME: Move setAttached to the initial comment parsing.
   if (Comment) {
@@ -81,12 +81,12 @@ MapASTVisitor::getComment(const NamedDecl *D, const ASTContext &Context) const {
 }
 
 int MapASTVisitor::getLine(const NamedDecl *D,
-                           const ASTContext &Context) const {
+                           const ASTContext &Context) {
   return Context.getSourceManager().getPresumedLoc(D->getBeginLoc()).getLine();
 }
 
 llvm::StringRef MapASTVisitor::getFile(const NamedDecl *D,
-                                       const ASTContext &Context) const {
+                                       const ASTContext &Context) {
   return Context.getSourceManager()
       .getPresumedLoc(D->getBeginLoc())
       .getFilename();

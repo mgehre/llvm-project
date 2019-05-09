@@ -35,7 +35,7 @@ protected:
   /// MemoryBuffer::getOpenFileSlice to map it.
   /// If \p Reopen is true, the file is closed after creating and reopened
   /// anew before using MemoryBuffer.
-  void testGetOpenFileSlice(bool Reopen);
+  static void testGetOpenFileSlice(bool Reopen);
 
   typedef std::unique_ptr<MemoryBuffer> OwningBuffer;
 

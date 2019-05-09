@@ -50,8 +50,8 @@ public:
     // want to visit those, so we make our own RecursiveASTVisitor.
     struct LocalVisitor : public RecursiveASTVisitor<LocalVisitor> {
       const PaddingChecker *Checker;
-      bool shouldVisitTemplateInstantiations() const { return true; }
-      bool shouldVisitImplicitCode() const { return true; }
+      static bool shouldVisitTemplateInstantiations() { return true; }
+      static bool shouldVisitImplicitCode() { return true; }
       explicit LocalVisitor(const PaddingChecker *Checker) : Checker(Checker) {}
       bool VisitRecordDecl(const RecordDecl *RD) {
         Checker->visitRecord(RD);

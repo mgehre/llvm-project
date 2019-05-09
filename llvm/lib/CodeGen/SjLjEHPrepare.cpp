@@ -64,10 +64,10 @@ public:
 
 private:
   bool setupEntryBlockAndCallSites(Function &F);
-  void substituteLPadValues(LandingPadInst *LPI, Value *ExnVal, Value *SelVal);
+  static void substituteLPadValues(LandingPadInst *LPI, Value *ExnVal, Value *SelVal);
   Value *setupFunctionContext(Function &F, ArrayRef<LandingPadInst *> LPads);
-  void lowerIncomingArguments(Function &F);
-  void lowerAcrossUnwindEdges(Function &F, ArrayRef<InvokeInst *> Invokes);
+  static void lowerIncomingArguments(Function &F);
+  static void lowerAcrossUnwindEdges(Function &F, ArrayRef<InvokeInst *> Invokes);
   void insertCallSiteStore(Instruction *I, int Number);
 };
 } // end anonymous namespace

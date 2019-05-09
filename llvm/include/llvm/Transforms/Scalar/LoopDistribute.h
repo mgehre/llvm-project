@@ -25,7 +25,7 @@ class Function;
 
 class LoopDistributePass : public PassInfoMixin<LoopDistributePass> {
 public:
-  PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
+  static PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
 };
 
 } // end namespace llvm

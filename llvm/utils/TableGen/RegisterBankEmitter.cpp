@@ -108,9 +108,9 @@ private:
   RecordKeeper &Records;
   CodeGenRegBank RegisterClassHierarchy;
 
-  void emitHeader(raw_ostream &OS, const StringRef TargetName,
+  static void emitHeader(raw_ostream &OS, const StringRef TargetName,
                   const std::vector<RegisterBank> &Banks);
-  void emitBaseClassDefinition(raw_ostream &OS, const StringRef TargetName,
+  static void emitBaseClassDefinition(raw_ostream &OS, const StringRef TargetName,
                                const std::vector<RegisterBank> &Banks);
   void emitBaseClassImplementation(raw_ostream &OS, const StringRef TargetName,
                                    std::vector<RegisterBank> &Banks);

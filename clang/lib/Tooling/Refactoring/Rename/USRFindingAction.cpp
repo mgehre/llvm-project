@@ -85,7 +85,7 @@ public:
     return std::vector<std::string>(USRSet.begin(), USRSet.end());
   }
 
-  bool shouldVisitTemplateInstantiations() const { return true; }
+  static bool shouldVisitTemplateInstantiations() { return true; }
 
   bool VisitCXXMethodDecl(const CXXMethodDecl *MethodDecl) {
     if (MethodDecl->isVirtual())

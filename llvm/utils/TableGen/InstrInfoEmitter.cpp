@@ -78,17 +78,17 @@ private:
                   const OperandInfoMapTy &OpInfo,
                   raw_ostream &OS);
   void emitOperandTypesEnum(raw_ostream &OS, const CodeGenTarget &Target);
-  void initOperandMapData(
+  static void initOperandMapData(
             ArrayRef<const CodeGenInstruction *> NumberedInstructions,
             StringRef Namespace,
             std::map<std::string, unsigned> &Operands,
             OpNameMapTy &OperandMap);
-  void emitOperandNameMappings(raw_ostream &OS, const CodeGenTarget &Target,
+  static void emitOperandNameMappings(raw_ostream &OS, const CodeGenTarget &Target,
             ArrayRef<const CodeGenInstruction*> NumberedInstructions);
 
   // Operand information.
   void EmitOperandInfo(raw_ostream &OS, OperandInfoMapTy &OperandInfoIDs);
-  std::vector<std::string> GetOperandInfo(const CodeGenInstruction &Inst);
+  static std::vector<std::string> GetOperandInfo(const CodeGenInstruction &Inst);
 };
 
 } // end anonymous namespace

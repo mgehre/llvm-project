@@ -749,7 +749,7 @@ public:
   llvm::ConstantInt *getSize(CharUnits numChars);
 
   /// Set the visibility for the given LLVM GlobalValue.
-  void setGlobalVisibility(llvm::GlobalValue *GV, const NamedDecl *D) const;
+  static void setGlobalVisibility(llvm::GlobalValue *GV, const NamedDecl *D) ;
 
   void setGlobalVisibilityAndLocal(llvm::GlobalValue *GV,
                                    const NamedDecl *D) const;
@@ -757,7 +757,7 @@ public:
   void setDSOLocal(llvm::GlobalValue *GV) const;
 
   void setDLLImportDLLExport(llvm::GlobalValue *GV, GlobalDecl D) const;
-  void setDLLImportDLLExport(llvm::GlobalValue *GV, const NamedDecl *D) const;
+  static void setDLLImportDLLExport(llvm::GlobalValue *GV, const NamedDecl *D) ;
   /// Set visibility, dllimport/dllexport and dso_local.
   /// This must be called after dllimport/dllexport is set.
   void setGVProperties(llvm::GlobalValue *GV, GlobalDecl GD) const;
@@ -1073,7 +1073,7 @@ public:
   void SetLLVMFunctionAttributesForDefinition(const Decl *D, llvm::Function *F);
 
   /// Return true iff the given type uses 'sret' when used as a return type.
-  bool ReturnTypeUsesSRet(const CGFunctionInfo &FI);
+  static bool ReturnTypeUsesSRet(const CGFunctionInfo &FI);
 
   /// Return true iff the given type uses an argument slot when 'sret' is used
   /// as a return type.
@@ -1290,7 +1290,7 @@ public:
   ///
   /// A most-base class of a class C is defined as a recursive base class of C,
   /// including C itself, that does not have any bases.
-  std::vector<const CXXRecordDecl *>
+  static std::vector<const CXXRecordDecl *>
   getMostBaseClasses(const CXXRecordDecl *RD);
 
   /// Get the declaration of std::terminate for the platform.

@@ -29,7 +29,7 @@ void CGCXXABI::ErrorUnsupportedABI(CodeGenFunction &CGF, StringRef S) {
     << S;
 }
 
-bool CGCXXABI::canCopyArgument(const CXXRecordDecl *RD) const {
+bool CGCXXABI::canCopyArgument(const CXXRecordDecl *RD) {
   // We can only copy the argument if there exists at least one trivial,
   // non-deleted copy or move constructor.
   return RD->canPassInRegisters();

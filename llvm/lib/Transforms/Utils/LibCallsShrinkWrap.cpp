@@ -96,12 +96,12 @@ private:
   bool performCallDomainErrorOnly(CallInst *CI, const LibFunc &Func);
   bool performCallErrors(CallInst *CI, const LibFunc &Func);
   bool performCallRangeErrorOnly(CallInst *CI, const LibFunc &Func);
-  Value *generateOneRangeCond(CallInst *CI, const LibFunc &Func);
-  Value *generateTwoRangeCond(CallInst *CI, const LibFunc &Func);
-  Value *generateCondForPow(CallInst *CI, const LibFunc &Func);
+  static Value *generateOneRangeCond(CallInst *CI, const LibFunc &Func);
+  static Value *generateTwoRangeCond(CallInst *CI, const LibFunc &Func);
+  static Value *generateCondForPow(CallInst *CI, const LibFunc &Func);
 
   // Create an OR of two conditions.
-  Value *createOrCond(CallInst *CI, CmpInst::Predicate Cmp, float Val,
+  static Value *createOrCond(CallInst *CI, CmpInst::Predicate Cmp, float Val,
                       CmpInst::Predicate Cmp2, float Val2) {
     IRBuilder<> BBBuilder(CI);
     Value *Arg = CI->getArgOperand(0);
@@ -111,7 +111,7 @@ private:
   }
 
   // Create a single condition using IRBuilder.
-  Value *createCond(IRBuilder<> &BBBuilder, Value *Arg, CmpInst::Predicate Cmp,
+  static Value *createCond(IRBuilder<> &BBBuilder, Value *Arg, CmpInst::Predicate Cmp,
                     float Val) {
     Constant *V = ConstantFP::get(BBBuilder.getContext(), APFloat(Val));
     if (!Arg->getType()->isFloatTy())
@@ -120,7 +120,7 @@ private:
   }
 
   // Create a single condition.
-  Value *createCond(CallInst *CI, CmpInst::Predicate Cmp, float Val) {
+  static Value *createCond(CallInst *CI, CmpInst::Predicate Cmp, float Val) {
     IRBuilder<> BBBuilder(CI);
     Value *Arg = CI->getArgOperand(0);
     return createCond(BBBuilder, Arg, Cmp, Val);

@@ -156,7 +156,7 @@ private:
   SectionInfo *sectionForAtom(const DefinedAtom*);
   SectionInfo *getRelocatableSection(DefinedAtom::ContentType type);
   SectionInfo *getFinalSection(DefinedAtom::ContentType type);
-  void         appendAtom(SectionInfo *sect, const DefinedAtom *atom);
+  static void         appendAtom(SectionInfo *sect, const DefinedAtom *atom);
   SegmentInfo *segmentForName(StringRef segName);
   void         layoutSectionsInSegment(SegmentInfo *seg, uint64_t &addr);
   void         layoutSectionsInTextSegment(size_t, SegmentInfo *, uint64_t &);
@@ -170,7 +170,7 @@ private:
   llvm::Error getSymbolTableRegion(const DefinedAtom* atom,
                                    bool &inGlobalsRegion,
                                    SymbolScope &symbolScope);
-  void         appendSection(SectionInfo *si, NormalizedFile &file);
+  static void         appendSection(SectionInfo *si, NormalizedFile &file);
   uint32_t     sectionIndexForAtom(const Atom *atom);
   void fixLazyReferenceImm(const DefinedAtom *atom, uint32_t offset,
                            NormalizedFile &file);

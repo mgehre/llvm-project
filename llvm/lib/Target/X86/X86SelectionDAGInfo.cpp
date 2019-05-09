@@ -25,7 +25,7 @@ using namespace llvm;
 #define DEBUG_TYPE "x86-selectiondag-info"
 
 bool X86SelectionDAGInfo::isBaseRegConflictPossible(
-    SelectionDAG &DAG, ArrayRef<MCPhysReg> ClobberSet) const {
+    SelectionDAG &DAG, ArrayRef<MCPhysReg> ClobberSet) {
   // We cannot use TRI->hasBasePointer() until *after* we select all basic
   // blocks.  Legalization may introduce new stack temporaries with large
   // alignment requirements.  Fall back to generic code if there are any

@@ -67,7 +67,7 @@ X86TTIImpl::getPopcntSupport(unsigned TyWidth) {
 }
 
 llvm::Optional<unsigned> X86TTIImpl::getCacheSize(
-  TargetTransformInfo::CacheLevel Level) const {
+  TargetTransformInfo::CacheLevel Level) {
   switch (Level) {
   case TargetTransformInfo::CacheLevel::L1D:
     //   - Penryn
@@ -97,7 +97,7 @@ llvm::Optional<unsigned> X86TTIImpl::getCacheSize(
 }
 
 llvm::Optional<unsigned> X86TTIImpl::getCacheAssociativity(
-  TargetTransformInfo::CacheLevel Level) const {
+  TargetTransformInfo::CacheLevel Level) {
   //   - Penryn
   //   - Nehalem
   //   - Westmere
@@ -1720,7 +1720,7 @@ int X86TTIImpl::getCmpSelInstrCost(unsigned Opcode, Type *ValTy, Type *CondTy,
   return BaseT::getCmpSelInstrCost(Opcode, ValTy, CondTy, I);
 }
 
-unsigned X86TTIImpl::getAtomicMemIntrinsicMaxElementSize() const { return 16; }
+unsigned X86TTIImpl::getAtomicMemIntrinsicMaxElementSize() { return 16; }
 
 int X86TTIImpl::getIntrinsicInstrCost(Intrinsic::ID IID, Type *RetTy,
                                       ArrayRef<Type *> Tys, FastMathFlags FMF,

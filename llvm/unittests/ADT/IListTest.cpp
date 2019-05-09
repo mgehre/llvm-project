@@ -209,8 +209,8 @@ struct NodeWithCallback : ilist_node<NodeWithCallback> {
 
 namespace llvm {
 template <> struct ilist_callback_traits<NodeWithCallback> {
-  void addNodeToList(NodeWithCallback *N) { N->IsInList = true; }
-  void removeNodeFromList(NodeWithCallback *N) { N->IsInList = false; }
+  static void addNodeToList(NodeWithCallback *N) { N->IsInList = true; }
+  static void removeNodeFromList(NodeWithCallback *N) { N->IsInList = false; }
   template <class Iterator>
   void transferNodesFromList(ilist_callback_traits &Other, Iterator First,
                              Iterator Last) {

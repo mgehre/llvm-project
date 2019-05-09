@@ -129,7 +129,7 @@ public:
   void TearDown() override { TestState.reset(); }
 
 protected:
-  bool ValidateDatabaseRecord(LazyRandomTypeCollection &Types, uint32_t Index) {
+  static bool ValidateDatabaseRecord(LazyRandomTypeCollection &Types, uint32_t Index) {
     TypeIndex TI = TypeIndex::fromArrayIndex(Index);
     if (!Types.contains(TI))
       return false;
@@ -177,7 +177,7 @@ protected:
     MockCallbacks Callbacks;
   };
 
-  FixedStreamArray<TypeIndexOffset>
+  static FixedStreamArray<TypeIndexOffset>
   createPartialOffsets(MutableBinaryByteStream &Storage,
                        std::initializer_list<uint32_t> Indices) {
 

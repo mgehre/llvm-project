@@ -469,7 +469,7 @@ void InstrBuilder::populateReads(InstrDesc &ID, const MCInst &MCI,
 }
 
 Error InstrBuilder::verifyInstrDesc(const InstrDesc &ID,
-                                    const MCInst &MCI) const {
+                                    const MCInst &MCI) {
   if (ID.NumMicroOps != 0)
     return ErrorSuccess();
 

@@ -73,8 +73,8 @@ class TargetLibraryInfoImpl {
 
   /// Return true if the function type FTy is valid for the library function
   /// F, regardless of whether the function is available.
-  bool isValidProtoForLibFunc(const FunctionType &FTy, LibFunc F,
-                              const DataLayout *DL) const;
+  static bool isValidProtoForLibFunc(const FunctionType &FTy, LibFunc F,
+                              const DataLayout *DL) ;
 
 public:
   /// List of known vector-functions libraries.
@@ -103,14 +103,14 @@ public:
   ///
   /// If it is one of the known library functions, return true and set F to the
   /// corresponding value.
-  bool getLibFunc(StringRef funcName, LibFunc &F) const;
+  static bool getLibFunc(StringRef funcName, LibFunc &F) ;
 
   /// Searches for a particular function name, also checking that its type is
   /// valid for the library function matching that name.
   ///
   /// If it is one of the known library functions, return true and set F to the
   /// corresponding value.
-  bool getLibFunc(const Function &FDecl, LibFunc &F) const;
+  static bool getLibFunc(const Function &FDecl, LibFunc &F) ;
 
   /// Forces a function to be marked as unavailable.
   void setUnavailable(LibFunc F) {
@@ -195,7 +195,7 @@ public:
 
   /// Returns the size of the wchar_t type in bytes or 0 if the size is unknown.
   /// This queries the 'wchar_size' metadata.
-  unsigned getWCharSize(const Module &M) const;
+  static unsigned getWCharSize(const Module &M) ;
 };
 
 /// Provides information about what library functions are available for

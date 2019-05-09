@@ -35,7 +35,7 @@ public:
 /// "bar".
 class NoBarFunctionConstraint {
 public:
-  void constrain(std::vector<CloneDetector::CloneGroup> &CloneGroups) {
+  static void constrain(std::vector<CloneDetector::CloneGroup> &CloneGroups) {
     CloneConstraint::splitCloneGroups(
         CloneGroups, [](const StmtSequence &A, const StmtSequence &B) {
           // Check if one of the sequences is in a function which name starts

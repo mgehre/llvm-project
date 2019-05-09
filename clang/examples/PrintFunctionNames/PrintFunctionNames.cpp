@@ -112,7 +112,7 @@ protected:
 
     return true;
   }
-  void PrintHelp(llvm::raw_ostream& ros) {
+  static void PrintHelp(llvm::raw_ostream& ros) {
     ros << "Help for PrintFunctionNames plugin goes here\n";
   }
 

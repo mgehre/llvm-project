@@ -64,7 +64,7 @@ class SimpleStreamChecker : public Checker<check::PostCall,
   void reportLeaks(ArrayRef<SymbolRef> LeakedStreams, CheckerContext &C,
                    ExplodedNode *ErrNode) const;
 
-  bool guaranteedNotToCloseFile(const CallEvent &Call) const;
+  static bool guaranteedNotToCloseFile(const CallEvent &Call) ;
 
 public:
   SimpleStreamChecker();
@@ -77,10 +77,10 @@ public:
   void checkDeadSymbols(SymbolReaper &SymReaper, CheckerContext &C) const;
 
   /// Stop tracking addresses which escape.
-  ProgramStateRef checkPointerEscape(ProgramStateRef State,
+  static ProgramStateRef checkPointerEscape(ProgramStateRef State,
                                     const InvalidatedSymbols &Escaped,
                                     const CallEvent *Call,
-                                    PointerEscapeKind Kind) const;
+                                    PointerEscapeKind Kind) ;
 };
 
 } // end anonymous namespace
@@ -227,7 +227,7 @@ void SimpleStreamChecker::reportLeaks(ArrayRef<SymbolRef> LeakedStreams,
   }
 }
 
-bool SimpleStreamChecker::guaranteedNotToCloseFile(const CallEvent &Call) const{
+bool SimpleStreamChecker::guaranteedNotToCloseFile(const CallEvent &Call) {
   // If it's not in a system header, assume it might close a file.
   if (!Call.isInSystemHeader())
     return false;
@@ -248,7 +248,7 @@ ProgramStateRef
 SimpleStreamChecker::checkPointerEscape(ProgramStateRef State,
                                         const InvalidatedSymbols &Escaped,
                                         const CallEvent *Call,
-                                        PointerEscapeKind Kind) const {
+                                        PointerEscapeKind Kind) {
   // If we know that the call cannot close a file, there is nothing to do.
   if (Kind == PSK_DirectEscapeOnCall && guaranteedNotToCloseFile(*Call)) {
     return State;

@@ -17,7 +17,7 @@ namespace {
 class ImplicitCtorVisitor
     : public ExpectedLocationVisitor<ImplicitCtorVisitor> {
 public:
-  bool shouldVisitImplicitCode() const { return true; }
+  static bool shouldVisitImplicitCode() { return true; }
 
   bool VisitCXXConstructorDecl(CXXConstructorDecl* Ctor) {
     if (Ctor->isImplicit()) {  // Was not written in source code

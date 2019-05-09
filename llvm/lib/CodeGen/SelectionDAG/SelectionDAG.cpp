@@ -3927,7 +3927,7 @@ bool SelectionDAG::isKnownNeverNaN(SDValue Op, bool SNaN, unsigned Depth) const 
   }
 }
 
-bool SelectionDAG::isKnownNeverZeroFloat(SDValue Op) const {
+bool SelectionDAG::isKnownNeverZeroFloat(SDValue Op) {
   assert(Op.getValueType().isFloatingPoint() &&
          "Floating point type expected");
 
@@ -3960,7 +3960,7 @@ bool SelectionDAG::isKnownNeverZero(SDValue Op) const {
   return false;
 }
 
-bool SelectionDAG::isEqualTo(SDValue A, SDValue B) const {
+bool SelectionDAG::isEqualTo(SDValue A, SDValue B) {
   // Check the obvious case.
   if (A == B) return true;
 

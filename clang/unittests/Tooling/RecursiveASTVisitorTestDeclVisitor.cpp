@@ -33,7 +33,7 @@ TEST(RecursiveASTVisitor, VisitsCXXForRangeStmtLoopVariable) {
 class ParmVarDeclVisitorForImplicitCode :
   public ExpectedLocationVisitor<ParmVarDeclVisitorForImplicitCode> {
 public:
-  bool shouldVisitImplicitCode() const { return true; }
+  static bool shouldVisitImplicitCode() { return true; }
 
   bool VisitParmVarDecl(ParmVarDecl *ParamVar) {
     Match(ParamVar->getNameAsString(), ParamVar->getBeginLoc());

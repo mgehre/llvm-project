@@ -28,7 +28,7 @@ protected:
 
   StringType theString;
 
-  void assertEmpty(StringType & v) {
+  static void assertEmpty(StringType & v) {
     // Size tests
     EXPECT_EQ(0u, v.size());
     EXPECT_TRUE(v.empty());

@@ -293,7 +293,7 @@ public:
   uint32_t getSymbolFlags(DataRefImpl Symb) const override;
   Expected<section_iterator> getSymbolSection(DataRefImpl Symb) const override;
   unsigned getSymbolSectionID(SymbolRef Symb) const;
-  unsigned getSectionID(SectionRef Sec) const;
+  static unsigned getSectionID(SectionRef Sec) ;
 
   void moveSectionNext(DataRefImpl &Sec) const override;
   std::error_code getSectionName(DataRefImpl Sec,
@@ -478,12 +478,12 @@ public:
   unsigned getPlainRelocationSymbolNum(
                                     const MachO::any_relocation_info &RE) const;
   bool getPlainRelocationExternal(const MachO::any_relocation_info &RE) const;
-  bool getScatteredRelocationScattered(
-                                    const MachO::any_relocation_info &RE) const;
-  uint32_t getScatteredRelocationValue(
-                                    const MachO::any_relocation_info &RE) const;
-  uint32_t getScatteredRelocationType(
-                                    const MachO::any_relocation_info &RE) const;
+  static bool getScatteredRelocationScattered(
+                                    const MachO::any_relocation_info &RE) ;
+  static uint32_t getScatteredRelocationValue(
+                                    const MachO::any_relocation_info &RE) ;
+  static uint32_t getScatteredRelocationType(
+                                    const MachO::any_relocation_info &RE) ;
   unsigned getAnyRelocationAddress(const MachO::any_relocation_info &RE) const;
   unsigned getAnyRelocationPCRel(const MachO::any_relocation_info &RE) const;
   unsigned getAnyRelocationLength(const MachO::any_relocation_info &RE) const;

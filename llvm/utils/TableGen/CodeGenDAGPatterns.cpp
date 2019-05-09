@@ -321,7 +321,7 @@ bool TypeSetByHwMode::intersect(SetType &Out, const SetType &In) {
   return Changed;
 }
 
-bool TypeSetByHwMode::validate() const {
+bool TypeSetByHwMode::validate() {
 #ifndef NDEBUG
   if (empty())
     return true;

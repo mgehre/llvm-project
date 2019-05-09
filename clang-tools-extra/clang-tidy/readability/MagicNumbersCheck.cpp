@@ -109,7 +109,7 @@ void MagicNumbersCheck::check(const MatchFinder::MatchResult &Result) {
 }
 
 bool MagicNumbersCheck::isConstant(const MatchFinder::MatchResult &Result,
-                                   const Expr &ExprResult) const {
+                                   const Expr &ExprResult) {
   return llvm::any_of(
       Result.Context->getParents(ExprResult),
       [&Result](const DynTypedNode &Parent) {
@@ -154,7 +154,7 @@ bool MagicNumbersCheck::isIgnoredValue(const FloatingLiteral *Literal) const {
 }
 
 bool MagicNumbersCheck::isSyntheticValue(const SourceManager *SourceManager,
-                                         const IntegerLiteral *Literal) const {
+                                         const IntegerLiteral *Literal) {
   const std::pair<FileID, unsigned> FileOffset =
       SourceManager->getDecomposedLoc(Literal->getLocation());
   if (FileOffset.first.isInvalid())

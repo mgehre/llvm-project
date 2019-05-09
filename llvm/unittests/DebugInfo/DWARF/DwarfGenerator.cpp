@@ -239,7 +239,7 @@ void dwarfgen::LineTable::generate(MCContext &MC, AsmPrinter &Asm) const {
 }
 
 void dwarfgen::LineTable::writeData(ArrayRef<ValueAndLength> Data,
-                                    AsmPrinter &Asm) const {
+                                    AsmPrinter &Asm) {
   for (auto Entry : Data) {
     switch (Entry.Length) {
     case Byte:

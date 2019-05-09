@@ -36,7 +36,7 @@ class WalkAST: public StmtVisitor<WalkAST> {
   AnalysisDeclContext* AC;
 
   /// Check if two expressions refer to the same declaration.
-  bool sameDecl(const Expr *A1, const Expr *A2) {
+  static bool sameDecl(const Expr *A1, const Expr *A2) {
     if (const auto *D1 = dyn_cast<DeclRefExpr>(A1->IgnoreParenCasts()))
       if (const auto *D2 = dyn_cast<DeclRefExpr>(A2->IgnoreParenCasts()))
         return D1->getDecl() == D2->getDecl();
@@ -44,7 +44,7 @@ class WalkAST: public StmtVisitor<WalkAST> {
   }
 
   /// Check if the expression E is a sizeof(WithArg).
-  bool isSizeof(const Expr *E, const Expr *WithArg) {
+  static bool isSizeof(const Expr *E, const Expr *WithArg) {
     if (const auto *UE = dyn_cast<UnaryExprOrTypeTraitExpr>(E))
       if (UE->getKind() == UETT_SizeOf && !UE->isArgumentType())
         return sameDecl(UE->getArgumentExpr(), WithArg);
@@ -52,7 +52,7 @@ class WalkAST: public StmtVisitor<WalkAST> {
   }
 
   /// Check if the expression E is a strlen(WithArg).
-  bool isStrlen(const Expr *E, const Expr *WithArg) {
+  static bool isStrlen(const Expr *E, const Expr *WithArg) {
     if (const auto *CE = dyn_cast<CallExpr>(E)) {
       const FunctionDecl *FD = CE->getDirectCallee();
       if (!FD)
@@ -64,13 +64,13 @@ class WalkAST: public StmtVisitor<WalkAST> {
   }
 
   /// Check if the expression is an integer literal with value 1.
-  bool isOne(const Expr *E) {
+  static bool isOne(const Expr *E) {
     if (const auto *IL = dyn_cast<IntegerLiteral>(E))
       return (IL->getValue().isIntN(1));
     return false;
   }
 
-  StringRef getPrintableName(const Expr *E) {
+  static StringRef getPrintableName(const Expr *E) {
     if (const auto *D = dyn_cast<DeclRefExpr>(E->IgnoreParenCasts()))
       return D->getDecl()->getName();
     return StringRef();
@@ -78,7 +78,7 @@ class WalkAST: public StmtVisitor<WalkAST> {
 
   /// Identify erroneous patterns in the last argument to strncat - the number
   /// of bytes to copy.
-  bool containsBadStrncatPattern(const CallExpr *CE);
+  static bool containsBadStrncatPattern(const CallExpr *CE);
 
   /// Identify erroneous patterns in the last argument to strlcpy - the number
   /// of bytes to copy.

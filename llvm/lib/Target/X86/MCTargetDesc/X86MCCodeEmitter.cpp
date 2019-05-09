@@ -49,22 +49,22 @@ public:
   X86MCCodeEmitter &operator=(const X86MCCodeEmitter &) = delete;
   ~X86MCCodeEmitter() override = default;
 
-  bool is64BitMode(const MCSubtargetInfo &STI) const {
+  static bool is64BitMode(const MCSubtargetInfo &STI) {
     return STI.getFeatureBits()[X86::Mode64Bit];
   }
 
-  bool is32BitMode(const MCSubtargetInfo &STI) const {
+  static bool is32BitMode(const MCSubtargetInfo &STI) {
     return STI.getFeatureBits()[X86::Mode32Bit];
   }
 
-  bool is16BitMode(const MCSubtargetInfo &STI) const {
+  static bool is16BitMode(const MCSubtargetInfo &STI) {
     return STI.getFeatureBits()[X86::Mode16Bit];
   }
 
   /// Is16BitMemOperand - Return true if the specified instruction has
   /// a 16-bit memory operand. Op specifies the operand # of the memoperand.
-  bool Is16BitMemOperand(const MCInst &MI, unsigned Op,
-                         const MCSubtargetInfo &STI) const {
+  static bool Is16BitMemOperand(const MCInst &MI, unsigned Op,
+                         const MCSubtargetInfo &STI) {
     const MCOperand &BaseReg  = MI.getOperand(Op+X86::AddrBaseReg);
     const MCOperand &IndexReg = MI.getOperand(Op+X86::AddrIndexReg);
     const MCOperand &Disp     = MI.getOperand(Op+X86::AddrDisp);
@@ -94,13 +94,13 @@ public:
     return (getX86RegEncoding(MI, OpNum) >> 3) & 1;
   }
 
-  void EmitByte(uint8_t C, unsigned &CurByte, raw_ostream &OS) const {
+  static void EmitByte(uint8_t C, unsigned &CurByte, raw_ostream &OS) {
     OS << (char)C;
     ++CurByte;
   }
 
-  void EmitConstant(uint64_t Val, unsigned Size, unsigned &CurByte,
-                    raw_ostream &OS) const {
+  static void EmitConstant(uint64_t Val, unsigned Size, unsigned &CurByte,
+                    raw_ostream &OS) {
     // Output the constant in little endian byte order.
     for (unsigned i = 0; i != Size; ++i) {
       EmitByte(Val & 255, CurByte, OS);
@@ -124,8 +124,8 @@ public:
     EmitByte(ModRMByte(3, RegOpcodeFld, GetX86RegNum(ModRMReg)), CurByte, OS);
   }
 
-  void EmitSIBByte(unsigned SS, unsigned Index, unsigned Base,
-                   unsigned &CurByte, raw_ostream &OS) const {
+  static void EmitSIBByte(unsigned SS, unsigned Index, unsigned Base,
+                   unsigned &CurByte, raw_ostream &OS) {
     // SIB byte is in the same format as the ModRMByte.
     EmitByte(ModRMByte(SS, Index, Base), CurByte, OS);
   }
@@ -143,8 +143,8 @@ public:
                            const MCInst &MI, const MCInstrDesc &Desc,
                            raw_ostream &OS) const;
 
-  void EmitSegmentOverridePrefix(unsigned &CurByte, unsigned SegOperand,
-                                 const MCInst &MI, raw_ostream &OS) const;
+  static void EmitSegmentOverridePrefix(unsigned &CurByte, unsigned SegOperand,
+                                 const MCInst &MI, raw_ostream &OS) ;
 
   bool emitOpcodePrefix(uint64_t TSFlags, unsigned &CurByte, int MemOperand,
                         const MCInst &MI, const MCInstrDesc &Desc,
@@ -1106,7 +1106,7 @@ uint8_t X86MCCodeEmitter::DetermineREXPrefix(const MCInst &MI, uint64_t TSFlags,
 void X86MCCodeEmitter::EmitSegmentOverridePrefix(unsigned &CurByte,
                                                  unsigned SegOperand,
                                                  const MCInst &MI,
-                                                 raw_ostream &OS) const {
+                                                 raw_ostream &OS) {
   // Check for explicit segment override on memory operand.
   switch (MI.getOperand(SegOperand).getReg()) {
   default: llvm_unreachable("Unknown segment register!");

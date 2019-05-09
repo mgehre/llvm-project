@@ -55,10 +55,10 @@ public:
     return false;
   }
 
-  void getTargetDefinesARMV81A(const LangOptions &Opts,
-                               MacroBuilder &Builder) const;
-  void getTargetDefinesARMV82A(const LangOptions &Opts,
-                               MacroBuilder &Builder) const;
+  static void getTargetDefinesARMV81A(const LangOptions &Opts,
+                               MacroBuilder &Builder) ;
+  static void getTargetDefinesARMV82A(const LangOptions &Opts,
+                               MacroBuilder &Builder) ;
   void getTargetDefines(const LangOptions &Opts,
                         MacroBuilder &Builder) const override;
 

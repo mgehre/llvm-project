@@ -94,7 +94,7 @@ public:
   void HandlePiece(Rewriter& R, FileID BugFileID,
                    const PathDiagnosticPiece& P, unsigned num, unsigned max);
 
-  void HighlightRange(Rewriter& R, FileID BugFileID, SourceRange Range,
+  static void HighlightRange(Rewriter& R, FileID BugFileID, SourceRange Range,
                       const char *HighlightStart = "<span class=\"mrange\">",
                       const char *HighlightEnd = "</span>");
 
@@ -117,17 +117,17 @@ public:
 
 private:
   /// \return Javascript for displaying shortcuts help;
-  StringRef showHelpJavascript();
+  static StringRef showHelpJavascript();
 
   /// \return Javascript for navigating the HTML report using j/k keys.
-  StringRef generateKeyboardNavigationJavascript();
+  static StringRef generateKeyboardNavigationJavascript();
 
   /// \return JavaScript for an option to only show relevant lines.
-  std::string showRelevantLinesJavascript(
+  static std::string showRelevantLinesJavascript(
     const PathDiagnostic &D, const PathPieces &path);
 
   /// Write executed lines from \p D in JSON format into \p os.
-  void dumpCoverageData(const PathDiagnostic &D,
+  static void dumpCoverageData(const PathDiagnostic &D,
                         const PathPieces &path,
                         llvm::raw_string_ostream &os);
 };

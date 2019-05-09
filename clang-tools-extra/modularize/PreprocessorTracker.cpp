@@ -926,7 +926,7 @@ public:
   StringHandle addString(llvm::StringRef Str) { return Strings.intern(Str); }
 
   // Convert to a canonical path.
-  std::string getCanonicalPath(llvm::StringRef path) const {
+  static std::string getCanonicalPath(llvm::StringRef path) {
     std::string CanonicalPath(path);
     std::replace(CanonicalPath.begin(), CanonicalPath.end(), '\\', '/');
     return CanonicalPath;

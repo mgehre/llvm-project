@@ -80,7 +80,7 @@ class PthreadLockChecker
   };
 public:
   void checkPostStmt(const CallExpr *CE, CheckerContext &C) const;
-  void checkDeadSymbols(SymbolReaper &SymReaper, CheckerContext &C) const;
+  static void checkDeadSymbols(SymbolReaper &SymReaper, CheckerContext &C) ;
   void printState(raw_ostream &Out, ProgramStateRef State,
                   const char *NL, const char *Sep) const override;
 
@@ -92,9 +92,9 @@ public:
                    enum LockingSemantics semantics) const;
   void InitLock(CheckerContext &C, const CallExpr *CE, SVal Lock) const;
   void reportUseDestroyedBug(CheckerContext &C, const CallExpr *CE) const;
-  ProgramStateRef resolvePossiblyDestroyedMutex(ProgramStateRef state,
+  static ProgramStateRef resolvePossiblyDestroyedMutex(ProgramStateRef state,
                                                 const MemRegion *lockR,
-                                                const SymbolRef *sym) const;
+                                                const SymbolRef *sym) ;
 };
 } // end anonymous namespace
 
@@ -157,7 +157,7 @@ void PthreadLockChecker::checkPostStmt(const CallExpr *CE,
 // In PthreadSemantics, pthread_mutex_destroy() returns zero if the lock is
 // successfully destroyed and it returns a non-zero value otherwise.
 ProgramStateRef PthreadLockChecker::resolvePossiblyDestroyedMutex(
-    ProgramStateRef state, const MemRegion *lockR, const SymbolRef *sym) const {
+    ProgramStateRef state, const MemRegion *lockR, const SymbolRef *sym) {
   const LockState *lstate = state->get<LockMap>(lockR);
   // Existence in DestroyRetVal ensures existence in LockMap.
   // Existence in Destroyed also ensures that the lock state for lockR is either
@@ -459,7 +459,7 @@ void PthreadLockChecker::reportUseDestroyedBug(CheckerContext &C,
 }
 
 void PthreadLockChecker::checkDeadSymbols(SymbolReaper &SymReaper,
-                                          CheckerContext &C) const {
+                                          CheckerContext &C) {
   ProgramStateRef State = C.getState();
 
   // TODO: Clean LockMap when a mutex region dies.

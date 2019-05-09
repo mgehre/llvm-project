@@ -42,7 +42,7 @@ public:
     this->RegParmMax = 0; // Disallow regparm
   }
 
-  void getArchDefines(const LangOptions &Opts, MacroBuilder &Builder) const;
+  static void getArchDefines(const LangOptions &Opts, MacroBuilder &Builder) ;
 
   void getTargetDefines(const LangOptions &Opts,
                         MacroBuilder &Builder) const override {

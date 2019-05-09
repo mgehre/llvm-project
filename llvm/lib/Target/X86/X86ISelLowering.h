@@ -1244,7 +1244,7 @@ namespace llvm {
     SDValue LowerTRUNCATE(SDValue Op, SelectionDAG &DAG) const;
     SDValue LowerFP_TO_INT(SDValue Op, SelectionDAG &DAG) const;
     SDValue LowerSETCC(SDValue Op, SelectionDAG &DAG) const;
-    SDValue LowerSETCCCARRY(SDValue Op, SelectionDAG &DAG) const;
+    static SDValue LowerSETCCCARRY(SDValue Op, SelectionDAG &DAG) ;
     SDValue LowerSELECT(SDValue Op, SelectionDAG &DAG) const;
     SDValue LowerBRCOND(SDValue Op, SelectionDAG &DAG) const;
     SDValue LowerJumpTable(SDValue Op, SelectionDAG &DAG) const;
@@ -1257,13 +1257,13 @@ namespace llvm {
     SDValue LowerFRAME_TO_ARGS_OFFSET(SDValue Op, SelectionDAG &DAG) const;
     SDValue LowerEH_RETURN(SDValue Op, SelectionDAG &DAG) const;
     SDValue lowerEH_SJLJ_SETJMP(SDValue Op, SelectionDAG &DAG) const;
-    SDValue lowerEH_SJLJ_LONGJMP(SDValue Op, SelectionDAG &DAG) const;
-    SDValue lowerEH_SJLJ_SETUP_DISPATCH(SDValue Op, SelectionDAG &DAG) const;
+    static SDValue lowerEH_SJLJ_LONGJMP(SDValue Op, SelectionDAG &DAG) ;
+    static SDValue lowerEH_SJLJ_SETUP_DISPATCH(SDValue Op, SelectionDAG &DAG) ;
     SDValue LowerINIT_TRAMPOLINE(SDValue Op, SelectionDAG &DAG) const;
     SDValue LowerFLT_ROUNDS_(SDValue Op, SelectionDAG &DAG) const;
     SDValue LowerWin64_i128OP(SDValue Op, SelectionDAG &DAG) const;
-    SDValue LowerGC_TRANSITION_START(SDValue Op, SelectionDAG &DAG) const;
-    SDValue LowerGC_TRANSITION_END(SDValue Op, SelectionDAG &DAG) const;
+    static SDValue LowerGC_TRANSITION_START(SDValue Op, SelectionDAG &DAG) ;
+    static SDValue LowerGC_TRANSITION_END(SDValue Op, SelectionDAG &DAG) ;
     SDValue LowerINTRINSIC_WO_CHAIN(SDValue Op, SelectionDAG &DAG) const;
 
     SDValue

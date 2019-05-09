@@ -145,9 +145,9 @@ public:
   ValueEnumerator &operator=(const ValueEnumerator &) = delete;
 
   void dump() const;
-  void print(raw_ostream &OS, const ValueMapType &Map, const char *Name) const;
-  void print(raw_ostream &OS, const MetadataMapType &Map,
-             const char *Name) const;
+  static void print(raw_ostream &OS, const ValueMapType &Map, const char *Name) ;
+  static void print(raw_ostream &OS, const MetadataMapType &Map,
+             const char *Name) ;
 
   unsigned getValueID(const Value *V) const;
 

@@ -50,7 +50,7 @@ bool MultipleInheritanceCheck::getInterfaceStatus(const CXXRecordDecl *Node,
 }
 
 bool MultipleInheritanceCheck::isCurrentClassInterface(
-    const CXXRecordDecl *Node) const {
+    const CXXRecordDecl *Node) {
   // Interfaces should have no fields.
   if (!Node->field_empty()) return false;
 

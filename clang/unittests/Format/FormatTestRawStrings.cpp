@@ -51,18 +51,18 @@ protected:
     return *Result;
   }
 
-  FormatStyle getStyleWithColumns(FormatStyle Style, unsigned ColumnLimit) {
+  static FormatStyle getStyleWithColumns(FormatStyle Style, unsigned ColumnLimit) {
     Style.ColumnLimit = ColumnLimit;
     return Style;
   }
 
-  FormatStyle getLLVMStyleWithColumns(unsigned ColumnLimit) {
+  static FormatStyle getLLVMStyleWithColumns(unsigned ColumnLimit) {
     return getStyleWithColumns(getLLVMStyle(), ColumnLimit);
   }
 
   int ReplacementCount;
 
-  FormatStyle getRawStringPbStyleWithColumns(unsigned ColumnLimit) {
+  static FormatStyle getRawStringPbStyleWithColumns(unsigned ColumnLimit) {
     FormatStyle Style = getLLVMStyle();
     Style.ColumnLimit = ColumnLimit;
     Style.RawStringFormats = {
@@ -77,7 +77,7 @@ protected:
     return Style;
   }
 
-  FormatStyle getRawStringLLVMCppStyleBasedOn(std::string BasedOnStyle) {
+  static FormatStyle getRawStringLLVMCppStyleBasedOn(std::string BasedOnStyle) {
     FormatStyle Style = getLLVMStyle();
     Style.RawStringFormats = {
         {
@@ -91,7 +91,7 @@ protected:
     return Style;
   }
 
-  FormatStyle getRawStringGoogleCppStyleBasedOn(std::string BasedOnStyle) {
+  static FormatStyle getRawStringGoogleCppStyleBasedOn(std::string BasedOnStyle) {
     FormatStyle Style = getGoogleStyle(FormatStyle::LK_Cpp);
     Style.RawStringFormats = {
         {
@@ -107,7 +107,7 @@ protected:
 
   // Gcc 4.8 doesn't support raw string literals in macros, which breaks some
   // build bots. We use this function instead.
-  void expect_eq(const std::string Expected, const std::string Actual) {
+  static void expect_eq(const std::string Expected, const std::string Actual) {
     EXPECT_EQ(Expected, Actual);
   }
 };

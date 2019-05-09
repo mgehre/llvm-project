@@ -288,7 +288,7 @@ private:
 
   /// Given a character reference name (e.g., "lt"), return the character that
   /// it stands for (e.g., "<").
-  StringRef resolveHTMLNamedCharacterReference(StringRef Name) const;
+  static StringRef resolveHTMLNamedCharacterReference(StringRef Name) ;
 
   /// Given a Unicode codepoint as base-10 integer, return the character.
   StringRef resolveHTMLDecimalCharacterReference(StringRef Name) const;
@@ -353,8 +353,8 @@ public:
 
   void lex(Token &T);
 
-  StringRef getSpelling(const Token &Tok, const SourceManager &SourceMgr,
-                        bool *Invalid = nullptr) const;
+  static StringRef getSpelling(const Token &Tok, const SourceManager &SourceMgr,
+                        bool *Invalid = nullptr) ;
 };
 
 } // end namespace comments

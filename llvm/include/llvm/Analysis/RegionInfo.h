@@ -921,7 +921,7 @@ public:
   ~RegionInfo() override;
 
   /// Handle invalidation explicitly.
-  bool invalidate(Function &F, const PreservedAnalyses &PA,
+  static bool invalidate(Function &F, const PreservedAnalyses &PA,
                   FunctionAnalysisManager::Invalidator &);
 
   // updateStatistics - Update statistic about created regions.
@@ -977,7 +977,7 @@ class RegionInfoAnalysis : public AnalysisInfoMixin<RegionInfoAnalysis> {
 public:
   using Result = RegionInfo;
 
-  RegionInfo run(Function &F, FunctionAnalysisManager &AM);
+  static RegionInfo run(Function &F, FunctionAnalysisManager &AM);
 };
 
 /// Printer pass for the \c RegionInfo.
@@ -992,7 +992,7 @@ public:
 
 /// Verifier pass for the \c RegionInfo.
 struct RegionInfoVerifierPass : PassInfoMixin<RegionInfoVerifierPass> {
-  PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
+  static PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
 };
 
 template <>

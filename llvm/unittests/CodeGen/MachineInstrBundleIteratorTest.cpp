@@ -17,8 +17,8 @@ namespace {
 
 struct MyBundledInstr
     : public ilist_node<MyBundledInstr, ilist_sentinel_tracking<true>> {
-  bool isBundledWithPred() const { return true; }
-  bool isBundledWithSucc() const { return true; }
+  static bool isBundledWithPred() { return true; }
+  static bool isBundledWithSucc() { return true; }
 };
 typedef MachineInstrBundleIterator<MyBundledInstr> bundled_iterator;
 typedef MachineInstrBundleIterator<const MyBundledInstr> const_bundled_iterator;
@@ -132,8 +132,8 @@ TEST(MachineInstrBundleIteratorTest, CompareToBundledMI) {
 
 struct MyUnbundledInstr
     : ilist_node<MyUnbundledInstr, ilist_sentinel_tracking<true>> {
-  bool isBundledWithPred() const { return false; }
-  bool isBundledWithSucc() const { return false; }
+  static bool isBundledWithPred() { return false; }
+  static bool isBundledWithSucc() { return false; }
 };
 typedef MachineInstrBundleIterator<MyUnbundledInstr> unbundled_iterator;
 typedef MachineInstrBundleIterator<const MyUnbundledInstr>

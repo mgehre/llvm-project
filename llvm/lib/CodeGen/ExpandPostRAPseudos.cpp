@@ -51,7 +51,7 @@ private:
   bool LowerSubregToReg(MachineInstr *MI);
   bool LowerCopy(MachineInstr *MI);
 
-  void TransferImplicitOperands(MachineInstr *MI);
+  static void TransferImplicitOperands(MachineInstr *MI);
 };
 } // end anonymous namespace
 

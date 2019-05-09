@@ -6744,9 +6744,9 @@ private:
   /// a flag marking the map as a pointer if requested. Add a flag marking the
   /// map as the first one of a series of maps that relate to the same map
   /// expression.
-  OpenMPOffloadMappingFlags getMapTypeBits(
+  static OpenMPOffloadMappingFlags getMapTypeBits(
       OpenMPMapClauseKind MapType, ArrayRef<OpenMPMapModifierKind> MapModifiers,
-      bool IsImplicit, bool AddPtrFlag, bool AddIsTargetParamFlag) const {
+      bool IsImplicit, bool AddPtrFlag, bool AddIsTargetParamFlag) {
     OpenMPOffloadMappingFlags Bits =
         IsImplicit ? OMP_MAP_IMPLICIT : OMP_MAP_NONE;
     switch (MapType) {
@@ -7625,10 +7625,10 @@ public:
   }
 
   /// Set correct indices for lambdas captures.
-  void adjustMemberOfForLambdaCaptures(
+  static void adjustMemberOfForLambdaCaptures(
       const llvm::DenseMap<llvm::Value *, llvm::Value *> &LambdaPointers,
       MapBaseValuesArrayTy &BasePointers, MapValuesArrayTy &Pointers,
-      MapFlagsArrayTy &Types) const {
+      MapFlagsArrayTy &Types) {
     for (unsigned I = 0, E = Types.size(); I < E; ++I) {
       // Set correct member_of idx for all implicit lambda captures.
       if (Types[I] != (OMP_MAP_PTR_AND_OBJ | OMP_MAP_LITERAL |
@@ -9533,7 +9533,7 @@ void CGOpenMPRuntime::emitDoacrossOrdered(CodeGenFunction &CGF,
 
 void CGOpenMPRuntime::emitCall(CodeGenFunction &CGF, SourceLocation Loc,
                                llvm::Value *Callee,
-                               ArrayRef<llvm::Value *> Args) const {
+                               ArrayRef<llvm::Value *> Args) {
   assert(Loc.isValid() && "Outlined function call location must be valid.");
   auto DL = ApplyDebugLocation::CreateDefaultArtificial(CGF, Loc);
 

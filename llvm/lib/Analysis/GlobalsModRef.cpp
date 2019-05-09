@@ -133,7 +133,7 @@ public:
   /// This method clears MayReadAnyGlobal bit added by GlobalsAAResult to return
   /// the corresponding ModRefInfo. It must align in functionality with
   /// clearMust().
-  ModRefInfo globalClearMayReadAnyGlobal(int I) const {
+  static ModRefInfo globalClearMayReadAnyGlobal(int I) {
     return ModRefInfo((I & static_cast<int>(ModRefInfo::ModRef)) |
                       static_cast<int>(ModRefInfo::NoModRef));
   }

@@ -50,7 +50,7 @@ private:
   /// \param Value Target symbol address to apply the relocation action
   void applyRelocation(const RelocationEntry &RE, uint64_t Value);
 
-  int64_t evaluateMIPS32Relocation(const SectionEntry &Section, uint64_t Offset,
+  static int64_t evaluateMIPS32Relocation(const SectionEntry &Section, uint64_t Offset,
                                    uint64_t Value, uint32_t Type);
   int64_t evaluateMIPS64Relocation(const SectionEntry &Section,
                                    uint64_t Offset, uint64_t Value,

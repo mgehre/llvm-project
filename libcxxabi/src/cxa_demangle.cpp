@@ -82,8 +82,8 @@ struct DumpVisitor {
     return false;
   }
 
-  void printStr(const char *S) { fprintf(stderr, "%s", S); }
-  void print(StringView SV) {
+  static void printStr(const char *S) { fprintf(stderr, "%s", S); }
+  static void print(StringView SV) {
     fprintf(stderr, "\"%.*s\"", (int)SV.size(), SV.begin());
   }
   void print(const Node *N) {
@@ -116,7 +116,7 @@ struct DumpVisitor {
   }
 
   // Overload used when T is exactly 'bool', not merely convertible to 'bool'.
-  void print(bool B) { printStr(B ? "true" : "false"); }
+  static void print(bool B) { printStr(B ? "true" : "false"); }
 
   template <class T>
   typename std::enable_if<std::is_unsigned<T>::value>::type print(T N) {
@@ -128,7 +128,7 @@ struct DumpVisitor {
     fprintf(stderr, "%lld", (long long)N);
   }
 
-  void print(ReferenceKind RK) {
+  static void print(ReferenceKind RK) {
     switch (RK) {
     case ReferenceKind::LValue:
       return printStr("ReferenceKind::LValue");
@@ -136,7 +136,7 @@ struct DumpVisitor {
       return printStr("ReferenceKind::RValue");
     }
   }
-  void print(FunctionRefQual RQ) {
+  static void print(FunctionRefQual RQ) {
     switch (RQ) {
     case FunctionRefQual::FrefQualNone:
       return printStr("FunctionRefQual::FrefQualNone");
@@ -146,7 +146,7 @@ struct DumpVisitor {
       return printStr("FunctionRefQual::FrefQualRValue");
     }
   }
-  void print(Qualifiers Qs) {
+  static void print(Qualifiers Qs) {
     if (!Qs) return printStr("QualNone");
     struct QualName { Qualifiers Q; const char *Name; } Names[] = {
       {QualConst, "QualConst"},
@@ -161,7 +161,7 @@ struct DumpVisitor {
       }
     }
   }
-  void print(SpecialSubKind SSK) {
+  static void print(SpecialSubKind SSK) {
     switch (SSK) {
     case SpecialSubKind::allocator:
       return printStr("SpecialSubKind::allocator");

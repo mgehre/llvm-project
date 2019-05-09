@@ -142,7 +142,7 @@ public:
   BackgroundIndexStorage *createStorage(llvm::StringRef CDBDirectory);
 
 private:
-  std::unique_ptr<BackgroundIndexStorage> create(llvm::StringRef CDBDirectory) {
+  static std::unique_ptr<BackgroundIndexStorage> create(llvm::StringRef CDBDirectory) {
     if (CDBDirectory.empty())
       return llvm::make_unique<NullStorage>();
     return llvm::make_unique<DiskBackedIndexStorage>(CDBDirectory);

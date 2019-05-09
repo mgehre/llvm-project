@@ -53,7 +53,7 @@ private:
   bool equalsVariable(const SectionChunk *A, const SectionChunk *B);
 
   uint32_t getHash(SectionChunk *C);
-  bool isEligible(SectionChunk *C);
+  static bool isEligible(SectionChunk *C);
 
   size_t findBoundary(size_t Begin, size_t End);
 

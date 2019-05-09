@@ -60,7 +60,7 @@ private:
   // Parses command line options.
   llvm::opt::InputArgList parse(llvm::ArrayRef<const char *> Args);
 
-  std::vector<const char *> tokenize(StringRef S);
+  static std::vector<const char *> tokenize(StringRef S);
 
   COFFOptTable Table;
 };
@@ -76,7 +76,7 @@ public:
   void enqueueArchiveMember(const Archive::Child &C, StringRef SymName,
                             StringRef ParentName);
 
-  MemoryBufferRef takeBuffer(std::unique_ptr<MemoryBuffer> MB);
+  static MemoryBufferRef takeBuffer(std::unique_ptr<MemoryBuffer> MB);
 
 private:
   std::unique_ptr<llvm::TarWriter> Tar; // for /linkrepro
@@ -103,7 +103,7 @@ private:
 
   std::set<std::string> VisitedLibs;
 
-  Symbol *addUndefined(StringRef Sym);
+  static Symbol *addUndefined(StringRef Sym);
 
   // Windows specific -- "main" is not the only main function in Windows.
   // You can choose one from these four -- {w,}{WinMain,main}.
@@ -112,11 +112,11 @@ private:
   // choose the right one depending on which "main" function is defined.
   // This function looks up the symbol table and resolve corresponding
   // entry point name.
-  StringRef findDefaultEntry();
-  WindowsSubsystem inferSubsystem();
+  static StringRef findDefaultEntry();
+  static WindowsSubsystem inferSubsystem();
 
   void addBuffer(std::unique_ptr<MemoryBuffer> MB, bool WholeArchive);
-  void addArchiveBuffer(MemoryBufferRef MBRef, StringRef SymName,
+  static void addArchiveBuffer(MemoryBufferRef MBRef, StringRef SymName,
                         StringRef ParentName);
 
   void enqueuePath(StringRef Path, bool WholeArchive);

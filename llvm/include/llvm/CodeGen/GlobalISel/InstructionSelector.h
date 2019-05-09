@@ -437,25 +437,25 @@ protected:
   /// register class. This could involve inserting COPYs before (for uses) or
   /// after (for defs) and may replace the operand of \p I.
   /// \returns whether operand regclass constraining succeeded.
-  bool constrainOperandRegToRegClass(MachineInstr &I, unsigned OpIdx,
+  static bool constrainOperandRegToRegClass(MachineInstr &I, unsigned OpIdx,
                                      const TargetRegisterClass &RC,
                                      const TargetInstrInfo &TII,
                                      const TargetRegisterInfo &TRI,
-                                     const RegisterBankInfo &RBI) const;
+                                     const RegisterBankInfo &RBI) ;
 
-  bool isOperandImmEqual(const MachineOperand &MO, int64_t Value,
-                         const MachineRegisterInfo &MRI) const;
+  static bool isOperandImmEqual(const MachineOperand &MO, int64_t Value,
+                         const MachineRegisterInfo &MRI) ;
 
   /// Return true if the specified operand is a G_GEP with a G_CONSTANT on the
   /// right-hand side. GlobalISel's separation of pointer and integer types
   /// means that we don't need to worry about G_OR with equivalent semantics.
-  bool isBaseWithConstantOffset(const MachineOperand &Root,
-                                const MachineRegisterInfo &MRI) const;
+  static bool isBaseWithConstantOffset(const MachineOperand &Root,
+                                const MachineRegisterInfo &MRI) ;
 
   /// Return true if MI can obviously be folded into IntoMI.
   /// MI and IntoMI do not need to be in the same basic blocks, but MI must
   /// preceed IntoMI.
-  bool isObviouslySafeToFold(MachineInstr &MI, MachineInstr &IntoMI) const;
+  static bool isObviouslySafeToFold(MachineInstr &MI, MachineInstr &IntoMI) ;
 };
 
 } // end namespace llvm

@@ -420,7 +420,7 @@ private:
 
   /// \return Whether the method declaration \p Parent
   /// syntactically has a binary operation writing into the ivar \p Ivar.
-  bool potentiallyWritesIntoIvar(const Decl *Parent,
+  static bool potentiallyWritesIntoIvar(const Decl *Parent,
                                  const ObjCIvarDecl *Ivar) {
     using namespace ast_matchers;
     const char * IvarBind = "Ivar";
@@ -504,7 +504,7 @@ private:
 
   /// Get parameters associated with runtime definition in order
   /// to get the correct parameter name.
-  ArrayRef<ParmVarDecl *> getCallParameters(CallEventRef<> Call) {
+  static ArrayRef<ParmVarDecl *> getCallParameters(CallEventRef<> Call) {
     // Use runtime definition, if available.
     RuntimeDefinition RD = Call->getRuntimeDefinition();
     if (const auto *FD = dyn_cast_or_null<FunctionDecl>(RD.getDecl()))
@@ -516,7 +516,7 @@ private:
   }
 
   /// \return whether \p Ty points to a const type, or is a const reference.
-  bool isPointerToConst(QualType Ty) {
+  static bool isPointerToConst(QualType Ty) {
     return !Ty->getPointeeType().isNull() &&
            Ty->getPointeeType().getCanonicalType().isConstQualified();
   }
@@ -605,7 +605,7 @@ private:
   }
 
   /// Print first item in the chain, return new separator.
-  StringRef prettyPrintFirstElement(StringRef FirstElement,
+  static StringRef prettyPrintFirstElement(StringRef FirstElement,
                        bool MoreItemsExpected,
                        int IndirectionLevel,
                        llvm::raw_svector_ostream &os) {
@@ -682,7 +682,7 @@ public:
               R->getAs<SubRegion>(), V));
   }
 
-  void* getTag() const {
+  static void* getTag() {
     static int Tag = 0;
     return static_cast<void *>(&Tag);
   }

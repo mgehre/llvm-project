@@ -22,7 +22,7 @@
 namespace llvm {
 
 bool DomTreeUpdater::isUpdateValid(
-    const DominatorTree::UpdateType Update) const {
+    const DominatorTree::UpdateType Update) {
   const auto *From = Update.getFrom();
   const auto *To = Update.getTo();
   const auto Kind = Update.getKind();
@@ -49,7 +49,7 @@ bool DomTreeUpdater::isUpdateValid(
 }
 
 bool DomTreeUpdater::isSelfDominance(
-    const DominatorTree::UpdateType Update) const {
+    const DominatorTree::UpdateType Update) {
   // Won't affect DomTree and PostDomTree.
   return Update.getFrom() == Update.getTo();
 }

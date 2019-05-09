@@ -182,8 +182,8 @@ private:
     Value *V, std::vector<std::pair<Value *, bool>> &PostorderStack,
     DenseSet<Value *> &Visited) const;
 
-  bool rewriteIntrinsicOperands(IntrinsicInst *II,
-                                Value *OldV, Value *NewV) const;
+  static bool rewriteIntrinsicOperands(IntrinsicInst *II,
+                                Value *OldV, Value *NewV) ;
   void collectRewritableIntrinsicOperands(
     IntrinsicInst *II,
     std::vector<std::pair<Value *, bool>> &PostorderStack,
@@ -191,10 +191,10 @@ private:
 
   std::vector<WeakTrackingVH> collectFlatAddressExpressions(Function &F) const;
 
-  Value *cloneValueWithNewAddressSpace(
+  static Value *cloneValueWithNewAddressSpace(
     Value *V, unsigned NewAddrSpace,
     const ValueToValueMapTy &ValueWithNewAddrSpace,
-    SmallVectorImpl<const Use *> *UndefUsesToFix) const;
+    SmallVectorImpl<const Use *> *UndefUsesToFix) ;
   unsigned joinAddressSpaces(unsigned AS1, unsigned AS2) const;
 };
 
@@ -255,7 +255,7 @@ static SmallVector<Value *, 2> getPointerOperands(const Value &V) {
 // TODO: Move logic to TTI?
 bool InferAddressSpaces::rewriteIntrinsicOperands(IntrinsicInst *II,
                                                   Value *OldV,
-                                                  Value *NewV) const {
+                                                  Value *NewV) {
   Module *M = II->getParent()->getParent()->getParent();
 
   switch (II->getIntrinsicID()) {
@@ -578,7 +578,7 @@ static Value *cloneConstantExprWithNewAddressSpace(
 Value *InferAddressSpaces::cloneValueWithNewAddressSpace(
   Value *V, unsigned NewAddrSpace,
   const ValueToValueMapTy &ValueWithNewAddrSpace,
-  SmallVectorImpl<const Use *> *UndefUsesToFix) const {
+  SmallVectorImpl<const Use *> *UndefUsesToFix) {
   // All values in Postorder are flat address expressions.
   assert(isAddressExpression(*V) &&
          V->getType()->getPointerAddressSpace() == FlatAddrSpace);

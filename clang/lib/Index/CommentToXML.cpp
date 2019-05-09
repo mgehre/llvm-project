@@ -238,7 +238,7 @@ public:
   void visitParamCommandComment(const ParamCommandComment *C);
   void visitTParamCommandComment(const TParamCommandComment *C);
   void visitVerbatimBlockComment(const VerbatimBlockComment *C);
-  void visitVerbatimBlockLineComment(const VerbatimBlockLineComment *C);
+  static void visitVerbatimBlockLineComment(const VerbatimBlockLineComment *C);
   void visitVerbatimLineComment(const VerbatimLineComment *C);
 
   void visitFullComment(const FullComment *C);
@@ -549,7 +549,7 @@ public:
   void visitParamCommandComment(const ParamCommandComment *C);
   void visitTParamCommandComment(const TParamCommandComment *C);
   void visitVerbatimBlockComment(const VerbatimBlockComment *C);
-  void visitVerbatimBlockLineComment(const VerbatimBlockLineComment *C);
+  static void visitVerbatimBlockLineComment(const VerbatimBlockLineComment *C);
   void visitVerbatimLineComment(const VerbatimLineComment *C);
 
   void visitFullComment(const FullComment *C);
@@ -558,7 +558,7 @@ public:
   void appendToResultWithXMLEscaping(StringRef S);
   void appendToResultWithCDATAEscaping(StringRef S);
 
-  void formatTextOfDeclaration(const DeclInfo *DI,
+  static void formatTextOfDeclaration(const DeclInfo *DI,
                                SmallString<128> &Declaration);
 
 private:

@@ -32,7 +32,7 @@ public:
     CFMakeCollectableII = &Ids.get("CFMakeCollectable");
   }
 
-  bool shouldWalkTypesOfTypeLocs() const { return false; }
+  static bool shouldWalkTypesOfTypeLocs() { return false; }
 
   bool VisitCallExpr(CallExpr *E) {
     TransformActions &TA = MigrateCtx.Pass.TA;

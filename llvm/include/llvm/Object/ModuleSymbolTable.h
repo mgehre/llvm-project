@@ -47,7 +47,7 @@ public:
   void addModule(Module *M);
 
   void printSymbolName(raw_ostream &OS, Symbol S) const;
-  uint32_t getSymbolFlags(Symbol S) const;
+  static uint32_t getSymbolFlags(Symbol S) ;
 
   /// Parse inline ASM and collect the symbols that are defined or referenced in
   /// the current module.

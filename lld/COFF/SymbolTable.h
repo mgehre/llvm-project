@@ -47,7 +47,7 @@ class Symbol;
 // There is one add* function per symbol type.
 class SymbolTable {
 public:
-  void addFile(InputFile *File);
+  static void addFile(InputFile *File);
 
   // Try to resolve any undefined symbols and update the symbol table
   // accordingly, then print an error message for any remaining undefined
@@ -58,7 +58,7 @@ public:
   bool handleMinGWAutomaticImport(Symbol *Sym, StringRef Name);
 
   // Returns a list of chunks of selected symbols.
-  std::vector<Chunk *> getChunks();
+  static std::vector<Chunk *> getChunks();
 
   // Returns a symbol for a given name. Returns a nullptr if not found.
   Symbol *find(StringRef Name);
@@ -99,7 +99,7 @@ public:
   Symbol *addImportThunk(StringRef Name, DefinedImportData *S,
                          uint16_t Machine);
 
-  void reportDuplicate(Symbol *Existing, InputFile *NewFile);
+  static void reportDuplicate(Symbol *Existing, InputFile *NewFile);
 
   // A list of chunks which to be added to .rdata.
   std::vector<Chunk *> LocalImportChunks;

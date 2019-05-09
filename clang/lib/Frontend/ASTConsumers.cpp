@@ -49,7 +49,7 @@ namespace {
       TraverseDecl(D);
     }
 
-    bool shouldWalkTypesOfTypeLocs() const { return false; }
+    static bool shouldWalkTypesOfTypeLocs() { return false; }
 
     bool TraverseDecl(Decl *D) {
       if (D && filterMatches(D)) {
@@ -69,7 +69,7 @@ namespace {
     }
 
   private:
-    std::string getName(Decl *D) {
+    static std::string getName(Decl *D) {
       if (isa<NamedDecl>(D))
         return cast<NamedDecl>(D)->getQualifiedNameAsString();
       return "";
@@ -119,7 +119,7 @@ namespace {
       TraverseDecl(Context.getTranslationUnitDecl());
     }
 
-    bool shouldWalkTypesOfTypeLocs() const { return false; }
+    static bool shouldWalkTypesOfTypeLocs() { return false; }
 
     bool VisitNamedDecl(NamedDecl *D) {
       D->printQualifiedName(Out);
@@ -174,7 +174,7 @@ namespace {
       return true;
     }
 
-    void HandleTopLevelSingleDecl(Decl *D);
+    static void HandleTopLevelSingleDecl(Decl *D);
   };
 }
 

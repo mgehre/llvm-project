@@ -150,7 +150,7 @@ class ProfileSummaryAnalysis
 public:
   typedef ProfileSummaryInfo Result;
 
-  Result run(Module &M, ModuleAnalysisManager &);
+  static Result run(Module &M, ModuleAnalysisManager &);
 
 private:
   friend AnalysisInfoMixin<ProfileSummaryAnalysis>;

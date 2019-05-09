@@ -792,7 +792,7 @@ private:
   bool eliminateInstructions(Function &);
   void replaceInstruction(Instruction *, Value *);
   void markInstructionForDeletion(Instruction *);
-  void deleteInstructionsInBlock(BasicBlock *);
+  static void deleteInstructionsInBlock(BasicBlock *);
   Value *findPHIOfOpsLeader(const Expression *, const Instruction *,
                             const BasicBlock *) const;
 

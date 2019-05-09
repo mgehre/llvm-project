@@ -914,7 +914,7 @@ TEST(Range, ConflictingRangesBeforeReplacements) {
 
 class MergeReplacementsTest : public ::testing::Test {
 protected:
-  void mergeAndTestRewrite(StringRef Code, StringRef Intermediate,
+  static void mergeAndTestRewrite(StringRef Code, StringRef Intermediate,
                            StringRef Result, const Replacements &First,
                            const Replacements &Second) {
     // These are mainly to verify the test itself and make it easier to read.
@@ -934,7 +934,7 @@ protected:
         llvm::errs() << M.getOffset() << " " << M.getLength() << " "
                      << M.getReplacementText() << "\n";
   }
-  void mergeAndTestRewrite(StringRef Code, const Replacements &First,
+  static void mergeAndTestRewrite(StringRef Code, const Replacements &First,
                            const Replacements &Second) {
     auto AfterFirst = applyAllReplacements(Code, First);
     EXPECT_TRUE(static_cast<bool>(AfterFirst));

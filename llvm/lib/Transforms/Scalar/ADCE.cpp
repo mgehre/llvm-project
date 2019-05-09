@@ -148,10 +148,10 @@ class AggressiveDeadCodeElimination {
   void initialize();
 
   /// Return true for operations which are always treated as live.
-  bool isAlwaysLive(Instruction &I);
+  static bool isAlwaysLive(Instruction &I);
 
   /// Return true for instrumentation instructions for value profiling.
-  bool isInstrumentsConstant(Instruction &I);
+  static bool isInstrumentsConstant(Instruction &I);
 
   /// Propagate liveness to reaching definitions.
   void markLiveInstructions();

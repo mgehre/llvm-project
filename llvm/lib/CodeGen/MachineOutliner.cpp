@@ -602,7 +602,7 @@ public:
 
   typedef RepeatedSubstringIterator iterator;
   iterator begin() { return iterator(Root); }
-  iterator end() { return iterator(nullptr); }
+  static iterator end() { return iterator(nullptr); }
 };
 
 /// Maps \p MachineInstrs to unsigned integers and stores the mappings.
@@ -861,12 +861,12 @@ struct MachineOutliner : public ModulePass {
 
   /// Remark output explaining that not outlining a set of candidates would be
   /// better than outlining that set.
-  void emitNotOutliningCheaperRemark(
+  static void emitNotOutliningCheaperRemark(
       unsigned StringLen, std::vector<Candidate> &CandidatesForRepeatedSeq,
       OutlinedFunction &OF);
 
   /// Remark output explaining that a function was outlined.
-  void emitOutlinedFunctionRemark(OutlinedFunction &OF);
+  static void emitOutlinedFunctionRemark(OutlinedFunction &OF);
 
   /// Find all repeated substrings that satisfy the outlining cost model by
   /// constructing a suffix tree.
@@ -881,7 +881,7 @@ struct MachineOutliner : public ModulePass {
   /// \param Mapper Contains outlining mapping information.
   /// \param[out] FunctionList Filled with a list of \p OutlinedFunctions
   /// each type of candidate.
-  void findCandidates(InstructionMapper &Mapper,
+  static void findCandidates(InstructionMapper &Mapper,
                       std::vector<OutlinedFunction> &FunctionList);
 
   /// Replace the sequences of instructions represented by \p OutlinedFunctions
@@ -904,7 +904,7 @@ struct MachineOutliner : public ModulePass {
 
   /// Return a DISubprogram for OF if one exists, and null otherwise. Helper
   /// function for remark emission.
-  DISubprogram *getSubprogramOrNull(const OutlinedFunction &OF) {
+  static DISubprogram *getSubprogramOrNull(const OutlinedFunction &OF) {
     DISubprogram *SP;
     for (const Candidate &C : OF.Candidates)
       if (C.getMF() && (SP = C.getMF()->getFunction().getSubprogram()))
@@ -921,13 +921,13 @@ struct MachineOutliner : public ModulePass {
   /// FIXME: This should be handled by the pass manager, not the outliner.
   /// FIXME: This is nearly identical to the initSizeRemarkInfo in the legacy
   /// pass manager.
-  void initSizeRemarkInfo(
+  static void initSizeRemarkInfo(
       const Module &M, const MachineModuleInfo &MMI,
       StringMap<unsigned> &FunctionToInstrCount);
 
   /// Emit the remark.
   // FIXME: This should be handled by the pass manager, not the outliner.
-  void emitInstrCountChangedRemark(
+  static void emitInstrCountChangedRemark(
       const Module &M, const MachineModuleInfo &MMI,
       const StringMap<unsigned> &FunctionToInstrCount);
 };

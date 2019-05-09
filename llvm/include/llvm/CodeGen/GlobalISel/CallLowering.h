@@ -134,8 +134,8 @@ protected:
   /// \p Callback to move them to the assigned locations.
   ///
   /// \return True if everything has succeeded, false otherwise.
-  bool handleAssignments(MachineIRBuilder &MIRBuilder, ArrayRef<ArgInfo> Args,
-                         ValueHandler &Handler) const;
+  static bool handleAssignments(MachineIRBuilder &MIRBuilder, ArrayRef<ArgInfo> Args,
+                         ValueHandler &Handler) ;
 
 public:
   CallLowering(const TargetLowering *TLI) : TLI(TLI) {}

@@ -210,7 +210,7 @@ bool ParsedAttr::diagnoseAppertainsTo(Sema &S, const Decl *D) const {
 }
 
 bool ParsedAttr::appliesToDecl(const Decl *D,
-                               attr::SubjectMatchRule MatchRule) const {
+                               attr::SubjectMatchRule MatchRule) {
   return checkAttributeMatchRuleAppliesTo(D, MatchRule);
 }
 

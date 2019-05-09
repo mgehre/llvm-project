@@ -165,7 +165,7 @@ private:
   /// Return null if the name isn't a register bank.
   const RegisterBank *getRegBank(const MachineFunction &MF, StringRef Name);
 
-  void computeFunctionProperties(MachineFunction &MF);
+  static void computeFunctionProperties(MachineFunction &MF);
 };
 
 } // end namespace llvm

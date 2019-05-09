@@ -95,7 +95,7 @@ static constexpr ISANameRevision ISARevisions[] = {
   {{"arch12"}, 12}, {{"z14"}, 12}
 };
 
-int SystemZTargetInfo::getISARevision(StringRef Name) const {
+int SystemZTargetInfo::getISARevision(StringRef Name) {
   const auto Rev =
       llvm::find_if(ISARevisions, [Name](const ISANameRevision &CR) {
         return CR.Name == Name;

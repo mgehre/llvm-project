@@ -144,7 +144,7 @@ public:
 
   bool markSamplesUsed(const FunctionSamples *FS, uint32_t LineOffset,
                        uint32_t Discriminator, uint64_t Samples);
-  unsigned computeCoverage(unsigned Used, unsigned Total) const;
+  static unsigned computeCoverage(unsigned Used, unsigned Total) ;
   unsigned countUsedRecords(const FunctionSamples *FS,
                             ProfileSummaryInfo *PSI) const;
   unsigned countBodyRecords(const FunctionSamples *FS,
@@ -211,7 +211,7 @@ public:
 
 protected:
   bool runOnFunction(Function &F, ModuleAnalysisManager *AM);
-  unsigned getFunctionLoc(Function &F);
+  static unsigned getFunctionLoc(Function &F);
   bool emitAnnotations(Function &F);
   ErrorOr<uint64_t> getInstWeight(const Instruction &I);
   ErrorOr<uint64_t> getBlockWeight(const BasicBlock *BB);
@@ -471,7 +471,7 @@ SampleCoverageTracker::countBodySamples(const FunctionSamples *FS,
 /// the percentage of sample records that were used while applying this
 /// profile to the associated function.
 unsigned SampleCoverageTracker::computeCoverage(unsigned Used,
-                                                unsigned Total) const {
+                                                unsigned Total) {
   assert(Used <= Total &&
          "number of used records cannot exceed the total number of records");
   return Total > 0 ? Used * 100 / Total : 100;

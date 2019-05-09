@@ -125,7 +125,7 @@ private:
 
   void EmitRanges(raw_ostream &o, const ArrayRef<SourceRange> Ranges,
                   unsigned indent);
-  void EmitMessage(raw_ostream &o, StringRef Message, unsigned indent);
+  static void EmitMessage(raw_ostream &o, StringRef Message, unsigned indent);
 
   void ReportControlFlow(raw_ostream &o,
                          const PathDiagnosticControlFlowPiece& P,

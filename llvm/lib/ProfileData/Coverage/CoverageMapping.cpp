@@ -643,7 +643,7 @@ CoverageMapping::getInstantiationGroups(StringRef Filename) const {
 }
 
 CoverageData
-CoverageMapping::getCoverageForFunction(const FunctionRecord &Function) const {
+CoverageMapping::getCoverageForFunction(const FunctionRecord &Function) {
   auto MainFileID = findMainViewFileID(Function);
   if (!MainFileID)
     return CoverageData();
@@ -665,7 +665,7 @@ CoverageMapping::getCoverageForFunction(const FunctionRecord &Function) const {
 }
 
 CoverageData CoverageMapping::getCoverageForExpansion(
-    const ExpansionRecord &Expansion) const {
+    const ExpansionRecord &Expansion) {
   CoverageData ExpansionCoverage(
       Expansion.Function.Filenames[Expansion.FileID]);
   std::vector<CountedRegion> Regions;

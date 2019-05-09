@@ -33,8 +33,8 @@ using namespace ento;
 namespace {
 class DominatorsTreeDumper : public Checker<check::ASTCodeBody> {
 public:
-  void checkASTCodeBody(const Decl *D, AnalysisManager& mgr,
-                        BugReporter &BR) const {
+  static void checkASTCodeBody(const Decl *D, AnalysisManager& mgr,
+                        BugReporter &BR) {
     if (AnalysisDeclContext *AC = mgr.getAnalysisDeclContext(D)) {
       DominatorTree dom;
       dom.buildDominatorTree(*AC);
@@ -55,8 +55,8 @@ void ento::registerDominatorsTreeDumper(CheckerManager &mgr) {
 namespace {
 class LiveVariablesDumper : public Checker<check::ASTCodeBody> {
 public:
-  void checkASTCodeBody(const Decl *D, AnalysisManager& mgr,
-                        BugReporter &BR) const {
+  static void checkASTCodeBody(const Decl *D, AnalysisManager& mgr,
+                        BugReporter &BR) {
     if (LiveVariables* L = mgr.getAnalysis<LiveVariables>(D)) {
       L->dumpBlockLiveness(mgr.getSourceManager());
     }
@@ -75,8 +75,8 @@ void ento::registerLiveVariablesDumper(CheckerManager &mgr) {
 namespace {
 class LiveStatementsDumper : public Checker<check::ASTCodeBody> {
 public:
-  void checkASTCodeBody(const Decl *D, AnalysisManager& Mgr,
-                        BugReporter &BR) const {
+  static void checkASTCodeBody(const Decl *D, AnalysisManager& Mgr,
+                        BugReporter &BR) {
     if (LiveVariables *L = Mgr.getAnalysis<RelaxedLiveVariables>(D))
       L->dumpStmtLiveness(Mgr.getSourceManager());
   }
@@ -94,8 +94,8 @@ void ento::registerLiveStatementsDumper(CheckerManager &mgr) {
 namespace {
 class CFGViewer : public Checker<check::ASTCodeBody> {
 public:
-  void checkASTCodeBody(const Decl *D, AnalysisManager& mgr,
-                        BugReporter &BR) const {
+  static void checkASTCodeBody(const Decl *D, AnalysisManager& mgr,
+                        BugReporter &BR) {
     if (CFG *cfg = mgr.getCFG(D)) {
       cfg->viewCFG(mgr.getLangOpts());
     }
@@ -114,8 +114,8 @@ void ento::registerCFGViewer(CheckerManager &mgr) {
 namespace {
 class CFGDumper : public Checker<check::ASTCodeBody> {
 public:
-  void checkASTCodeBody(const Decl *D, AnalysisManager& mgr,
-                        BugReporter &BR) const {
+  static void checkASTCodeBody(const Decl *D, AnalysisManager& mgr,
+                        BugReporter &BR) {
     PrintingPolicy Policy(mgr.getLangOpts());
     Policy.TerseOutput = true;
     Policy.PolishForDeclaration = true;
@@ -188,9 +188,9 @@ class ConfigDumper : public Checker< check::EndOfTranslationUnit > {
   }
 
 public:
-  void checkEndOfTranslationUnit(const TranslationUnitDecl *TU,
+  static void checkEndOfTranslationUnit(const TranslationUnitDecl *TU,
                                  AnalysisManager& mgr,
-                                 BugReporter &BR) const {
+                                 BugReporter &BR) {
     const Table &Config = mgr.options.Config;
 
     SmallVector<const Table::MapEntryTy *, 32> Keys;
@@ -222,7 +222,7 @@ namespace {
 class ExplodedGraphViewer : public Checker< check::EndAnalysis > {
 public:
   ExplodedGraphViewer() {}
-  void checkEndAnalysis(ExplodedGraph &G, BugReporter &B,ExprEngine &Eng) const {
+  static void checkEndAnalysis(ExplodedGraph &G, BugReporter &B,ExprEngine &Eng) {
     Eng.ViewGraph(0);
   }
 };

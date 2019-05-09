@@ -157,7 +157,7 @@ class Symbolizer final {
   bool modules_fresh_;
 
   // Platform-specific default demangler, must not return nullptr.
-  const char *PlatformDemangle(const char *name);
+  static const char *PlatformDemangle(const char *name);
 
   static Symbolizer *symbolizer_;
   static StaticSpinMutex init_mu_;

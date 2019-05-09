@@ -69,7 +69,7 @@ private:
 
   Function *generateLSDAInEAXThunk(Function *ParentFunc);
 
-  bool isStateStoreNeeded(EHPersonality Personality, CallSite CS);
+  static bool isStateStoreNeeded(EHPersonality Personality, CallSite CS);
   void rewriteSetJmpCallSite(IRBuilder<> &Builder, Function &F, CallSite CS,
                              Value *State);
   int getBaseStateForBB(DenseMap<BasicBlock *, ColorVector> &BlockColors,

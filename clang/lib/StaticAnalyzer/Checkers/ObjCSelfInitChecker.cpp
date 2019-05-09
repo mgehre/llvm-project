@@ -69,15 +69,15 @@ class ObjCSelfInitChecker : public Checker<  check::PostObjCMessage,
 
 public:
   ObjCSelfInitChecker() {}
-  void checkPostObjCMessage(const ObjCMethodCall &Msg, CheckerContext &C) const;
+  static void checkPostObjCMessage(const ObjCMethodCall &Msg, CheckerContext &C) ;
   void checkPostStmt(const ObjCIvarRefExpr *E, CheckerContext &C) const;
   void checkPreStmt(const ReturnStmt *S, CheckerContext &C) const;
-  void checkLocation(SVal location, bool isLoad, const Stmt *S,
-                     CheckerContext &C) const;
-  void checkBind(SVal loc, SVal val, const Stmt *S, CheckerContext &C) const;
+  static void checkLocation(SVal location, bool isLoad, const Stmt *S,
+                     CheckerContext &C) ;
+  static void checkBind(SVal loc, SVal val, const Stmt *S, CheckerContext &C) ;
 
-  void checkPreCall(const CallEvent &CE, CheckerContext &C) const;
-  void checkPostCall(const CallEvent &CE, CheckerContext &C) const;
+  static void checkPreCall(const CallEvent &CE, CheckerContext &C) ;
+  static void checkPostCall(const CallEvent &CE, CheckerContext &C) ;
 
   void printState(raw_ostream &Out, ProgramStateRef State,
                   const char *NL, const char *Sep) const override;
@@ -164,7 +164,7 @@ void ObjCSelfInitChecker::checkForInvalidSelf(const Expr *E, CheckerContext &C,
 }
 
 void ObjCSelfInitChecker::checkPostObjCMessage(const ObjCMethodCall &Msg,
-                                               CheckerContext &C) const {
+                                               CheckerContext &C) {
   // When encountering a message that does initialization (init rule),
   // tag the return value so that we know later on that if self has this value
   // then it is properly initialized.
@@ -236,7 +236,7 @@ void ObjCSelfInitChecker::checkPreStmt(const ReturnStmt *S,
 // SelfFlags to the result of the call.
 
 void ObjCSelfInitChecker::checkPreCall(const CallEvent &CE,
-                                       CheckerContext &C) const {
+                                       CheckerContext &C) {
   // FIXME: A callback should disable checkers at the start of functions.
   if (!shouldRunOnFunctionOrMethod(dyn_cast<NamedDecl>(
                                  C.getCurrentAnalysisDeclContext()->getDecl())))
@@ -264,7 +264,7 @@ void ObjCSelfInitChecker::checkPreCall(const CallEvent &CE,
 }
 
 void ObjCSelfInitChecker::checkPostCall(const CallEvent &CE,
-                                        CheckerContext &C) const {
+                                        CheckerContext &C) {
   // FIXME: A callback should disable checkers at the start of functions.
   if (!shouldRunOnFunctionOrMethod(dyn_cast<NamedDecl>(
                                  C.getCurrentAnalysisDeclContext()->getDecl())))
@@ -300,7 +300,7 @@ void ObjCSelfInitChecker::checkPostCall(const CallEvent &CE,
 
 void ObjCSelfInitChecker::checkLocation(SVal location, bool isLoad,
                                         const Stmt *S,
-                                        CheckerContext &C) const {
+                                        CheckerContext &C) {
   if (!shouldRunOnFunctionOrMethod(dyn_cast<NamedDecl>(
         C.getCurrentAnalysisDeclContext()->getDecl())))
     return;
@@ -315,7 +315,7 @@ void ObjCSelfInitChecker::checkLocation(SVal location, bool isLoad,
 
 
 void ObjCSelfInitChecker::checkBind(SVal loc, SVal val, const Stmt *S,
-                                    CheckerContext &C) const {
+                                    CheckerContext &C) {
   // Allow assignment of anything to self. Self is a local variable in the
   // initializer, so it is legal to assign anything to it, like results of
   // static functions/method calls. After self is assigned something we cannot

@@ -61,7 +61,7 @@ class CSEMIRBuilder : public MachineIRBuilder {
       profileDstOp(Op, B);
   }
 
-  void profileSrcOp(const SrcOp &Op, GISelInstProfileBuilder &B) const;
+  static void profileSrcOp(const SrcOp &Op, GISelInstProfileBuilder &B) ;
 
   void profileSrcOps(ArrayRef<SrcOp> Ops, GISelInstProfileBuilder &B) const {
     for (const SrcOp &Op : Ops)
@@ -86,7 +86,7 @@ class CSEMIRBuilder : public MachineIRBuilder {
   // If we have can CSE an instruction, but still need to materialize to a VReg,
   // check if we can generate copies. It's not possible to return a single MIB,
   // while emitting copies to multiple vregs.
-  bool checkCopyToDefsPossible(ArrayRef<DstOp> DstOps);
+  static bool checkCopyToDefsPossible(ArrayRef<DstOp> DstOps);
 
 public:
   // Pull in base class constructors.

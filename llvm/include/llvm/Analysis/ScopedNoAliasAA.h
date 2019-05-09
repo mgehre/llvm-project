@@ -45,7 +45,7 @@ public:
   ModRefInfo getModRefInfo(const CallBase *Call1, const CallBase *Call2);
 
 private:
-  bool mayAliasInScopes(const MDNode *Scopes, const MDNode *NoAlias) const;
+  static bool mayAliasInScopes(const MDNode *Scopes, const MDNode *NoAlias) ;
 };
 
 /// Analysis pass providing a never-invalidated alias analysis result.
@@ -57,7 +57,7 @@ class ScopedNoAliasAA : public AnalysisInfoMixin<ScopedNoAliasAA> {
 public:
   using Result = ScopedNoAliasAAResult;
 
-  ScopedNoAliasAAResult run(Function &F, FunctionAnalysisManager &AM);
+  static ScopedNoAliasAAResult run(Function &F, FunctionAnalysisManager &AM);
 };
 
 /// Legacy wrapper pass to provide the ScopedNoAliasAAResult object.

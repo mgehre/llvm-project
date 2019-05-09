@@ -31,7 +31,7 @@ struct NamedStreamMapTraits {
   NamedStreamMap *NS;
 
   explicit NamedStreamMapTraits(NamedStreamMap &NS);
-  uint16_t hashLookupKey(StringRef S) const;
+  static uint16_t hashLookupKey(StringRef S) ;
   StringRef storageKeyToLookupKey(uint32_t Offset) const;
   uint32_t lookupKeyToStorageKey(StringRef S);
 };

@@ -123,12 +123,12 @@ public:
   void emitTable(formatted_raw_ostream &o, DecoderTable &Table,
                  unsigned Indentation, unsigned BitWidth,
                  StringRef Namespace) const;
-  void emitPredicateFunction(formatted_raw_ostream &OS,
+  static void emitPredicateFunction(formatted_raw_ostream &OS,
                              PredicateSet &Predicates,
-                             unsigned Indentation) const;
-  void emitDecoderFunction(formatted_raw_ostream &OS,
+                             unsigned Indentation) ;
+  static void emitDecoderFunction(formatted_raw_ostream &OS,
                            DecoderSet &Decoders,
-                           unsigned Indentation) const;
+                           unsigned Indentation) ;
 
   // run - Output the code emitter
   void run(raw_ostream &o);
@@ -418,8 +418,8 @@ protected:
   //
   // Returns false if there exists any uninitialized bit value in the range.
   // Returns true, otherwise.
-  bool fieldFromInsn(uint64_t &Field, insn_t &Insn, unsigned StartBit,
-                     unsigned NumBits) const;
+  static bool fieldFromInsn(uint64_t &Field, insn_t &Insn, unsigned StartBit,
+                     unsigned NumBits) ;
 
   /// dumpFilterArray - dumpFilterArray prints out debugging info for the given
   /// filter array as a series of chars.
@@ -454,7 +454,7 @@ protected:
                           unsigned Opc) const;
 
   bool doesOpcodeNeedPredicate(unsigned Opc) const;
-  unsigned getPredicateIndex(DecoderTableInfo &TableInfo, StringRef P) const;
+  static unsigned getPredicateIndex(DecoderTableInfo &TableInfo, StringRef P) ;
   void emitPredicateTableEntry(DecoderTableInfo &TableInfo,
                                unsigned Opc) const;
 
@@ -905,7 +905,7 @@ void FixedLenDecoderEmitter::emitTable(formatted_raw_ostream &OS,
 
 void FixedLenDecoderEmitter::
 emitPredicateFunction(formatted_raw_ostream &OS, PredicateSet &Predicates,
-                      unsigned Indentation) const {
+                      unsigned Indentation) {
   // The predicate function is just a big switch statement based on the
   // input predicate index.
   OS.indent(Indentation) << "static bool checkDecoderPredicate(unsigned Idx, "
@@ -930,7 +930,7 @@ emitPredicateFunction(formatted_raw_ostream &OS, PredicateSet &Predicates,
 
 void FixedLenDecoderEmitter::
 emitDecoderFunction(formatted_raw_ostream &OS, DecoderSet &Decoders,
-                    unsigned Indentation) const {
+                    unsigned Indentation) {
   // The decoder function is just a big switch statement based on the
   // input decoder index.
   OS.indent(Indentation) << "template<typename InsnType>\n";
@@ -960,7 +960,7 @@ emitDecoderFunction(formatted_raw_ostream &OS, DecoderSet &Decoders,
 // Returns false if and on the first uninitialized bit value encountered.
 // Returns true, otherwise.
 bool FilterChooser::fieldFromInsn(uint64_t &Field, insn_t &Insn,
-                                  unsigned StartBit, unsigned NumBits) const {
+                                  unsigned StartBit, unsigned NumBits) {
   Field = 0;
 
   for (unsigned i = 0; i < NumBits; ++i) {
@@ -1206,7 +1206,7 @@ bool FilterChooser::doesOpcodeNeedPredicate(unsigned Opc) const {
 }
 
 unsigned FilterChooser::getPredicateIndex(DecoderTableInfo &TableInfo,
-                                          StringRef Predicate) const {
+                                          StringRef Predicate) {
   // Using the full predicate string as the key value here is a bit
   // heavyweight, but is effective. If the string comparisons become a
   // performance concern, we can implement a mangling of the predicate

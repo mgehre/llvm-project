@@ -38,7 +38,7 @@ class FlattenCFGOpt {
 
   /// Use parallel-and or parallel-or to generate conditions for
   /// conditional branches.
-  bool FlattenParallelAndOr(BasicBlock *BB, IRBuilder<> &Builder);
+  static bool FlattenParallelAndOr(BasicBlock *BB, IRBuilder<> &Builder);
 
   /// If \param BB is the merge block of an if-region, attempt to merge
   /// the if-region with an adjacent if-region upstream if two if-regions

@@ -1179,7 +1179,7 @@ static VersionTuple getMSVCVersionFromExe(const std::string &BinDir) {
 void MSVCToolChain::AddSystemIncludeWithSubfolder(
     const ArgList &DriverArgs, ArgStringList &CC1Args,
     const std::string &folder, const Twine &subfolder1, const Twine &subfolder2,
-    const Twine &subfolder3) const {
+    const Twine &subfolder3) {
   llvm::SmallString<128> path(folder);
   llvm::sys::path::append(path, subfolder1, subfolder2, subfolder3);
   addSystemInclude(DriverArgs, CC1Args, path);

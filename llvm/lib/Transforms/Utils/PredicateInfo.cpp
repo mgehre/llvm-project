@@ -153,8 +153,8 @@ struct ValueDFS_Compare {
   }
 
   // For a phi use, or a non-materialized def, return the edge it represents.
-  const std::pair<BasicBlock *, BasicBlock *>
-  getBlockEdge(const ValueDFS &VD) const {
+  static const std::pair<BasicBlock *, BasicBlock *>
+  getBlockEdge(const ValueDFS &VD) {
     if (!VD.Def && VD.U) {
       auto *PHI = cast<PHINode>(VD.U->getUser());
       return std::make_pair(PHI->getIncomingBlock(*VD.U), PHI->getParent());
@@ -164,7 +164,7 @@ struct ValueDFS_Compare {
   }
 
   // For two phi related values, return the ordering.
-  bool comparePHIRelated(const ValueDFS &A, const ValueDFS &B) const {
+  static bool comparePHIRelated(const ValueDFS &A, const ValueDFS &B) {
     auto &ABlockEdge = getBlockEdge(A);
     auto &BBlockEdge = getBlockEdge(B);
     // Now sort by block edge and then defs before uses.
@@ -172,7 +172,7 @@ struct ValueDFS_Compare {
   }
 
   // Get the definition of an instruction that occurs in the middle of a block.
-  Value *getMiddleDef(const ValueDFS &VD) const {
+  static Value *getMiddleDef(const ValueDFS &VD) {
     if (VD.Def)
       return VD.Def;
     // It's possible for the defs and uses to be null.  For branches, the local
@@ -193,7 +193,7 @@ struct ValueDFS_Compare {
 
   // Return either the Def, if it's not null, or the user of the Use, if the def
   // is null.
-  const Instruction *getDefOrUser(const Value *Def, const Use *U) const {
+  static const Instruction *getDefOrUser(const Value *Def, const Use *U) {
     if (Def)
       return cast<Instruction>(Def);
     return cast<Instruction>(U->getUser());

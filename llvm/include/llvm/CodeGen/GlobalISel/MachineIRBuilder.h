@@ -201,7 +201,7 @@ class MachineIRBuilder {
 protected:
   void validateTruncExt(const LLT &Dst, const LLT &Src, bool IsExtend);
 
-  void validateBinaryOp(const LLT &Res, const LLT &Op0, const LLT &Op1);
+  static void validateBinaryOp(const LLT &Res, const LLT &Op0, const LLT &Op1);
 
   void validateSelectOp(const LLT &ResTy, const LLT &TstTy, const LLT &Op0Ty,
                         const LLT &Op1Ty);

@@ -69,7 +69,7 @@ private:
 
   /// Collects the attributes of DIE \param Die into the \param Attrs
   /// structure.
-  void collectAttributes(const DIE &Die, DIEAttrs &Attrs);
+  static void collectAttributes(const DIE &Die, DIEAttrs &Attrs);
 
   /// Hashes the attributes in \param Attrs in order.
   void hashAttributes(const DIEAttrs &Attrs, dwarf::Tag Tag);

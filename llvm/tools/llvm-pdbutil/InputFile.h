@@ -79,7 +79,7 @@ public:
 
   iterator_range<SymbolGroupIterator> symbol_groups();
   SymbolGroupIterator symbol_groups_begin();
-  SymbolGroupIterator symbol_groups_end();
+  static SymbolGroupIterator symbol_groups_end();
 
   bool isPdb() const;
   bool isObj() const;

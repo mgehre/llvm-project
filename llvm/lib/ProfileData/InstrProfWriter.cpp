@@ -133,7 +133,7 @@ public:
     return std::make_pair(N, M);
   }
 
-  void EmitKey(raw_ostream &Out, key_type_ref K, offset_type N) {
+  static void EmitKey(raw_ostream &Out, key_type_ref K, offset_type N) {
     Out.write(K.data(), N);
   }
 

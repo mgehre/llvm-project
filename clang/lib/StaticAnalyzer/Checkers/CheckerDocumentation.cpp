@@ -227,7 +227,7 @@ public:
   /// first one wins.
   ///
   /// eval::Call
-  bool evalCall(const CallExpr *CE, CheckerContext &C) const { return true; }
+  static bool evalCall(const CallExpr *CE, CheckerContext &C) { return true; }
 
   /// Handles assumptions on symbolic values.
   ///
@@ -237,9 +237,9 @@ public:
   /// performed on the symbols of interest and change the state accordingly.
   ///
   /// eval::Assume
-  ProgramStateRef evalAssume(ProgramStateRef State,
+  static ProgramStateRef evalAssume(ProgramStateRef State,
                                  SVal Cond,
-                                 bool Assumption) const { return State; }
+                                 bool Assumption) { return State; }
 
   /// Allows modifying SymbolReaper object. For example, checkers can explicitly
   /// register symbols of interest as live. These symbols will not be marked
@@ -270,13 +270,13 @@ public:
   ///        change was not triggered by a call.
   ///
   /// check::RegionChanges
-  ProgramStateRef
+  static ProgramStateRef
     checkRegionChanges(ProgramStateRef State,
                        const InvalidatedSymbols *Invalidated,
                        ArrayRef<const MemRegion *> ExplicitRegions,
                        ArrayRef<const MemRegion *> Regions,
                        const LocationContext *LCtx,
-                       const CallEvent *Call) const {
+                       const CallEvent *Call) {
     return State;
   }
 
@@ -293,10 +293,10 @@ public:
   /// parameters to the given call.
   /// \param Kind How the symbols have escaped.
   /// \returns Checkers can modify the state by returning a new state.
-  ProgramStateRef checkPointerEscape(ProgramStateRef State,
+  static ProgramStateRef checkPointerEscape(ProgramStateRef State,
                                      const InvalidatedSymbols &Escaped,
                                      const CallEvent *Call,
-                                     PointerEscapeKind Kind) const {
+                                     PointerEscapeKind Kind) {
     return State;
   }
 
@@ -304,10 +304,10 @@ public:
   ///
   /// Note: in most cases checkPointerEscape callback is sufficient.
   /// \sa checkPointerEscape
-  ProgramStateRef checkConstPointerEscape(ProgramStateRef State,
+  static ProgramStateRef checkConstPointerEscape(ProgramStateRef State,
                                      const InvalidatedSymbols &Escaped,
                                      const CallEvent *Call,
-                                     PointerEscapeKind Kind) const {
+                                     PointerEscapeKind Kind) {
     return State;
   }
 

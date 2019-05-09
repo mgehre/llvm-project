@@ -42,7 +42,7 @@ namespace llvm {
 /// Performs Loop Invariant Code Motion Pass.
 class LICMPass : public PassInfoMixin<LICMPass> {
 public:
-  PreservedAnalyses run(Loop &L, LoopAnalysisManager &AM,
+  static PreservedAnalyses run(Loop &L, LoopAnalysisManager &AM,
                         LoopStandardAnalysisResults &AR, LPMUpdater &U);
 };
 } // end namespace llvm

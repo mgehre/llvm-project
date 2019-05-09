@@ -111,7 +111,7 @@ private:
     std::string ErrorMsg;
   };
 
-  StringRef getTokenForError(StringRef Expr) const {
+  static StringRef getTokenForError(StringRef Expr) {
     if (Expr.empty())
       return "";
 
@@ -129,8 +129,8 @@ private:
     return Token;
   }
 
-  EvalResult unexpectedToken(StringRef TokenStart, StringRef SubExpr,
-                             StringRef ErrText) const {
+  static EvalResult unexpectedToken(StringRef TokenStart, StringRef SubExpr,
+                             StringRef ErrText) {
     std::string ErrorMsg("Encountered unexpected token '");
     ErrorMsg += getTokenForError(TokenStart);
     if (SubExpr != "") {
@@ -152,7 +152,7 @@ private:
     return false;
   }
 
-  std::pair<BinOpToken, StringRef> parseBinOpToken(StringRef Expr) const {
+  static std::pair<BinOpToken, StringRef> parseBinOpToken(StringRef Expr) {
     if (Expr.empty())
       return std::make_pair(BinOpToken::Invalid, "");
 
@@ -184,8 +184,8 @@ private:
     return std::make_pair(Op, Expr.substr(1).ltrim());
   }
 
-  EvalResult computeBinOpResult(BinOpToken Op, const EvalResult &LHSResult,
-                                const EvalResult &RHSResult) const {
+  static EvalResult computeBinOpResult(BinOpToken Op, const EvalResult &LHSResult,
+                                const EvalResult &RHSResult) {
     switch (Op) {
     default:
       llvm_unreachable("Tried to evaluate unrecognized operation.");
@@ -206,7 +206,7 @@ private:
 
   // Parse a symbol and return a (string, string) pair representing the symbol
   // name and expression remaining to be parsed.
-  std::pair<StringRef, StringRef> parseSymbol(StringRef Expr) const {
+  static std::pair<StringRef, StringRef> parseSymbol(StringRef Expr) {
     size_t FirstNonSymbol = Expr.find_first_not_of("0123456789"
                                                    "abcdefghijklmnopqrstuvwxyz"
                                                    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -450,7 +450,7 @@ private:
 
   // Parse a number (hexadecimal or decimal) and return a (string, string)
   // pair representing the number and the expression remaining to be parsed.
-  std::pair<StringRef, StringRef> parseNumberString(StringRef Expr) const {
+  static std::pair<StringRef, StringRef> parseNumberString(StringRef Expr) {
     size_t FirstNonDigit = StringRef::npos;
     if (Expr.startswith("0x")) {
       FirstNonDigit = Expr.find_first_not_of("0123456789abcdefABCDEF", 2);
@@ -468,7 +468,7 @@ private:
   // Evaluate a constant numeric expression (hexadecimal or decimal) and
   // return a pair containing the result, and the expression remaining to be
   // evaluated.
-  std::pair<EvalResult, StringRef> evalNumberExpr(StringRef Expr) const {
+  static std::pair<EvalResult, StringRef> evalNumberExpr(StringRef Expr) {
     StringRef ValueStr;
     StringRef RemainingExpr;
     std::tie(ValueStr, RemainingExpr) = parseNumberString(Expr);

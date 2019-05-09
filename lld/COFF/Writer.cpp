@@ -184,7 +184,7 @@ private:
   void createRuntimePseudoRelocs();
   void insertCtorDtorSymbols();
   void createGuardCFTables();
-  void markSymbolsForRVATable(ObjFile *File,
+  static void markSymbolsForRVATable(ObjFile *File,
                               ArrayRef<SectionChunk *> SymIdxChunks,
                               SymbolRVASet &TableSymbols);
   void maybeAddRVATable(SymbolRVASet TableSymbols, StringRef TableSym,
@@ -193,7 +193,7 @@ private:
   void writeSections();
   void writeBuildId();
   void sortExceptionTable();
-  void sortCRTSectionChunks(std::vector<Chunk *> &Chunks);
+  static void sortCRTSectionChunks(std::vector<Chunk *> &Chunks);
 
   llvm::Optional<coff_symbol16> createSymbol(Defined *D);
   size_t addEntryToStringTable(StringRef Str);

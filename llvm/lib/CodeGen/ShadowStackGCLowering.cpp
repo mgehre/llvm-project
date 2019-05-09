@@ -70,7 +70,7 @@ public:
   bool runOnFunction(Function &F) override;
 
 private:
-  bool IsNullValue(Value *V);
+  static bool IsNullValue(Value *V);
   Constant *GetFrameMap(Function &F);
   Type *GetConcreteStackEntryType(Function &F);
   void CollectRoots(Function &F);

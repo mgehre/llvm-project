@@ -9811,7 +9811,7 @@ namespace {
     ///
     /// For the purposes of type reconstruction, a type has already been
     /// transformed if it is NULL or if it is not dependent.
-    bool AlreadyTransformed(QualType T) {
+    static bool AlreadyTransformed(QualType T) {
       return T.isNull() || !T->isDependentType();
     }
 
@@ -9829,7 +9829,7 @@ namespace {
       this->Entity = Entity;
     }
 
-    ExprResult TransformLambdaExpr(LambdaExpr *E) {
+    static ExprResult TransformLambdaExpr(LambdaExpr *E) {
       // Lambdas never need to be transformed.
       return E;
     }

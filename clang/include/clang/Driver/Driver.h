@@ -423,7 +423,7 @@ public:
   /// @{
 
   /// PrintActions - Print the list of actions.
-  void PrintActions(const Compilation &C) const;
+  static void PrintActions(const Compilation &C) ;
 
   /// PrintHelp - Print the help text.
   ///
@@ -510,11 +510,11 @@ public:
   std::string GetTemporaryDirectory(StringRef Prefix) const;
 
   /// Return the pathname of the pch file in clang-cl mode.
-  std::string GetClPchPath(Compilation &C, StringRef BaseName) const;
+  static std::string GetClPchPath(Compilation &C, StringRef BaseName) ;
 
   /// ShouldUseClangCompiler - Should the clang compiler be used to
   /// handle this action.
-  bool ShouldUseClangCompiler(const JobAction &JA) const;
+  static bool ShouldUseClangCompiler(const JobAction &JA) ;
 
   /// Returns true if we are performing any kind of LTO.
   bool isUsingLTO() const { return LTOMode != LTOK_None; }
@@ -554,7 +554,7 @@ private:
 
   /// Get bitmasks for which option flags to include and exclude based on
   /// the driver mode.
-  std::pair<unsigned, unsigned> getIncludeExcludeOptionFlagMasks(bool IsClCompatMode) const;
+  static std::pair<unsigned, unsigned> getIncludeExcludeOptionFlagMasks(bool IsClCompatMode) ;
 
   /// Helper used in BuildJobsForAction.  Doesn't use the cache when building
   /// jobs specifically for the given action, but will use the cache when

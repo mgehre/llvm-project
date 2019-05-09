@@ -297,7 +297,7 @@ namespace {
         X86::RFP80RegClass.contains(SrcReg);
     }
 
-    void setKillFlags(MachineBasicBlock &MBB) const;
+    static void setKillFlags(MachineBasicBlock &MBB) ;
   };
   char FPS::ID = 0;
 }
@@ -1671,7 +1671,7 @@ void FPS::handleSpecialFP(MachineBasicBlock::iterator &Inst) {
     --Inst;
 }
 
-void FPS::setKillFlags(MachineBasicBlock &MBB) const {
+void FPS::setKillFlags(MachineBasicBlock &MBB) {
   const TargetRegisterInfo &TRI =
       *MBB.getParent()->getSubtarget().getRegisterInfo();
   LivePhysRegs LPR(TRI);

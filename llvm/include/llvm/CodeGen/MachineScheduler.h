@@ -380,7 +380,7 @@ protected:
   void dumpSchedule() const;
 
   // Lesser helpers...
-  bool checkSchedLimit();
+  static bool checkSchedLimit();
 
   void findRootsAndBiasEdges(SmallVectorImpl<SUnit*> &TopRoots,
                              SmallVectorImpl<SUnit*> &BotRoots);

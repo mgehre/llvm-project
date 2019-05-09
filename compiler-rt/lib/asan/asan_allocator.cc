@@ -185,14 +185,14 @@ struct QuarantineCallback {
 typedef Quarantine<QuarantineCallback, AsanChunk> AsanQuarantine;
 typedef AsanQuarantine::Cache QuarantineCache;
 
-void AsanMapUnmapCallback::OnMap(uptr p, uptr size) const {
+void AsanMapUnmapCallback::OnMap(uptr p, uptr size) {
   PoisonShadow(p, size, kAsanHeapLeftRedzoneMagic);
   // Statistics.
   AsanStats &thread_stats = GetCurrentThreadStats();
   thread_stats.mmaps++;
   thread_stats.mmaped += size;
 }
-void AsanMapUnmapCallback::OnUnmap(uptr p, uptr size) const {
+void AsanMapUnmapCallback::OnUnmap(uptr p, uptr size) {
   PoisonShadow(p, size, 0);
   // We are about to unmap a chunk of user memory.
   // Mark the corresponding shadow memory as not needed.
@@ -259,7 +259,7 @@ struct Allocator {
       : quarantine(LINKER_INITIALIZED),
         fallback_quarantine_cache(LINKER_INITIALIZED) {}
 
-  void CheckOptions(const AllocatorOptions &options) const {
+  static void CheckOptions(const AllocatorOptions &options) {
     CHECK_GE(options.min_redzone, 16);
     CHECK_GE(options.max_redzone, options.min_redzone);
     CHECK_LE(options.max_redzone, 2048);
@@ -372,7 +372,7 @@ struct Allocator {
   }
 
   // We have an address between two chunks, and we want to report just one.
-  AsanChunk *ChooseChunk(uptr addr, AsanChunk *left_chunk,
+  static AsanChunk *ChooseChunk(uptr addr, AsanChunk *left_chunk,
                          AsanChunk *right_chunk) {
     // Prefer an allocated chunk over freed chunk and freed chunk
     // over available chunk.
@@ -547,7 +547,7 @@ struct Allocator {
 
   // Set quarantine flag if chunk is allocated, issue ASan error report on
   // available and quarantined chunks. Return true on success, false otherwise.
-  bool AtomicallySetQuarantineFlagIfAllocated(AsanChunk *m, void *ptr,
+  static bool AtomicallySetQuarantineFlagIfAllocated(AsanChunk *m, void *ptr,
                                    BufferedStackTrace *stack) {
     u8 old_chunk_state = CHUNK_ALLOCATED;
     // Flip the chunk_state atomically to avoid race on double-free.
@@ -687,7 +687,7 @@ struct Allocator {
     return ptr;
   }
 
-  void ReportInvalidFree(void *ptr, u8 chunk_state, BufferedStackTrace *stack) {
+  static void ReportInvalidFree(void *ptr, u8 chunk_state, BufferedStackTrace *stack) {
     if (chunk_state == CHUNK_QUARANTINE)
       ReportDoubleFree((uptr)ptr, stack);
     else

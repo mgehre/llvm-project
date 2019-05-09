@@ -264,7 +264,7 @@ namespace {
 
     /// Given that the Invariant is not equal to Val. Simplify instructions
     /// in the loop.
-    Value *SimplifyInstructionWithNotEqual(Instruction *Inst, Value *Invariant,
+    static Value *SimplifyInstructionWithNotEqual(Instruction *Inst, Value *Invariant,
                                            Constant *Val);
   };
 

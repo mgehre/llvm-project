@@ -42,25 +42,25 @@ void MachineBranchProbabilityInfo::anchor() {}
 
 BranchProbability MachineBranchProbabilityInfo::getEdgeProbability(
     const MachineBasicBlock *Src,
-    MachineBasicBlock::const_succ_iterator Dst) const {
+    MachineBasicBlock::const_succ_iterator Dst) {
   return Src->getSuccProbability(Dst);
 }
 
 BranchProbability MachineBranchProbabilityInfo::getEdgeProbability(
-    const MachineBasicBlock *Src, const MachineBasicBlock *Dst) const {
+    const MachineBasicBlock *Src, const MachineBasicBlock *Dst) {
   // This is a linear search. Try to use the const_succ_iterator version when
   // possible.
   return getEdgeProbability(Src, find(Src->successors(), Dst));
 }
 
 bool MachineBranchProbabilityInfo::isEdgeHot(
-    const MachineBasicBlock *Src, const MachineBasicBlock *Dst) const {
+    const MachineBasicBlock *Src, const MachineBasicBlock *Dst) {
   BranchProbability HotProb(StaticLikelyProb, 100);
   return getEdgeProbability(Src, Dst) > HotProb;
 }
 
 MachineBasicBlock *
-MachineBranchProbabilityInfo::getHotSucc(MachineBasicBlock *MBB) const {
+MachineBranchProbabilityInfo::getHotSucc(MachineBasicBlock *MBB) {
   auto MaxProb = BranchProbability::getZero();
   MachineBasicBlock *MaxSucc = nullptr;
   for (MachineBasicBlock::const_succ_iterator I = MBB->succ_begin(),
@@ -81,7 +81,7 @@ MachineBranchProbabilityInfo::getHotSucc(MachineBasicBlock *MBB) const {
 
 raw_ostream &MachineBranchProbabilityInfo::printEdgeProbability(
     raw_ostream &OS, const MachineBasicBlock *Src,
-    const MachineBasicBlock *Dst) const {
+    const MachineBasicBlock *Dst) {
 
   const BranchProbability Prob = getEdgeProbability(Src, Dst);
   OS << "edge " << printMBBReference(*Src) << " -> " << printMBBReference(*Dst)

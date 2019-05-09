@@ -479,7 +479,7 @@ class VarDecl;
                              bool IsClassScopeSpecialization = false);
     Decl *VisitFunctionDecl(FunctionDecl *D,
                             TemplateParameterList *TemplateParams);
-    Decl *VisitDecl(Decl *D);
+    static Decl *VisitDecl(Decl *D);
     Decl *VisitVarDecl(VarDecl *D, bool InstantiatingVarTemplate,
                        ArrayRef<BindingDecl *> *Bindings = nullptr);
 

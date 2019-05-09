@@ -31,8 +31,8 @@ public:
   void check(const ast_matchers::MatchFinder::MatchResult &Result) override;
 
 private:
-  bool isConstant(const clang::ast_matchers::MatchFinder::MatchResult &Result,
-                  const clang::Expr &ExprResult) const;
+  static bool isConstant(const clang::ast_matchers::MatchFinder::MatchResult &Result,
+                  const clang::Expr &ExprResult) ;
 
   bool isIgnoredValue(const IntegerLiteral *Literal) const;
   bool isIgnoredValue(const FloatingLiteral *Literal) const;
@@ -42,8 +42,8 @@ private:
     return false;
   }
 
-  bool isSyntheticValue(const clang::SourceManager *SourceManager,
-                        const IntegerLiteral *Literal) const;
+  static bool isSyntheticValue(const clang::SourceManager *SourceManager,
+                        const IntegerLiteral *Literal) ;
 
   template <typename L>
   void checkBoundMatch(const ast_matchers::MatchFinder::MatchResult &Result,

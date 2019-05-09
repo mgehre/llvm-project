@@ -577,7 +577,7 @@ private:
   // Returns the edge via which an instruction in BB will get the values from.
 
   // Returns true when the values are flowing out to each edge.
-  bool valueAnticipable(CHIArgs C, Instruction *TI) const {
+  static bool valueAnticipable(CHIArgs C, Instruction *TI) {
     if (TI->getNumSuccessors() > (unsigned)size(C))
       return false; // Not enough args in this CHI.
 
@@ -615,7 +615,7 @@ private:
   using RenameStackType = DenseMap<VNType, SmallVector<Instruction *, 2>>;
 
   // Push all the VNs corresponding to BB into RenameStack.
-  void fillRenameStack(BasicBlock *BB, InValuesType &ValueBBs,
+  static void fillRenameStack(BasicBlock *BB, InValuesType &ValueBBs,
                        RenameStackType &RenameStack) {
     auto it1 = ValueBBs.find(BB);
     if (it1 != ValueBBs.end()) {
@@ -888,7 +888,7 @@ private:
     Repl->replaceUsesOfWith(Gep, ClonedGep);
   }
 
-  void updateAlignment(Instruction *I, Instruction *Repl) {
+  static void updateAlignment(Instruction *I, Instruction *Repl) {
     if (auto *ReplacementLoad = dyn_cast<LoadInst>(Repl)) {
       ReplacementLoad->setAlignment(
           std::min(ReplacementLoad->getAlignment(),

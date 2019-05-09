@@ -1454,7 +1454,7 @@ namespace clang {
 
     bool parseModuleMapFile();
 
-    bool terminatedByDirective() { return false; }
+    static bool terminatedByDirective() { return false; }
     SourceLocation getLocation() { return Tok.getLocation(); }
   };
 

@@ -81,9 +81,9 @@ public:
 
   /// Given a machine instruction descriptor, returns the register
   /// class constraint for OpNum, or NULL.
-  const TargetRegisterClass *getRegClass(const MCInstrDesc &MCID, unsigned OpNum,
+  static const TargetRegisterClass *getRegClass(const MCInstrDesc &MCID, unsigned OpNum,
                                          const TargetRegisterInfo *TRI,
-                                         const MachineFunction &MF) const;
+                                         const MachineFunction &MF) ;
 
   /// Return true if the instruction is trivially rematerializable, meaning it
   /// has no side effects and requires no operands that aren't always available.
@@ -1283,7 +1283,7 @@ public:
 
   /// Provide a global flag for disabling the PreRA hazard recognizer that
   /// targets may choose to honor.
-  bool usePreRAHazardRecognizer() const;
+  static bool usePreRAHazardRecognizer() ;
 
   /// For a comparison instruction, return the source registers
   /// in SrcReg and SrcReg2 if having two register operands, and the value it

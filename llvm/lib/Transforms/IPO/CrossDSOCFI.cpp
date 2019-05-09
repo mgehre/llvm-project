@@ -48,7 +48,7 @@ struct CrossDSOCFI : public ModulePass {
 
   MDNode *VeryLikelyWeights;
 
-  ConstantInt *extractNumericTypeId(MDNode *MD);
+  static ConstantInt *extractNumericTypeId(MDNode *MD);
   void buildCFICheck(Module &M);
   bool runOnModule(Module &M) override;
 };

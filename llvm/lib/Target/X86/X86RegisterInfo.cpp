@@ -378,7 +378,7 @@ X86RegisterInfo::getCalleeSavedRegs(const MachineFunction *MF) const {
 }
 
 const MCPhysReg *X86RegisterInfo::getCalleeSavedRegsViaCopy(
-    const MachineFunction *MF) const {
+    const MachineFunction *MF) {
   assert(MF && "Invalid MachineFunction pointer.");
   if (MF->getFunction().getCallingConv() == CallingConv::CXX_FAST_TLS &&
       MF->getInfo<X86MachineFunctionInfo>()->isSplitCSR())
@@ -489,7 +489,7 @@ X86RegisterInfo::getNoPreservedMask() const {
   return CSR_NoRegs_RegMask;
 }
 
-const uint32_t *X86RegisterInfo::getDarwinTLSCallPreservedMask() const {
+const uint32_t *X86RegisterInfo::getDarwinTLSCallPreservedMask() {
   return CSR_64_TLS_Darwin_RegMask;
 }
 

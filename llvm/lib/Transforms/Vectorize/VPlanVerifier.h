@@ -37,7 +37,7 @@ public:
   /// verification process comprises the following steps:
   /// 1. Region/Block verification: Check the Region/Block verification
   /// invariants for every region in the H-CFG.
-  void verifyHierarchicalCFG(const VPRegionBlock *TopRegion) const;
+  static void verifyHierarchicalCFG(const VPRegionBlock *TopRegion) ;
 };
 } // namespace llvm
 

@@ -462,7 +462,7 @@ class MetadataLoader::MetadataLoaderImpl {
   Error parseOneMetadata(SmallVectorImpl<uint64_t> &Record, unsigned Code,
                          PlaceholderQueue &Placeholders, StringRef Blob,
                          unsigned &NextMetadataNo);
-  Error parseMetadataStrings(ArrayRef<uint64_t> Record, StringRef Blob,
+  static Error parseMetadataStrings(ArrayRef<uint64_t> Record, StringRef Blob,
                              function_ref<void(StringRef)> CallBack);
   Error parseGlobalObjectAttachment(GlobalObject &GO,
                                     ArrayRef<uint64_t> Record);

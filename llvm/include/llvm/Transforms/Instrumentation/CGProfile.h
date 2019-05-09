@@ -19,12 +19,12 @@
 namespace llvm {
 class CGProfilePass : public PassInfoMixin<CGProfilePass> {
 public:
-  PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
+  static PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
 
 private:
-  void addModuleFlags(
+  static void addModuleFlags(
       Module &M,
-      MapVector<std::pair<Function *, Function *>, uint64_t> &Counts) const;
+      MapVector<std::pair<Function *, Function *>, uint64_t> &Counts) ;
 };
 } // end namespace llvm
 

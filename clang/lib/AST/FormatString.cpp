@@ -558,7 +558,7 @@ std::string ArgType::getRepresentativeTypeName(ASTContext &C) const {
 //===----------------------------------------------------------------------===//
 
 ArgType
-analyze_format_string::OptionalAmount::getArgType(ASTContext &Ctx) const {
+analyze_format_string::OptionalAmount::getArgType(ASTContext &Ctx) {
   return Ctx.IntTy;
 }
 

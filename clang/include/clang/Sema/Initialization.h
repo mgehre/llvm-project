@@ -1095,7 +1095,7 @@ public:
 private:
   /// Prints a follow-up note that highlights the location of
   /// the initialized entity, if it's remote.
-  void PrintInitLocationNote(Sema &S, const InitializedEntity &Entity);
+  static void PrintInitLocationNote(Sema &S, const InitializedEntity &Entity);
 
 public:
   /// Try to perform initialization of the given entity, creating a

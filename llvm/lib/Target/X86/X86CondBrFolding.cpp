@@ -123,7 +123,7 @@ private:
   void replaceBrDest(MachineBasicBlock *MBB, MachineBasicBlock *OrigDest,
                      MachineBasicBlock *NewDest);
   void fixupModifiedCond(MachineBasicBlock *MBB);
-  std::unique_ptr<TargetMBBInfo> analyzeMBB(MachineBasicBlock &MBB);
+  static std::unique_ptr<TargetMBBInfo> analyzeMBB(MachineBasicBlock &MBB);
   static bool analyzeCompare(const MachineInstr &MI, unsigned &SrcReg,
                              int &CmpValue);
   bool findPath(MachineBasicBlock *MBB,

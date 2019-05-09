@@ -142,7 +142,7 @@ private:
     return remapIndexFallback(Idx, Map);
   }
 
-  inline bool remapIndexSimple(TypeIndex &Idx, ArrayRef<TypeIndex> Map) const {
+  static inline bool remapIndexSimple(TypeIndex &Idx, ArrayRef<TypeIndex> Map) {
     // Simple types are unchanged.
     if (Idx.isSimple())
       return true;
@@ -160,7 +160,7 @@ private:
 
   bool remapIndexFallback(TypeIndex &Idx, ArrayRef<TypeIndex> Map);
 
-  Error errorCorruptRecord() const {
+  static Error errorCorruptRecord() {
     return llvm::make_error<CodeViewError>(cv_error_code::corrupt_record);
   }
 

@@ -36,7 +36,7 @@ public:
   iterator_range<codeview::CVSymbolArray::Iterator>
   getSymbols(bool *HadError) const;
 
-  Error commit();
+  static Error commit();
 
 private:
   codeview::CVSymbolArray SymbolRecords;

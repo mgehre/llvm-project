@@ -110,12 +110,12 @@ class RISCVCompressInstEmitter {
   void emitCompressInstEmitter(raw_ostream &o, bool Compress);
   bool validateTypes(Record *SubType, Record *Type, bool IsSourceInst);
   bool validateRegister(Record *Reg, Record *RegClass);
-  void createDagOperandMapping(Record *Rec, StringMap<unsigned> &SourceOperands,
+  static void createDagOperandMapping(Record *Rec, StringMap<unsigned> &SourceOperands,
                                StringMap<unsigned> &DestOperands,
                                DagInit *SourceDag, DagInit *DestDag,
                                IndexedMap<OpData> &SourceOperandMap);
 
-  void createInstOperandMapping(Record *Rec, DagInit *SourceDag,
+  static void createInstOperandMapping(Record *Rec, DagInit *SourceDag,
                                 DagInit *DestDag,
                                 IndexedMap<OpData> &SourceOperandMap,
                                 IndexedMap<OpData> &DestOperandMap,

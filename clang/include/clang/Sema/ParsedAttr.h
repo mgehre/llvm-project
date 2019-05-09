@@ -553,7 +553,7 @@ public:
   unsigned getMaxArgs() const;
   bool hasVariadicArg() const;
   bool diagnoseAppertainsTo(class Sema &S, const Decl *D) const;
-  bool appliesToDecl(const Decl *D, attr::SubjectMatchRule MatchRule) const;
+  static bool appliesToDecl(const Decl *D, attr::SubjectMatchRule MatchRule) ;
   void getMatchRules(const LangOptions &LangOpts,
                      SmallVectorImpl<std::pair<attr::SubjectMatchRule, bool>>
                          &MatchRules) const;

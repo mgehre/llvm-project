@@ -298,7 +298,7 @@ private:
     return NP - 1;
   }
 
-  void ComputeLiveInBlocks(AllocaInst *AI, AllocaInfo &Info,
+  static void ComputeLiveInBlocks(AllocaInst *AI, AllocaInfo &Info,
                            const SmallPtrSetImpl<BasicBlock *> &DefBlocks,
                            SmallPtrSetImpl<BasicBlock *> &LiveInBlocks);
   void RenamePass(BasicBlock *BB, BasicBlock *Pred,

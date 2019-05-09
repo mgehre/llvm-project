@@ -1215,7 +1215,7 @@ private:
   };
 
   /// Reads the stored information about an input file.
-  InputFileInfo readInputFileInfo(ModuleFile &F, unsigned ID);
+  static InputFileInfo readInputFileInfo(ModuleFile &F, unsigned ID);
 
   /// Retrieve the file entry and 'overridden' bit for an input
   /// file in the given module file.
@@ -1223,7 +1223,7 @@ private:
                                         bool Complain = true);
 
 public:
-  void ResolveImportedPath(ModuleFile &M, std::string &Filename);
+  static void ResolveImportedPath(ModuleFile &M, std::string &Filename);
   static void ResolveImportedPath(std::string &Filename, StringRef Prefix);
 
   /// Returns the first key declaration for the given declaration. This
@@ -1344,12 +1344,12 @@ private:
   RecordLocation TypeCursorForIndex(unsigned Index);
   void LoadedDecl(unsigned Index, Decl *D);
   Decl *ReadDeclRecord(serialization::DeclID ID);
-  void markIncompleteDeclChain(Decl *Canon);
+  static void markIncompleteDeclChain(Decl *Canon);
 
   /// Returns the most recent declaration of a declaration (which must be
   /// of a redeclarable kind) that is either local or has already been loaded
   /// merged into its redecl chain.
-  Decl *getMostRecentExistingDecl(Decl *D);
+  static Decl *getMostRecentExistingDecl(Decl *D);
 
   RecordLocation DeclCursorForID(serialization::DeclID ID,
                                  SourceLocation &Location);
@@ -1359,7 +1359,7 @@ private:
                           unsigned PreviousGeneration = 0);
 
   RecordLocation getLocalBitOffset(uint64_t GlobalOffset);
-  uint64_t getGlobalBitOffset(ModuleFile &M, uint32_t LocalOffset);
+  static uint64_t getGlobalBitOffset(ModuleFile &M, uint32_t LocalOffset);
 
   /// Returns the first preprocessed entity ID that begins or ends after
   /// \arg Loc.
@@ -1816,7 +1816,7 @@ public:
                                       serialization::LocalDeclID LocalID) const;
 
   /// Returns true if global DeclID \p ID originated from module \p M.
-  bool isDeclIDFromModule(serialization::GlobalDeclID ID, ModuleFile &M) const;
+  static bool isDeclIDFromModule(serialization::GlobalDeclID ID, ModuleFile &M) ;
 
   /// Retrieve the module file that owns the given declaration, or NULL
   /// if the declaration is not from a module file.
@@ -2215,13 +2215,13 @@ public:
                               const RecordData &Record, unsigned &Idx);
 
   /// Read an integral value
-  llvm::APInt ReadAPInt(const RecordData &Record, unsigned &Idx);
+  static llvm::APInt ReadAPInt(const RecordData &Record, unsigned &Idx);
 
   /// Read a signed integral value
-  llvm::APSInt ReadAPSInt(const RecordData &Record, unsigned &Idx);
+  static llvm::APSInt ReadAPSInt(const RecordData &Record, unsigned &Idx);
 
   /// Read a floating-point value
-  llvm::APFloat ReadAPFloat(const RecordData &Record,
+  static llvm::APFloat ReadAPFloat(const RecordData &Record,
                             const llvm::fltSemantics &Sem, unsigned &Idx);
 
   // Read a string
@@ -2233,7 +2233,7 @@ public:
   }
 
   // Read a path
-  std::string ReadPath(ModuleFile &F, const RecordData &Record, unsigned &Idx);
+  static std::string ReadPath(ModuleFile &F, const RecordData &Record, unsigned &Idx);
 
   // Skip a path
   static void SkipPath(const RecordData &Record, unsigned &Idx) {
@@ -2250,7 +2250,7 @@ public:
   Attr *ReadAttr(ModuleFile &M, const RecordData &Record, unsigned &Idx);
 
   /// Reads attributes from the current stream position.
-  void ReadAttributes(ASTRecordReader &Record, AttrVec &Attrs);
+  static void ReadAttributes(ASTRecordReader &Record, AttrVec &Attrs);
 
   /// Reads a statement.
   Stmt *ReadStmt(ModuleFile &F);

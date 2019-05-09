@@ -340,7 +340,7 @@ public:
 
   /// addRecordTypeName - Compute a name from the given record decl with an
   /// optional suffix and name the given LLVM type using it.
-  void addRecordTypeName(const RecordDecl *RD, llvm::StructType *Ty,
+  static void addRecordTypeName(const RecordDecl *RD, llvm::StructType *Ty,
                          StringRef suffix);
 
 

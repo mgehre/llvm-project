@@ -144,7 +144,7 @@ FileAnalysis::getNextInstructionSequential(const Instr &InstrMeta) const {
   return &KV->second;
 }
 
-bool FileAnalysis::usesRegisterOperand(const Instr &InstrMeta) const {
+bool FileAnalysis::usesRegisterOperand(const Instr &InstrMeta) {
   for (const auto &Operand : InstrMeta.Instruction) {
     if (Operand.isReg())
       return true;

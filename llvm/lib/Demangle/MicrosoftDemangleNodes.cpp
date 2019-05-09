@@ -534,7 +534,7 @@ void ArrayTypeNode::outputPre(OutputStream &OS, OutputFlags Flags) const {
 }
 
 void ArrayTypeNode::outputOneDimension(OutputStream &OS, OutputFlags Flags,
-                                       Node *N) const {
+                                       Node *N) {
   assert(N->kind() == NodeKind::IntegerLiteral);
   IntegerLiteralNode *ILN = static_cast<IntegerLiteralNode *>(N);
   if (ILN->Value != 0)

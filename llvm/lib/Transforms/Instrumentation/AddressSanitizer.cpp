@@ -630,7 +630,7 @@ struct AddressSanitizer : public FunctionPass {
     AU.addRequired<TargetLibraryInfoWrapperPass>();
   }
 
-  uint64_t getAllocaSizeInBytes(const AllocaInst &AI) const {
+  static uint64_t getAllocaSizeInBytes(const AllocaInst &AI) {
     uint64_t ArraySize = 1;
     if (AI.isArrayAllocation()) {
       const ConstantInt *CI = dyn_cast<ConstantInt>(AI.getArraySize());
@@ -673,7 +673,7 @@ struct AddressSanitizer : public FunctionPass {
   void instrumentMemIntrinsic(MemIntrinsic *MI);
   Value *memToShadow(Value *Shadow, IRBuilder<> &IRB);
   bool runOnFunction(Function &F) override;
-  bool maybeInsertAsanInitAtFunctionEntry(Function &F);
+  static bool maybeInsertAsanInitAtFunctionEntry(Function &F);
   void maybeInsertDynamicShadowAtFunctionEntry(Function &F);
   void markEscapedLocalAllocas(Function &F);
   bool doInitialization(Module &M) override;
@@ -688,8 +688,8 @@ private:
 
   bool LooksLikeCodeInBug11395(Instruction *I);
   bool GlobalIsLinkerInitialized(GlobalVariable *G);
-  bool isSafeAccess(ObjectSizeOffsetVisitor &ObjSizeVis, Value *Addr,
-                    uint64_t TypeSize) const;
+  static bool isSafeAccess(ObjectSizeOffsetVisitor &ObjSizeVis, Value *Addr,
+                    uint64_t TypeSize) ;
 
   /// Helper to cleanup per-function state.
   struct FunctionStateRAII {
@@ -797,7 +797,7 @@ private:
   size_t MinRedzoneSizeForGlobal() const {
     return RedzoneSizeForScale(Mapping.Scale);
   }
-  int GetAsanVersion(const Module &M) const;
+  static int GetAsanVersion(const Module &M) ;
 
   GlobalsMetadata GlobalsMD;
   bool CompileKernel;
@@ -2271,7 +2271,7 @@ bool AddressSanitizerModule::InstrumentGlobals(IRBuilder<> &IRB, Module &M, bool
   return true;
 }
 
-int AddressSanitizerModule::GetAsanVersion(const Module &M) const {
+int AddressSanitizerModule::GetAsanVersion(const Module &M) {
   int LongSize = M.getDataLayout().getPointerSizeInBits();
   bool isAndroid = Triple(M.getTargetTriple()).isAndroid();
   int Version = 8;
@@ -3246,7 +3246,7 @@ void FunctionStackPoisoner::handleDynamicAllocaCall(AllocaInst *AI) {
 // base object. For example, it is a field access or an array access with
 // constant inbounds index.
 bool AddressSanitizer::isSafeAccess(ObjectSizeOffsetVisitor &ObjSizeVis,
-                                    Value *Addr, uint64_t TypeSize) const {
+                                    Value *Addr, uint64_t TypeSize) {
   SizeOffsetType SizeOffset = ObjSizeVis.compute(Addr);
   if (!ObjSizeVis.bothKnown(SizeOffset)) return false;
   uint64_t Size = SizeOffset.first.getZExtValue();

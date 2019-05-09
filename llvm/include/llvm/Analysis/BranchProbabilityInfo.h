@@ -213,7 +213,7 @@ public:
   using Result = BranchProbabilityInfo;
 
   /// Run the analysis pass over a function and produce BPI.
-  BranchProbabilityInfo run(Function &F, FunctionAnalysisManager &AM);
+  static BranchProbabilityInfo run(Function &F, FunctionAnalysisManager &AM);
 };
 
 /// Printer pass for the \c BranchProbabilityAnalysis results.

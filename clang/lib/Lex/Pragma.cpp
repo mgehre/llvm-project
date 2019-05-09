@@ -1119,7 +1119,7 @@ struct PragmaDebugHandler : public PragmaHandler {
       Callbacks->PragmaDebug(Tok.getLocation(), II->getName());
   }
 
-  void HandleCaptured(Preprocessor &PP) {
+  static void HandleCaptured(Preprocessor &PP) {
     Token Tok;
     PP.LexUnexpandedToken(Tok);
 

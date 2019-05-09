@@ -464,7 +464,7 @@ struct ArrayTypeNode : public TypeNode {
   void outputPost(OutputStream &OS, OutputFlags Flags) const;
 
   void outputDimensionsImpl(OutputStream &OS, OutputFlags Flags) const;
-  void outputOneDimension(OutputStream &OS, OutputFlags Flags, Node *N) const;
+  static void outputOneDimension(OutputStream &OS, OutputFlags Flags, Node *N) ;
 
   // A list of array dimensions.  e.g. [3,4,5] in `int Foo[3][4][5]`
   NodeArrayNode *Dimensions = nullptr;

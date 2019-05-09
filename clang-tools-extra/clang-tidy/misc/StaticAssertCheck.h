@@ -30,7 +30,7 @@ public:
   void check(const ast_matchers::MatchFinder::MatchResult &Result) override;
 
 private:
-  SourceLocation getLastParenLoc(const ASTContext *ASTCtx,
+  static SourceLocation getLastParenLoc(const ASTContext *ASTCtx,
                                  SourceLocation AssertLoc);
 };
 

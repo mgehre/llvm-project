@@ -69,7 +69,7 @@ public:
   /// Return the location list at the given offset or nullptr.
   LocationList const *getLocationListAtOffset(uint64_t Offset) const;
 
-  Optional<LocationList> parseOneLocationList(DWARFDataExtractor Data,
+  static Optional<LocationList> parseOneLocationList(DWARFDataExtractor Data,
                                               uint32_t *Offset);
 };
 

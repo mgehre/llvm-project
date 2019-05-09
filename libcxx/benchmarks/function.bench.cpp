@@ -47,7 +47,7 @@ struct AllOpacity : EnumValuesAsTuple<AllOpacity, Opacity, 2> {
 };
 
 struct S {
-  int function() const { return 0; }
+  static int function() { return 0; }
   int field = 0;
 };
 

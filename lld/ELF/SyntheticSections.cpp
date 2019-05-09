@@ -628,7 +628,7 @@ uint64_t GotSection::getGlobalDynAddr(const Symbol &B) const {
   return this->getVA() + B.GlobalDynIndex * Config->Wordsize;
 }
 
-uint64_t GotSection::getGlobalDynOffset(const Symbol &B) const {
+uint64_t GotSection::getGlobalDynOffset(const Symbol &B) {
   return B.GlobalDynIndex * Config->Wordsize;
 }
 

@@ -449,7 +449,7 @@ public:
 private:
   // Get the supported declaration from a given typeLoc. If the declaration type
   // is not supported, returns nullptr.
-  const NamedDecl *getSupportedDeclFromTypeLoc(TypeLoc Loc) {
+  static const NamedDecl *getSupportedDeclFromTypeLoc(TypeLoc Loc) {
     if (const auto* TT = Loc.getType()->getAs<clang::TypedefType>())
       return TT->getDecl();
     if (const auto *RD = Loc.getType()->getAsCXXRecordDecl())

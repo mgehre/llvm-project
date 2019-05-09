@@ -88,7 +88,7 @@ public:
   }
   ~TraceLock() { AllocTracer.TraceDisabled = !AllocTracer.TraceDisabled; }
 
-  bool IsDisabled() const {
+  static bool IsDisabled() {
     // This is already inverted value.
     return !AllocTracer.TraceDisabled;
   }

@@ -558,10 +558,10 @@ public:
   CoverageData getCoverageForFile(StringRef Filename) const;
 
   /// Get the coverage for a particular function.
-  CoverageData getCoverageForFunction(const FunctionRecord &Function) const;
+  static CoverageData getCoverageForFunction(const FunctionRecord &Function) ;
 
   /// Get the coverage for an expansion within a coverage set.
-  CoverageData getCoverageForExpansion(const ExpansionRecord &Expansion) const;
+  static CoverageData getCoverageForExpansion(const ExpansionRecord &Expansion) ;
 
   /// Gets all of the functions covered by this profile.
   iterator_range<FunctionRecordIterator> getCoveredFunctions() const {

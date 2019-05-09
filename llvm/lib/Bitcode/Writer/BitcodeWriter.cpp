@@ -389,7 +389,7 @@ private:
   void writeBlockInfo();
   void writeModuleHash(size_t BlockStartPos);
 
-  unsigned getEncodedSyncScopeID(SyncScope::ID SSID) {
+  static unsigned getEncodedSyncScopeID(SyncScope::ID SSID) {
     return unsigned(SSID);
   }
 };

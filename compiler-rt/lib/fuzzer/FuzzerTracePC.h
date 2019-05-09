@@ -162,8 +162,8 @@ private:
   size_t NumPCTables;
   size_t NumPCsInPCTables;
 
-  uint8_t *Counters() const;
-  uintptr_t *PCs() const;
+  static uint8_t *Counters() ;
+  static uintptr_t *PCs() ;
 
   Set<uintptr_t> ObservedPCs;
   std::unordered_map<uintptr_t, uintptr_t> ObservedFuncs;  // PC => Counter.

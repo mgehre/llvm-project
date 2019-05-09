@@ -406,7 +406,7 @@ public:
   /// Set the initial size of the module if the user has specified that they
   /// want remarks for size.
   /// Returns 0 if the remark was not requested.
-  unsigned initSizeRemarkInfo(
+  static unsigned initSizeRemarkInfo(
       Module &M,
       StringMap<std::pair<unsigned, unsigned>> &FunctionToInstrCount);
 
@@ -419,7 +419,7 @@ public:
   /// first member of the pair is the IR count of the \p Function before running
   /// \p P, and the second member is the IR count of the \p Function after
   /// running \p P.
-  void emitInstrCountChangedRemark(
+  static void emitInstrCountChangedRemark(
       Pass *P, Module &M, int64_t Delta, unsigned CountBefore,
       StringMap<std::pair<unsigned, unsigned>> &FunctionToInstrCount,
       Function *F = nullptr);
@@ -438,7 +438,7 @@ protected:
 
   /// isPassDebuggingExecutionsOrMore - Return true if -debug-pass=Executions
   /// or higher is specified.
-  bool isPassDebuggingExecutionsOrMore() const;
+  static bool isPassDebuggingExecutionsOrMore() ;
 
 private:
   void dumpAnalysisUsage(StringRef Msg, const Pass *P,

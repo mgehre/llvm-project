@@ -29,7 +29,7 @@ using namespace llvm::pdb;
 
 NamedStreamMapTraits::NamedStreamMapTraits(NamedStreamMap &NS) : NS(&NS) {}
 
-uint16_t NamedStreamMapTraits::hashLookupKey(StringRef S) const {
+uint16_t NamedStreamMapTraits::hashLookupKey(StringRef S) {
   // In the reference implementation, this uses
   // HASH Hasher<ULONG*, USHORT*>::hashPbCb(PB pb, size_t cb, ULONG ulMod).
   // Here, the type HASH is a typedef of unsigned short.

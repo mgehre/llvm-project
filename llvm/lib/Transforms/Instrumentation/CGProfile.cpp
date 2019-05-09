@@ -79,7 +79,7 @@ PreservedAnalyses CGProfilePass::run(Module &M, ModuleAnalysisManager &MAM) {
 
 void CGProfilePass::addModuleFlags(
     Module &M,
-    MapVector<std::pair<Function *, Function *>, uint64_t> &Counts) const {
+    MapVector<std::pair<Function *, Function *>, uint64_t> &Counts) {
   if (Counts.empty())
     return;
 

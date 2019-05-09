@@ -493,7 +493,7 @@ public:
   /// framework. This primarily includes integer types, and it can optionally
   /// include pointer types if the ScalarEvolution class has access to
   /// target-specific information.
-  bool isSCEVable(Type *Ty) const;
+  static bool isSCEVable(Type *Ty) ;
 
   /// Return the size in bits of the specified type, for which isSCEVable must
   /// return true.
@@ -952,7 +952,7 @@ public:
   bool properlyDominates(const SCEV *S, const BasicBlock *BB);
 
   /// Test whether the given SCEV has Op as a direct or indirect operand.
-  bool hasOperand(const SCEV *S, const SCEV *Op) const;
+  static bool hasOperand(const SCEV *S, const SCEV *Op) ;
 
   /// Return the size of an element read or written by Inst.
   const SCEV *getElementSize(Instruction *Inst);
@@ -966,7 +966,7 @@ public:
 
   void print(raw_ostream &OS) const;
   void verify() const;
-  bool invalidate(Function &F, const PreservedAnalyses &PA,
+  static bool invalidate(Function &F, const PreservedAnalyses &PA,
                   FunctionAnalysisManager::Invalidator &Inv);
 
   /// Collect parametric terms occurring in step expressions (first step of
@@ -1719,7 +1719,7 @@ private:
                                     const SCEV *RHS);
 
   /// Try to match the Expr as "(L + R)<Flags>".
-  bool splitBinaryAdd(const SCEV *Expr, const SCEV *&L, const SCEV *&R,
+  static bool splitBinaryAdd(const SCEV *Expr, const SCEV *&L, const SCEV *&R,
                       SCEV::NoWrapFlags &Flags);
 
   /// Compute \p LHS - \p RHS and returns the result as an APInt if it is a
@@ -1739,7 +1739,7 @@ private:
 
   /// Return false iff given SCEV contains a SCEVUnknown with NULL value-
   /// pointer.
-  bool checkValidity(const SCEV *S) const;
+  static bool checkValidity(const SCEV *S) ;
 
   /// Return true if `ExtendOpTy`({`Start`,+,`Step`}) can be proved to be
   /// equal to {`ExtendOpTy`(`Start`),+,`ExtendOpTy`(`Step`)}.  This is
@@ -1883,7 +1883,7 @@ class ScalarEvolutionAnalysis
 public:
   using Result = ScalarEvolution;
 
-  ScalarEvolution run(Function &F, FunctionAnalysisManager &AM);
+  static ScalarEvolution run(Function &F, FunctionAnalysisManager &AM);
 };
 
 /// Printer pass for the \c ScalarEvolutionAnalysis results.

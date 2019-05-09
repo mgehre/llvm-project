@@ -49,7 +49,7 @@ public:
   ModRefInfo getModRefInfo(const CallBase *Call1, const CallBase *Call2);
 
 private:
-  bool Aliases(const MDNode *A, const MDNode *B) const;
+  static bool Aliases(const MDNode *A, const MDNode *B) ;
   bool PathAliases(const MDNode *A, const MDNode *B) const;
 };
 
@@ -62,7 +62,7 @@ class TypeBasedAA : public AnalysisInfoMixin<TypeBasedAA> {
 public:
   using Result = TypeBasedAAResult;
 
-  TypeBasedAAResult run(Function &F, FunctionAnalysisManager &AM);
+  static TypeBasedAAResult run(Function &F, FunctionAnalysisManager &AM);
 };
 
 /// Legacy wrapper pass to provide the TypeBasedAAResult object.

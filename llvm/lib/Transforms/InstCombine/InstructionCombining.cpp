@@ -753,7 +753,7 @@ Value *InstCombiner::SimplifySelectsFeedingBinaryOp(BinaryOperator &I,
 
 /// Given a 'sub' instruction, return the RHS of the instruction if the LHS is a
 /// constant zero (which is the 'negate' form).
-Value *InstCombiner::dyn_castNegVal(Value *V) const {
+Value *InstCombiner::dyn_castNegVal(Value *V) {
   Value *NegV;
   if (match(V, m_Neg(m_Value(NegV))))
     return NegV;

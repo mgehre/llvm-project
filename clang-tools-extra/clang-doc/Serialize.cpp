@@ -44,8 +44,8 @@ public:
   void visitVerbatimLineComment(const VerbatimLineComment *C);
 
 private:
-  std::string getCommandName(unsigned CommandID) const;
-  bool isWhitespaceOnly(StringRef S) const;
+  static std::string getCommandName(unsigned CommandID) ;
+  static bool isWhitespaceOnly(StringRef S) ;
 
   CommentInfo &CurrentCI;
 };
@@ -130,11 +130,11 @@ void ClangDocCommentVisitor::visitVerbatimLineComment(
     CurrentCI.Text = C->getText();
 }
 
-bool ClangDocCommentVisitor::isWhitespaceOnly(llvm::StringRef S) const {
+bool ClangDocCommentVisitor::isWhitespaceOnly(llvm::StringRef S) {
   return std::all_of(S.begin(), S.end(), isspace);
 }
 
-std::string ClangDocCommentVisitor::getCommandName(unsigned CommandID) const {
+std::string ClangDocCommentVisitor::getCommandName(unsigned CommandID) {
   const CommandInfo *Info = CommandTraits::getBuiltinCommandInfo(CommandID);
   if (Info)
     return Info->Name;

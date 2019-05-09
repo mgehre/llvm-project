@@ -274,7 +274,7 @@ private:
   // The result is no larger than 1 and is represented using BP.
   // (Note that the outlined region's 'head' block can only have incoming
   // edges from the guarding entry blocks).
-  BranchProbability getOutliningCallBBRelativeFreq(FunctionCloner &Cloner);
+  static BranchProbability getOutliningCallBBRelativeFreq(FunctionCloner &Cloner);
 
   // Return true if the callee of CS should be partially inlined with
   // profit.
@@ -313,7 +313,7 @@ private:
     return getCallSite(User);
   }
 
-  std::tuple<DebugLoc, BasicBlock *> getOneDebugLoc(Function *F) {
+  static std::tuple<DebugLoc, BasicBlock *> getOneDebugLoc(Function *F) {
     CallSite CS = getOneCallSiteTo(F);
     DebugLoc DLoc = CS.getInstruction()->getDebugLoc();
     BasicBlock *Block = CS.getParent();
@@ -326,14 +326,14 @@ private:
   //    outlined function itself;
   // - The second value is the estimated size of the new call sequence in
   //   basic block Cloner.OutliningCallBB;
-  std::tuple<int, int> computeOutliningCosts(FunctionCloner &Cloner);
+  static std::tuple<int, int> computeOutliningCosts(FunctionCloner &Cloner);
 
   // Compute the 'InlineCost' of block BB. InlineCost is a proxy used to
   // approximate both the size and runtime cost (Note that in the current
   // inline cost analysis, there is no clear distinction there either).
   static int computeBBInlineCost(BasicBlock *BB);
 
-  std::unique_ptr<FunctionOutliningInfo> computeOutliningInfo(Function *F);
+  static std::unique_ptr<FunctionOutliningInfo> computeOutliningInfo(Function *F);
   std::unique_ptr<FunctionOutliningMultiRegionInfo>
   computeOutliningColdRegionsInfo(Function *F, OptimizationRemarkEmitter &ORE);
 };

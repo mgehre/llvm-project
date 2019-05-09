@@ -43,7 +43,7 @@ private:
   Error writeSectionData(raw_ostream &OS);
   Error writeLinkEditData(raw_ostream &OS);
 
-  void writeBindOpcodes(raw_ostream &OS,
+  static void writeBindOpcodes(raw_ostream &OS,
                         std::vector<MachOYAML::BindOpcode> &BindOpcodes);
   // LinkEdit writers
   Error writeRebaseOpcodes(raw_ostream &OS);

@@ -140,9 +140,9 @@ public:
     return true;
   }
 
-  bool TraverseFunctionDecl(FunctionDecl *D) { return true; }
-  bool TraverseBlockDecl(BlockDecl *block) { return true; }
-  bool TraverseBlockExpr(BlockExpr *block) { return true; }
+  static bool TraverseFunctionDecl(FunctionDecl *D) { return true; }
+  static bool TraverseBlockDecl(BlockDecl *block) { return true; }
+  static bool TraverseBlockExpr(BlockExpr *block) { return true; }
 
 private:
   bool isRemovable(Expr *E) const {

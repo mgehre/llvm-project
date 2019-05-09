@@ -685,7 +685,7 @@ public:
   Optional<BehaviorSummary> canEval(const CallExpr *CE, const FunctionDecl *FD,
                                     bool &hasTrustedImplementationAnnotation);
 
-  bool isTrustedReferenceCountImplementation(const FunctionDecl *FD);
+  static bool isTrustedReferenceCountImplementation(const FunctionDecl *FD);
 
   const RetainSummary *getSummary(const CallEvent &Call,
                                   QualType ReceiverType=QualType());

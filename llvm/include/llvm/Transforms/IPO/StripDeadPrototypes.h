@@ -24,7 +24,7 @@ namespace llvm {
 
 /// Pass to remove unused function declarations.
 struct StripDeadPrototypesPass : PassInfoMixin<StripDeadPrototypesPass> {
-  PreservedAnalyses run(Module &M, ModuleAnalysisManager &);
+  static PreservedAnalyses run(Module &M, ModuleAnalysisManager &);
 };
 
 }

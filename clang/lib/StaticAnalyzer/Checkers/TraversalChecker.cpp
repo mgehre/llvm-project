@@ -28,14 +28,14 @@ class TraversalDumper : public Checker< check::BranchCondition,
                                         check::BeginFunction,
                                         check::EndFunction > {
 public:
-  void checkBranchCondition(const Stmt *Condition, CheckerContext &C) const;
-  void checkBeginFunction(CheckerContext &C) const;
-  void checkEndFunction(const ReturnStmt *RS, CheckerContext &C) const;
+  static void checkBranchCondition(const Stmt *Condition, CheckerContext &C) ;
+  static void checkBeginFunction(CheckerContext &C) ;
+  static void checkEndFunction(const ReturnStmt *RS, CheckerContext &C) ;
 };
 }
 
 void TraversalDumper::checkBranchCondition(const Stmt *Condition,
-                                           CheckerContext &C) const {
+                                           CheckerContext &C) {
   // Special-case Objective-C's for-in loop, which uses the entire loop as its
   // condition. We just print the collection expression.
   const Stmt *Parent = dyn_cast<ObjCForCollectionStmt>(Condition);
@@ -52,12 +52,12 @@ void TraversalDumper::checkBranchCondition(const Stmt *Condition,
                << Parent->getStmtClassName() << "\n";
 }
 
-void TraversalDumper::checkBeginFunction(CheckerContext &C) const {
+void TraversalDumper::checkBeginFunction(CheckerContext &C) {
   llvm::outs() << "--BEGIN FUNCTION--\n";
 }
 
 void TraversalDumper::checkEndFunction(const ReturnStmt *RS,
-                                       CheckerContext &C) const {
+                                       CheckerContext &C) {
   llvm::outs() << "--END FUNCTION--\n";
 }
 
@@ -71,12 +71,12 @@ namespace {
 class CallDumper : public Checker< check::PreCall,
                                    check::PostCall > {
 public:
-  void checkPreCall(const CallEvent &Call, CheckerContext &C) const;
-  void checkPostCall(const CallEvent &Call, CheckerContext &C) const;
+  static void checkPreCall(const CallEvent &Call, CheckerContext &C) ;
+  static void checkPostCall(const CallEvent &Call, CheckerContext &C) ;
 };
 }
 
-void CallDumper::checkPreCall(const CallEvent &Call, CheckerContext &C) const {
+void CallDumper::checkPreCall(const CallEvent &Call, CheckerContext &C) {
   unsigned Indentation = 0;
   for (const LocationContext *LC = C.getLocationContext()->getParent();
        LC != nullptr; LC = LC->getParent())
@@ -89,7 +89,7 @@ void CallDumper::checkPreCall(const CallEvent &Call, CheckerContext &C) const {
   Call.dump(llvm::outs());
 }
 
-void CallDumper::checkPostCall(const CallEvent &Call, CheckerContext &C) const {
+void CallDumper::checkPostCall(const CallEvent &Call, CheckerContext &C) {
   const Expr *CallE = Call.getOriginExpr();
   if (!CallE)
     return;

@@ -414,7 +414,7 @@ namespace {
       MostDerivedArraySize = 2;
       MostDerivedPathLength = Entries.size();
     }
-    void diagnoseUnsizedArrayPointerArithmetic(EvalInfo &Info, const Expr *E);
+    static void diagnoseUnsizedArrayPointerArithmetic(EvalInfo &Info, const Expr *E);
     void diagnosePointerArithmetic(EvalInfo &Info, const Expr *E,
                                    const APSInt &N);
     /// Add N to the address of this subobject.
@@ -2978,7 +2978,7 @@ struct ExtractSubobjectHandler {
   static const AccessKinds AccessKind = AK_Read;
 
   typedef bool result_type;
-  bool failed() { return false; }
+  static bool failed() { return false; }
   bool found(APValue &Subobj, QualType SubobjType) {
     Result = Subobj;
     return true;
@@ -3028,7 +3028,7 @@ struct ModifySubobjectHandler {
     return true;
   }
 
-  bool failed() { return false; }
+  static bool failed() { return false; }
   bool found(APValue &Subobj, QualType SubobjType) {
     if (!checkConst(SubobjType))
       return false;
@@ -3053,7 +3053,7 @@ struct ModifySubobjectHandler {
     Value = NewVal.getFloat();
     return true;
   }
-  bool foundString(APValue &Subobj, QualType SubobjType, uint64_t Character) {
+  static bool foundString(APValue &Subobj, QualType SubobjType, uint64_t Character) {
     llvm_unreachable("shouldn't encounter string elements with ExpandArrays");
   }
 };
@@ -3418,7 +3418,7 @@ struct CompoundAssignSubobjectHandler {
     return true;
   }
 
-  bool failed() { return false; }
+  static bool failed() { return false; }
   bool found(APValue &Subobj, QualType SubobjType) {
     switch (Subobj.getKind()) {
     case APValue::Int:
@@ -3500,7 +3500,7 @@ struct CompoundAssignSubobjectHandler {
     LVal.moveInto(Subobj);
     return true;
   }
-  bool foundString(APValue &Subobj, QualType SubobjType, uint64_t Character) {
+  static bool foundString(APValue &Subobj, QualType SubobjType, uint64_t Character) {
     llvm_unreachable("shouldn't encounter string elements here");
   }
 };
@@ -3545,7 +3545,7 @@ struct IncDecSubobjectHandler {
     return true;
   }
 
-  bool failed() { return false; }
+  static bool failed() { return false; }
   bool found(APValue &Subobj, QualType SubobjType) {
     // Stash the old value. Also clear Old, so we don't clobber it later
     // if we're post-incrementing a complex.
@@ -3651,7 +3651,7 @@ struct IncDecSubobjectHandler {
     LVal.moveInto(Subobj);
     return true;
   }
-  bool foundString(APValue &Subobj, QualType SubobjType, uint64_t Character) {
+  static bool foundString(APValue &Subobj, QualType SubobjType, uint64_t Character) {
     llvm_unreachable("shouldn't encounter string elements here");
   }
 };
@@ -7351,7 +7351,7 @@ public:
   IntExprEvaluator(EvalInfo &info, APValue &result)
       : ExprEvaluatorBaseTy(info), Result(result) {}
 
-  bool Success(const llvm::APSInt &SI, const Expr *E, APValue &Result) {
+  static bool Success(const llvm::APSInt &SI, const Expr *E, APValue &Result) {
     assert(E->getType()->isIntegralOrEnumerationType() &&
            "Invalid evaluation result.");
     assert(SI.isSigned() == E->getType()->isSignedIntegerOrEnumerationType() &&
@@ -7365,7 +7365,7 @@ public:
     return Success(SI, E, Result);
   }
 
-  bool Success(const llvm::APInt &I, const Expr *E, APValue &Result) {
+  static bool Success(const llvm::APInt &I, const Expr *E, APValue &Result) {
     assert(E->getType()->isIntegralOrEnumerationType() &&
            "Invalid evaluation result.");
     assert(I.getBitWidth() == Info.Ctx.getIntWidth(E->getType()) &&
@@ -7493,7 +7493,7 @@ class FixedPointExprEvaluator
   FixedPointExprEvaluator(EvalInfo &info, APValue &result)
       : ExprEvaluatorBaseTy(info), Result(result) {}
 
-  bool Success(const llvm::APSInt &SI, const Expr *E, APValue &Result) {
+  static bool Success(const llvm::APSInt &SI, const Expr *E, APValue &Result) {
     assert(E->getType()->isFixedPointType() && "Invalid evaluation result.");
     assert(SI.isSigned() == E->getType()->isSignedFixedPointType() &&
            "Invalid evaluation result.");
@@ -7506,7 +7506,7 @@ class FixedPointExprEvaluator
     return Success(SI, E, Result);
   }
 
-  bool Success(const llvm::APInt &I, const Expr *E, APValue &Result) {
+  static bool Success(const llvm::APInt &I, const Expr *E, APValue &Result) {
     assert(E->getType()->isFixedPointType() && "Invalid evaluation result.");
     assert(I.getBitWidth() == Info.Ctx.getIntWidth(E->getType()) &&
            "Invalid evaluation result.");
@@ -10707,9 +10707,9 @@ class VoidExprEvaluator
 public:
   VoidExprEvaluator(EvalInfo &Info) : ExprEvaluatorBaseTy(Info) {}
 
-  bool Success(const APValue &V, const Expr *e) { return true; }
+  static bool Success(const APValue &V, const Expr *e) { return true; }
 
-  bool ZeroInitialization(const Expr *E) { return true; }
+  static bool ZeroInitialization(const Expr *E) { return true; }
 
   bool VisitCastExpr(const CastExpr *E) {
     switch (E->getCastKind()) {

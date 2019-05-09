@@ -37,7 +37,7 @@ namespace __tsan {
 
 struct MapUnmapCallback {
   void OnMap(uptr p, uptr size) const { }
-  void OnUnmap(uptr p, uptr size) const {
+  static void OnUnmap(uptr p, uptr size) {
     // We are about to unmap a chunk of user memory.
     // Mark the corresponding shadow memory as not needed.
     DontNeedShadowFor(p, size);

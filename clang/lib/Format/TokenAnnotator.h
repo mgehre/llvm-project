@@ -176,9 +176,9 @@ private:
 
   bool mustBreakForReturnType(const AnnotatedLine &Line) const;
 
-  void printDebugInfo(const AnnotatedLine &Line);
+  static void printDebugInfo(const AnnotatedLine &Line);
 
-  void calculateUnbreakableTailLengths(AnnotatedLine &Line);
+  static void calculateUnbreakableTailLengths(AnnotatedLine &Line);
 
   const FormatStyle &Style;
 

@@ -417,12 +417,12 @@ namespace {
                                 const SmallInstructionSet &Final,
                                 DenseSet<Instruction *> &Users);
 
-      UsesTy::iterator nextInstr(int Val, UsesTy &In,
+      static UsesTy::iterator nextInstr(int Val, UsesTy &In,
                                  const SmallInstructionSet &Exclude,
                                  UsesTy::iterator *StartI=nullptr);
       bool isBaseInst(Instruction *I);
       bool isRootInst(Instruction *I);
-      bool instrDependsOn(Instruction *I,
+      static bool instrDependsOn(Instruction *I,
                           UsesTy::iterator Start,
                           UsesTy::iterator End);
       void replaceIV(DAGRootSet &DRS, const SCEV *Start, const SCEV *IncrExpr);
@@ -467,16 +467,16 @@ namespace {
     };
 
     // Check if it is a compare-like instruction whose user is a branch
-    bool isCompareUsedByBranch(Instruction *I) {
+    static bool isCompareUsedByBranch(Instruction *I) {
       auto *TI = I->getParent()->getTerminator();
       if (!isa<BranchInst>(TI) || !isa<CmpInst>(I))
         return false;
       return I->hasOneUse() && TI->getOperand(0) == I;
     };
 
-    bool isLoopControlIV(Loop *L, Instruction *IV);
+    static bool isLoopControlIV(Loop *L, Instruction *IV);
     void collectPossibleIVs(Loop *L, SmallInstructionVector &PossibleIVs);
-    void collectPossibleReductions(Loop *L,
+    static void collectPossibleReductions(Loop *L,
            ReductionTracker &Reductions);
     bool reroll(Instruction *IV, Loop *L, BasicBlock *Header,
                 const SCEV *BackedgeTakenCount, ReductionTracker &Reductions);

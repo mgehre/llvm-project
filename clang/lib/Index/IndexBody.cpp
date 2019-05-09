@@ -32,7 +32,7 @@ public:
               const NamedDecl *Parent, const DeclContext *DC)
     : IndexCtx(indexCtx), Parent(Parent), ParentDC(DC) { }
 
-  bool shouldWalkTypesOfTypeLocs() const { return false; }
+  static bool shouldWalkTypesOfTypeLocs() { return false; }
 
   bool dataTraverseStmtPre(Stmt *S) {
     StmtStack.push_back(S);

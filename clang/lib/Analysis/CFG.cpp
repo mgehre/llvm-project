@@ -169,7 +169,7 @@ public:
 
   /// Return a copy of this object, except with the 'always-add' bit
   ///  set as specified.
-  AddStmtChoice withAlwaysAdd(bool alwaysAdd) const {
+  static AddStmtChoice withAlwaysAdd(bool alwaysAdd) {
     return AddStmtChoice(alwaysAdd ? AlwaysAdd : NotAlwaysAdd);
   }
 
@@ -888,7 +888,7 @@ private:
   /// Find a relational comparison with an expression evaluating to a
   /// boolean and a constant other than 0 and 1.
   /// e.g. if ((x < y) == 10)
-  TryResult checkIncorrectRelationalOperator(const BinaryOperator *B) {
+  static TryResult checkIncorrectRelationalOperator(const BinaryOperator *B) {
     const Expr *LHSExpr = B->getLHS()->IgnoreParens();
     const Expr *RHSExpr = B->getRHS()->IgnoreParens();
 
@@ -976,7 +976,7 @@ private:
     return TryResult();
   }
 
-  TryResult analyzeLogicOperatorCondition(BinaryOperatorKind Relation,
+  static TryResult analyzeLogicOperatorCondition(BinaryOperatorKind Relation,
                                           const llvm::APSInt &Value1,
                                           const llvm::APSInt &Value2) {
     assert(Value1.isSigned() == Value2.isSigned());

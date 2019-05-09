@@ -222,8 +222,8 @@ private:
   /// for the given machine function.
   void extractLexicalScopes(SmallVectorImpl<InsnRange> &MIRanges,
                             DenseMap<const MachineInstr *, LexicalScope *> &M);
-  void constructScopeNest(LexicalScope *Scope);
-  void
+  static void constructScopeNest(LexicalScope *Scope);
+  static void
   assignInstructionRanges(SmallVectorImpl<InsnRange> &MIRanges,
                           DenseMap<const MachineInstr *, LexicalScope *> &M);
 

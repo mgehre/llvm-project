@@ -719,7 +719,7 @@ public:
   //                            Visitor Methods
   //===--------------------------------------------------------------------===//
 
-  llvm::Constant *VisitStmt(Stmt *S, QualType T) {
+  static llvm::Constant *VisitStmt(Stmt *S, QualType T) {
     return nullptr;
   }
 
@@ -1605,7 +1605,7 @@ private:
   llvm::Constant *tryEmitAbsolute(llvm::Type *destTy);
   ConstantLValue tryEmitBase(const APValue::LValueBase &base);
 
-  ConstantLValue VisitStmt(const Stmt *S) { return nullptr; }
+  static ConstantLValue VisitStmt(const Stmt *S) { return nullptr; }
   ConstantLValue VisitConstantExpr(const ConstantExpr *E);
   ConstantLValue VisitCompoundLiteralExpr(const CompoundLiteralExpr *E);
   ConstantLValue VisitStringLiteral(const StringLiteral *E);

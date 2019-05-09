@@ -51,7 +51,7 @@ public:
   ~BlockFrequencyInfo();
 
   /// Handle invalidation explicitly.
-  bool invalidate(Function &F, const PreservedAnalyses &PA,
+  static bool invalidate(Function &F, const PreservedAnalyses &PA,
                   FunctionAnalysisManager::Invalidator &);
 
   const Function *getFunction() const;
@@ -117,7 +117,7 @@ public:
   using Result = BlockFrequencyInfo;
 
   /// Run the analysis pass over a function and produce BFI.
-  Result run(Function &F, FunctionAnalysisManager &AM);
+  static Result run(Function &F, FunctionAnalysisManager &AM);
 };
 
 /// Printer pass for the \c BlockFrequencyInfo results.

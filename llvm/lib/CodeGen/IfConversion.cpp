@@ -297,7 +297,7 @@ namespace {
     }
 
     /// Returns true if Block ends without a terminator.
-    bool blockAlwaysFallThrough(BBInfo &BBI) const {
+    static bool blockAlwaysFallThrough(BBInfo &BBI) {
       return BBI.IsBrAnalyzable && BBI.TrueBB == nullptr;
     }
 

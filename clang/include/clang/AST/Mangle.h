@@ -126,8 +126,8 @@ public:
   void mangleBlock(const DeclContext *DC, const BlockDecl *BD,
                    raw_ostream &Out);
 
-  void mangleObjCMethodNameWithoutSize(const ObjCMethodDecl *MD, raw_ostream &);
-  void mangleObjCMethodName(const ObjCMethodDecl *MD, raw_ostream &);
+  static void mangleObjCMethodNameWithoutSize(const ObjCMethodDecl *MD, raw_ostream &);
+  static void mangleObjCMethodName(const ObjCMethodDecl *MD, raw_ostream &);
 
   virtual void mangleStaticGuardVariable(const VarDecl *D, raw_ostream &) = 0;
 

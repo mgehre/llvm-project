@@ -216,7 +216,7 @@ private:
   /// has to be inside of its parent Function while awaiting deletion under Lazy
   /// UpdateStrategy to prevent other routines from asserting the state of the
   /// IR is inconsistent. Assert if DelBB is nullptr or has predecessors.
-  void validateDeleteBB(BasicBlock *DelBB);
+  static void validateDeleteBB(BasicBlock *DelBB);
 
   /// Returns true if at least one BasicBlock is deleted.
   bool forceFlushDeletedBB();
@@ -247,10 +247,10 @@ private:
   /// Returns true if the update appears in the LLVM IR.
   /// It is used to check whether an update is valid in
   /// insertEdge/deleteEdge or is unnecessary in the batch update.
-  bool isUpdateValid(DominatorTree::UpdateType Update) const;
+  static bool isUpdateValid(DominatorTree::UpdateType Update) ;
 
   /// Returns true if the update is self dominance.
-  bool isSelfDominance(DominatorTree::UpdateType Update) const;
+  static bool isSelfDominance(DominatorTree::UpdateType Update) ;
 };
 } // namespace llvm
 

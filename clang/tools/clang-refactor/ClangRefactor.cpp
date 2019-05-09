@@ -514,7 +514,7 @@ public:
 
 private:
   /// Logs an individual refactoring action invocation to STDOUT.
-  void logInvocation(RefactoringActionSubcommand &Subcommand,
+  static void logInvocation(RefactoringActionSubcommand &Subcommand,
                      const RefactoringRuleContext &Context) {
     llvm::outs() << "invoking action '" << Subcommand.getName() << "':\n";
     if (Context.getSelectionRange().isValid()) {
@@ -527,7 +527,7 @@ private:
     }
   }
 
-  llvm::Expected<RefactoringActionRule *>
+  static llvm::Expected<RefactoringActionRule *>
   getMatchingRule(RefactoringActionSubcommand &Subcommand) {
     SmallVector<RefactoringActionRule *, 4> MatchingRules;
     llvm::StringSet<> MissingOptions;

@@ -190,11 +190,11 @@ protected:
       (R.getVersion() >= VersionTuple(major, minor));
   }
 
-  std::string SymbolForProtocol(StringRef Name) {
+  static std::string SymbolForProtocol(StringRef Name) {
     return (StringRef("._OBJC_PROTOCOL_") + Name).str();
   }
 
-  std::string SymbolForProtocolRef(StringRef Name) {
+  static std::string SymbolForProtocolRef(StringRef Name) {
     return (StringRef("._OBJC_REF_PROTOCOL_") + Name).str();
   }
 
@@ -322,11 +322,11 @@ protected:
   /// Ensures that the value has the required type, by inserting a bitcast if
   /// required.  This function lets us avoid inserting bitcasts that are
   /// redundant.
-  llvm::Value* EnforceType(CGBuilderTy &B, llvm::Value *V, llvm::Type *Ty) {
+  static llvm::Value* EnforceType(CGBuilderTy &B, llvm::Value *V, llvm::Type *Ty) {
     if (V->getType() == Ty) return V;
     return B.CreateBitCast(V, Ty);
   }
-  Address EnforceType(CGBuilderTy &B, Address V, llvm::Type *Ty) {
+  static Address EnforceType(CGBuilderTy &B, Address V, llvm::Type *Ty) {
     if (V.getType() == Ty) return V;
     return B.CreateBitCast(V, Ty);
   }
@@ -937,14 +937,14 @@ class CGObjCGNUstep2 : public CGObjCGNUstep {
   bool EmittedClass = false;
   /// Generate the name of a symbol for a reference to a class.  Accesses to
   /// classes should be indirected via this.
-  std::string SymbolForClassRef(StringRef Name, bool isWeak) {
+  static std::string SymbolForClassRef(StringRef Name, bool isWeak) {
     if (isWeak)
       return (StringRef("._OBJC_WEAK_REF_CLASS_") + Name).str();
     else
       return (StringRef("._OBJC_REF_CLASS_") + Name).str();
   }
   /// Generate the name of a class symbol.
-  std::string SymbolForClass(StringRef Name) {
+  static std::string SymbolForClass(StringRef Name) {
     return (StringRef("._OBJC_CLASS_") + Name).str();
   }
   void CallRuntimeFunction(CGBuilderTy &B, StringRef FunctionName,
@@ -1210,7 +1210,7 @@ class CGObjCGNUstep2 : public CGObjCGNUstep {
     return CGF.Builder.CreateLoad(Address(GetClassVar(Name, isWeak),
           CGM.getPointerAlign()));
   }
-  int32_t FlagsForOwnership(Qualifiers::ObjCLifetime Ownership) {
+  static int32_t FlagsForOwnership(Qualifiers::ObjCLifetime Ownership) {
     // typedef enum {
     //   ownership_invalid = 0,
     //   ownership_strong  = 1,
@@ -1372,7 +1372,7 @@ class CGObjCGNUstep2 : public CGObjCGNUstep {
     Protocol = GV;
     return GV;
   }
-  llvm::Constant *EnforceType(llvm::Constant *Val, llvm::Type *Ty) {
+  static llvm::Constant *EnforceType(llvm::Constant *Val, llvm::Type *Ty) {
     if (Val->getType() == Ty)
       return Val;
     return llvm::ConstantExpr::getBitCast(Val, Ty);

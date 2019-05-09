@@ -131,9 +131,9 @@ public:
     CG_V9,
   };
 
-  CPUGeneration getCPUGeneration(CPUKind Kind) const;
+  static CPUGeneration getCPUGeneration(CPUKind Kind) ;
 
-  CPUKind getCPUKind(StringRef Name) const;
+  static CPUKind getCPUKind(StringRef Name) ;
 
   bool isValidCPUName(StringRef Name) const override {
     return getCPUKind(Name) != CK_GENERIC;

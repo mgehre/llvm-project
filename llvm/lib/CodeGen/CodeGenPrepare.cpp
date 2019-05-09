@@ -339,11 +339,11 @@ class TypePromotionTransaction;
       }
     }
 
-    bool eliminateFallThrough(Function &F);
+    static bool eliminateFallThrough(Function &F);
     bool eliminateMostlyEmptyBlocks(Function &F);
-    BasicBlock *findDestBlockOfMergeableEmptyBlock(BasicBlock *BB);
-    bool canMergeBlocks(const BasicBlock *BB, const BasicBlock *DestBB) const;
-    void eliminateMostlyEmptyBlock(BasicBlock *BB);
+    static BasicBlock *findDestBlockOfMergeableEmptyBlock(BasicBlock *BB);
+    static bool canMergeBlocks(const BasicBlock *BB, const BasicBlock *DestBB) ;
+    static void eliminateMostlyEmptyBlock(BasicBlock *BB);
     bool isMergingEmptyBlockProfitable(BasicBlock *BB, BasicBlock *DestBB,
                                        bool isPreheader);
     bool optimizeBlock(BasicBlock &BB, bool &ModifiedDT);
@@ -360,7 +360,7 @@ class TypePromotionTransaction;
     bool optimizeSwitchInst(SwitchInst *SI);
     bool optimizeExtractElementInst(Instruction *Inst);
     bool dupRetToEnableTailCallOpts(BasicBlock *BB);
-    bool placeDbgValues(Function &F);
+    static bool placeDbgValues(Function &F);
     bool canFormExtLd(const SmallVectorImpl<Instruction *> &MovedExts,
                       LoadInst *&LI, Instruction *&Inst, bool HasPromoted);
     bool tryToPromoteExts(TypePromotionTransaction &TPT,
@@ -375,7 +375,7 @@ class TypePromotionTransaction;
         bool HasPromoted, TypePromotionTransaction &TPT,
         SmallVectorImpl<Instruction *> &SpeculativelyMovedExts);
     bool splitBranchCondition(Function &F);
-    bool simplifyOffsetableRelocate(Instruction &I);
+    static bool simplifyOffsetableRelocate(Instruction &I);
   };
 
 } // end anonymous namespace
@@ -724,7 +724,7 @@ bool CodeGenPrepare::isMergingEmptyBlockProfitable(BasicBlock *BB,
 /// unconditional branch between them, and BB contains no other non-phi
 /// instructions.
 bool CodeGenPrepare::canMergeBlocks(const BasicBlock *BB,
-                                    const BasicBlock *DestBB) const {
+                                    const BasicBlock *DestBB) {
   // We only want to eliminate blocks whose phi nodes are used by phi nodes in
   // the successor.  If there are more complex condition (e.g. preheaders),
   // don't mess around with them.
@@ -3121,7 +3121,7 @@ private:
 
   /// Try to match PHI node to Candidate.
   /// Matcher tracks the matched Phi nodes.
-  bool MatchPhiNode(PHINode *PHI, PHINode *Candidate,
+  static bool MatchPhiNode(PHINode *PHI, PHINode *Candidate,
                     SmallSetVector<PHIPair, 8> &Matcher,
                     PhiNodeSet &PhiNodesToMatch) {
     SmallVector<PHIPair, 8> WorkList;
@@ -3170,7 +3170,7 @@ private:
   /// For the given set of PHI nodes (in the SimplificationTracker) try
   /// to find their equivalents.
   /// Returns false if this matching fails and creation of new Phi is disabled.
-  bool MatchPhiSet(SimplificationTracker &ST, bool AllowNewPhiNodes,
+  static bool MatchPhiSet(SimplificationTracker &ST, bool AllowNewPhiNodes,
                    unsigned &PhiNotMatchedCount) {
     // Matched and PhiNodesToMatch iterate their elements in a deterministic
     // order, so the replacements (ReplacePhi) are also done in a deterministic
@@ -3217,7 +3217,7 @@ private:
     return true;
   }
   /// Fill the placeholders with values from predecessors and simplify them.
-  void FillPlaceholders(FoldAddrToValueMapping &Map,
+  static void FillPlaceholders(FoldAddrToValueMapping &Map,
                         SmallVectorImpl<Value *> &TraverseOrder,
                         SimplificationTracker &ST) {
     while (!TraverseOrder.empty()) {
@@ -6054,7 +6054,7 @@ class VectorPromoteHelper {
   /// Return the index of the original value in the transition.
   /// E.g., for "extractelement <2 x i32> c, i32 1" the original value,
   /// c, is at index 0.
-  unsigned getTransitionOriginalValueIdx() const {
+  static unsigned getTransitionOriginalValueIdx() {
     assert(isa<ExtractElementInst>(Transition) &&
            "Other kind of transitions are not supported yet");
     return 0;
@@ -6063,7 +6063,7 @@ class VectorPromoteHelper {
   /// Return the index of the index in the transition.
   /// E.g., for "extractelement <2 x i32> c, i32 0" the index
   /// is at index 1.
-  unsigned getTransitionIdx() const {
+  static unsigned getTransitionIdx() {
     assert(isa<ExtractElementInst>(Transition) &&
            "Other kind of transitions are not supported yet");
     return 1;
@@ -6206,7 +6206,7 @@ public:
   }
 
   /// Check if we can promote \p ToBePromoted to \p Type.
-  bool canPromote(const Instruction *ToBePromoted) const {
+  static bool canPromote(const Instruction *ToBePromoted) {
     // We could support CastInst too.
     return isa<BinaryOperator>(ToBePromoted);
   }
@@ -6242,7 +6242,7 @@ public:
   /// Check whether or not \p Use can be combined
   /// with the transition.
   /// I.e., is it possible to do Use(Transition) => AnotherUse?
-  bool canCombine(const Instruction *Use) { return isa<StoreInst>(Use); }
+  static bool canCombine(const Instruction *Use) { return isa<StoreInst>(Use); }
 
   /// Record \p ToBePromoted as part of the chain to be promoted.
   void enqueueForPromotion(Instruction *ToBePromoted) {

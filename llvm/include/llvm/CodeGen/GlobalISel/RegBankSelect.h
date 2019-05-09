@@ -603,9 +603,9 @@ private:
   /// \pre \p MO == MO.getParent()->getOperand(\p RepairPt.getOpIdx())
   /// \pre \p ValMapping is the mapping of \p MO for MO.getParent()
   ///      that implied \p RepairPt.
-  void tryAvoidingSplit(RegBankSelect::RepairingPlacement &RepairPt,
+  static void tryAvoidingSplit(RegBankSelect::RepairingPlacement &RepairPt,
                         const MachineOperand &MO,
-                        const RegisterBankInfo::ValueMapping &ValMapping) const;
+                        const RegisterBankInfo::ValueMapping &ValMapping) ;
 
   /// Apply \p Mapping to \p MI. \p RepairPts represents the different
   /// mapping action that need to happen for the mapping to be

@@ -509,7 +509,7 @@ template <typename T> class ArrayRef;
 
     /// mapSrcLoop - Given one of the loops containing the source, return
     /// its level index in our numbering scheme.
-    unsigned mapSrcLoop(const Loop *SrcLoop) const;
+    static unsigned mapSrcLoop(const Loop *SrcLoop) ;
 
     /// mapDstLoop - Given one of the loops containing the destination,
     /// return its level index in our numbering scheme.
@@ -529,7 +529,7 @@ template <typename T> class ArrayRef;
     /// If the source and destination are identically sign (or zero)
     /// extended, it strips off the extension in an effort to
     /// simplify the actual analysis.
-    void removeMatchingExtensions(Subscript *Pair);
+    static void removeMatchingExtensions(Subscript *Pair);
 
     /// collectCommonLoops - Finds the set of loops from the LoopNest that
     /// have a level <= CommonLevels and are referred to by the SCEV Expression.
@@ -929,7 +929,7 @@ template <typename T> class ArrayRef;
   class DependenceAnalysis : public AnalysisInfoMixin<DependenceAnalysis> {
   public:
     typedef DependenceInfo Result;
-    Result run(Function &F, FunctionAnalysisManager &FAM);
+    static Result run(Function &F, FunctionAnalysisManager &FAM);
 
   private:
     static AnalysisKey Key;

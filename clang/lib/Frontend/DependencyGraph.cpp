@@ -37,7 +37,7 @@ class DependencyGraphCallback : public PPCallbacks {
   DependencyMap Dependencies;
 
 private:
-  raw_ostream &writeNodeReference(raw_ostream &OS,
+  static raw_ostream &writeNodeReference(raw_ostream &OS,
                                   const FileEntry *Node);
   void OutputGraphFile();
 

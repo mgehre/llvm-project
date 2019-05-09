@@ -56,13 +56,13 @@ protected:
     return *Result;
   }
 
-  FormatStyle getLLVMStyleWithColumns(unsigned ColumnLimit) {
+  static FormatStyle getLLVMStyleWithColumns(unsigned ColumnLimit) {
     FormatStyle Style = getLLVMStyle();
     Style.ColumnLimit = ColumnLimit;
     return Style;
   }
 
-  FormatStyle getTextProtoStyleWithColumns(unsigned ColumnLimit) {
+  static FormatStyle getTextProtoStyleWithColumns(unsigned ColumnLimit) {
     FormatStyle Style = getGoogleStyle(FormatStyle::FormatStyle::LK_TextProto);
     Style.ColumnLimit = ColumnLimit;
     return Style;

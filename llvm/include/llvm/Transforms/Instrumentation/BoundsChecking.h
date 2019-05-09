@@ -17,7 +17,7 @@ namespace llvm {
 /// A pass to instrument code and perform run-time bounds checking on loads,
 /// stores, and other memory intrinsics.
 struct BoundsCheckingPass : PassInfoMixin<BoundsCheckingPass> {
-  PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
+  static PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
 };
 
 

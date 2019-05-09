@@ -55,7 +55,7 @@ namespace {
 
 } // end anonymous namespace
 
-StringRef Lexer::resolveHTMLNamedCharacterReference(StringRef Name) const {
+StringRef Lexer::resolveHTMLNamedCharacterReference(StringRef Name) {
   // Fast path, first check a few most widely used named character references.
   return llvm::StringSwitch<StringRef>(Name)
       .Case("amp", "&")
@@ -852,7 +852,7 @@ again:
 
 StringRef Lexer::getSpelling(const Token &Tok,
                              const SourceManager &SourceMgr,
-                             bool *Invalid) const {
+                             bool *Invalid) {
   SourceLocation Loc = Tok.getLocation();
   std::pair<FileID, unsigned> LocInfo = SourceMgr.getDecomposedLoc(Loc);
 

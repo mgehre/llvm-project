@@ -219,7 +219,7 @@ class CallAnalyzer : public InstVisitor<CallAnalyzer, bool> {
   void updateThreshold(CallSite CS, Function &Callee);
 
   /// Return true if size growth is allowed when inlining the callee at CS.
-  bool allowSizeGrowth(CallSite CS);
+  static bool allowSizeGrowth(CallSite CS);
 
   /// Return true if \p CS is a cold callsite.
   bool isColdCallSite(CallSite CS, BlockFrequencyInfo *CallerBFI);
@@ -266,10 +266,10 @@ class CallAnalyzer : public InstVisitor<CallAnalyzer, bool> {
   bool visitSelectInst(SelectInst &SI);
   bool visitSwitchInst(SwitchInst &SI);
   bool visitIndirectBrInst(IndirectBrInst &IBI);
-  bool visitResumeInst(ResumeInst &RI);
-  bool visitCleanupReturnInst(CleanupReturnInst &RI);
-  bool visitCatchReturnInst(CatchReturnInst &RI);
-  bool visitUnreachableInst(UnreachableInst &I);
+  static bool visitResumeInst(ResumeInst &RI);
+  static bool visitCleanupReturnInst(CleanupReturnInst &RI);
+  static bool visitCatchReturnInst(CatchReturnInst &RI);
+  static bool visitUnreachableInst(UnreachableInst &I);
 
 public:
   CallAnalyzer(const TargetTransformInfo &TTI,

@@ -206,38 +206,38 @@ class IteratorChecker
   std::unique_ptr<BugType> MismatchedBugType;
   std::unique_ptr<BugType> InvalidatedBugType;
 
-  void handleComparison(CheckerContext &C, const SVal &RetVal, const SVal &LVal,
-                        const SVal &RVal, OverloadedOperatorKind Op) const;
+  static void handleComparison(CheckerContext &C, const SVal &RetVal, const SVal &LVal,
+                        const SVal &RVal, OverloadedOperatorKind Op) ;
   void verifyAccess(CheckerContext &C, const SVal &Val) const;
   void verifyDereference(CheckerContext &C, const SVal &Val) const;
-  void handleIncrement(CheckerContext &C, const SVal &RetVal, const SVal &Iter,
-                       bool Postfix) const;
-  void handleDecrement(CheckerContext &C, const SVal &RetVal, const SVal &Iter,
-                       bool Postfix) const;
-  void handleRandomIncrOrDecr(CheckerContext &C, OverloadedOperatorKind Op,
+  static void handleIncrement(CheckerContext &C, const SVal &RetVal, const SVal &Iter,
+                       bool Postfix) ;
+  static void handleDecrement(CheckerContext &C, const SVal &RetVal, const SVal &Iter,
+                       bool Postfix) ;
+  static void handleRandomIncrOrDecr(CheckerContext &C, OverloadedOperatorKind Op,
                               const SVal &RetVal, const SVal &LHS,
-                              const SVal &RHS) const;
-  void handleBegin(CheckerContext &C, const Expr *CE, const SVal &RetVal,
-                   const SVal &Cont) const;
-  void handleEnd(CheckerContext &C, const Expr *CE, const SVal &RetVal,
-                 const SVal &Cont) const;
-  void assignToContainer(CheckerContext &C, const Expr *CE, const SVal &RetVal,
-                         const MemRegion *Cont) const;
-  void handleAssign(CheckerContext &C, const SVal &Cont,
+                              const SVal &RHS) ;
+  static void handleBegin(CheckerContext &C, const Expr *CE, const SVal &RetVal,
+                   const SVal &Cont) ;
+  static void handleEnd(CheckerContext &C, const Expr *CE, const SVal &RetVal,
+                 const SVal &Cont) ;
+  static void assignToContainer(CheckerContext &C, const Expr *CE, const SVal &RetVal,
+                         const MemRegion *Cont) ;
+  static void handleAssign(CheckerContext &C, const SVal &Cont,
                     const Expr *CE = nullptr,
-                    const SVal &OldCont = UndefinedVal()) const;
-  void handleClear(CheckerContext &C, const SVal &Cont) const;
-  void handlePushBack(CheckerContext &C, const SVal &Cont) const;
-  void handlePopBack(CheckerContext &C, const SVal &Cont) const;
-  void handlePushFront(CheckerContext &C, const SVal &Cont) const;
-  void handlePopFront(CheckerContext &C, const SVal &Cont) const;
-  void handleInsert(CheckerContext &C, const SVal &Iter) const;
-  void handleErase(CheckerContext &C, const SVal &Iter) const;
-  void handleErase(CheckerContext &C, const SVal &Iter1,
-                   const SVal &Iter2) const;
-  void handleEraseAfter(CheckerContext &C, const SVal &Iter) const;
-  void handleEraseAfter(CheckerContext &C, const SVal &Iter1,
-                        const SVal &Iter2) const;
+                    const SVal &OldCont = UndefinedVal()) ;
+  static void handleClear(CheckerContext &C, const SVal &Cont) ;
+  static void handlePushBack(CheckerContext &C, const SVal &Cont) ;
+  static void handlePopBack(CheckerContext &C, const SVal &Cont) ;
+  static void handlePushFront(CheckerContext &C, const SVal &Cont) ;
+  static void handlePopFront(CheckerContext &C, const SVal &Cont) ;
+  static void handleInsert(CheckerContext &C, const SVal &Iter) ;
+  static void handleErase(CheckerContext &C, const SVal &Iter) ;
+  static void handleErase(CheckerContext &C, const SVal &Iter1,
+                   const SVal &Iter2) ;
+  static void handleEraseAfter(CheckerContext &C, const SVal &Iter) ;
+  static void handleEraseAfter(CheckerContext &C, const SVal &Iter1,
+                        const SVal &Iter2) ;
   void verifyIncrement(CheckerContext &C, const SVal &Iter) const;
   void verifyDecrement(CheckerContext &C, const SVal &Iter) const;
   void verifyRandomIncrOrDecr(CheckerContext &C, OverloadedOperatorKind Op,
@@ -246,9 +246,9 @@ class IteratorChecker
                    const MemRegion *Cont) const;
   void verifyMatch(CheckerContext &C, const SVal &Iter1,
                    const SVal &Iter2) const;
-  IteratorPosition advancePosition(CheckerContext &C, OverloadedOperatorKind Op,
+  static IteratorPosition advancePosition(CheckerContext &C, OverloadedOperatorKind Op,
                                    const IteratorPosition &Pos,
-                                   const SVal &Distance) const;
+                                   const SVal &Distance) ;
   void reportOutOfRangeBug(const StringRef &Message, const SVal &Val,
                            CheckerContext &C, ExplodedNode *ErrNode) const;
   void reportMismatchedBug(const StringRef &Message, const SVal &Val1,
@@ -274,16 +274,16 @@ public:
   CheckName CheckNames[CK_NumCheckKinds];
 
   void checkPreCall(const CallEvent &Call, CheckerContext &C) const;
-  void checkPostCall(const CallEvent &Call, CheckerContext &C) const;
-  void checkBind(SVal Loc, SVal Val, const Stmt *S, CheckerContext &C) const;
+  static void checkPostCall(const CallEvent &Call, CheckerContext &C) ;
+  static void checkBind(SVal Loc, SVal Val, const Stmt *S, CheckerContext &C) ;
   void checkPostStmt(const CXXConstructExpr *CCE, CheckerContext &C) const;
   void checkPostStmt(const DeclStmt *DS, CheckerContext &C) const;
-  void checkPostStmt(const MaterializeTemporaryExpr *MTE,
-                     CheckerContext &C) const;
-  void checkLiveSymbols(ProgramStateRef State, SymbolReaper &SR) const;
-  void checkDeadSymbols(SymbolReaper &SR, CheckerContext &C) const;
-  ProgramStateRef evalAssume(ProgramStateRef State, SVal Cond,
-                             bool Assumption) const;
+  static void checkPostStmt(const MaterializeTemporaryExpr *MTE,
+                     CheckerContext &C) ;
+  static void checkLiveSymbols(ProgramStateRef State, SymbolReaper &SR) ;
+  static void checkDeadSymbols(SymbolReaper &SR, CheckerContext &C) ;
+  static ProgramStateRef evalAssume(ProgramStateRef State, SVal Cond,
+                             bool Assumption) ;
 };
 } // namespace
 
@@ -599,7 +599,7 @@ void IteratorChecker::checkPreCall(const CallEvent &Call,
 }
 
 void IteratorChecker::checkPostCall(const CallEvent &Call,
-                                    CheckerContext &C) const {
+                                    CheckerContext &C) {
   // Record new iterator positions and iterator position changes
   const auto *Func = dyn_cast_or_null<FunctionDecl>(Call.getDecl());
   if (!Func)
@@ -741,7 +741,7 @@ void IteratorChecker::checkPostCall(const CallEvent &Call,
 }
 
 void IteratorChecker::checkBind(SVal Loc, SVal Val, const Stmt *S,
-                                CheckerContext &C) const {
+                                CheckerContext &C) {
   auto State = C.getState();
   const auto *Pos = getIteratorPosition(State, Val);
   if (Pos) {
@@ -757,7 +757,7 @@ void IteratorChecker::checkBind(SVal Loc, SVal Val, const Stmt *S,
 }
 
 void IteratorChecker::checkPostStmt(const MaterializeTemporaryExpr *MTE,
-                                    CheckerContext &C) const {
+                                    CheckerContext &C) {
   /* Transfer iterator state to temporary objects */
   auto State = C.getState();
   const auto *Pos =
@@ -769,7 +769,7 @@ void IteratorChecker::checkPostStmt(const MaterializeTemporaryExpr *MTE,
 }
 
 void IteratorChecker::checkLiveSymbols(ProgramStateRef State,
-                                       SymbolReaper &SR) const {
+                                       SymbolReaper &SR) {
   // Keep symbolic expressions of iterator positions, container begins and ends
   // alive
   auto RegionMap = State->get<IteratorRegionMap>();
@@ -805,7 +805,7 @@ void IteratorChecker::checkLiveSymbols(ProgramStateRef State,
 }
 
 void IteratorChecker::checkDeadSymbols(SymbolReaper &SR,
-                                       CheckerContext &C) const {
+                                       CheckerContext &C) {
   // Cleanup
   auto State = C.getState();
 
@@ -850,7 +850,7 @@ void IteratorChecker::checkDeadSymbols(SymbolReaper &SR,
 }
 
 ProgramStateRef IteratorChecker::evalAssume(ProgramStateRef State, SVal Cond,
-                                            bool Assumption) const {
+                                            bool Assumption) {
   // Load recorded comparison and transfer iterator state between sides
   // according to comparison operator and assumption
   const auto *SE = Cond.getAsSymExpr();
@@ -889,7 +889,7 @@ ProgramStateRef IteratorChecker::evalAssume(ProgramStateRef State, SVal Cond,
 
 void IteratorChecker::handleComparison(CheckerContext &C, const SVal &RetVal,
                                        const SVal &LVal, const SVal &RVal,
-                                       OverloadedOperatorKind Op) const {
+                                       OverloadedOperatorKind Op) {
   // Record the operands and the operator of the comparison for the next
   // evalAssume, if the result is a symbolic expression. If it is a concrete
   // value (only one branch is possible), then transfer the state between
@@ -939,7 +939,7 @@ void IteratorChecker::verifyAccess(CheckerContext &C, const SVal &Val) const {
 }
 
 void IteratorChecker::handleIncrement(CheckerContext &C, const SVal &RetVal,
-                                      const SVal &Iter, bool Postfix) const {
+                                      const SVal &Iter, bool Postfix) {
   // Increment the symbolic expressions which represents the position of the
   // iterator
   auto State = C.getState();
@@ -957,7 +957,7 @@ void IteratorChecker::handleIncrement(CheckerContext &C, const SVal &RetVal,
 }
 
 void IteratorChecker::handleDecrement(CheckerContext &C, const SVal &RetVal,
-                                      const SVal &Iter, bool Postfix) const {
+                                      const SVal &Iter, bool Postfix) {
   // Decrement the symbolic expressions which represents the position of the
   // iterator
   auto State = C.getState();
@@ -1019,7 +1019,7 @@ void IteratorChecker::handleRandomIncrOrDecr(CheckerContext &C,
                                              OverloadedOperatorKind Op,
                                              const SVal &RetVal,
                                              const SVal &LHS,
-                                             const SVal &RHS) const {
+                                             const SVal &RHS) {
   // Increment or decrement the symbolic expressions which represents the
   // position of the iterator
   auto State = C.getState();
@@ -1126,7 +1126,7 @@ void IteratorChecker::verifyMatch(CheckerContext &C, const SVal &Iter1,
 }
 
 void IteratorChecker::handleBegin(CheckerContext &C, const Expr *CE,
-                                  const SVal &RetVal, const SVal &Cont) const {
+                                  const SVal &RetVal, const SVal &Cont) {
   const auto *ContReg = Cont.getAsRegion();
   if (!ContReg)
     return;
@@ -1150,7 +1150,7 @@ void IteratorChecker::handleBegin(CheckerContext &C, const Expr *CE,
 }
 
 void IteratorChecker::handleEnd(CheckerContext &C, const Expr *CE,
-                                const SVal &RetVal, const SVal &Cont) const {
+                                const SVal &RetVal, const SVal &Cont) {
   const auto *ContReg = Cont.getAsRegion();
   if (!ContReg)
     return;
@@ -1175,7 +1175,7 @@ void IteratorChecker::handleEnd(CheckerContext &C, const Expr *CE,
 
 void IteratorChecker::assignToContainer(CheckerContext &C, const Expr *CE,
                                         const SVal &RetVal,
-                                        const MemRegion *Cont) const {
+                                        const MemRegion *Cont) {
   Cont = Cont->getMostDerivedObjectRegion();
 
   auto State = C.getState();
@@ -1189,7 +1189,7 @@ void IteratorChecker::assignToContainer(CheckerContext &C, const Expr *CE,
 }
 
 void IteratorChecker::handleAssign(CheckerContext &C, const SVal &Cont,
-                                   const Expr *CE, const SVal &OldCont) const {
+                                   const Expr *CE, const SVal &OldCont) {
   const auto *ContReg = Cont.getAsRegion();
   if (!ContReg)
     return;
@@ -1264,7 +1264,7 @@ void IteratorChecker::handleAssign(CheckerContext &C, const SVal &Cont,
   C.addTransition(State);
 }
 
-void IteratorChecker::handleClear(CheckerContext &C, const SVal &Cont) const {
+void IteratorChecker::handleClear(CheckerContext &C, const SVal &Cont) {
   const auto *ContReg = Cont.getAsRegion();
   if (!ContReg)
     return;
@@ -1291,7 +1291,7 @@ void IteratorChecker::handleClear(CheckerContext &C, const SVal &Cont) const {
 }
 
 void IteratorChecker::handlePushBack(CheckerContext &C,
-                                     const SVal &Cont) const {
+                                     const SVal &Cont) {
   const auto *ContReg = Cont.getAsRegion();
   if (!ContReg)
     return;
@@ -1328,7 +1328,7 @@ void IteratorChecker::handlePushBack(CheckerContext &C,
   C.addTransition(State);
 }
 
-void IteratorChecker::handlePopBack(CheckerContext &C, const SVal &Cont) const {
+void IteratorChecker::handlePopBack(CheckerContext &C, const SVal &Cont) {
   const auto *ContReg = Cont.getAsRegion();
   if (!ContReg)
     return;
@@ -1366,7 +1366,7 @@ void IteratorChecker::handlePopBack(CheckerContext &C, const SVal &Cont) const {
 }
 
 void IteratorChecker::handlePushFront(CheckerContext &C,
-                                      const SVal &Cont) const {
+                                      const SVal &Cont) {
   const auto *ContReg = Cont.getAsRegion();
   if (!ContReg)
     return;
@@ -1399,7 +1399,7 @@ void IteratorChecker::handlePushFront(CheckerContext &C,
 }
 
 void IteratorChecker::handlePopFront(CheckerContext &C,
-                                     const SVal &Cont) const {
+                                     const SVal &Cont) {
   const auto *ContReg = Cont.getAsRegion();
   if (!ContReg)
     return;
@@ -1432,7 +1432,7 @@ void IteratorChecker::handlePopFront(CheckerContext &C,
   }
 }
 
-void IteratorChecker::handleInsert(CheckerContext &C, const SVal &Iter) const {
+void IteratorChecker::handleInsert(CheckerContext &C, const SVal &Iter) {
   auto State = C.getState();
   const auto *Pos = getIteratorPosition(State, Iter);
   if (!Pos)
@@ -1457,7 +1457,7 @@ void IteratorChecker::handleInsert(CheckerContext &C, const SVal &Iter) const {
   }
 }
 
-void IteratorChecker::handleErase(CheckerContext &C, const SVal &Iter) const {
+void IteratorChecker::handleErase(CheckerContext &C, const SVal &Iter) {
   auto State = C.getState();
   const auto *Pos = getIteratorPosition(State, Iter);
   if (!Pos)
@@ -1486,7 +1486,7 @@ void IteratorChecker::handleErase(CheckerContext &C, const SVal &Iter) const {
 }
 
 void IteratorChecker::handleErase(CheckerContext &C, const SVal &Iter1,
-                                  const SVal &Iter2) const {
+                                  const SVal &Iter2) {
   auto State = C.getState();
   const auto *Pos1 = getIteratorPosition(State, Iter1);
   const auto *Pos2 = getIteratorPosition(State, Iter2);
@@ -1518,7 +1518,7 @@ void IteratorChecker::handleErase(CheckerContext &C, const SVal &Iter1,
 }
 
 void IteratorChecker::handleEraseAfter(CheckerContext &C,
-                                       const SVal &Iter) const {
+                                       const SVal &Iter) {
   auto State = C.getState();
   const auto *Pos = getIteratorPosition(State, Iter);
   if (!Pos)
@@ -1539,7 +1539,7 @@ void IteratorChecker::handleEraseAfter(CheckerContext &C,
 }
 
 void IteratorChecker::handleEraseAfter(CheckerContext &C, const SVal &Iter1,
-                                       const SVal &Iter2) const {
+                                       const SVal &Iter2) {
   auto State = C.getState();
   const auto *Pos1 = getIteratorPosition(State, Iter1);
   const auto *Pos2 = getIteratorPosition(State, Iter2);
@@ -1555,7 +1555,7 @@ void IteratorChecker::handleEraseAfter(CheckerContext &C, const SVal &Iter1,
 IteratorPosition IteratorChecker::advancePosition(CheckerContext &C,
                                                   OverloadedOperatorKind Op,
                                                   const IteratorPosition &Pos,
-                                                  const SVal &Distance) const {
+                                                  const SVal &Distance) {
   auto State = C.getState();
   auto &SymMgr = C.getSymbolManager();
   auto &SVB = C.getSValBuilder();

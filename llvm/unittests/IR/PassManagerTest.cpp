@@ -86,7 +86,7 @@ struct TestModulePass : PassInfoMixin<TestModulePass> {
 };
 
 struct TestPreservingModulePass : PassInfoMixin<TestPreservingModulePass> {
-  PreservedAnalyses run(Module &M, ModuleAnalysisManager &) {
+  static PreservedAnalyses run(Module &M, ModuleAnalysisManager &) {
     return PreservedAnalyses::all();
   }
 };
@@ -532,7 +532,7 @@ public:
     int I;
   };
 
-  Result run(Function &F, CustomizedAnalysisManager &AM, int I) {
+  static Result run(Function &F, CustomizedAnalysisManager &AM, int I) {
     return Result(I);
   }
 
@@ -589,7 +589,7 @@ struct TestIndirectFunctionAnalysis
     TestFunctionAnalysis::Result &FDep;
     TestModuleAnalysis::Result &MDep;
 
-    bool invalidate(Function &F, const PreservedAnalyses &PA,
+    static bool invalidate(Function &F, const PreservedAnalyses &PA,
                     FunctionAnalysisManager::Invalidator &Inv) {
       auto PAC = PA.getChecker<TestIndirectFunctionAnalysis>();
       return !(PAC.preserved() ||
@@ -638,7 +638,7 @@ struct TestDoublyIndirectFunctionAnalysis
     Result(TestIndirectFunctionAnalysis::Result &IDep) : IDep(IDep) {}
     TestIndirectFunctionAnalysis::Result &IDep;
 
-    bool invalidate(Function &F, const PreservedAnalyses &PA,
+    static bool invalidate(Function &F, const PreservedAnalyses &PA,
                     FunctionAnalysisManager::Invalidator &Inv) {
       auto PAC = PA.getChecker<TestDoublyIndirectFunctionAnalysis>();
       return !(PAC.preserved() ||

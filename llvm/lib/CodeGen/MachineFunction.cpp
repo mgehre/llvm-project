@@ -537,7 +537,7 @@ namespace llvm {
 
 } // end namespace llvm
 
-void MachineFunction::viewCFG() const
+void MachineFunction::viewCFG() 
 {
 #ifndef NDEBUG
   ViewGraph(this, "mf" + getName());
@@ -547,7 +547,7 @@ void MachineFunction::viewCFG() const
 #endif // NDEBUG
 }
 
-void MachineFunction::viewCFGOnly() const
+void MachineFunction::viewCFGOnly() 
 {
 #ifndef NDEBUG
   ViewGraph(this, "mf" + getName(), true);

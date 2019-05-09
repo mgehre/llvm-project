@@ -434,15 +434,15 @@ private:
   Instruction *findClosestMatchingDominator(const SCEV *Key,
                                             Instruction *Dominatee);
   /// Verify F is free of dead code.
-  void verifyNoDeadCode(Function &F);
+  static void verifyNoDeadCode(Function &F);
 
-  bool hasMoreThanOneUseInLoop(Value *v, Loop *L);
+  static bool hasMoreThanOneUseInLoop(Value *v, Loop *L);
 
   // Swap the index operand of two GEP.
   void swapGEPOperand(GetElementPtrInst *First, GetElementPtrInst *Second);
 
   // Check if it is safe to swap operand of two GEP.
-  bool isLegalToSwapOperand(GetElementPtrInst *First, GetElementPtrInst *Second,
+  static bool isLegalToSwapOperand(GetElementPtrInst *First, GetElementPtrInst *Second,
                             Loop *CurLoop);
 
   const DataLayout *DL = nullptr;

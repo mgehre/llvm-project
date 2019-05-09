@@ -300,8 +300,8 @@ private:
                LiveOutVec &LiveOuts) const;
 
   /// Create a live-out register record for the given register @p Reg.
-  LiveOutReg createLiveOutReg(unsigned Reg,
-                              const TargetRegisterInfo *TRI) const;
+  static LiveOutReg createLiveOutReg(unsigned Reg,
+                              const TargetRegisterInfo *TRI) ;
 
   /// Parse the register live-out mask and return a vector of live-out
   /// registers that need to be recorded in the stackmap.

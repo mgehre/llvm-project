@@ -4617,7 +4617,7 @@ void Parser::ParseEnumBody(SourceLocation StartLoc, Decl *EnumDecl) {
 /// isKnownToBeTypeSpecifier - Return true if we know that the specified token
 /// is definitely a type-specifier.  Return false if it isn't part of a type
 /// specifier or if we're not sure.
-bool Parser::isKnownToBeTypeSpecifier(const Token &Tok) const {
+bool Parser::isKnownToBeTypeSpecifier(const Token &Tok) {
   switch (Tok.getKind()) {
   default: return false;
     // type-specifiers

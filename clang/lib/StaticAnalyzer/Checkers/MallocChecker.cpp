@@ -211,17 +211,17 @@ public:
 
   void checkPreCall(const CallEvent &Call, CheckerContext &C) const;
   void checkPostStmt(const CallExpr *CE, CheckerContext &C) const;
-  void checkPostStmt(const CXXNewExpr *NE, CheckerContext &C) const;
-  void checkNewAllocator(const CXXNewExpr *NE, SVal Target,
-                         CheckerContext &C) const;
+  static void checkPostStmt(const CXXNewExpr *NE, CheckerContext &C) ;
+  static void checkNewAllocator(const CXXNewExpr *NE, SVal Target,
+                         CheckerContext &C) ;
   void checkPreStmt(const CXXDeleteExpr *DE, CheckerContext &C) const;
   void checkPostObjCMessage(const ObjCMethodCall &Call, CheckerContext &C) const;
-  void checkPostStmt(const BlockExpr *BE, CheckerContext &C) const;
+  static void checkPostStmt(const BlockExpr *BE, CheckerContext &C) ;
   void checkDeadSymbols(SymbolReaper &SymReaper, CheckerContext &C) const;
   void checkPreStmt(const ReturnStmt *S, CheckerContext &C) const;
   void checkEndFunction(const ReturnStmt *S, CheckerContext &C) const;
-  ProgramStateRef evalAssume(ProgramStateRef state, SVal Cond,
-                            bool Assumption) const;
+  static ProgramStateRef evalAssume(ProgramStateRef state, SVal Cond,
+                            bool Assumption) ;
   void checkLocation(SVal l, bool isLoad, const Stmt *S,
                      CheckerContext &C) const;
 
@@ -267,8 +267,8 @@ private:
   /// Print names of allocators and deallocators.
   ///
   /// \returns true on success.
-  bool printAllocDeallocName(raw_ostream &os, CheckerContext &C,
-                             const Expr *E) const;
+  static bool printAllocDeallocName(raw_ostream &os, CheckerContext &C,
+                             const Expr *E) ;
 
   /// Print expected name of an allocator based on the deallocator's
   /// family derived from the DeallocExpr.
@@ -276,7 +276,7 @@ private:
                               const Expr *DeallocExpr) const;
   /// Print expected name of a deallocator based on the allocator's
   /// family.
-  void printExpectedDeallocName(raw_ostream &os, AllocationFamily Family) const;
+  static void printExpectedDeallocName(raw_ostream &os, AllocationFamily Family) ;
 
   ///@{
   /// Check if this is one of the functions which can allocate/reallocate memory
@@ -286,21 +286,21 @@ private:
                       ASTContext &C,
                       AllocationFamily Family,
                       MemoryOperationKind MemKind) const;
-  bool isStandardNewDelete(const FunctionDecl *FD, ASTContext &C) const;
+  static bool isStandardNewDelete(const FunctionDecl *FD, ASTContext &C) ;
   ///@}
 
   /// Process C++ operator new()'s allocation, which is the part of C++
   /// new-expression that goes before the constructor.
-  void processNewAllocation(const CXXNewExpr *NE, CheckerContext &C,
-                            SVal Target) const;
+  static void processNewAllocation(const CXXNewExpr *NE, CheckerContext &C,
+                            SVal Target) ;
 
   /// Perform a zero-allocation check.
   /// The optional \p RetVal parameter specifies the newly allocated pointer
   /// value; if unspecified, the value of expression \p E is used.
-  ProgramStateRef ProcessZeroAllocation(CheckerContext &C, const Expr *E,
+  static ProgramStateRef ProcessZeroAllocation(CheckerContext &C, const Expr *E,
                                         const unsigned AllocationSizeArg,
                                         ProgramStateRef State,
-                                        Optional<SVal> RetVal = None) const;
+                                        Optional<SVal> RetVal = None) ;
 
   ProgramStateRef MallocMemReturnsAttr(CheckerContext &C,
                                        const CallExpr *CE,
@@ -357,7 +357,7 @@ private:
                                    ProgramStateRef State);
 
   /// Check if the memory associated with this symbol was released.
-  bool isReleased(SymbolRef Sym, CheckerContext &C) const;
+  static bool isReleased(SymbolRef Sym, CheckerContext &C) ;
 
   bool checkUseAfterFree(SymbolRef Sym, CheckerContext &C, const Stmt *S) const;
 
@@ -429,8 +429,8 @@ private:
 
   /// Find the location of the allocation for Sym on the path leading to the
   /// exploded node N.
-  LeakInfo getAllocationSite(const ExplodedNode *N, SymbolRef Sym,
-                             CheckerContext &C) const;
+  static LeakInfo getAllocationSite(const ExplodedNode *N, SymbolRef Sym,
+                             CheckerContext &C) ;
 
   void reportLeak(SymbolRef Sym, ExplodedNode *N, CheckerContext &C) const;
 
@@ -474,7 +474,7 @@ private:
       ID.AddPointer(Sym);
     }
 
-    inline bool isAllocated(const RefState *S, const RefState *SPrev,
+    static inline bool isAllocated(const RefState *S, const RefState *SPrev,
                             const Stmt *Stmt) {
       // Did not track -> allocated. Other state (released) -> allocated.
       return (Stmt && (isa<CallExpr>(Stmt) || isa<CXXNewExpr>(Stmt)) &&
@@ -483,7 +483,7 @@ private:
                            SPrev->isAllocatedOfSizeZero())));
     }
 
-    inline bool isReleased(const RefState *S, const RefState *SPrev,
+    static inline bool isReleased(const RefState *S, const RefState *SPrev,
                            const Stmt *Stmt) {
       // Did not track -> released. Other state (allocated) -> released.
       // The statement associated with the release might be missing.
@@ -495,7 +495,7 @@ private:
       return IsReleased;
     }
 
-    inline bool isRelinquished(const RefState *S, const RefState *SPrev,
+    static inline bool isRelinquished(const RefState *S, const RefState *SPrev,
                                const Stmt *Stmt) {
       // Did not track -> relinquished. Other state (allocated) -> relinquished.
       return (Stmt && (isa<CallExpr>(Stmt) || isa<ObjCMessageExpr>(Stmt) ||
@@ -504,7 +504,7 @@ private:
               (!SPrev || !SPrev->isRelinquished()));
     }
 
-    inline bool isReallocFailedCheck(const RefState *S, const RefState *SPrev,
+    static inline bool isReallocFailedCheck(const RefState *S, const RefState *SPrev,
                                      const Stmt *Stmt) {
       // If the expression is not a call, and the state change is
       // released -> allocated, it must be the realloc return value
@@ -715,7 +715,7 @@ bool MallocChecker::isCMemFunction(const FunctionDecl *FD,
 // Tells if the callee is one of the builtin new/delete operators, including
 // placement operators and other standard overloads.
 bool MallocChecker::isStandardNewDelete(const FunctionDecl *FD,
-                                        ASTContext &C) const {
+                                        ASTContext &C) {
   if (!FD)
     return false;
 
@@ -971,7 +971,7 @@ void MallocChecker::checkPostStmt(const CallExpr *CE, CheckerContext &C) const {
 // Performs a 0-sized allocations check.
 ProgramStateRef MallocChecker::ProcessZeroAllocation(
     CheckerContext &C, const Expr *E, const unsigned AllocationSizeArg,
-    ProgramStateRef State, Optional<SVal> RetVal) const {
+    ProgramStateRef State, Optional<SVal> RetVal) {
   if (!State)
     return nullptr;
 
@@ -1072,7 +1072,7 @@ static bool treatUnusedNewEscaped(const CXXNewExpr *NE) {
 
 void MallocChecker::processNewAllocation(const CXXNewExpr *NE,
                                          CheckerContext &C,
-                                         SVal Target) const {
+                                         SVal Target) {
   if (!isStandardNewDelete(NE->getOperatorNew(), C.getASTContext()))
     return;
 
@@ -1093,13 +1093,13 @@ void MallocChecker::processNewAllocation(const CXXNewExpr *NE,
 }
 
 void MallocChecker::checkPostStmt(const CXXNewExpr *NE,
-                                  CheckerContext &C) const {
+                                  CheckerContext &C) {
   if (!C.getAnalysisManager().getAnalyzerOptions().MayInlineCXXAllocator)
     processNewAllocation(NE, C, C.getSVal(NE));
 }
 
 void MallocChecker::checkNewAllocator(const CXXNewExpr *NE, SVal Target,
-                                      CheckerContext &C) const {
+                                      CheckerContext &C) {
   if (!C.wasInlined)
     processNewAllocation(NE, C, Target);
 }
@@ -1410,7 +1410,7 @@ AllocationFamily MallocChecker::getAllocationFamily(CheckerContext &C,
 }
 
 bool MallocChecker::printAllocDeallocName(raw_ostream &os, CheckerContext &C,
-                                          const Expr *E) const {
+                                          const Expr *E) {
   if (const CallExpr *CE = dyn_cast<CallExpr>(E)) {
     // FIXME: This doesn't handle indirect calls.
     const FunctionDecl *FD = CE->getDirectCallee();
@@ -1465,7 +1465,7 @@ void MallocChecker::printExpectedAllocName(raw_ostream &os, CheckerContext &C,
 }
 
 void MallocChecker::printExpectedDeallocName(raw_ostream &os,
-                                             AllocationFamily Family) const {
+                                             AllocationFamily Family) {
   switch(Family) {
     case AF_Malloc: os << "free()"; return;
     case AF_CXXNew: os << "'delete'"; return;
@@ -2239,7 +2239,7 @@ ProgramStateRef MallocChecker::CallocMem(CheckerContext &C, const CallExpr *CE,
 
 LeakInfo
 MallocChecker::getAllocationSite(const ExplodedNode *N, SymbolRef Sym,
-                                 CheckerContext &C) const {
+                                 CheckerContext &C) {
   const LocationContext *LeakContext = N->getLocationContext();
   // Walk the ExplodedGraph backwards and find the first node that referred to
   // the tracked symbol.
@@ -2491,7 +2491,7 @@ void MallocChecker::checkEscapeOnReturn(const ReturnStmt *S,
 // upon invocation. After that's in place, special casing here will not be
 // needed.
 void MallocChecker::checkPostStmt(const BlockExpr *BE,
-                                  CheckerContext &C) const {
+                                  CheckerContext &C) {
 
   // Scan the BlockDecRefExprs for any object the retain count checker
   // may be tracking.
@@ -2525,7 +2525,7 @@ void MallocChecker::checkPostStmt(const BlockExpr *BE,
   C.addTransition(state);
 }
 
-bool MallocChecker::isReleased(SymbolRef Sym, CheckerContext &C) const {
+bool MallocChecker::isReleased(SymbolRef Sym, CheckerContext &C) {
   assert(Sym);
   const RefState *RS = C.getState()->get<RegionState>(Sym);
   return (RS && RS->isReleased());
@@ -2578,7 +2578,7 @@ void MallocChecker::checkLocation(SVal l, bool isLoad, const Stmt *S,
 // it - assuming that allocation failed on this path.
 ProgramStateRef MallocChecker::evalAssume(ProgramStateRef state,
                                               SVal Cond,
-                                              bool Assumption) const {
+                                              bool Assumption) {
   RegionStateTy RS = state->get<RegionState>();
   for (RegionStateTy::iterator I = RS.begin(), E = RS.end(); I != E; ++I) {
     // If the symbol is assumed to be NULL, remove it from consideration.

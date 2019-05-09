@@ -25,7 +25,7 @@ using namespace llvm;
 
 namespace {
 class X86MachObjectWriter : public MCMachObjectTargetWriter {
-  bool recordScatteredRelocation(MachObjectWriter *Writer,
+  static bool recordScatteredRelocation(MachObjectWriter *Writer,
                                  const MCAssembler &Asm,
                                  const MCAsmLayout &Layout,
                                  const MCFragment *Fragment,
@@ -33,7 +33,7 @@ class X86MachObjectWriter : public MCMachObjectTargetWriter {
                                  MCValue Target,
                                  unsigned Log2Size,
                                  uint64_t &FixedValue);
-  void recordTLVPRelocation(MachObjectWriter *Writer,
+  static void recordTLVPRelocation(MachObjectWriter *Writer,
                             const MCAssembler &Asm,
                             const MCAsmLayout &Layout,
                             const MCFragment *Fragment,
@@ -41,14 +41,14 @@ class X86MachObjectWriter : public MCMachObjectTargetWriter {
                             MCValue Target,
                             uint64_t &FixedValue);
 
-  void RecordX86Relocation(MachObjectWriter *Writer,
+  static void RecordX86Relocation(MachObjectWriter *Writer,
                               const MCAssembler &Asm,
                               const MCAsmLayout &Layout,
                               const MCFragment *Fragment,
                               const MCFixup &Fixup,
                               MCValue Target,
                               uint64_t &FixedValue);
-  void RecordX86_64Relocation(MachObjectWriter *Writer, MCAssembler &Asm,
+  static void RecordX86_64Relocation(MachObjectWriter *Writer, MCAssembler &Asm,
                               const MCAsmLayout &Layout,
                               const MCFragment *Fragment, const MCFixup &Fixup,
                               MCValue Target, uint64_t &FixedValue);

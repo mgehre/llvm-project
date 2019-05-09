@@ -78,7 +78,7 @@ public:
 
   /// ArgNeedsPreexpansion - If we can prove that the argument won't be affected
   /// by pre-expansion, return false.  Otherwise, conservatively return true.
-  bool ArgNeedsPreexpansion(const Token *ArgTok, Preprocessor &PP) const;
+  static bool ArgNeedsPreexpansion(const Token *ArgTok, Preprocessor &PP) ;
 
   /// getUnexpArgument - Return a pointer to the first token of the unexpanded
   /// token list for the specified formal.

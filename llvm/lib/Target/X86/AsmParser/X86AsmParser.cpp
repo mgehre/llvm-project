@@ -134,7 +134,7 @@ private:
     SmallVector<InfixCalculatorTok, 4> InfixOperatorStack;
     SmallVector<ICToken, 4> PostfixStack;
 
-    bool isUnaryOperator(const InfixCalculatorTok Op) {
+    static bool isUnaryOperator(const InfixCalculatorTok Op) {
       return Op == IC_NEG || Op == IC_NOT;
     }
 
@@ -811,8 +811,8 @@ private:
 
   std::unique_ptr<X86Operand> DefaultMemSIOperand(SMLoc Loc);
   std::unique_ptr<X86Operand> DefaultMemDIOperand(SMLoc Loc);
-  bool IsSIReg(unsigned Reg);
-  unsigned GetSIDIForRegClass(unsigned RegClassID, unsigned Reg, bool IsSIReg);
+  static bool IsSIReg(unsigned Reg);
+  static unsigned GetSIDIForRegClass(unsigned RegClassID, unsigned Reg, bool IsSIReg);
   void
   AddDefaultSrcDestOperands(OperandVector &Operands,
                             std::unique_ptr<llvm::MCParsedAsmOperand> &&Src,
@@ -824,10 +824,10 @@ private:
   std::unique_ptr<X86Operand> ParseIntelOperand();
   std::unique_ptr<X86Operand> ParseIntelOffsetOfOperator();
   bool ParseIntelDotOperator(IntelExprStateMachine &SM, SMLoc &End);
-  unsigned IdentifyIntelInlineAsmOperator(StringRef Name);
+  static unsigned IdentifyIntelInlineAsmOperator(StringRef Name);
   unsigned ParseIntelInlineAsmOperator(unsigned OpKind);
   std::unique_ptr<X86Operand> ParseRoundingModeOp(SMLoc Start);
-  bool ParseIntelNamedOperator(StringRef Name, IntelExprStateMachine &SM);
+  static bool ParseIntelNamedOperator(StringRef Name, IntelExprStateMachine &SM);
   void RewriteIntelExpression(IntelExprStateMachine &SM, SMLoc Start,
                               SMLoc End);
   bool ParseIntelExpression(IntelExprStateMachine &SM, SMLoc &End);
@@ -861,7 +861,7 @@ private:
   bool parseDirectiveFPOData(SMLoc L);
 
   bool validateInstruction(MCInst &Inst, const OperandVector &Ops);
-  bool processInstruction(MCInst &Inst, const OperandVector &Ops);
+  static bool processInstruction(MCInst &Inst, const OperandVector &Ops);
 
   /// Wrapper around MCStreamer::EmitInstruction(). Possibly adds
   /// instrumentation around Inst.

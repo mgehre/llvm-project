@@ -11650,7 +11650,7 @@ class SequenceChecker : public EvaluatedExprVisitor<SequenceChecker> {
     };
 
     SequenceTree() { Values.push_back(Value(0)); }
-    Seq root() const { return Seq(0); }
+    static Seq root() { return Seq(0); }
 
     /// Create a new sequence of operations, which is an unsequenced
     /// subset of \p Parent. This sequence of operations is sequenced with

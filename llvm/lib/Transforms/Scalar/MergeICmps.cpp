@@ -784,7 +784,7 @@ class MergeICmps : public FunctionPass {
     AU.addRequired<AAResultsWrapperPass>();
   }
 
-  PreservedAnalyses runImpl(Function &F, const TargetLibraryInfo *TLI,
+  static PreservedAnalyses runImpl(Function &F, const TargetLibraryInfo *TLI,
                             const TargetTransformInfo *TTI, AliasAnalysis *AA);
 };
 

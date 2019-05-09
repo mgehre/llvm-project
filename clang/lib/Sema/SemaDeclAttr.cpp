@@ -7982,7 +7982,7 @@ public:
 
   bool TraverseIfStmt(IfStmt *If);
 
-  bool TraverseLambdaExpr(LambdaExpr *E) { return true; }
+  static bool TraverseLambdaExpr(LambdaExpr *E) { return true; }
 
   // for 'case X:' statements, don't bother looking at the 'X'; it can't lead
   // to any useful diagnostics.

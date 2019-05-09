@@ -137,7 +137,7 @@ std::string dumpASTWithoutMemoryLocs(ClangdServer &Server, PathRef File) {
 
 class ClangdVFSTest : public ::testing::Test {
 protected:
-  std::string parseSourceAndDumpAST(
+  static std::string parseSourceAndDumpAST(
       PathRef SourceFileRelPath, llvm::StringRef SourceContents,
       std::vector<std::pair<PathRef, llvm::StringRef>> ExtraFiles = {},
       bool ExpectErrors = false) {

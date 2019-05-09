@@ -208,8 +208,8 @@ public:
     return traverse(*CtorInit);
   }
 
-  bool shouldVisitTemplateInstantiations() const { return true; }
-  bool shouldVisitImplicitCode() const { return true; }
+  static bool shouldVisitTemplateInstantiations() { return true; }
+  static bool shouldVisitImplicitCode() { return true; }
 
 private:
   // Used for updating the depth during traversal.
@@ -502,8 +502,8 @@ public:
   // Implements ASTMatchFinder::getASTContext.
   ASTContext &getASTContext() const override { return *ActiveASTContext; }
 
-  bool shouldVisitTemplateInstantiations() const { return true; }
-  bool shouldVisitImplicitCode() const { return true; }
+  static bool shouldVisitTemplateInstantiations() { return true; }
+  static bool shouldVisitImplicitCode() { return true; }
 
 private:
   class TimeBucketRegion {

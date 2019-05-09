@@ -53,7 +53,7 @@ private:
   bool GetTestResult(const changeset_ty &Changes);
 
   /// Split - Partition a set of changes \p S into one or two subsets.
-  void Split(const changeset_ty &S, changesetlist_ty &Res);
+  static void Split(const changeset_ty &S, changesetlist_ty &Res);
 
   /// Delta - Minimize a set of \p Changes which has been partioned into
   /// smaller sets, by attempting to remove individual subsets.

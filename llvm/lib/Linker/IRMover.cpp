@@ -431,7 +431,7 @@ class IRLinker {
 
   /// Most of the errors produced by this module are inconvertible StringErrors.
   /// This convenience function lets us return one of those more easily.
-  Error stringErr(const Twine &T) {
+  static Error stringErr(const Twine &T) {
     return make_error<StringError>(T, inconvertibleErrorCode());
   }
 

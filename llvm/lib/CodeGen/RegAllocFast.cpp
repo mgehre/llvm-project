@@ -183,7 +183,7 @@ namespace {
                                SmallVectorImpl<unsigned> &VirtDead);
     bool isLastUseOfLocalReg(const MachineOperand &MO) const;
 
-    void addKillFlag(const LiveReg &LRI);
+    static void addKillFlag(const LiveReg &LRI);
     void killVirtReg(LiveReg &LR);
     void killVirtReg(unsigned VirtReg);
     void spillVirtReg(MachineBasicBlock::iterator MI, LiveReg &LR);

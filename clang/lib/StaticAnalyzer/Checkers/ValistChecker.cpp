@@ -54,10 +54,10 @@ public:
   void checkDeadSymbols(SymbolReaper &SR, CheckerContext &C) const;
 
 private:
-  const MemRegion *getVAListAsRegion(SVal SV, const Expr *VAExpr,
-                                     bool &IsSymbolic, CheckerContext &C) const;
-  const ExplodedNode *getStartCallSite(const ExplodedNode *N,
-                                       const MemRegion *Reg) const;
+  static const MemRegion *getVAListAsRegion(SVal SV, const Expr *VAExpr,
+                                     bool &IsSymbolic, CheckerContext &C) ;
+  static const ExplodedNode *getStartCallSite(const ExplodedNode *N,
+                                       const MemRegion *Reg) ;
 
   void reportUninitializedAccess(const MemRegion *VAList, StringRef Msg,
                                  CheckerContext &C) const;
@@ -161,7 +161,7 @@ void ValistChecker::checkPreCall(const CallEvent &Call,
 
 const MemRegion *ValistChecker::getVAListAsRegion(SVal SV, const Expr *E,
                                                   bool &IsSymbolic,
-                                                  CheckerContext &C) const {
+                                                  CheckerContext &C) {
   const MemRegion *Reg = SV.getAsRegion();
   if (!Reg)
     return nullptr;
@@ -221,7 +221,7 @@ void ValistChecker::checkDeadSymbols(SymbolReaper &SR,
 // different stack frames, so that case is not yet handled.
 const ExplodedNode *
 ValistChecker::getStartCallSite(const ExplodedNode *N,
-                                const MemRegion *Reg) const {
+                                const MemRegion *Reg) {
   const LocationContext *LeakContext = N->getLocationContext();
   const ExplodedNode *StartCallNode = N;
 

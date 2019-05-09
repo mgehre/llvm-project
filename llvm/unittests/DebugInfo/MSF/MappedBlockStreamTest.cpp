@@ -32,7 +32,7 @@ public:
   DiscontiguousStream(ArrayRef<uint32_t> Blocks, MutableArrayRef<uint8_t> Data)
       : Blocks(Blocks.begin(), Blocks.end()), Data(Data.begin(), Data.end()) {}
 
-  uint32_t block_size() const { return 1; }
+  static uint32_t block_size() { return 1; }
   uint32_t block_count() const { return Blocks.size(); }
 
   endianness getEndian() const override { return little; }

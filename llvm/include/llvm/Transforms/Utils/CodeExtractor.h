@@ -160,7 +160,7 @@ class Value;
 
     void moveCodeToFunction(Function *newFunction);
 
-    void calculateNewCallTerminatorWeights(
+    static void calculateNewCallTerminatorWeights(
         BasicBlock *CodeReplacer,
         DenseMap<BasicBlock *, BlockFrequency> &ExitWeights,
         BranchProbabilityInfo *BPI);

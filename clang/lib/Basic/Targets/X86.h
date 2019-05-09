@@ -120,9 +120,9 @@ protected:
 
   bool checkCPUKind(CPUKind Kind) const;
 
-  CPUKind getCPUKind(StringRef CPU) const;
+  static CPUKind getCPUKind(StringRef CPU) ;
 
-  std::string getCPUKindCanonicalName(CPUKind Kind) const;
+  static std::string getCPUKindCanonicalName(CPUKind Kind) ;
 
   enum FPMathKind { FP_Default, FP_SSE, FP_387 } FPMath = FP_Default;
 

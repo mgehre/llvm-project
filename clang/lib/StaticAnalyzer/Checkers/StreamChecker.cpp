@@ -76,8 +76,8 @@ public:
   void checkDeadSymbols(SymbolReaper &SymReaper, CheckerContext &C) const;
 
 private:
-  void Fopen(CheckerContext &C, const CallExpr *CE) const;
-  void Tmpfile(CheckerContext &C, const CallExpr *CE) const;
+  static void Fopen(CheckerContext &C, const CallExpr *CE) ;
+  static void Tmpfile(CheckerContext &C, const CallExpr *CE) ;
   void Fclose(CheckerContext &C, const CallExpr *CE) const;
   void Fread(CheckerContext &C, const CallExpr *CE) const;
   void Fwrite(CheckerContext &C, const CallExpr *CE) const;
@@ -91,7 +91,7 @@ private:
   void Ferror(CheckerContext &C, const CallExpr *CE) const;
   void Fileno(CheckerContext &C, const CallExpr *CE) const;
 
-  void OpenFileAux(CheckerContext &C, const CallExpr *CE) const;
+  static void OpenFileAux(CheckerContext &C, const CallExpr *CE) ;
 
   ProgramStateRef CheckNullStream(SVal SV, ProgramStateRef state,
                                  CheckerContext &C) const;
@@ -199,15 +199,15 @@ bool StreamChecker::evalCall(const CallExpr *CE, CheckerContext &C) const {
   return false;
 }
 
-void StreamChecker::Fopen(CheckerContext &C, const CallExpr *CE) const {
+void StreamChecker::Fopen(CheckerContext &C, const CallExpr *CE) {
   OpenFileAux(C, CE);
 }
 
-void StreamChecker::Tmpfile(CheckerContext &C, const CallExpr *CE) const {
+void StreamChecker::Tmpfile(CheckerContext &C, const CallExpr *CE) {
   OpenFileAux(C, CE);
 }
 
-void StreamChecker::OpenFileAux(CheckerContext &C, const CallExpr *CE) const {
+void StreamChecker::OpenFileAux(CheckerContext &C, const CallExpr *CE) {
   ProgramStateRef state = C.getState();
   SValBuilder &svalBuilder = C.getSValBuilder();
   const LocationContext *LCtx = C.getPredecessor()->getLocationContext();

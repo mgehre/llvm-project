@@ -116,8 +116,8 @@ private:
 
   friend class Constant;
 
-  void destroyConstantImpl();
-  Value *handleOperandChangeImpl(Value *From, Value *To);
+  static void destroyConstantImpl();
+  static Value *handleOperandChangeImpl(Value *From, Value *To);
 
   /// Returns true if the definition of this global may be replaced by a
   /// differently optimized variant of the same source level function at link

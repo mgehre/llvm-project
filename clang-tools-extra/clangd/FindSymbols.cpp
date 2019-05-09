@@ -270,7 +270,7 @@ private:
       traverseDecl(C, Results);
   }
 
-  VisitKind shouldVisit(NamedDecl *D) {
+  static VisitKind shouldVisit(NamedDecl *D) {
     if (D->isImplicit())
       return VisitKind::No;
 

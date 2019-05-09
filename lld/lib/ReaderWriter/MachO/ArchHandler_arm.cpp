@@ -195,15 +195,15 @@ private:
   static uint32_t setWordFromThumbMov(uint32_t instruction, uint16_t word);
   static uint32_t setWordFromArmMov(uint32_t instruction, uint16_t word);
 
-  StringRef stubName(const DefinedAtom &);
-  bool useExternalRelocationTo(const Atom &target);
+  static StringRef stubName(const DefinedAtom &);
+  static bool useExternalRelocationTo(const Atom &target);
 
-  void applyFixupFinal(const Reference &ref, uint8_t *location,
+  static void applyFixupFinal(const Reference &ref, uint8_t *location,
                        uint64_t fixupAddress, uint64_t targetAddress,
                        uint64_t inAtomAddress, bool &thumbMode,
                        bool targetIsThumb);
 
-  void applyFixupRelocatable(const Reference &ref, uint8_t *location,
+  static void applyFixupRelocatable(const Reference &ref, uint8_t *location,
                              uint64_t fixupAddress,
                              uint64_t targetAddress,
                              uint64_t inAtomAddress, bool &thumbMode,

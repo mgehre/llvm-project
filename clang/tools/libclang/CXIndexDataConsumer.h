@@ -326,7 +326,7 @@ class CXIndexDataConsumer : public index::IndexDataConsumer {
                      CXIndexDataConsumer &IdxCtx, ScratchAlloc &SA);
 
   private:
-    SourceLocation getBaseLoc(const CXXBaseSpecifier &Base) const;
+    static SourceLocation getBaseLoc(const CXXBaseSpecifier &Base) ;
   };
 
   friend class AttrListInfo;
@@ -489,7 +489,7 @@ private:
 
   const NamedDecl *getEntityDecl(const NamedDecl *D) const;
 
-  const DeclContext *getEntityContainer(const Decl *D) const;
+  static const DeclContext *getEntityContainer(const Decl *D) ;
 
   CXIdxClientFile getIndexFile(const FileEntry *File);
   

@@ -4375,7 +4375,7 @@ public:
       : SwiftABIInfo(CGT), Kind(Kind), HasQPX(HasQPX),
         IsSoftFloatABI(SoftFloatABI) {}
 
-  bool isPromotableTypeForABI(QualType Ty) const;
+  static bool isPromotableTypeForABI(QualType Ty) ;
   CharUnits getParamTypeAlignment(QualType Ty) const;
 
   ABIArgInfo classifyReturnType(QualType RetTy) const;
@@ -4462,7 +4462,7 @@ public:
 // Return true if the ABI requires Ty to be passed sign- or zero-
 // extended to 64 bits.
 bool
-PPC64_SVR4_ABIInfo::isPromotableTypeForABI(QualType Ty) const {
+PPC64_SVR4_ABIInfo::isPromotableTypeForABI(QualType Ty) {
   // Treat an enum type as its underlying type.
   if (const EnumType *EnumTy = Ty->getAs<EnumType>())
     Ty = EnumTy->getDecl()->getIntegerType();
@@ -6252,7 +6252,7 @@ class NVPTXABIInfo : public ABIInfo {
 public:
   NVPTXABIInfo(CodeGenTypes &CGT) : ABIInfo(CGT) {}
 
-  ABIArgInfo classifyReturnType(QualType RetTy) const;
+  static ABIArgInfo classifyReturnType(QualType RetTy) ;
   ABIArgInfo classifyArgumentType(QualType Ty) const;
 
   void computeInfo(CGFunctionInfo &FI) const override;
@@ -6275,7 +6275,7 @@ private:
   static void addNVVMMetadata(llvm::Function *F, StringRef Name, int Operand);
 };
 
-ABIArgInfo NVPTXABIInfo::classifyReturnType(QualType RetTy) const {
+ABIArgInfo NVPTXABIInfo::classifyReturnType(QualType RetTy) {
   if (RetTy->isVoidType())
     return ABIArgInfo::getIgnore();
 
@@ -6408,10 +6408,10 @@ public:
   SystemZABIInfo(CodeGenTypes &CGT, bool HV)
     : SwiftABIInfo(CGT), HasVector(HV) {}
 
-  bool isPromotableIntegerType(QualType Ty) const;
-  bool isCompoundType(QualType Ty) const;
+  static bool isPromotableIntegerType(QualType Ty) ;
+  static bool isCompoundType(QualType Ty) ;
   bool isVectorArgumentType(QualType Ty) const;
-  bool isFPArgumentType(QualType Ty) const;
+  static bool isFPArgumentType(QualType Ty) ;
   QualType GetSingleElementType(QualType Ty) const;
 
   ABIArgInfo classifyReturnType(QualType RetTy) const;
@@ -6444,7 +6444,7 @@ public:
 
 }
 
-bool SystemZABIInfo::isPromotableIntegerType(QualType Ty) const {
+bool SystemZABIInfo::isPromotableIntegerType(QualType Ty) {
   // Treat an enum type as its underlying type.
   if (const EnumType *EnumTy = Ty->getAs<EnumType>())
     Ty = EnumTy->getDecl()->getIntegerType();
@@ -6465,7 +6465,7 @@ bool SystemZABIInfo::isPromotableIntegerType(QualType Ty) const {
   return false;
 }
 
-bool SystemZABIInfo::isCompoundType(QualType Ty) const {
+bool SystemZABIInfo::isCompoundType(QualType Ty) {
   return (Ty->isAnyComplexType() ||
           Ty->isVectorType() ||
           isAggregateTypeForABI(Ty));
@@ -6477,7 +6477,7 @@ bool SystemZABIInfo::isVectorArgumentType(QualType Ty) const {
           getContext().getTypeSize(Ty) <= 128);
 }
 
-bool SystemZABIInfo::isFPArgumentType(QualType Ty) const {
+bool SystemZABIInfo::isFPArgumentType(QualType Ty) {
   if (const BuiltinType *BT = Ty->getAs<BuiltinType>())
     switch (BT->getKind()) {
     case BuiltinType::Float:

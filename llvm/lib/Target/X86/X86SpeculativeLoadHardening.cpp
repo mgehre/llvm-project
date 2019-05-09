@@ -171,7 +171,7 @@ private:
 
   void hardenEdgesWithLFENCE(MachineFunction &MF);
 
-  SmallVector<BlockCondInfo, 16> collectBlockCondInfo(MachineFunction &MF);
+  static SmallVector<BlockCondInfo, 16> collectBlockCondInfo(MachineFunction &MF);
 
   SmallVector<MachineInstr *, 16>
   tracePredStateThroughCFG(MachineFunction &MF, ArrayRef<BlockCondInfo> Infos);

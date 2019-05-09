@@ -27,7 +27,7 @@ class WarnMissedTransformationsPass
 public:
   explicit WarnMissedTransformationsPass() {}
 
-  PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
+  static PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
 };
 
 // Legacy pass manager boilerplate.

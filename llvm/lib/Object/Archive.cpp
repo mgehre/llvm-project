@@ -790,7 +790,7 @@ Archive::child_iterator Archive::child_begin(Error &Err,
   return child_iterator(C, &Err);
 }
 
-Archive::child_iterator Archive::child_end() const {
+Archive::child_iterator Archive::child_end() {
   return child_iterator(Child(nullptr, nullptr, nullptr), nullptr);
 }
 

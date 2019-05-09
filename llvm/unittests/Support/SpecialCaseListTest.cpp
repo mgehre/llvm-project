@@ -18,13 +18,13 @@ namespace {
 
 class SpecialCaseListTest : public ::testing::Test {
 protected:
-  std::unique_ptr<SpecialCaseList> makeSpecialCaseList(StringRef List,
+  static std::unique_ptr<SpecialCaseList> makeSpecialCaseList(StringRef List,
                                                        std::string &Error) {
     std::unique_ptr<MemoryBuffer> MB = MemoryBuffer::getMemBuffer(List);
     return SpecialCaseList::create(MB.get(), Error);
   }
 
-  std::unique_ptr<SpecialCaseList> makeSpecialCaseList(StringRef List) {
+  static std::unique_ptr<SpecialCaseList> makeSpecialCaseList(StringRef List) {
     std::string Error;
     auto SCL = makeSpecialCaseList(List, Error);
     assert(SCL);
@@ -32,7 +32,7 @@ protected:
     return SCL;
   }
 
-  std::string makeSpecialCaseListFile(StringRef Contents) {
+  static std::string makeSpecialCaseListFile(StringRef Contents) {
     int FD;
     SmallString<64> Path;
     sys::fs::createTemporaryFile("SpecialCaseListTest", "temp", FD, Path);

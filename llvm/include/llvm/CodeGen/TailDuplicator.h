@@ -118,7 +118,7 @@ private:
                  SmallVectorImpl<std::pair<unsigned,RegSubRegPair>> &CopyInfos,
                  SmallVectorImpl<MachineInstr *> &Copies);
 
-  void removeDeadBlock(
+  static void removeDeadBlock(
       MachineBasicBlock *MBB,
       function_ref<void(MachineBasicBlock *)> *RemovalCallback = nullptr);
 };

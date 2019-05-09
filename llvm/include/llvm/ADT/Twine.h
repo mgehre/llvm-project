@@ -243,11 +243,11 @@ namespace llvm {
     NodeKind getRHSKind() const { return RHSKind; }
 
     /// Print one child from a twine.
-    void printOneChild(raw_ostream &OS, Child Ptr, NodeKind Kind) const;
+    static void printOneChild(raw_ostream &OS, Child Ptr, NodeKind Kind) ;
 
     /// Print the representation of one child from a twine.
-    void printOneChildRepr(raw_ostream &OS, Child Ptr,
-                           NodeKind Kind) const;
+    static void printOneChildRepr(raw_ostream &OS, Child Ptr,
+                           NodeKind Kind) ;
 
   public:
     /// @name Constructors

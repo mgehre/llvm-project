@@ -311,7 +311,7 @@ public:
   /// Determine which inlining mode should be used when this function is
   /// analyzed. This allows to redefine the default inlining policies when
   /// analyzing a given function.
-  ExprEngine::InliningModes
+  static ExprEngine::InliningModes
     getInliningModeForFunction(const Decl *D, const SetOfConstDecls &Visited);
 
   /// Build the call graph for all the top level decls of this TU and
@@ -333,7 +333,7 @@ public:
                               SetOfConstDecls *VisitedCallees);
 
   /// Visitors for the RecursiveASTVisitor.
-  bool shouldWalkTypesOfTypeLocs() const { return false; }
+  static bool shouldWalkTypesOfTypeLocs() { return false; }
 
   /// Handle callbacks for arbitrary Decls.
   bool VisitDecl(Decl *D) {

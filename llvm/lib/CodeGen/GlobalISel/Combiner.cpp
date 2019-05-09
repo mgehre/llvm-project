@@ -68,7 +68,7 @@ public:
     WorkList.insert(&MI);
   }
 
-  void reportFullyCreatedInstrs() {
+  static void reportFullyCreatedInstrs() {
     LLVM_DEBUG(for (const auto *MI
                     : CreatedInstrs) {
       dbgs() << "Created: ";

@@ -476,7 +476,7 @@ LLVM_DUMP_METHOD void ValueEnumerator::dump() const {
 #endif
 
 void ValueEnumerator::print(raw_ostream &OS, const ValueMapType &Map,
-                            const char *Name) const {
+                            const char *Name) {
   OS << "Map Name: " << Name << "\n";
   OS << "Size: " << Map.size() << "\n";
   for (ValueMapType::const_iterator I = Map.begin(),
@@ -504,7 +504,7 @@ void ValueEnumerator::print(raw_ostream &OS, const ValueMapType &Map,
 }
 
 void ValueEnumerator::print(raw_ostream &OS, const MetadataMapType &Map,
-                            const char *Name) const {
+                            const char *Name) {
   OS << "Map Name: " << Name << "\n";
   OS << "Size: " << Map.size() << "\n";
   for (auto I = Map.begin(), E = Map.end(); I != E; ++I) {

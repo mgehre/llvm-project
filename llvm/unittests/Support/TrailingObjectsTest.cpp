@@ -179,8 +179,8 @@ TEST(TrailingObjects, TwoArg) {
 class Class3 final : public TrailingObjects<Class3, double, short, bool> {
   friend TrailingObjects;
 
-  size_t numTrailingObjects(OverloadToken<double>) const { return 1; }
-  size_t numTrailingObjects(OverloadToken<short>) const { return 1; }
+  static size_t numTrailingObjects(OverloadToken<double>) { return 1; }
+  static size_t numTrailingObjects(OverloadToken<short>) { return 1; }
 };
 
 TEST(TrailingObjects, ThreeArg) {
@@ -212,7 +212,7 @@ TEST(TrailingObjects, ThreeArg) {
 
 class Class4 final : public TrailingObjects<Class4, char, long> {
   friend TrailingObjects;
-  size_t numTrailingObjects(OverloadToken<char>) const { return 1; }
+  static size_t numTrailingObjects(OverloadToken<char>) { return 1; }
 };
 
 TEST(TrailingObjects, Realignment) {

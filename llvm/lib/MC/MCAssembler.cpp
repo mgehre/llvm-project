@@ -162,7 +162,7 @@ bool MCAssembler::isThumbFunc(const MCSymbol *Symbol) const {
   return true;
 }
 
-bool MCAssembler::isSymbolLinkerVisible(const MCSymbol &Symbol) const {
+bool MCAssembler::isSymbolLinkerVisible(const MCSymbol &Symbol) {
   // Non-temporary labels should always be visible to the linker.
   if (!Symbol.isTemporary())
     return true;

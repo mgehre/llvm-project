@@ -709,7 +709,7 @@ private:
   bool isCodeCompletionPoint(const char *CurPtr) const;
   void cutOffLexing() { BufferPtr = BufferEnd; }
 
-  bool isHexaLiteral(const char *Start, const LangOptions &LangOpts);
+  static bool isHexaLiteral(const char *Start, const LangOptions &LangOpts);
 
   void codeCompleteIncludedFile(const char *PathStart,
                                 const char *CompletionPoint, bool IsAngled);

@@ -338,25 +338,25 @@ public:
   /// based on the function's attributes. If the operation is not overridden by
   /// the function's attributes, "Unspecified" is returned and target defaults
   /// are expected to be used for instruction selection.
-  int getRecipEstimateSqrtEnabled(EVT VT, MachineFunction &MF) const;
+  static int getRecipEstimateSqrtEnabled(EVT VT, MachineFunction &MF) ;
 
   /// Return a ReciprocalEstimate enum value for a division of the given type
   /// based on the function's attributes. If the operation is not overridden by
   /// the function's attributes, "Unspecified" is returned and target defaults
   /// are expected to be used for instruction selection.
-  int getRecipEstimateDivEnabled(EVT VT, MachineFunction &MF) const;
+  static int getRecipEstimateDivEnabled(EVT VT, MachineFunction &MF) ;
 
   /// Return the refinement step count for a square root of the given type based
   /// on the function's attributes. If the operation is not overridden by
   /// the function's attributes, "Unspecified" is returned and target defaults
   /// are expected to be used for instruction selection.
-  int getSqrtRefinementSteps(EVT VT, MachineFunction &MF) const;
+  static int getSqrtRefinementSteps(EVT VT, MachineFunction &MF) ;
 
   /// Return the refinement step count for a division of the given type based
   /// on the function's attributes. If the operation is not overridden by
   /// the function's attributes, "Unspecified" is returned and target defaults
   /// are expected to be used for instruction selection.
-  int getDivRefinementSteps(EVT VT, MachineFunction &MF) const;
+  static int getDivRefinementSteps(EVT VT, MachineFunction &MF) ;
 
   /// Returns true if target has indicated at least one type should be bypassed.
   bool isSlowDivBypassed() const { return !BypassSlowDivWidths.empty(); }
@@ -1416,11 +1416,11 @@ public:
   virtual unsigned getMinimumJumpTableEntries() const;
 
   /// Return lower limit of the density in a jump table.
-  unsigned getMinimumJumpTableDensity(bool OptForSize) const;
+  static unsigned getMinimumJumpTableDensity(bool OptForSize) ;
 
   /// Return upper limit for number of entries in a jump table.
   /// Zero if no limit.
-  unsigned getMaximumJumpTableSize() const;
+  static unsigned getMaximumJumpTableSize() ;
 
   virtual bool isJumpTableRelative() const {
     return TM.isPositionIndependent();
@@ -1518,8 +1518,8 @@ public:
   virtual Value *getSSPStackGuardCheck(const Module &M) const;
 
 protected:
-  Value *getDefaultSafeStackPointerLocation(IRBuilder<> &IRB,
-                                            bool UseTLS) const;
+  static Value *getDefaultSafeStackPointerLocation(IRBuilder<> &IRB,
+                                            bool UseTLS) ;
 
 public:
   /// Returns the target-specific address of the unsafe stack pointer.
@@ -1556,7 +1556,7 @@ public:
   /// @{
 
   /// Get the ISD node that corresponds to the Instruction class opcode.
-  int InstructionOpcodeToISD(unsigned Opcode) const;
+  static int InstructionOpcodeToISD(unsigned Opcode) ;
 
   /// Estimate the cost of type-legalization and the legalized type.
   std::pair<int, MVT> getTypeLegalizationCost(const DataLayout &DL,
@@ -1831,11 +1831,11 @@ protected:
   }
 
   /// Indicate the minimum number of blocks to generate jump tables.
-  void setMinimumJumpTableEntries(unsigned Val);
+  static void setMinimumJumpTableEntries(unsigned Val);
 
   /// Indicate the maximum number of entries in jump tables.
   /// Set to zero to generate unlimited jump tables.
-  void setMaximumJumpTableSize(unsigned);
+  static void setMaximumJumpTableSize(unsigned);
 
   /// If set to a physical register, this specifies the register that
   /// llvm.savestack/llvm.restorestack should save and restore.
@@ -2738,18 +2738,18 @@ protected:
 
   /// Replace/modify any TargetFrameIndex operands with a targte-dependent
   /// sequence of memory operands that is recognized by PrologEpilogInserter.
-  MachineBasicBlock *emitPatchPoint(MachineInstr &MI,
-                                    MachineBasicBlock *MBB) const;
+  static MachineBasicBlock *emitPatchPoint(MachineInstr &MI,
+                                    MachineBasicBlock *MBB) ;
 
   /// Replace/modify the XRay custom event operands with target-dependent
   /// details.
-  MachineBasicBlock *emitXRayCustomEvent(MachineInstr &MI,
-                                         MachineBasicBlock *MBB) const;
+  static MachineBasicBlock *emitXRayCustomEvent(MachineInstr &MI,
+                                         MachineBasicBlock *MBB) ;
 
   /// Replace/modify the XRay typed event operands with target-dependent
   /// details.
-  MachineBasicBlock *emitXRayTypedEvent(MachineInstr &MI,
-                                        MachineBasicBlock *MBB) const;
+  static MachineBasicBlock *emitXRayTypedEvent(MachineInstr &MI,
+                                        MachineBasicBlock *MBB) ;
 };
 
 /// This class defines information used to lower LLVM code to legal SelectionDAG
@@ -2843,10 +2843,10 @@ public:
   /// Check whether parameters to a call that are passed in callee saved
   /// registers are the same as from the calling function.  This needs to be
   /// checked for tail call eligibility.
-  bool parametersInCSRMatch(const MachineRegisterInfo &MRI,
+  static bool parametersInCSRMatch(const MachineRegisterInfo &MRI,
       const uint32_t *CallerPreservedMask,
       const SmallVectorImpl<CCValAssign> &ArgLocs,
-      const SmallVectorImpl<SDValue> &OutVals) const;
+      const SmallVectorImpl<SDValue> &OutVals) ;
 
   //===--------------------------------------------------------------------===//
   // TargetLowering Optimization Methods
@@ -2894,8 +2894,8 @@ public:
   /// Convert x+y to (VT)((SmallVT)x+(SmallVT)y) if the casts are free.  This
   /// uses isZExtFree and ZERO_EXTEND for the widening cast, but it could be
   /// generalized for targets with other types of implicit widening casts.
-  bool ShrinkDemandedOp(SDValue Op, unsigned BitWidth, const APInt &Demanded,
-                        TargetLoweringOpt &TLO) const;
+  static bool ShrinkDemandedOp(SDValue Op, unsigned BitWidth, const APInt &Demanded,
+                        TargetLoweringOpt &TLO) ;
 
   /// Look at Op.  At this point, we know that only the DemandedBits bits of the
   /// result of Op are ever used downstream.  If we can use this information to
@@ -3504,8 +3504,8 @@ public:
     return nullptr;
   }
 
-  bool verifyReturnAddressArgumentIsConstant(SDValue Op,
-                                             SelectionDAG &DAG) const;
+  static bool verifyReturnAddressArgumentIsConstant(SDValue Op,
+                                             SelectionDAG &DAG) ;
 
   //===--------------------------------------------------------------------===//
   // Inline Asm Support hooks
@@ -3800,7 +3800,7 @@ public:
   /// Turn load of vector type into a load of the individual elements.
   /// \param LD load to expand
   /// \returns MERGE_VALUEs of the scalar loads with their chains.
-  SDValue scalarizeVectorLoad(LoadSDNode *LD, SelectionDAG &DAG) const;
+  static SDValue scalarizeVectorLoad(LoadSDNode *LD, SelectionDAG &DAG) ;
 
   // Turn a store of a vector type into stores of the individual elements.
   /// \param ST Store with a vector value type
@@ -3823,16 +3823,16 @@ public:
   /// in the \p Mask.
   /// \p DataVT is a vector type. \p Mask is a vector value.
   /// \p DataVT and \p Mask have the same number of vector elements.
-  SDValue IncrementMemoryAddress(SDValue Addr, SDValue Mask, const SDLoc &DL,
+  static SDValue IncrementMemoryAddress(SDValue Addr, SDValue Mask, const SDLoc &DL,
                                  EVT DataVT, SelectionDAG &DAG,
-                                 bool IsCompressedMemory) const;
+                                 bool IsCompressedMemory) ;
 
   /// Get a pointer to vector element \p Idx located in memory for a vector of
   /// type \p VecVT starting at a base address of \p VecPtr. If \p Idx is out of
   /// bounds the returned pointer is unspecified, but will be within the vector
   /// bounds.
-  SDValue getVectorElementPointer(SelectionDAG &DAG, SDValue VecPtr, EVT VecVT,
-                                  SDValue Index) const;
+  static SDValue getVectorElementPointer(SelectionDAG &DAG, SDValue VecPtr, EVT VecVT,
+                                  SDValue Index) ;
 
   /// Method for building the DAG expansion of ISD::[US][ADD|SUB]SAT. This
   /// method accepts integers as its arguments.
@@ -3898,10 +3898,10 @@ private:
                                ISD::CondCode Cond, DAGCombinerInfo &DCI,
                                const SDLoc &DL) const;
 
-  SDValue optimizeSetCCOfSignedTruncationCheck(EVT SCCVT, SDValue N0,
+  static SDValue optimizeSetCCOfSignedTruncationCheck(EVT SCCVT, SDValue N0,
                                                SDValue N1, ISD::CondCode Cond,
                                                DAGCombinerInfo &DCI,
-                                               const SDLoc &DL) const;
+                                               const SDLoc &DL) ;
 };
 
 /// Given an LLVM IR type and return type attributes, compute the return value

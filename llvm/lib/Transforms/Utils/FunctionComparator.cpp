@@ -52,19 +52,19 @@ using namespace llvm;
 
 #define DEBUG_TYPE "functioncomparator"
 
-int FunctionComparator::cmpNumbers(uint64_t L, uint64_t R) const {
+int FunctionComparator::cmpNumbers(uint64_t L, uint64_t R) {
   if (L < R) return -1;
   if (L > R) return 1;
   return 0;
 }
 
-int FunctionComparator::cmpOrderings(AtomicOrdering L, AtomicOrdering R) const {
+int FunctionComparator::cmpOrderings(AtomicOrdering L, AtomicOrdering R) {
   if ((int)L < (int)R) return -1;
   if ((int)L > (int)R) return 1;
   return 0;
 }
 
-int FunctionComparator::cmpAPInts(const APInt &L, const APInt &R) const {
+int FunctionComparator::cmpAPInts(const APInt &L, const APInt &R) {
   if (int Res = cmpNumbers(L.getBitWidth(), R.getBitWidth()))
     return Res;
   if (L.ugt(R)) return 1;
@@ -72,7 +72,7 @@ int FunctionComparator::cmpAPInts(const APInt &L, const APInt &R) const {
   return 0;
 }
 
-int FunctionComparator::cmpAPFloats(const APFloat &L, const APFloat &R) const {
+int FunctionComparator::cmpAPFloats(const APFloat &L, const APFloat &R) {
   // Floats are ordered first by semantics (i.e. float, double, half, etc.),
   // then by value interpreted as a bitstring (aka APInt).
   const fltSemantics &SL = L.getSemantics(), &SR = R.getSemantics();
@@ -91,7 +91,7 @@ int FunctionComparator::cmpAPFloats(const APFloat &L, const APFloat &R) const {
   return cmpAPInts(L.bitcastToAPInt(), R.bitcastToAPInt());
 }
 
-int FunctionComparator::cmpMem(StringRef L, StringRef R) const {
+int FunctionComparator::cmpMem(StringRef L, StringRef R) {
   // Prevent heavy comparison, compare sizes first.
   if (int Res = cmpNumbers(L.size(), R.size()))
     return Res;
@@ -102,7 +102,7 @@ int FunctionComparator::cmpMem(StringRef L, StringRef R) const {
 }
 
 int FunctionComparator::cmpAttrs(const AttributeList L,
-                                 const AttributeList R) const {
+                                 const AttributeList R) {
   if (int Res = cmpNumbers(L.getNumAttrSets(), R.getNumAttrSets()))
     return Res;
 
@@ -128,7 +128,7 @@ int FunctionComparator::cmpAttrs(const AttributeList L,
 }
 
 int FunctionComparator::cmpRangeMetadata(const MDNode *L,
-                                         const MDNode *R) const {
+                                         const MDNode *R) {
   if (L == R)
     return 0;
   if (!L)
@@ -155,7 +155,7 @@ int FunctionComparator::cmpRangeMetadata(const MDNode *L,
 }
 
 int FunctionComparator::cmpOperandBundlesSchema(const Instruction *L,
-                                                const Instruction *R) const {
+                                                const Instruction *R) {
   ImmutableCallSite LCS(L);
   ImmutableCallSite RCS(R);
 

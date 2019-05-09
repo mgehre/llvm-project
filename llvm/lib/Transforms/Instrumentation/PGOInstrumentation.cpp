@@ -1680,7 +1680,7 @@ template <> struct DOTGraphTraits<PGOUseFunc *> : DefaultDOTGraphTraits {
     return G->getFunc().getName();
   }
 
-  std::string getNodeLabel(const BasicBlock *Node, const PGOUseFunc *Graph) {
+  static std::string getNodeLabel(const BasicBlock *Node, const PGOUseFunc *Graph) {
     std::string Result;
     raw_string_ostream OS(Result);
 

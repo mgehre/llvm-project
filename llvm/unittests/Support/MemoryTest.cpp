@@ -56,7 +56,7 @@ public:
 
 protected:
   // Adds RW flags to permit testing of the resulting memory
-  unsigned getTestableEquivalent(unsigned RequestedFlags) {
+  static unsigned getTestableEquivalent(unsigned RequestedFlags) {
     switch (RequestedFlags) {
     case Memory::MF_READ:
     case Memory::MF_WRITE:
@@ -72,7 +72,7 @@ protected:
   }
 
   // Returns true if the memory blocks overlap
-  bool doesOverlap(MemoryBlock M1, MemoryBlock M2) {
+  static bool doesOverlap(MemoryBlock M1, MemoryBlock M2) {
     if (M1.base() == M2.base())
       return true;
 

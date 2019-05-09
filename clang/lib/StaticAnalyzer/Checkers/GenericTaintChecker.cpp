@@ -59,7 +59,7 @@ private:
   void addSourcesPre(const CallExpr *CE, CheckerContext &C) const;
 
   /// Propagate taint generated at pre-visit.
-  bool propagateFromPre(const CallExpr *CE, CheckerContext &C) const;
+  static bool propagateFromPre(const CallExpr *CE, CheckerContext &C) ;
 
   /// Add taint sources on a post visit.
   void addSourcesPost(const CallExpr *CE, CheckerContext &C) const;
@@ -327,7 +327,7 @@ void GenericTaintChecker::addSourcesPre(const CallExpr *CE,
 }
 
 bool GenericTaintChecker::propagateFromPre(const CallExpr *CE,
-                                           CheckerContext &C) const {
+                                           CheckerContext &C) {
   ProgramStateRef State = C.getState();
 
   // Depending on what was tainted at pre-visit, we determined a set of

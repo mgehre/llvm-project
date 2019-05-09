@@ -528,12 +528,12 @@ bool ARMTargetInfo::setFPMath(StringRef Name) {
 }
 
 void ARMTargetInfo::getTargetDefinesARMV81A(const LangOptions &Opts,
-                                            MacroBuilder &Builder) const {
+                                            MacroBuilder &Builder) {
   Builder.defineMacro("__ARM_FEATURE_QRDMX", "1");
 }
 
 void ARMTargetInfo::getTargetDefinesARMV82A(const LangOptions &Opts,
-                                            MacroBuilder &Builder) const {
+                                            MacroBuilder &Builder) {
   // Also include the ARMv8.1-A defines
   getTargetDefinesARMV81A(Opts, Builder);
 }

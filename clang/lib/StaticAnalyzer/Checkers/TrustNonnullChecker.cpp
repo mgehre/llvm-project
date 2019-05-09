@@ -63,9 +63,9 @@ public:
             getKeywordSelector(Ctx, "setObject", "forKeyedSubscript")),
         SetObjectForKeySel(getKeywordSelector(Ctx, "setObject", "forKey")) {}
 
-  ProgramStateRef evalAssume(ProgramStateRef State,
+  static ProgramStateRef evalAssume(ProgramStateRef State,
                              SVal Cond,
-                             bool Assumption) const {
+                             bool Assumption) {
     const SymbolRef CondS = Cond.getAsSymbol();
     if (!CondS || CondS->computeComplexity() > ComplexityThreshold)
       return State;
@@ -79,7 +79,7 @@ public:
     return State;
   }
 
-  void checkPostCall(const CallEvent &Call, CheckerContext &C) const {
+  static void checkPostCall(const CallEvent &Call, CheckerContext &C) {
     // Only trust annotations for system headers for non-protocols.
     if (!Call.isInSystemHeader())
       return;
@@ -155,7 +155,7 @@ private:
 
   /// \returns Whether we trust the result of the method call to be
   /// a non-null pointer.
-  bool isNonNullPtr(const CallEvent &Call, CheckerContext &C) const {
+  static bool isNonNullPtr(const CallEvent &Call, CheckerContext &C) {
     QualType ExprRetType = Call.getResultType();
     if (!ExprRetType->isAnyPointerType())
       return false;
@@ -211,9 +211,9 @@ private:
   /// If \p Negated is true, checks NullImplicationMap, and assumes
   /// the negation of \p Antecedent.
   /// Checks NonNullImplicationMap and assumes \p Antecedent otherwise.
-  ProgramStateRef addImplication(SymbolRef Antecedent,
+  static ProgramStateRef addImplication(SymbolRef Antecedent,
                                  ProgramStateRef InputState,
-                                 bool Negated) const {
+                                 bool Negated) {
     if (!InputState)
       return nullptr;
     SValBuilder &SVB = InputState->getStateManager().getSValBuilder();

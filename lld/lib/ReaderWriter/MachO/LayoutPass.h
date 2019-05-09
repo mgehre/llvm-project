@@ -106,8 +106,8 @@ private:
 
   std::vector<SortKey> decorate(File::AtomRange<DefinedAtom> &atomRange) const;
 
-  void undecorate(File::AtomRange<DefinedAtom> &atomRange,
-                  std::vector<SortKey> &keys) const;
+  static void undecorate(File::AtomRange<DefinedAtom> &atomRange,
+                  std::vector<SortKey> &keys) ;
 
   // Check if the follow-on graph is a correct structure. For debugging only.
   void checkFollowonChain(const File::AtomRange<DefinedAtom> &range);

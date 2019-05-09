@@ -462,7 +462,7 @@ bool TargetPassConfig::hasLimitedCodeGenPipeline() {
 }
 
 std::string
-TargetPassConfig::getLimitedCodeGenPipelineReason(const char *Separator) const {
+TargetPassConfig::getLimitedCodeGenPipelineReason(const char *Separator) {
   if (!hasLimitedCodeGenPipeline())
     return std::string();
   std::string Res;
@@ -1100,7 +1100,7 @@ FunctionPass *TargetPassConfig::createRegAllocPass(bool Optimized) {
 
 /// Return true if the default global register allocator is in use and
 /// has not be overriden on the command line with '-regalloc=...'
-bool TargetPassConfig::usingDefaultRegAlloc() const {
+bool TargetPassConfig::usingDefaultRegAlloc() {
   return RegAlloc.getNumOccurrences() == 0;
 }
 

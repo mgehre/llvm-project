@@ -102,10 +102,10 @@ public:
   }
 
 private:
-  void IntersectInRange(BasicValueFactory &BV, Factory &F,
+  static void IntersectInRange(BasicValueFactory &BV, Factory &F,
                         const llvm::APSInt &Lower, const llvm::APSInt &Upper,
                         PrimRangeSet &newRanges, PrimRangeSet::iterator &i,
-                        PrimRangeSet::iterator &e) const;
+                        PrimRangeSet::iterator &e) ;
 
   const llvm::APSInt &getMinValue() const;
 

@@ -172,7 +172,7 @@ public:
 
   /// Returns true if IR has to be issued immediately, or if IR is a zero
   /// latency instruction.
-  bool mustIssueImmediately(const InstRef &IR) const;
+  static bool mustIssueImmediately(const InstRef &IR) ;
 
   /// This routine notifies the Scheduler that a new cycle just started.
   ///

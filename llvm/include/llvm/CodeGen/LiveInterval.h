@@ -819,7 +819,7 @@ namespace llvm {
     }
 
     /// Free memory held by SubRange.
-    void freeSubRange(SubRange *S);
+    static void freeSubRange(SubRange *S);
   };
 
   inline raw_ostream &operator<<(raw_ostream &OS,

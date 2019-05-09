@@ -240,11 +240,11 @@ struct TypeSetByHwMode : public InfoByHwMode<MachineValueTypeSet> {
   bool operator!=(const TypeSetByHwMode &VTS) const { return !(*this == VTS); }
 
   void dump() const;
-  bool validate() const;
+  static bool validate() ;
 
 private:
   /// Intersect two sets. Return true if anything has changed.
-  bool intersect(SetType &Out, const SetType &In);
+  static bool intersect(SetType &Out, const SetType &In);
 };
 
 raw_ostream &operator<<(raw_ostream &OS, const TypeSetByHwMode &T);
@@ -321,7 +321,7 @@ struct TypeInfer {
   /// For each overloaded type (i.e. of form *Any), replace it with the
   /// corresponding subset of legal, specific types.
   void expandOverloads(TypeSetByHwMode &VTS);
-  void expandOverloads(TypeSetByHwMode::SetType &Out,
+  static void expandOverloads(TypeSetByHwMode::SetType &Out,
                        const TypeSetByHwMode::SetType &Legal);
 
   struct ValidateOnExit {
@@ -1285,7 +1285,7 @@ private:
   void GenerateVariants();
   void VerifyInstructionFlags();
 
-  std::vector<Predicate> makePredList(ListInit *L);
+  static std::vector<Predicate> makePredList(ListInit *L);
 
   void ParseOnePattern(Record *TheDef,
                        TreePattern &Pattern, TreePattern &Result,

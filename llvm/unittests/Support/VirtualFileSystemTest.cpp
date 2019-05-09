@@ -1206,7 +1206,7 @@ public:
   }
 
   // This is intended as a "XFAIL" for windows hosts.
-  bool supportsSameDirMultipleYAMLEntries() {
+  static bool supportsSameDirMultipleYAMLEntries() {
     Triple Host(Triple::normalize(sys::getProcessTriple()));
     return !Host.isOSWindows();
   }

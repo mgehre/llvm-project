@@ -244,15 +244,15 @@ namespace {
     void report(const char *msg, const MachineOperand *MO, unsigned MONum,
                 LLT MOVRegType = LLT{});
 
-    void report_context(const LiveInterval &LI) const;
+    static void report_context(const LiveInterval &LI) ;
     void report_context(const LiveRange &LR, unsigned VRegUnit,
                         LaneBitmask LaneMask) const;
-    void report_context(const LiveRange::Segment &S) const;
-    void report_context(const VNInfo &VNI) const;
-    void report_context(SlotIndex Pos) const;
+    static void report_context(const LiveRange::Segment &S) ;
+    static void report_context(const VNInfo &VNI) ;
+    static void report_context(SlotIndex Pos) ;
     void report_context(MCPhysReg PhysReg) const;
-    void report_context_liverange(const LiveRange &LR) const;
-    void report_context_lanemask(LaneBitmask LaneMask) const;
+    static void report_context_liverange(const LiveRange &LR) ;
+    static void report_context_lanemask(LaneBitmask LaneMask) ;
     void report_context_vreg(unsigned VReg) const;
     void report_context_vreg_regunit(unsigned VRegOrUnit) const;
 
@@ -513,11 +513,11 @@ void MachineVerifier::report(const char *msg, const MachineOperand *MO,
   errs() << "\n";
 }
 
-void MachineVerifier::report_context(SlotIndex Pos) const {
+void MachineVerifier::report_context(SlotIndex Pos) {
   errs() << "- at:          " << Pos << '\n';
 }
 
-void MachineVerifier::report_context(const LiveInterval &LI) const {
+void MachineVerifier::report_context(const LiveInterval &LI) {
   errs() << "- interval:    " << LI << '\n';
 }
 
@@ -529,15 +529,15 @@ void MachineVerifier::report_context(const LiveRange &LR, unsigned VRegUnit,
     report_context_lanemask(LaneMask);
 }
 
-void MachineVerifier::report_context(const LiveRange::Segment &S) const {
+void MachineVerifier::report_context(const LiveRange::Segment &S) {
   errs() << "- segment:     " << S << '\n';
 }
 
-void MachineVerifier::report_context(const VNInfo &VNI) const {
+void MachineVerifier::report_context(const VNInfo &VNI) {
   errs() << "- ValNo:       " << VNI.id << " (def " << VNI.def << ")\n";
 }
 
-void MachineVerifier::report_context_liverange(const LiveRange &LR) const {
+void MachineVerifier::report_context_liverange(const LiveRange &LR) {
   errs() << "- liverange:   " << LR << '\n';
 }
 
@@ -557,7 +557,7 @@ void MachineVerifier::report_context_vreg_regunit(unsigned VRegOrUnit) const {
   }
 }
 
-void MachineVerifier::report_context_lanemask(LaneBitmask LaneMask) const {
+void MachineVerifier::report_context_lanemask(LaneBitmask LaneMask) {
   errs() << "- lanemask:    " << PrintLaneMask(LaneMask) << '\n';
 }
 

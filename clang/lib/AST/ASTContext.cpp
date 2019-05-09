@@ -2472,7 +2472,7 @@ bool ASTContext::hasUniqueObjectRepresentations(QualType Ty) const {
   return false;
 }
 
-unsigned ASTContext::CountNonClassIvars(const ObjCInterfaceDecl *OI) const {
+unsigned ASTContext::CountNonClassIvars(const ObjCInterfaceDecl *OI) {
   unsigned count = 0;
   // Count ivars declared in class extension.
   for (const auto *Ext : OI->known_extensions())
@@ -2550,7 +2550,7 @@ void ASTContext::setObjCMethodRedeclaration(const ObjCMethodDecl *MD,
 }
 
 const ObjCInterfaceDecl *ASTContext::getObjContainingInterface(
-                                              const NamedDecl *ND) const {
+                                              const NamedDecl *ND) {
   if (const auto *ID = dyn_cast<ObjCInterfaceDecl>(ND->getDeclContext()))
     return ID;
   if (const auto *CD = dyn_cast<ObjCCategoryDecl>(ND->getDeclContext()))
@@ -5536,7 +5536,7 @@ QualType ASTContext::getBaseElementType(QualType type) const {
 
 /// getConstantArrayElementCount - Returns number of constant array elements.
 uint64_t
-ASTContext::getConstantArrayElementCount(const ConstantArrayType *CA)  const {
+ASTContext::getConstantArrayElementCount(const ConstantArrayType *CA)  {
   uint64_t ElementCount = 1;
   do {
     ElementCount *= CA->getSize().getZExtValue();
@@ -5598,7 +5598,7 @@ QualType ASTContext::getFloatingTypeOfSizeWithinDomain(QualType Size,
 /// point types, ignoring the domain of the type (i.e. 'double' ==
 /// '_Complex double').  If LHS > RHS, return 1.  If LHS == RHS, return 0. If
 /// LHS < RHS, return -1.
-int ASTContext::getFloatingTypeOrder(QualType LHS, QualType RHS) const {
+int ASTContext::getFloatingTypeOrder(QualType LHS, QualType RHS) {
   FloatingRank LHSR = getFloatingRank(LHS);
   FloatingRank RHSR = getFloatingRank(RHS);
 
@@ -6007,7 +6007,7 @@ QualType ASTContext::getBlockDescriptorExtendedType() const {
   return getTagDeclType(BlockDescriptorExtendedType);
 }
 
-TargetInfo::OpenCLTypeKind ASTContext::getOpenCLTypeKind(const Type *T) const {
+TargetInfo::OpenCLTypeKind ASTContext::getOpenCLTypeKind(const Type *T) {
   const auto *BT = dyn_cast<BuiltinType>(T);
 
   if (!BT) {
@@ -6154,7 +6154,7 @@ bool ASTContext::isMSStaticDataMemberInlineDefinition(const VarDecl *VD) const {
 }
 
 ASTContext::InlineVariableDefinitionKind
-ASTContext::getInlineVariableDefinitionKind(const VarDecl *VD) const {
+ASTContext::getInlineVariableDefinitionKind(const VarDecl *VD) {
   if (!VD->isInline())
     return InlineVariableDefinitionKind::None;
 
@@ -6348,7 +6348,7 @@ std::string ASTContext::getObjCEncodingForMethodDecl(const ObjCMethodDecl *Decl,
 ObjCPropertyImplDecl *
 ASTContext::getObjCPropertyImplDeclForPropertyDecl(
                                       const ObjCPropertyDecl *PD,
-                                      const Decl *Container) const {
+                                      const Decl *Container) {
   if (!Container)
     return nullptr;
   if (const auto *CID = dyn_cast<ObjCCategoryImplDecl>(Container)) {
@@ -7156,7 +7156,7 @@ void ASTContext::getObjCEncodingForStructureImpl(RecordDecl *RDecl,
 }
 
 void ASTContext::getObjCEncodingForTypeQualifier(Decl::ObjCDeclQualifier QT,
-                                                 std::string& S) const {
+                                                 std::string& S) {
   if (QT & Decl::OBJC_TQ_In)
     S += 'n';
   if (QT & Decl::OBJC_TQ_Inout)
@@ -10193,9 +10193,9 @@ private:
 
   using VisitorBase = RecursiveASTVisitor<ASTVisitor>;
 
-  bool shouldVisitTemplateInstantiations() const { return true; }
+  static bool shouldVisitTemplateInstantiations() { return true; }
 
-  bool shouldVisitImplicitCode() const { return true; }
+  static bool shouldVisitImplicitCode() { return true; }
 
   template <typename T, typename MapNodeTy, typename BaseTraverseFn,
             typename MapTy>

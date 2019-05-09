@@ -579,7 +579,7 @@ class DoubleAPFloat final : public APFloatBase {
   opStatus addImpl(const APFloat &a, const APFloat &aa, const APFloat &c,
                    const APFloat &cc, roundingMode RM);
 
-  opStatus addWithSpecial(const DoubleAPFloat &LHS, const DoubleAPFloat &RHS,
+  static opStatus addWithSpecial(const DoubleAPFloat &LHS, const DoubleAPFloat &RHS,
                           DoubleAPFloat &Out, roundingMode RM);
 
 public:

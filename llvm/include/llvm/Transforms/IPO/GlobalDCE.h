@@ -47,7 +47,7 @@ private:
   void UpdateGVDependencies(GlobalValue &GV);
   void MarkLive(GlobalValue &GV,
                 SmallVectorImpl<GlobalValue *> *Updates = nullptr);
-  bool RemoveUnusedGlobalValue(GlobalValue &GV);
+  static bool RemoveUnusedGlobalValue(GlobalValue &GV);
 
   void ComputeDependencies(Value *V, SmallPtrSetImpl<GlobalValue *> &U);
 };

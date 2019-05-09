@@ -24,7 +24,7 @@ namespace llvm {
 /// Performs Loop Predication Pass.
 class LoopPredicationPass : public PassInfoMixin<LoopPredicationPass> {
 public:
-  PreservedAnalyses run(Loop &L, LoopAnalysisManager &AM,
+  static PreservedAnalyses run(Loop &L, LoopAnalysisManager &AM,
                         LoopStandardAnalysisResults &AR, LPMUpdater &U);
 };
 } // end namespace llvm

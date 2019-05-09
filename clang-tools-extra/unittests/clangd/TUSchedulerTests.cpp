@@ -70,7 +70,7 @@ protected:
   /// Schedule an update and call \p CB with the diagnostics it produces, if
   /// any. The TUScheduler should be created with captureDiags as a
   /// DiagsCallback for this to work.
-  void updateWithDiags(TUScheduler &S, PathRef File, ParseInputs Inputs,
+  static void updateWithDiags(TUScheduler &S, PathRef File, ParseInputs Inputs,
                        WantDiagnostics WD,
                        llvm::unique_function<void(std::vector<Diag>)> CB) {
     Path OrigFile = File.str();

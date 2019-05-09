@@ -72,16 +72,16 @@ struct RemarkParser {
 private:
   /// Parse one key to a string.
   /// otherwise.
-  Error parseKey(StringRef &Result, yaml::KeyValueNode &Node);
+  static Error parseKey(StringRef &Result, yaml::KeyValueNode &Node);
   /// Parse one value to a string.
-  Error parseValue(StringRef &Result, yaml::KeyValueNode &Node);
+  static Error parseValue(StringRef &Result, yaml::KeyValueNode &Node);
   /// Parse one value to an unsigned.
-  Error parseValue(Optional<unsigned> &Result, yaml::KeyValueNode &Node);
+  static Error parseValue(Optional<unsigned> &Result, yaml::KeyValueNode &Node);
   /// Parse a debug location.
-  Error parseDebugLoc(Optional<StringRef> &File, Optional<unsigned> &Line,
+  static Error parseDebugLoc(Optional<StringRef> &File, Optional<unsigned> &Line,
                       Optional<unsigned> &Column, yaml::KeyValueNode &Node);
   /// Parse an argument.
-  Error parseArg(SmallVectorImpl<LLVMOptRemarkArg> &TmpArgs, yaml::Node &Node);
+  static Error parseArg(SmallVectorImpl<LLVMOptRemarkArg> &TmpArgs, yaml::Node &Node);
 
   /// Handle a diagnostic from the YAML stream. Records the error in the
   /// RemarkParser class.

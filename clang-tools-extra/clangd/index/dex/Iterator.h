@@ -151,29 +151,29 @@ public:
   ///
   /// consume(): OR Iterator returns the highest boost value among children
   /// containing the requested item.
-  std::unique_ptr<Iterator>
-  unionOf(std::vector<std::unique_ptr<Iterator>> Children) const;
+  static std::unique_ptr<Iterator>
+  unionOf(std::vector<std::unique_ptr<Iterator>> Children) ;
 
   /// Returns TRUE Iterator which iterates over "virtual" PostingList
   /// containing all items in range [0, Size) in an efficient manner.
   std::unique_ptr<Iterator> all() const;
 
   /// Returns FALSE Iterator which iterates over no documents.
-  std::unique_ptr<Iterator> none() const;
+  static std::unique_ptr<Iterator> none() ;
 
   /// Returns BOOST iterator which multiplies the score of each item by given
   /// factor. Boosting can be used as a computationally inexpensive filtering.
   /// Users can return significantly more items using consumeAndBoost() and
   /// then trim Top K using retrieval score.
-  std::unique_ptr<Iterator> boost(std::unique_ptr<Iterator> Child,
-                                  float Factor) const;
+  static std::unique_ptr<Iterator> boost(std::unique_ptr<Iterator> Child,
+                                  float Factor) ;
 
   /// Returns LIMIT iterator, which yields up to N elements of its child
   /// iterator. Elements only count towards the limit if they are part of the
   /// final result set. Therefore the following iterator (AND (2) (LIMIT (1 2)
   /// 1)) yields (2), not ().
-  std::unique_ptr<Iterator> limit(std::unique_ptr<Iterator> Child,
-                                  size_t Limit) const;
+  static std::unique_ptr<Iterator> limit(std::unique_ptr<Iterator> Child,
+                                  size_t Limit) ;
 
   /// This allows intersect(create(...), create(...)) syntax.
   template <typename... Args>

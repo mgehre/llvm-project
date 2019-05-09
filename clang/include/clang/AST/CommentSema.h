@@ -92,7 +92,7 @@ public:
                                               unsigned CommandID,
                                               CommandMarkerKind CommandMarker);
 
-  void actOnBlockCommandArgs(BlockCommandComment *Command,
+  static void actOnBlockCommandArgs(BlockCommandComment *Command,
                              ArrayRef<BlockCommandComment::Argument> Args);
 
   void actOnBlockCommandFinish(BlockCommandComment *Command,
@@ -158,7 +158,7 @@ public:
   VerbatimBlockLineComment *actOnVerbatimBlockLine(SourceLocation Loc,
                                                    StringRef Text);
 
-  void actOnVerbatimBlockFinish(VerbatimBlockComment *Block,
+  static void actOnVerbatimBlockFinish(VerbatimBlockComment *Block,
                                 SourceLocation CloseNameLocBegin,
                                 StringRef CloseName,
                                 ArrayRef<VerbatimBlockLineComment *> Lines);
@@ -236,19 +236,19 @@ public:
 
   /// Returns index of a function parameter with the name closest to a given
   /// typo.
-  unsigned correctTypoInParmVarReference(StringRef Typo,
+  static unsigned correctTypoInParmVarReference(StringRef Typo,
                                          ArrayRef<const ParmVarDecl *> ParamVars);
 
-  bool resolveTParamReference(StringRef Name,
+  static bool resolveTParamReference(StringRef Name,
                               const TemplateParameterList *TemplateParameters,
                               SmallVectorImpl<unsigned> *Position);
 
-  StringRef correctTypoInTParamReference(
+  static StringRef correctTypoInTParamReference(
                               StringRef Typo,
                               const TemplateParameterList *TemplateParameters);
 
-  InlineCommandComment::RenderKind
-  getInlineCommandRenderKind(StringRef Name) const;
+  static InlineCommandComment::RenderKind
+  getInlineCommandRenderKind(StringRef Name) ;
 };
 
 } // end namespace comments

@@ -111,7 +111,7 @@ static constexpr SparcCPUInfo CPUInfo[] = {
 };
 
 SparcTargetInfo::CPUGeneration
-SparcTargetInfo::getCPUGeneration(CPUKind Kind) const {
+SparcTargetInfo::getCPUGeneration(CPUKind Kind) {
   if (Kind == CK_GENERIC)
     return CG_V8;
   const SparcCPUInfo *Item = llvm::find_if(
@@ -121,7 +121,7 @@ SparcTargetInfo::getCPUGeneration(CPUKind Kind) const {
   return Item->Generation;
 }
 
-SparcTargetInfo::CPUKind SparcTargetInfo::getCPUKind(StringRef Name) const {
+SparcTargetInfo::CPUKind SparcTargetInfo::getCPUKind(StringRef Name) {
   const SparcCPUInfo *Item = llvm::find_if(
       CPUInfo, [Name](const SparcCPUInfo &Info) { return Info.Name == Name; });
 

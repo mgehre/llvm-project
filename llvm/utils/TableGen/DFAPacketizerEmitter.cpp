@@ -121,7 +121,7 @@ public:
   //
   // collectAllFuncUnits - Construct a map of function unit names to bits.
   //
-  int collectAllFuncUnits(std::vector<Record*> &ProcItinList,
+  static int collectAllFuncUnits(std::vector<Record*> &ProcItinList,
                            std::map<std::string, unsigned> &FUNameToBitsMap,
                            int &maxResources,
                            raw_ostream &OS);
@@ -130,7 +130,7 @@ public:
   // collectAllComboFuncs - Construct a map from a combo function unit bit to
   //                        the bits of all included functional units.
   //
-  int collectAllComboFuncs(std::vector<Record*> &ComboFuncList,
+  static int collectAllComboFuncs(std::vector<Record*> &ComboFuncList,
                            std::map<std::string, unsigned> &FUNameToBitsMap,
                            std::map<unsigned, unsigned> &ComboBitToBitsMap,
                            raw_ostream &OS);

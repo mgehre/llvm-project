@@ -82,7 +82,7 @@ GroupRecord::subgroup_iterator GroupRecord::subgroup_begin() const {
   return DiagSubGroups + SubGroups;
 }
 
-GroupRecord::subgroup_iterator GroupRecord::subgroup_end() const {
+GroupRecord::subgroup_iterator GroupRecord::subgroup_end() {
   return nullptr;
 }
 
@@ -95,7 +95,7 @@ GroupRecord::diagnostics_iterator GroupRecord::diagnostics_begin() const {
   return DiagArrays + Members;
 }
 
-GroupRecord::diagnostics_iterator GroupRecord::diagnostics_end() const {
+GroupRecord::diagnostics_iterator GroupRecord::diagnostics_end() {
   return nullptr;
 }
 

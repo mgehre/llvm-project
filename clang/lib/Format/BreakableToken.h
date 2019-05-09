@@ -169,8 +169,8 @@ public:
   /// \p RemainingTokenColumns, assuming that Split is within the range measured
   /// by \p RemainingTokenColumns, and that the whitespace in Split is reduced
   /// to a single space.
-  unsigned getLengthAfterCompression(unsigned RemainingTokenColumns,
-                                     Split Split) const;
+  static unsigned getLengthAfterCompression(unsigned RemainingTokenColumns,
+                                     Split Split) ;
 
   /// Replaces the whitespace range described by \p Split with a single
   /// space.

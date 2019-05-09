@@ -596,7 +596,7 @@ private:
   }
 
   /// Assign new LoopIDs for the partition's cloned loop.
-  void setNewLoopID(MDNode *OrigLoopID, InstPartition *Part) {
+  static void setNewLoopID(MDNode *OrigLoopID, InstPartition *Part) {
     Optional<MDNode *> PartitionID = makeFollowupLoopID(
         OrigLoopID,
         {LLVMLoopDistributeFollowupAll,
@@ -890,7 +890,7 @@ private:
   /// \p PtrToPartition contains the partition number for pointers.  Partition
   /// number -1 means that the pointer is used in multiple partitions.  In this
   /// case we can't safely omit the check.
-  SmallVector<RuntimePointerChecking::PointerCheck, 4>
+  static SmallVector<RuntimePointerChecking::PointerCheck, 4>
   includeOnlyCrossPartitionChecks(
       const SmallVectorImpl<RuntimePointerChecking::PointerCheck> &AllChecks,
       const SmallVectorImpl<int> &PtrToPartition,

@@ -61,8 +61,8 @@ public:
   CodeCompletionTUInfo &getCodeCompletionTUInfo() override { return CCTUInfo; }
 
 private:
-  std::vector<std::string> getVisitedNamespace(
-      CodeCompletionContext::VisitedContextSet VisitedContexts) const {
+  static std::vector<std::string> getVisitedNamespace(
+      CodeCompletionContext::VisitedContextSet VisitedContexts) {
     std::vector<std::string> NSNames;
     for (const auto *Context : VisitedContexts)
       if (const auto *NS = llvm::dyn_cast<NamespaceDecl>(Context))

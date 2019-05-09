@@ -123,7 +123,7 @@ static void verifyRegionRec(const VPRegionBlock *Region) {
 }
 
 void VPlanVerifier::verifyHierarchicalCFG(
-    const VPRegionBlock *TopRegion) const {
+    const VPRegionBlock *TopRegion) {
   if (!EnableHCFGVerifier)
     return;
 

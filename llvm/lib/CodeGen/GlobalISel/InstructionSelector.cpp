@@ -37,7 +37,7 @@ InstructionSelector::InstructionSelector() = default;
 bool InstructionSelector::constrainOperandRegToRegClass(
     MachineInstr &I, unsigned OpIdx, const TargetRegisterClass &RC,
     const TargetInstrInfo &TII, const TargetRegisterInfo &TRI,
-    const RegisterBankInfo &RBI) const {
+    const RegisterBankInfo &RBI) {
   MachineBasicBlock &MBB = *I.getParent();
   MachineFunction &MF = *MBB.getParent();
   MachineRegisterInfo &MRI = MF.getRegInfo();
@@ -48,7 +48,7 @@ bool InstructionSelector::constrainOperandRegToRegClass(
 
 bool InstructionSelector::isOperandImmEqual(
     const MachineOperand &MO, int64_t Value,
-    const MachineRegisterInfo &MRI) const {
+    const MachineRegisterInfo &MRI) {
   if (MO.isReg() && MO.getReg())
     if (auto VRegVal = getConstantVRegVal(MO.getReg(), MRI))
       return *VRegVal == Value;
@@ -56,7 +56,7 @@ bool InstructionSelector::isOperandImmEqual(
 }
 
 bool InstructionSelector::isBaseWithConstantOffset(
-    const MachineOperand &Root, const MachineRegisterInfo &MRI) const {
+    const MachineOperand &Root, const MachineRegisterInfo &MRI) {
   if (!Root.isReg())
     return false;
 
@@ -73,7 +73,7 @@ bool InstructionSelector::isBaseWithConstantOffset(
 }
 
 bool InstructionSelector::isObviouslySafeToFold(MachineInstr &MI,
-                                                MachineInstr &IntoMI) const {
+                                                MachineInstr &IntoMI) {
   // Immediate neighbours are already folded.
   if (MI.getParent() == IntoMI.getParent() &&
       std::next(MI.getIterator()) == IntoMI.getIterator())

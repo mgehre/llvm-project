@@ -976,7 +976,7 @@ void RuntimeDyldELF::processSimpleRelocation(unsigned SectionID, uint64_t Offset
 }
 
 uint32_t RuntimeDyldELF::getMatchingLoRelocation(uint32_t RelType,
-                                                 bool IsLocal) const {
+                                                 bool IsLocal) {
   switch (RelType) {
   case ELF::R_MICROMIPS_GOT16:
     if (IsLocal)

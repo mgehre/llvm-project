@@ -57,7 +57,7 @@ class InstrBuilder {
 
   void populateWrites(InstrDesc &ID, const MCInst &MCI, unsigned SchedClassID);
   void populateReads(InstrDesc &ID, const MCInst &MCI, unsigned SchedClassID);
-  Error verifyInstrDesc(const InstrDesc &ID, const MCInst &MCI) const;
+  static Error verifyInstrDesc(const InstrDesc &ID, const MCInst &MCI) ;
 
 public:
   InstrBuilder(const MCSubtargetInfo &STI, const MCInstrInfo &MCII,

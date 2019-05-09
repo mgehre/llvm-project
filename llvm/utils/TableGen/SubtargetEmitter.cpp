@@ -77,12 +77,12 @@ class SubtargetEmitter {
   void Enumeration(raw_ostream &OS);
   unsigned FeatureKeyValues(raw_ostream &OS);
   unsigned CPUKeyValues(raw_ostream &OS);
-  void FormItineraryStageString(const std::string &Names,
+  static void FormItineraryStageString(const std::string &Names,
                                 Record *ItinData, std::string &ItinString,
                                 unsigned &NStages);
-  void FormItineraryOperandCycleString(Record *ItinData, std::string &ItinString,
+  static void FormItineraryOperandCycleString(Record *ItinData, std::string &ItinString,
                                        unsigned &NOperandCycles);
-  void FormItineraryBypassString(const std::string &Names,
+  static void FormItineraryBypassString(const std::string &Names,
                                  Record *ItinData,
                                  std::string &ItinString, unsigned NOperandCycles);
   void EmitStageAndOperandCycleData(raw_ostream &OS,
@@ -91,13 +91,13 @@ class SubtargetEmitter {
   void EmitItineraries(raw_ostream &OS,
                        std::vector<std::vector<InstrItinerary>>
                          &ProcItinLists);
-  unsigned EmitRegisterFileTables(const CodeGenProcModel &ProcModel,
+  static unsigned EmitRegisterFileTables(const CodeGenProcModel &ProcModel,
                                   raw_ostream &OS);
-  void EmitLoadStoreQueueInfo(const CodeGenProcModel &ProcModel,
+  static void EmitLoadStoreQueueInfo(const CodeGenProcModel &ProcModel,
                               raw_ostream &OS);
-  void EmitExtraProcessorInfo(const CodeGenProcModel &ProcModel,
+  static void EmitExtraProcessorInfo(const CodeGenProcModel &ProcModel,
                               raw_ostream &OS);
-  void EmitProcessorProp(raw_ostream &OS, const Record *R, StringRef Name,
+  static void EmitProcessorProp(raw_ostream &OS, const Record *R, StringRef Name,
                          char Separator);
   void EmitProcessorResourceSubUnits(const CodeGenProcModel &ProcModel,
                                      raw_ostream &OS);

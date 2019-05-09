@@ -148,7 +148,7 @@ private:
                                        BinaryOperator *I);
 
   // Tries to match Op1 and Op2 by using V.
-  bool matchTernaryOp(BinaryOperator *I, Value *V, Value *&Op1, Value *&Op2);
+  static bool matchTernaryOp(BinaryOperator *I, Value *V, Value *&Op1, Value *&Op2);
 
   // Gets SCEV for (LHS op RHS).
   const SCEV *getBinarySCEV(BinaryOperator *I, const SCEV *LHS,

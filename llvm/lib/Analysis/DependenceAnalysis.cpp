@@ -756,7 +756,7 @@ void DependenceInfo::establishNestingLevels(const Instruction *Src,
 
 // Given one of the loops containing the source, return
 // its level index in our numbering scheme.
-unsigned DependenceInfo::mapSrcLoop(const Loop *SrcLoop) const {
+unsigned DependenceInfo::mapSrcLoop(const Loop *SrcLoop) {
   return SrcLoop->getLoopDepth();
 }
 

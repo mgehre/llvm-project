@@ -82,12 +82,12 @@ class TestAfterDivZeroChecker
   void reportBug(SVal Val, CheckerContext &C) const;
 
 public:
-  void checkPreStmt(const BinaryOperator *B, CheckerContext &C) const;
+  static void checkPreStmt(const BinaryOperator *B, CheckerContext &C) ;
   void checkBranchCondition(const Stmt *Condition, CheckerContext &C) const;
-  void checkEndFunction(const ReturnStmt *RS, CheckerContext &C) const;
-  void setDivZeroMap(SVal Var, CheckerContext &C) const;
-  bool hasDivZeroMap(SVal Var, const CheckerContext &C) const;
-  bool isZero(SVal S, CheckerContext &C) const;
+  static void checkEndFunction(const ReturnStmt *RS, CheckerContext &C) ;
+  static void setDivZeroMap(SVal Var, CheckerContext &C) ;
+  static bool hasDivZeroMap(SVal Var, const CheckerContext &C) ;
+  static bool isZero(SVal S, CheckerContext &C) ;
 };
 } // end anonymous namespace
 
@@ -132,7 +132,7 @@ DivisionBRVisitor::VisitNode(const ExplodedNode *Succ,
   return nullptr;
 }
 
-bool TestAfterDivZeroChecker::isZero(SVal S, CheckerContext &C) const {
+bool TestAfterDivZeroChecker::isZero(SVal S, CheckerContext &C) {
   Optional<DefinedSVal> DSV = S.getAs<DefinedSVal>();
 
   if (!DSV)
@@ -142,7 +142,7 @@ bool TestAfterDivZeroChecker::isZero(SVal S, CheckerContext &C) const {
   return !CM.assume(C.getState(), *DSV, true);
 }
 
-void TestAfterDivZeroChecker::setDivZeroMap(SVal Var, CheckerContext &C) const {
+void TestAfterDivZeroChecker::setDivZeroMap(SVal Var, CheckerContext &C) {
   SymbolRef SR = Var.getAsSymbol();
   if (!SR)
     return;
@@ -154,7 +154,7 @@ void TestAfterDivZeroChecker::setDivZeroMap(SVal Var, CheckerContext &C) const {
 }
 
 bool TestAfterDivZeroChecker::hasDivZeroMap(SVal Var,
-                                            const CheckerContext &C) const {
+                                            const CheckerContext &C) {
   SymbolRef SR = Var.getAsSymbol();
   if (!SR)
     return false;
@@ -180,7 +180,7 @@ void TestAfterDivZeroChecker::reportBug(SVal Val, CheckerContext &C) const {
 }
 
 void TestAfterDivZeroChecker::checkEndFunction(const ReturnStmt *,
-                                               CheckerContext &C) const {
+                                               CheckerContext &C) {
   ProgramStateRef State = C.getState();
 
   DivZeroMapTy DivZeroes = State->get<DivZeroMap>();
@@ -199,7 +199,7 @@ void TestAfterDivZeroChecker::checkEndFunction(const ReturnStmt *,
 }
 
 void TestAfterDivZeroChecker::checkPreStmt(const BinaryOperator *B,
-                                           CheckerContext &C) const {
+                                           CheckerContext &C) {
   BinaryOperator::Opcode Op = B->getOpcode();
   if (Op == BO_Div || Op == BO_Rem || Op == BO_DivAssign ||
       Op == BO_RemAssign) {

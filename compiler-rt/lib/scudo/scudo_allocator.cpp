@@ -236,7 +236,7 @@ struct Allocator {
   explicit Allocator(LinkerInitialized)
     : Quarantine(LINKER_INITIALIZED) {}
 
-  NOINLINE void performSanityChecks();
+  static NOINLINE void performSanityChecks();
 
   void init() {
     SanitizerToolName = "Scudo";
@@ -277,7 +277,7 @@ struct Allocator {
   }
 
   // Helper function that checks for a valid Scudo chunk. nullptr isn't.
-  bool isValidPointer(const void *Ptr) {
+  static bool isValidPointer(const void *Ptr) {
     initThreadMaybe();
     if (UNLIKELY(!Ptr))
       return false;
@@ -501,7 +501,7 @@ struct Allocator {
   }
 
   // Helper function that returns the actual usable size of a chunk.
-  uptr getUsableSize(const void *Ptr) {
+  static uptr getUsableSize(const void *Ptr) {
     initThreadMaybe();
     if (UNLIKELY(!Ptr))
       return 0;
@@ -535,7 +535,7 @@ struct Allocator {
     return stats[StatType];
   }
 
-  bool canReturnNull() {
+  static bool canReturnNull() {
     initThreadMaybe();
     return AllocatorMayReturnNull();
   }

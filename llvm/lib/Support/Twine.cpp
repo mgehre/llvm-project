@@ -56,7 +56,7 @@ StringRef Twine::toNullTerminatedStringRef(SmallVectorImpl<char> &Out) const {
 }
 
 void Twine::printOneChild(raw_ostream &OS, Child Ptr,
-                          NodeKind Kind) const {
+                          NodeKind Kind) {
   switch (Kind) {
   case Twine::NullKind: break;
   case Twine::EmptyKind: break;
@@ -106,7 +106,7 @@ void Twine::printOneChild(raw_ostream &OS, Child Ptr,
 }
 
 void Twine::printOneChildRepr(raw_ostream &OS, Child Ptr,
-                              NodeKind Kind) const {
+                              NodeKind Kind) {
   switch (Kind) {
   case Twine::NullKind:
     OS << "null"; break;

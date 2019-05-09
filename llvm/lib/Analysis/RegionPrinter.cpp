@@ -71,7 +71,7 @@ struct DOTGraphTraits<RegionInfo *> : public DOTGraphTraits<RegionNode *> {
         Node, reinterpret_cast<RegionNode *>(G->getTopLevelRegion()));
   }
 
-  std::string getEdgeAttributes(RegionNode *srcNode,
+  static std::string getEdgeAttributes(RegionNode *srcNode,
                                 GraphTraits<RegionInfo *>::ChildIteratorType CI,
                                 RegionInfo *G) {
     RegionNode *destNode = *CI;

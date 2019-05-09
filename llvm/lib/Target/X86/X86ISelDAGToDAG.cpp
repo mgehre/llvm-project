@@ -207,7 +207,7 @@ namespace {
     bool matchAdd(SDValue N, X86ISelAddressMode &AM, unsigned Depth);
     bool matchAddressRecursively(SDValue N, X86ISelAddressMode &AM,
                                  unsigned Depth);
-    bool matchAddressBase(SDValue N, X86ISelAddressMode &AM);
+    static bool matchAddressBase(SDValue N, X86ISelAddressMode &AM);
     bool selectAddr(SDNode *Parent, SDValue N, SDValue &Base,
                     SDValue &Scale, SDValue &Index, SDValue &Disp,
                     SDValue &Segment);
@@ -424,7 +424,7 @@ namespace {
       return true;
     }
 
-    bool isSExtAbsoluteSymbolRef(unsigned Width, SDNode *N) const;
+    static bool isSExtAbsoluteSymbolRef(unsigned Width, SDNode *N) ;
 
     /// Returns whether this is a relocatable immediate in the range
     /// [-2^Width .. 2^Width-1].
@@ -473,9 +473,9 @@ namespace {
 
     bool tryOptimizeRem8Extend(SDNode *N);
 
-    bool onlyUsesZeroFlag(SDValue Flags) const;
-    bool hasNoSignFlagUses(SDValue Flags) const;
-    bool hasNoCarryFlagUses(SDValue Flags) const;
+    static bool onlyUsesZeroFlag(SDValue Flags) ;
+    static bool hasNoSignFlagUses(SDValue Flags) ;
+    static bool hasNoCarryFlagUses(SDValue Flags) ;
   };
 }
 
@@ -2259,7 +2259,7 @@ SDNode *X86DAGToDAGISel::getGlobalBaseReg() {
   return CurDAG->getRegister(GlobalBaseReg, TLI->getPointerTy(DL)).getNode();
 }
 
-bool X86DAGToDAGISel::isSExtAbsoluteSymbolRef(unsigned Width, SDNode *N) const {
+bool X86DAGToDAGISel::isSExtAbsoluteSymbolRef(unsigned Width, SDNode *N) {
   if (N->getOpcode() == ISD::TRUNCATE)
     N = N->getOperand(0).getNode();
   if (N->getOpcode() != X86ISD::Wrapper)
@@ -2288,7 +2288,7 @@ static X86::CondCode getCondFromOpc(unsigned Opc) {
 
 /// Test whether the given X86ISD::CMP node has any users that use a flag
 /// other than ZF.
-bool X86DAGToDAGISel::onlyUsesZeroFlag(SDValue Flags) const {
+bool X86DAGToDAGISel::onlyUsesZeroFlag(SDValue Flags) {
   // Examine each user of the node.
   for (SDNode::use_iterator UI = Flags->use_begin(), UE = Flags->use_end();
          UI != UE; ++UI) {
@@ -2324,7 +2324,7 @@ bool X86DAGToDAGISel::onlyUsesZeroFlag(SDValue Flags) const {
 
 /// Test whether the given X86ISD::CMP node has any uses which require the SF
 /// flag to be accurate.
-bool X86DAGToDAGISel::hasNoSignFlagUses(SDValue Flags) const {
+bool X86DAGToDAGISel::hasNoSignFlagUses(SDValue Flags) {
   // Examine each user of the node.
   for (SDNode::use_iterator UI = Flags->use_begin(), UE = Flags->use_end();
          UI != UE; ++UI) {
@@ -2380,7 +2380,7 @@ static bool mayUseCarryFlag(X86::CondCode CC) {
 
 /// Test whether the given node which sets flags has any uses which require the
 /// CF flag to be accurate.
- bool X86DAGToDAGISel::hasNoCarryFlagUses(SDValue Flags) const {
+ bool X86DAGToDAGISel::hasNoCarryFlagUses(SDValue Flags) {
   // Examine each user of the node.
   for (SDNode::use_iterator UI = Flags->use_begin(), UE = Flags->use_end();
          UI != UE; ++UI) {

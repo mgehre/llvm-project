@@ -3386,7 +3386,7 @@ bool LocalTypedefNameReferencer::VisitRecordType(const RecordType *RT) {
 }
 }
 
-TypeLoc Sema::getReturnTypeLoc(FunctionDecl *FD) const {
+TypeLoc Sema::getReturnTypeLoc(FunctionDecl *FD) {
   TypeLoc TL = FD->getTypeSourceInfo()->getTypeLoc().IgnoreParens();
   while (auto ATL = TL.getAs<AttributedTypeLoc>())
     TL = ATL.getModifiedLoc().IgnoreParens();

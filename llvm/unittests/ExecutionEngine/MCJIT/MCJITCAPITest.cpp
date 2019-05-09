@@ -97,7 +97,7 @@ public:
     ReservedDataSizeRW = DataSizeRW;
   }
 
-  void useSpace(uintptr_t* UsedSize, uintptr_t Size, unsigned Alignment) {
+  static void useSpace(uintptr_t* UsedSize, uintptr_t Size, unsigned Alignment) {
     uintptr_t AlignedSize = (Size + Alignment - 1) / Alignment * Alignment;
     uintptr_t AlignedBegin = (*UsedSize + Alignment - 1) / Alignment * Alignment;
     *UsedSize = AlignedBegin + AlignedSize;

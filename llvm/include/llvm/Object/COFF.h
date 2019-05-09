@@ -789,8 +789,8 @@ private:
 
   template <typename coff_symbol_type>
   const coff_symbol_type *toSymb(DataRefImpl Symb) const;
-  const coff_section *toSec(DataRefImpl Sec) const;
-  const coff_relocation *toRel(DataRefImpl Rel) const;
+  static const coff_section *toSec(DataRefImpl Sec) ;
+  static const coff_relocation *toRel(DataRefImpl Rel) ;
 
   std::error_code initSymbolTablePtr();
   std::error_code initImportTablePtr();
@@ -929,10 +929,10 @@ public:
   section_iterator section_begin() const override;
   section_iterator section_end() const override;
 
-  const coff_section *getCOFFSection(const SectionRef &Section) const;
+  static const coff_section *getCOFFSection(const SectionRef &Section) ;
   COFFSymbolRef getCOFFSymbol(const DataRefImpl &Ref) const;
   COFFSymbolRef getCOFFSymbol(const SymbolRef &Symbol) const;
-  const coff_relocation *getCOFFRelocation(const RelocationRef &Reloc) const;
+  static const coff_relocation *getCOFFRelocation(const RelocationRef &Reloc) ;
   unsigned getSectionID(SectionRef Sec) const;
   unsigned getSymbolSectionID(SymbolRef Sym) const;
 

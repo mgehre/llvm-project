@@ -750,7 +750,7 @@ private:
   }
 
   // Map indirect call target name hash to name string.
-  uint64_t remapValue(uint64_t Value, uint32_t ValueKind,
+  static uint64_t remapValue(uint64_t Value, uint32_t ValueKind,
                       InstrProfSymtab *SymTab);
 
   // Merge Value Profile data from Src record to this record for ValueKind.

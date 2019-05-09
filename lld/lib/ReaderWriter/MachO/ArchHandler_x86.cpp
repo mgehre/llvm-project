@@ -161,11 +161,11 @@ private:
 
   static bool useExternalRelocationTo(const Atom &target);
 
-  void applyFixupFinal(const Reference &ref, uint8_t *location,
+  static void applyFixupFinal(const Reference &ref, uint8_t *location,
                        uint64_t fixupAddress, uint64_t targetAddress,
                        uint64_t inAtomAddress);
 
-  void applyFixupRelocatable(const Reference &ref, uint8_t *location,
+  static void applyFixupRelocatable(const Reference &ref, uint8_t *location,
                              uint64_t fixupAddress,
                              uint64_t targetAddress,
                              uint64_t inAtomAddress);

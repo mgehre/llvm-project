@@ -25,7 +25,7 @@ const FunctionDecl *CheckerContext::getCalleeDecl(const CallExpr *CE) const {
   return L.getAsFunctionDecl();
 }
 
-StringRef CheckerContext::getCalleeName(const FunctionDecl *FunDecl) const {
+StringRef CheckerContext::getCalleeName(const FunctionDecl *FunDecl) {
   if (!FunDecl)
     return StringRef();
   IdentifierInfo *funI = FunDecl->getIdentifier();

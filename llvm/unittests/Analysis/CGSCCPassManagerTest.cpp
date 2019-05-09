@@ -101,7 +101,7 @@ class TestImmutableFunctionAnalysis
     : public AnalysisInfoMixin<TestImmutableFunctionAnalysis> {
 public:
   struct Result {
-    bool invalidate(Function &, const PreservedAnalyses &,
+    static bool invalidate(Function &, const PreservedAnalyses &,
                     FunctionAnalysisManager::Invalidator &) {
       return false;
     }
@@ -848,7 +848,7 @@ struct TestIndirectSCCAnalysis
     TestSCCAnalysis::Result &SCCDep;
     TestModuleAnalysis::Result &MDep;
 
-    bool invalidate(LazyCallGraph::SCC &C, const PreservedAnalyses &PA,
+    static bool invalidate(LazyCallGraph::SCC &C, const PreservedAnalyses &PA,
                     CGSCCAnalysisManager::Invalidator &Inv) {
       auto PAC = PA.getChecker<TestIndirectSCCAnalysis>();
       return !(PAC.preserved() ||
@@ -901,7 +901,7 @@ struct TestDoublyIndirectSCCAnalysis
     Result(TestIndirectSCCAnalysis::Result &IDep) : IDep(IDep) {}
     TestIndirectSCCAnalysis::Result &IDep;
 
-    bool invalidate(LazyCallGraph::SCC &C, const PreservedAnalyses &PA,
+    static bool invalidate(LazyCallGraph::SCC &C, const PreservedAnalyses &PA,
                     CGSCCAnalysisManager::Invalidator &Inv) {
       auto PAC = PA.getChecker<TestDoublyIndirectSCCAnalysis>();
       return !(PAC.preserved() ||
@@ -942,7 +942,7 @@ struct TestIndirectFunctionAnalysis
     TestModuleAnalysis::Result &MDep;
     TestSCCAnalysis::Result &SCCDep;
 
-    bool invalidate(Function &F, const PreservedAnalyses &PA,
+    static bool invalidate(Function &F, const PreservedAnalyses &PA,
                     FunctionAnalysisManager::Invalidator &Inv) {
       auto PAC = PA.getChecker<TestIndirectFunctionAnalysis>();
       return !(PAC.preserved() ||

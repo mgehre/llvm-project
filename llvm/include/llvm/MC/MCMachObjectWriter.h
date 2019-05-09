@@ -131,7 +131,7 @@ public:
 
   support::endian::Writer W;
 
-  const MCSymbol &findAliasedSymbol(const MCSymbol &Sym) const;
+  static const MCSymbol &findAliasedSymbol(const MCSymbol &Sym) ;
 
   /// \name Lifetime management Methods
   /// @{
@@ -143,7 +143,7 @@ public:
   /// \name Utility Methods
   /// @{
 
-  bool isFixupKindPCRel(const MCAssembler &Asm, unsigned Kind);
+  static bool isFixupKindPCRel(const MCAssembler &Asm, unsigned Kind);
 
   SectionAddrMap &getSectionAddressMap() { return SectionAddress; }
 
@@ -157,7 +157,7 @@ public:
 
   uint64_t getPaddingSize(const MCSection *SD, const MCAsmLayout &Layout) const;
 
-  bool doesSymbolRequireExternRelocation(const MCSymbol &S);
+  static bool doesSymbolRequireExternRelocation(const MCSymbol &S);
 
   /// @}
 

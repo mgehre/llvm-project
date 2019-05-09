@@ -645,7 +645,7 @@ protected:
   void add(StringRef File, StringRef Flags = "") { add(File, "clang", Flags); }
 
   // Turn a unix path fragment (foo/bar.h) into a native path (C:\tmp\foo\bar.h)
-  std::string path(llvm::SmallString<32> File) {
+  static std::string path(llvm::SmallString<32> File) {
     llvm::SmallString<32> Dir;
     llvm::sys::path::system_temp_directory(false, Dir);
     llvm::sys::path::native(File);

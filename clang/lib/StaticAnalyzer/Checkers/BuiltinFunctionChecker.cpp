@@ -24,13 +24,13 @@ namespace {
 
 class BuiltinFunctionChecker : public Checker<eval::Call> {
 public:
-  bool evalCall(const CallExpr *CE, CheckerContext &C) const;
+  static bool evalCall(const CallExpr *CE, CheckerContext &C) ;
 };
 
 }
 
 bool BuiltinFunctionChecker::evalCall(const CallExpr *CE,
-                                      CheckerContext &C) const {
+                                      CheckerContext &C) {
   ProgramStateRef state = C.getState();
   const FunctionDecl *FD = C.getCalleeDecl(CE);
   const LocationContext *LCtx = C.getLocationContext();

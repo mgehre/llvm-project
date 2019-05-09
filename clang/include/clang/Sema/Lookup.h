@@ -696,7 +696,7 @@ private:
   void configure();
 
   // Sanity checks.
-  bool sanity() const;
+  static bool sanity() ;
 
   bool sanityCheckUnresolved() const {
     for (iterator I = begin(), E = end(); I != E; ++I)

@@ -56,16 +56,16 @@ class DynamicTypePropagation:
                     check::PostStmt<CXXNewExpr>,
                     check::PreObjCMessage,
                     check::PostObjCMessage > {
-  const ObjCObjectType *getObjectTypeForAllocAndNew(const ObjCMessageExpr *MsgE,
-                                                    CheckerContext &C) const;
+  static const ObjCObjectType *getObjectTypeForAllocAndNew(const ObjCMessageExpr *MsgE,
+                                                    CheckerContext &C) ;
 
   /// Return a better dynamic type if one can be derived from the cast.
-  const ObjCObjectPointerType *getBetterObjCType(const Expr *CastE,
-                                                 CheckerContext &C) const;
+  static const ObjCObjectPointerType *getBetterObjCType(const Expr *CastE,
+                                                 CheckerContext &C) ;
 
-  ExplodedNode *dynamicTypePropagationOnCasts(const CastExpr *CE,
+  static ExplodedNode *dynamicTypePropagationOnCasts(const CastExpr *CE,
                                               ProgramStateRef &State,
-                                              CheckerContext &C) const;
+                                              CheckerContext &C) ;
 
   mutable std::unique_ptr<BugType> ObjCGenericsBugType;
   void initBugType() const {
@@ -99,13 +99,13 @@ class DynamicTypePropagation:
                          const Stmt *ReportedNode = nullptr) const;
 
 public:
-  void checkPreCall(const CallEvent &Call, CheckerContext &C) const;
-  void checkPostCall(const CallEvent &Call, CheckerContext &C) const;
+  static void checkPreCall(const CallEvent &Call, CheckerContext &C) ;
+  static void checkPostCall(const CallEvent &Call, CheckerContext &C) ;
   void checkPostStmt(const CastExpr *CastE, CheckerContext &C) const;
-  void checkPostStmt(const CXXNewExpr *NewE, CheckerContext &C) const;
-  void checkDeadSymbols(SymbolReaper &SR, CheckerContext &C) const;
+  static void checkPostStmt(const CXXNewExpr *NewE, CheckerContext &C) ;
+  static void checkDeadSymbols(SymbolReaper &SR, CheckerContext &C) ;
   void checkPreObjCMessage(const ObjCMethodCall &M, CheckerContext &C) const;
-  void checkPostObjCMessage(const ObjCMethodCall &M, CheckerContext &C) const;
+  static void checkPostObjCMessage(const ObjCMethodCall &M, CheckerContext &C) ;
 
   /// This value is set to true, when the Generics checker is turned on.
   DefaultBool CheckGenerics;
@@ -113,7 +113,7 @@ public:
 } // end anonymous namespace
 
 void DynamicTypePropagation::checkDeadSymbols(SymbolReaper &SR,
-                                              CheckerContext &C) const {
+                                              CheckerContext &C) {
   ProgramStateRef State = C.getState();
   DynamicTypeMapImpl TypeMap = State->get<DynamicTypeMap>();
   for (DynamicTypeMapImpl::iterator I = TypeMap.begin(), E = TypeMap.end();
@@ -150,7 +150,7 @@ static void recordFixedType(const MemRegion *Region, const CXXMethodDecl *MD,
 }
 
 void DynamicTypePropagation::checkPreCall(const CallEvent &Call,
-                                          CheckerContext &C) const {
+                                          CheckerContext &C) {
   if (const CXXConstructorCall *Ctor = dyn_cast<CXXConstructorCall>(&Call)) {
     // C++11 [class.cdtor]p4: When a virtual function is called directly or
     //   indirectly from a constructor or from a destructor, including during
@@ -194,7 +194,7 @@ void DynamicTypePropagation::checkPreCall(const CallEvent &Call,
 }
 
 void DynamicTypePropagation::checkPostCall(const CallEvent &Call,
-                                           CheckerContext &C) const {
+                                           CheckerContext &C) {
   // We can obtain perfect type info for return values from some calls.
   if (const ObjCMethodCall *Msg = dyn_cast<ObjCMethodCall>(&Call)) {
 
@@ -281,7 +281,7 @@ void DynamicTypePropagation::checkPostCall(const CallEvent &Call,
 ///
 /// Precondition: the cast is between ObjCObjectPointers.
 ExplodedNode *DynamicTypePropagation::dynamicTypePropagationOnCasts(
-    const CastExpr *CE, ProgramStateRef &State, CheckerContext &C) const {
+    const CastExpr *CE, ProgramStateRef &State, CheckerContext &C) {
   // We only track type info for regions.
   const MemRegion *ToR = C.getSVal(CE).getAsRegion();
   if (!ToR)
@@ -298,7 +298,7 @@ ExplodedNode *DynamicTypePropagation::dynamicTypePropagationOnCasts(
 }
 
 void DynamicTypePropagation::checkPostStmt(const CXXNewExpr *NewE,
-                                           CheckerContext &C) const {
+                                           CheckerContext &C) {
   if (NewE->isArray())
     return;
 
@@ -313,7 +313,7 @@ void DynamicTypePropagation::checkPostStmt(const CXXNewExpr *NewE,
 
 const ObjCObjectType *
 DynamicTypePropagation::getObjectTypeForAllocAndNew(const ObjCMessageExpr *MsgE,
-                                                    CheckerContext &C) const {
+                                                    CheckerContext &C) {
   if (MsgE->getReceiverKind() == ObjCMessageExpr::Class) {
     if (const ObjCObjectType *ObjTy
           = MsgE->getClassReceiver()->getAs<ObjCObjectType>())
@@ -350,7 +350,7 @@ DynamicTypePropagation::getObjectTypeForAllocAndNew(const ObjCMessageExpr *MsgE,
 // are casting. If the new type is lower in the inheritance hierarchy, pick it.
 const ObjCObjectPointerType *
 DynamicTypePropagation::getBetterObjCType(const Expr *CastE,
-                                          CheckerContext &C) const {
+                                          CheckerContext &C) {
   const MemRegion *ToR = C.getSVal(CastE).getAsRegion();
   assert(ToR);
 
@@ -820,7 +820,7 @@ void DynamicTypePropagation::checkPreObjCMessage(const ObjCMethodCall &M,
 // TODO: right now it only tracks generic types. Extend this to track every
 // type in the DynamicTypeMap and diagnose type errors!
 void DynamicTypePropagation::checkPostObjCMessage(const ObjCMethodCall &M,
-                                                  CheckerContext &C) const {
+                                                  CheckerContext &C) {
   const ObjCMessageExpr *MessageExpr = M.getOriginExpr();
 
   SymbolRef RetSym = M.getReturnValue().getAsSymbol();

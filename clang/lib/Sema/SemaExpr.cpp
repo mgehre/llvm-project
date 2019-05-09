@@ -427,7 +427,7 @@ void Sema::DiagnoseSentinelCalls(NamedDecl *D, SourceLocation Loc,
   Diag(D->getLocation(), diag::note_sentinel_here) << int(calleeType);
 }
 
-SourceRange Sema::getExprRange(Expr *E) const {
+SourceRange Sema::getExprRange(Expr *E) {
   return E ? E->getSourceRange() : SourceRange();
 }
 
@@ -14456,7 +14456,7 @@ namespace {
     TransformToPE(Sema &SemaRef) : BaseTransform(SemaRef) { }
 
     // Make sure we redo semantic analysis
-    bool AlwaysRebuild() { return true; }
+    static bool AlwaysRebuild() { return true; }
 
     // Make sure we handle LabelStmts correctly.
     // FIXME: This does the right thing, but maybe we need a more general
@@ -14491,7 +14491,7 @@ namespace {
       return BaseTransform::TransformUnaryOperator(E);
     }
 
-    ExprResult TransformLambdaExpr(LambdaExpr *E) {
+    static ExprResult TransformLambdaExpr(LambdaExpr *E) {
       // Lambdas never need to be transformed.
       return E;
     }
@@ -16272,7 +16272,7 @@ namespace {
 
     RebuildUnknownAnyFunction(Sema &S) : S(S) {}
 
-    ExprResult VisitStmt(Stmt *S) {
+    static ExprResult VisitStmt(Stmt *S) {
       llvm_unreachable("unexpected statement!");
     }
 
@@ -16364,7 +16364,7 @@ namespace {
     RebuildUnknownAnyExpr(Sema &S, QualType CastType)
       : S(S), DestType(CastType) {}
 
-    ExprResult VisitStmt(Stmt *S) {
+    static ExprResult VisitStmt(Stmt *S) {
       llvm_unreachable("unexpected statement!");
     }
 

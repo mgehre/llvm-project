@@ -116,7 +116,7 @@ const coff_symbol_type *COFFObjectFile::toSymb(DataRefImpl Ref) const {
   return Addr;
 }
 
-const coff_section *COFFObjectFile::toSec(DataRefImpl Ref) const {
+const coff_section *COFFObjectFile::toSec(DataRefImpl Ref) {
   const coff_section *Addr = reinterpret_cast<const coff_section*>(Ref.p);
 
 #ifndef NDEBUG
@@ -1137,7 +1137,7 @@ COFFObjectFile::getSectionContents(const coff_section *Sec,
   return std::error_code();
 }
 
-const coff_relocation *COFFObjectFile::toRel(DataRefImpl Rel) const {
+const coff_relocation *COFFObjectFile::toRel(DataRefImpl Rel) {
   return reinterpret_cast<const coff_relocation*>(Rel.p);
 }
 
@@ -1171,7 +1171,7 @@ uint64_t COFFObjectFile::getRelocationType(DataRefImpl Rel) const {
 }
 
 const coff_section *
-COFFObjectFile::getCOFFSection(const SectionRef &Section) const {
+COFFObjectFile::getCOFFSection(const SectionRef &Section) {
   return toSec(Section.getRawDataRefImpl());
 }
 
@@ -1188,7 +1188,7 @@ COFFSymbolRef COFFObjectFile::getCOFFSymbol(const SymbolRef &Symbol) const {
 }
 
 const coff_relocation *
-COFFObjectFile::getCOFFRelocation(const RelocationRef &Reloc) const {
+COFFObjectFile::getCOFFRelocation(const RelocationRef &Reloc) {
   return toRel(Reloc.getRawDataRefImpl());
 }
 

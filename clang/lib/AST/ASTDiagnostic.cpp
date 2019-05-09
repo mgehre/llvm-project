@@ -1794,7 +1794,7 @@ class TemplateDiff {
 
   /// HasExtraInfo - Returns true if E is not an integer literal, the
   /// negation of an integer literal, or a boolean literal.
-  bool HasExtraInfo(Expr *E) {
+  static bool HasExtraInfo(Expr *E) {
     if (!E) return false;
 
     E = E->IgnoreImpCasts();

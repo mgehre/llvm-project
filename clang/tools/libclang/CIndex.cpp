@@ -6862,7 +6862,7 @@ public:
   void VisitChildren(CXCursor C) { AnnotateVis.VisitChildren(C); }
   enum CXChildVisitResult Visit(CXCursor cursor, CXCursor parent);
   bool IsIgnoredChildCursor(CXCursor cursor) const;
-  PostChildrenActions DetermineChildActions(CXCursor Cursor) const;
+  static PostChildrenActions DetermineChildActions(CXCursor Cursor) ;
 
   bool postVisitChildren(CXCursor cursor);
   void HandlePostPonedChildCursors(const PostChildrenInfo &Info);
@@ -6917,7 +6917,7 @@ const CXXOperatorCallExpr *GetSubscriptOrCallOperator(CXCursor Cursor) {
 }
 
 AnnotateTokensWorker::PostChildrenActions
-AnnotateTokensWorker::DetermineChildActions(CXCursor Cursor) const {
+AnnotateTokensWorker::DetermineChildActions(CXCursor Cursor) {
   PostChildrenActions actions;
 
   // The DeclRefExpr of CXXOperatorCallExpr refering to the custom operator is

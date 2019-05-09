@@ -1853,7 +1853,7 @@ static unsigned PrintActions1(const Compilation &C, Action *A,
 
 // Print the action graphs in a compilation C.
 // For example "clang -c file1.c file2.c" is composed of two subgraphs.
-void Driver::PrintActions(const Compilation &C) const {
+void Driver::PrintActions(const Compilation &C) {
   std::map<Action *, unsigned> Ids;
   for (Action *A : C.getActions())
     PrintActions1(C, A, Ids);
@@ -4490,7 +4490,7 @@ std::string Driver::GetTemporaryDirectory(StringRef Prefix) const {
   return Path.str();
 }
 
-std::string Driver::GetClPchPath(Compilation &C, StringRef BaseName) const {
+std::string Driver::GetClPchPath(Compilation &C, StringRef BaseName) {
   SmallString<128> Output;
   if (Arg *FpArg = C.getArgs().getLastArg(options::OPT__SLASH_Fp)) {
     // FIXME: If anybody needs it, implement this obscure rule:
@@ -4670,7 +4670,7 @@ const ToolChain &Driver::getToolChain(const ArgList &Args,
   return *TC;
 }
 
-bool Driver::ShouldUseClangCompiler(const JobAction &JA) const {
+bool Driver::ShouldUseClangCompiler(const JobAction &JA) {
   // Say "no" if there is not exactly one input of a type clang understands.
   if (JA.size() != 1 ||
       !types::isAcceptedByClang((*JA.input_begin())->getType()))
@@ -4750,7 +4750,7 @@ bool Driver::GetReleaseVersion(StringRef Str,
   return false;
 }
 
-std::pair<unsigned, unsigned> Driver::getIncludeExcludeOptionFlagMasks(bool IsClCompatMode) const {
+std::pair<unsigned, unsigned> Driver::getIncludeExcludeOptionFlagMasks(bool IsClCompatMode) {
   unsigned IncludedFlagsBitmask = 0;
   unsigned ExcludedFlagsBitmask = options::NoDriverOption;
 

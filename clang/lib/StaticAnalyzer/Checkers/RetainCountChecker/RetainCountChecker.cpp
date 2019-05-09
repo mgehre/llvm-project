@@ -207,7 +207,7 @@ public:
 //===----------------------------------------------------------------------===//
 
 void RetainCountChecker::checkPostStmt(const BlockExpr *BE,
-                                       CheckerContext &C) const {
+                                       CheckerContext &C) {
 
   // Scan the BlockDecRefExprs for any object the retain count checker
   // may be tracking.
@@ -243,7 +243,7 @@ void RetainCountChecker::checkPostStmt(const BlockExpr *BE,
 }
 
 void RetainCountChecker::checkPostStmt(const CastExpr *CE,
-                                       CheckerContext &C) const {
+                                       CheckerContext &C) {
   const ObjCBridgedCastExpr *BE = dyn_cast<ObjCBridgedCastExpr>(CE);
   if (!BE)
     return;
@@ -324,7 +324,7 @@ void RetainCountChecker::checkPostStmt(const ObjCDictionaryLiteral *DL,
 }
 
 void RetainCountChecker::checkPostStmt(const ObjCBoxedExpr *Ex,
-                                       CheckerContext &C) const {
+                                       CheckerContext &C) {
   const ExplodedNode *Pred = C.getPredecessor();
   ProgramStateRef State = Pred->getState();
 
@@ -338,7 +338,7 @@ void RetainCountChecker::checkPostStmt(const ObjCBoxedExpr *Ex,
 }
 
 void RetainCountChecker::checkPostStmt(const ObjCIvarRefExpr *IRE,
-                                       CheckerContext &C) const {
+                                       CheckerContext &C) {
   Optional<Loc> IVarLoc = C.getSVal(IRE).getAs<Loc>();
   if (!IVarLoc)
     return;
@@ -491,7 +491,7 @@ static bool shouldEscapeOSArgumentOnCall(const CallEvent &CE, unsigned ArgIdx,
 // to stop tracking the symbols which were marked with StopTrackingHard.
 void RetainCountChecker::processSummaryOfInlined(const RetainSummary &Summ,
                                                  const CallEvent &CallOrMsg,
-                                                 CheckerContext &C) const {
+                                                 CheckerContext &C) {
   ProgramStateRef state = C.getState();
 
   // Evaluate the effect of the arguments.
@@ -740,7 +740,7 @@ ProgramStateRef RetainCountChecker::updateSymbol(ProgramStateRef state,
                                                  SymbolRef sym, RefVal V,
                                                  ArgEffect AE,
                                                  RefVal::Kind &hasErr,
-                                                 CheckerContext &C) const {
+                                                 CheckerContext &C) {
   bool IgnoreRetainMsg = (bool)C.getASTContext().getLangOpts().ObjCAutoRefCount;
   if (AE.getObjKind() == ObjKind::ObjC && IgnoreRetainMsg) {
     switch (AE.getKind()) {
@@ -1156,7 +1156,7 @@ ExplodedNode * RetainCountChecker::checkReturnWithRetEffect(const ReturnStmt *S,
 //===----------------------------------------------------------------------===//
 
 void RetainCountChecker::checkBind(SVal loc, SVal val, const Stmt *S,
-                                   CheckerContext &C) const {
+                                   CheckerContext &C) {
   ProgramStateRef state = C.getState();
   const MemRegion *MR = loc.getAsRegion();
 
@@ -1170,7 +1170,7 @@ void RetainCountChecker::checkBind(SVal loc, SVal val, const Stmt *S,
 
 ProgramStateRef RetainCountChecker::evalAssume(ProgramStateRef state,
                                                SVal Cond,
-                                               bool Assumption) const {
+                                               bool Assumption) {
   // FIXME: We may add to the interface of evalAssume the list of symbols
   //  whose assumptions have changed.  For now we just iterate through the
   //  bindings and check if any of the tracked symbols are NULL.  This isn't
@@ -1205,7 +1205,7 @@ ProgramStateRef RetainCountChecker::checkRegionChanges(
     ProgramStateRef state, const InvalidatedSymbols *invalidated,
     ArrayRef<const MemRegion *> ExplicitRegions,
     ArrayRef<const MemRegion *> Regions, const LocationContext *LCtx,
-    const CallEvent *Call) const {
+    const CallEvent *Call) {
   if (!invalidated)
     return state;
 
@@ -1308,7 +1308,7 @@ RetainCountChecker::handleAutoreleaseCounts(ProgramStateRef state,
 ProgramStateRef
 RetainCountChecker::handleSymbolDeath(ProgramStateRef state,
                                       SymbolRef sid, RefVal V,
-                                    SmallVectorImpl<SymbolRef> &Leaked) const {
+                                    SmallVectorImpl<SymbolRef> &Leaked) {
   bool hasLeak;
 
   // HACK: Ignore retain-count issues on values accessed through ivars,

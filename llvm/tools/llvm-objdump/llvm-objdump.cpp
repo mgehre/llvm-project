@@ -1004,7 +1004,7 @@ public:
 PrettyPrinter PrettyPrinterInst;
 class HexagonPrettyPrinter : public PrettyPrinter {
 public:
-  void printLead(ArrayRef<uint8_t> Bytes, uint64_t Address,
+  static void printLead(ArrayRef<uint8_t> Bytes, uint64_t Address,
                  raw_ostream &OS) {
     uint32_t opcode =
       (Bytes[3] << 24) | (Bytes[2] << 16) | (Bytes[1] << 8) | Bytes[0];

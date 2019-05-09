@@ -816,7 +816,7 @@ public:
   }
 
   /// Handle invalidation explicitly.
-  bool invalidate(Function &F, const PreservedAnalyses &PA,
+  static bool invalidate(Function &F, const PreservedAnalyses &PA,
                   FunctionAnalysisManager::Invalidator &);
 
   // Most of the public interface is provided via LoopInfoBase.
@@ -949,7 +949,7 @@ class LoopAnalysis : public AnalysisInfoMixin<LoopAnalysis> {
 public:
   typedef LoopInfo Result;
 
-  LoopInfo run(Function &F, FunctionAnalysisManager &AM);
+  static LoopInfo run(Function &F, FunctionAnalysisManager &AM);
 };
 
 /// Printer pass for the \c LoopAnalysis results.
@@ -963,7 +963,7 @@ public:
 
 /// Verifier pass for the \c LoopAnalysis results.
 struct LoopVerifierPass : public PassInfoMixin<LoopVerifierPass> {
-  PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
+  static PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
 };
 
 /// The legacy pass manager's analysis pass to compute loop information.

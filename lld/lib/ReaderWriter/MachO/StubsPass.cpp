@@ -327,7 +327,7 @@ public:
   }
 
 private:
-  bool noTextRelocs() {
+  static bool noTextRelocs() {
     return true;
   }
 
@@ -335,7 +335,7 @@ private:
     return _archHandler.isCallSite(ref);
   }
 
-  void addReference(SimpleDefinedAtom* atom,
+  static void addReference(SimpleDefinedAtom* atom,
                     const ArchHandler::ReferenceInfo &refInfo,
                     const lld::Atom* target) {
     atom->addReference(Reference::KindNamespace::mach_o,
@@ -343,14 +343,14 @@ private:
                       target, refInfo.addend);
   }
 
-  void addReferenceAddend(SimpleDefinedAtom *atom,
+  static void addReferenceAddend(SimpleDefinedAtom *atom,
                           const ArchHandler::ReferenceInfo &refInfo,
                           const lld::Atom *target, uint64_t addend) {
     atom->addReference(Reference::KindNamespace::mach_o, refInfo.arch,
                        refInfo.kind, refInfo.offset, target, addend);
   }
 
-   void addOptReference(SimpleDefinedAtom* atom,
+   static void addOptReference(SimpleDefinedAtom* atom,
                     const ArchHandler::ReferenceInfo &refInfo,
                     const ArchHandler::OptionalRefInfo &optRef,
                     const lld::Atom* target) {

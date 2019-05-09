@@ -118,13 +118,13 @@ class _LIBCXXABI_TYPE_VIS __class_type_info : public __shim_type_info {
 public:
   _LIBCXXABI_HIDDEN virtual ~__class_type_info();
 
-  _LIBCXXABI_HIDDEN void process_static_type_above_dst(__dynamic_cast_info *,
+  static _LIBCXXABI_HIDDEN void process_static_type_above_dst(__dynamic_cast_info *,
                                                        const void *,
-                                                       const void *, int) const;
-  _LIBCXXABI_HIDDEN void process_static_type_below_dst(__dynamic_cast_info *,
-                                                       const void *, int) const;
-  _LIBCXXABI_HIDDEN void process_found_base_class(__dynamic_cast_info *, void *,
-                                                  int) const;
+                                                       const void *, int) ;
+  static _LIBCXXABI_HIDDEN void process_static_type_below_dst(__dynamic_cast_info *,
+                                                       const void *, int) ;
+  static _LIBCXXABI_HIDDEN void process_found_base_class(__dynamic_cast_info *, void *,
+                                                  int) ;
   _LIBCXXABI_HIDDEN virtual void search_above_dst(__dynamic_cast_info *,
                                                   const void *, const void *,
                                                   int, bool) const;

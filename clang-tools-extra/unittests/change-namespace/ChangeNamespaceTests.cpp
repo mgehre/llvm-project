@@ -51,7 +51,7 @@ public:
     return format(Context.getRewrittenText(ID));
   }
 
-  std::string format(llvm::StringRef Code) {
+  static std::string format(llvm::StringRef Code) {
     tooling::Replacements Replaces = format::reformat(
         format::getLLVMStyle(), Code, {tooling::Range(0, Code.size())});
     auto ChangedCode = tooling::applyAllReplacements(Code, Replaces);

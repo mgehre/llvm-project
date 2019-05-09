@@ -208,20 +208,20 @@ public:
   /// Dump graph to the specified filename.
   /// If filename is empty, generate a temporary one.
   /// \return The filename the graph is written into.
-  std::string DumpGraph(bool trim = false, StringRef Filename="");
+  static std::string DumpGraph(bool trim = false, StringRef Filename="");
 
   /// Dump the graph consisting of the given nodes to a specified filename.
   /// Generate a temporary filename if it's not provided.
   /// \return The filename the graph is written into.
-  std::string DumpGraph(ArrayRef<const ExplodedNode *> Nodes,
+  static std::string DumpGraph(ArrayRef<const ExplodedNode *> Nodes,
                         StringRef Filename = "");
 
   /// Visualize the ExplodedGraph created by executing the simulation.
-  void ViewGraph(bool trim = false);
+  static void ViewGraph(bool trim = false);
 
   /// Visualize a trimmed ExplodedGraph that only contains paths to the given
   /// nodes.
-  void ViewGraph(ArrayRef<const ExplodedNode *> Nodes);
+  static void ViewGraph(ArrayRef<const ExplodedNode *> Nodes);
 
   /// getInitialState - Return the initial state used for the root vertex
   ///  in the ExplodedGraph.
@@ -567,7 +567,7 @@ public:
                                      StmtNodeBuilder &Bldr,
                                      ExplodedNode *Pred);
 
-  void handleUOExtension(ExplodedNodeSet::iterator I,
+  static void handleUOExtension(ExplodedNodeSet::iterator I,
                          const UnaryOperator* U,
                          StmtNodeBuilder &Bldr);
 
@@ -668,7 +668,7 @@ public:
                        const EvalCallOptions &CallOpts = {});
 
 private:
-  ProgramStateRef finishArgumentConstruction(ProgramStateRef State,
+  static ProgramStateRef finishArgumentConstruction(ProgramStateRef State,
                                              const CallEvent &Call);
   void finishArgumentConstruction(ExplodedNodeSet &Dst, ExplodedNode *Pred,
                                   const CallEvent &Call);

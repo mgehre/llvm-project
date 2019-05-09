@@ -197,7 +197,7 @@ private:
   void addObjCClassRef(const GlobalVariable *clgv);
 
   /// Get string that the data pointer points to.
-  bool objcClassNameFromExpression(const Constant *c, std::string &name);
+  static bool objcClassNameFromExpression(const Constant *c, std::string &name);
 
   /// Create an LTOModule (private version).
   static ErrorOr<std::unique_ptr<LTOModule>>

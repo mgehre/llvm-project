@@ -45,10 +45,10 @@ public:
 private:
   mutable std::unique_ptr<BuiltinBug> BT;
 
-  bool isLossOfPrecision(const ImplicitCastExpr *Cast, QualType DestType,
-                         CheckerContext &C) const;
+  static bool isLossOfPrecision(const ImplicitCastExpr *Cast, QualType DestType,
+                         CheckerContext &C) ;
 
-  bool isLossOfSign(const ImplicitCastExpr *Cast, CheckerContext &C) const;
+  static bool isLossOfSign(const ImplicitCastExpr *Cast, CheckerContext &C) ;
 
   void reportBug(ExplodedNode *N, CheckerContext &C, const char Msg[]) const;
 };
@@ -128,7 +128,7 @@ void ConversionChecker::reportBug(ExplodedNode *N, CheckerContext &C,
 
 bool ConversionChecker::isLossOfPrecision(const ImplicitCastExpr *Cast,
                                           QualType DestType,
-                                          CheckerContext &C) const {
+                                          CheckerContext &C) {
   // Don't warn about explicit loss of precision.
   if (Cast->isEvaluatable(C.getASTContext()))
     return false;
@@ -183,7 +183,7 @@ bool ConversionChecker::isLossOfPrecision(const ImplicitCastExpr *Cast,
 }
 
 bool ConversionChecker::isLossOfSign(const ImplicitCastExpr *Cast,
-                                     CheckerContext &C) const {
+                                     CheckerContext &C) {
   QualType CastType = Cast->getType();
   QualType SubType = Cast->IgnoreParenImpCasts()->getType();
 

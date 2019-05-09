@@ -195,7 +195,7 @@ public:
     }
   }
 
-  void removeOption(Option *O, SubCommand *SC) {
+  static void removeOption(Option *O, SubCommand *SC) {
     SmallVector<StringRef, 16> OptionNames;
     O->getExtraOptionNames(OptionNames);
     if (O->hasArgStr())
@@ -238,7 +238,7 @@ public:
     }
   }
 
-  bool hasOptions(const SubCommand &Sub) const {
+  static bool hasOptions(const SubCommand &Sub) {
     return (!Sub.OptionsMap.empty() || !Sub.PositionalOpts.empty() ||
             nullptr != Sub.ConsumeAfterOpt);
   }
@@ -337,7 +337,7 @@ public:
 private:
   SubCommand *ActiveSubCommand;
 
-  Option *LookupOption(SubCommand &Sub, StringRef &Arg, StringRef &Value);
+  static Option *LookupOption(SubCommand &Sub, StringRef &Arg, StringRef &Value);
   SubCommand *LookupSubCommand(StringRef Name);
 };
 
@@ -1543,7 +1543,7 @@ void basic_parser_impl::printOptionInfo(const Option &O,
 }
 
 void basic_parser_impl::printOptionName(const Option &O,
-                                        size_t GlobalWidth) const {
+                                        size_t GlobalWidth) {
   outs() << "  -" << O.ArgStr;
   outs().indent(GlobalWidth - O.ArgStr.size());
 }
@@ -1757,7 +1757,7 @@ PRINT_OPT_DIFF(char)
 
 void parser<std::string>::printOptionDiff(const Option &O, StringRef V,
                                           const OptionValue<std::string> &D,
-                                          size_t GlobalWidth) const {
+                                          size_t GlobalWidth) {
   printOptionName(O, GlobalWidth);
   outs() << "= " << V;
   size_t NumSpaces = MaxOptWidth > V.size() ? MaxOptWidth - V.size() : 0;
@@ -1771,7 +1771,7 @@ void parser<std::string>::printOptionDiff(const Option &O, StringRef V,
 
 // Print a placeholder for options that don't yet support printOptionDiff().
 void basic_parser_impl::printOptionNoValue(const Option &O,
-                                           size_t GlobalWidth) const {
+                                           size_t GlobalWidth) {
   printOptionName(O, GlobalWidth);
   outs() << "= *cannot print option value*\n";
 }
@@ -1844,7 +1844,7 @@ protected:
       Opts[i].second->printOptionInfo(MaxArgLen);
   }
 
-  void printSubCommands(StrSubCommandPairVector &Subs, size_t MaxSubLen) {
+  static void printSubCommands(StrSubCommandPairVector &Subs, size_t MaxSubLen) {
     for (const auto &S : Subs) {
       outs() << "  " << S.first;
       if (!S.second->getDescription().empty()) {
@@ -2143,7 +2143,7 @@ static std::vector<VersionPrinterTy> *ExtraVersionPrinters = nullptr;
 namespace {
 class VersionPrinter {
 public:
-  void print() {
+  static void print() {
     raw_ostream &OS = outs();
 #ifdef PACKAGE_VENDOR
     OS << PACKAGE_VENDOR << " ";

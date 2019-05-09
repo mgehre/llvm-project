@@ -230,7 +230,7 @@ namespace {
 
 /// No-op module pass which does nothing.
 struct NoOpModulePass {
-  PreservedAnalyses run(Module &M, ModuleAnalysisManager &) {
+  static PreservedAnalyses run(Module &M, ModuleAnalysisManager &) {
     return PreservedAnalyses::all();
   }
   static StringRef name() { return "NoOpModulePass"; }
@@ -243,13 +243,13 @@ class NoOpModuleAnalysis : public AnalysisInfoMixin<NoOpModuleAnalysis> {
 
 public:
   struct Result {};
-  Result run(Module &, ModuleAnalysisManager &) { return Result(); }
+  static Result run(Module &, ModuleAnalysisManager &) { return Result(); }
   static StringRef name() { return "NoOpModuleAnalysis"; }
 };
 
 /// No-op CGSCC pass which does nothing.
 struct NoOpCGSCCPass {
-  PreservedAnalyses run(LazyCallGraph::SCC &C, CGSCCAnalysisManager &,
+  static PreservedAnalyses run(LazyCallGraph::SCC &C, CGSCCAnalysisManager &,
                         LazyCallGraph &, CGSCCUpdateResult &UR) {
     return PreservedAnalyses::all();
   }
@@ -263,7 +263,7 @@ class NoOpCGSCCAnalysis : public AnalysisInfoMixin<NoOpCGSCCAnalysis> {
 
 public:
   struct Result {};
-  Result run(LazyCallGraph::SCC &, CGSCCAnalysisManager &, LazyCallGraph &G) {
+  static Result run(LazyCallGraph::SCC &, CGSCCAnalysisManager &, LazyCallGraph &G) {
     return Result();
   }
   static StringRef name() { return "NoOpCGSCCAnalysis"; }
@@ -271,7 +271,7 @@ public:
 
 /// No-op function pass which does nothing.
 struct NoOpFunctionPass {
-  PreservedAnalyses run(Function &F, FunctionAnalysisManager &) {
+  static PreservedAnalyses run(Function &F, FunctionAnalysisManager &) {
     return PreservedAnalyses::all();
   }
   static StringRef name() { return "NoOpFunctionPass"; }
@@ -284,13 +284,13 @@ class NoOpFunctionAnalysis : public AnalysisInfoMixin<NoOpFunctionAnalysis> {
 
 public:
   struct Result {};
-  Result run(Function &, FunctionAnalysisManager &) { return Result(); }
+  static Result run(Function &, FunctionAnalysisManager &) { return Result(); }
   static StringRef name() { return "NoOpFunctionAnalysis"; }
 };
 
 /// No-op loop pass which does nothing.
 struct NoOpLoopPass {
-  PreservedAnalyses run(Loop &L, LoopAnalysisManager &,
+  static PreservedAnalyses run(Loop &L, LoopAnalysisManager &,
                         LoopStandardAnalysisResults &, LPMUpdater &) {
     return PreservedAnalyses::all();
   }
@@ -304,7 +304,7 @@ class NoOpLoopAnalysis : public AnalysisInfoMixin<NoOpLoopAnalysis> {
 
 public:
   struct Result {};
-  Result run(Loop &, LoopAnalysisManager &, LoopStandardAnalysisResults &) {
+  static Result run(Loop &, LoopAnalysisManager &, LoopStandardAnalysisResults &) {
     return Result();
   }
   static StringRef name() { return "NoOpLoopAnalysis"; }

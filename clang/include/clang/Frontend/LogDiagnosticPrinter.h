@@ -43,7 +43,7 @@ class LogDiagnosticPrinter : public DiagnosticConsumer {
     DiagnosticsEngine::Level DiagnosticLevel;
   };
 
-  void EmitDiagEntry(llvm::raw_ostream &OS,
+  static void EmitDiagEntry(llvm::raw_ostream &OS,
                      const LogDiagnosticPrinter::DiagEntry &DE);
 
   // Conditional ownership (when StreamOwner is non-null, it's keeping OS

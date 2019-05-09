@@ -164,14 +164,14 @@ struct MapRegionCounters : public RecursiveASTVisitor<MapRegionCounters> {
 
   // Blocks and lambdas are handled as separate functions, so we need not
   // traverse them in the parent context.
-  bool TraverseBlockExpr(BlockExpr *BE) { return true; }
+  static bool TraverseBlockExpr(BlockExpr *BE) { return true; }
   bool TraverseLambdaExpr(LambdaExpr *LE) {
     // Traverse the captures, but not the body.
     for (const auto &C : zip(LE->captures(), LE->capture_inits()))
       TraverseLambdaCapture(LE, &std::get<0>(C), std::get<1>(C));
     return true;
   }
-  bool TraverseCapturedStmt(CapturedStmt *CS) { return true; }
+  static bool TraverseCapturedStmt(CapturedStmt *CS) { return true; }
 
   bool VisitDecl(const Decl *D) {
     switch (D->getKind()) {
@@ -250,7 +250,7 @@ struct MapRegionCounters : public RecursiveASTVisitor<MapRegionCounters> {
   DEFINE_NESTABLE_TRAVERSAL(CXXCatchStmt)
 
   /// Get version \p HashVersion of the PGO hash for \p S.
-  PGOHash::HashType getHashType(PGOHashVersion HashVersion, const Stmt *S) {
+  static PGOHash::HashType getHashType(PGOHashVersion HashVersion, const Stmt *S) {
     switch (S->getStmtClass()) {
     default:
       break;

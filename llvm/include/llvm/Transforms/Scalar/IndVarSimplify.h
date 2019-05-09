@@ -25,7 +25,7 @@ class LPMUpdater;
 
 class IndVarSimplifyPass : public PassInfoMixin<IndVarSimplifyPass> {
 public:
-  PreservedAnalyses run(Loop &L, LoopAnalysisManager &AM,
+  static PreservedAnalyses run(Loop &L, LoopAnalysisManager &AM,
                         LoopStandardAnalysisResults &AR, LPMUpdater &U);
 };
 

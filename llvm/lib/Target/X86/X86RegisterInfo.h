@@ -99,15 +99,15 @@ public:
   /// callee-save registers on this target.
   const MCPhysReg *
   getCalleeSavedRegs(const MachineFunction* MF) const override;
-  const MCPhysReg *
-  getCalleeSavedRegsViaCopy(const MachineFunction *MF) const;
+  static const MCPhysReg *
+  getCalleeSavedRegsViaCopy(const MachineFunction *MF) ;
   const uint32_t *getCallPreservedMask(const MachineFunction &MF,
                                        CallingConv::ID) const override;
   const uint32_t *getNoPreservedMask() const override;
 
   // Calls involved in thread-local variable lookup save more registers than
   // normal calls, so they need a different mask to represent this.
-  const uint32_t *getDarwinTLSCallPreservedMask() const;
+  static const uint32_t *getDarwinTLSCallPreservedMask() ;
 
   /// getReservedRegs - Returns a bitset indexed by physical register number
   /// indicating if a register is a special register that has particular uses and

@@ -77,7 +77,7 @@ struct StructuralEquivalenceTest : ::testing::Test {
     return makeDecls<NamedDecl>(SrcCode0, SrcCode1, Lang, Matcher);
   }
 
-  bool testStructuralMatch(Decl *D0, Decl *D1) {
+  static bool testStructuralMatch(Decl *D0, Decl *D1) {
     llvm::DenseSet<std::pair<Decl *, Decl *>> NonEquivalentDecls01;
     llvm::DenseSet<std::pair<Decl *, Decl *>> NonEquivalentDecls10;
     StructuralEquivalenceContext Ctx01(
@@ -92,7 +92,7 @@ struct StructuralEquivalenceTest : ::testing::Test {
     return Eq01;
   }
 
-  bool testStructuralMatch(std::tuple<Decl *, Decl *> t) {
+  static bool testStructuralMatch(std::tuple<Decl *, Decl *> t) {
     return testStructuralMatch(get<0>(t), get<1>(t));
   }
 };
@@ -499,7 +499,7 @@ TEST_F(StructuralEquivalenceCXXMethodTest, OutOfClass2) {
 
 struct StructuralEquivalenceRecordTest : StructuralEquivalenceTest {
   // FIXME Use a common getRecordDecl with ASTImporterTest.cpp!
-  RecordDecl *getRecordDecl(FieldDecl *FD) {
+  static RecordDecl *getRecordDecl(FieldDecl *FD) {
     auto *ET = cast<ElaboratedType>(FD->getType().getTypePtr());
     return cast<RecordType>(ET->getNamedType().getTypePtr())->getDecl();
   };

@@ -2341,7 +2341,7 @@ private:
   using Base::visit;
 
   // Every instruction which can end up as a user must have a rewrite rule.
-  bool visitInstruction(Instruction &I) {
+  static bool visitInstruction(Instruction &I) {
     LLVM_DEBUG(dbgs() << "    !!!! Cannot rewrite: " << I << "\n");
     llvm_unreachable("No rewrite rule for this instruction!");
   }
@@ -3194,7 +3194,7 @@ private:
   }
 
   // Conservative default is to not rewrite anything.
-  bool visitInstruction(Instruction &I) { return false; }
+  static bool visitInstruction(Instruction &I) { return false; }
 
   /// Generic recursive split emission class.
   template <typename Derived> class OpSplitter {

@@ -53,7 +53,7 @@ public:
 
   void VisitStmt(Stmt *S) { VisitChildren(S); }
 
-  Decl *getDeclFromCall(CallExpr *CE) {
+  static Decl *getDeclFromCall(CallExpr *CE) {
     if (FunctionDecl *CalleeDecl = CE->getDirectCallee())
       return CalleeDecl;
 

@@ -270,7 +270,7 @@ private:
     _LIBCPP_UNREACHABLE();
   }
 
-  PosPtr consumeSeparator(PosPtr P, PosPtr End) const noexcept {
+  static PosPtr consumeSeparator(PosPtr P, PosPtr End) noexcept {
     if (P == End || *P != '/')
       return nullptr;
     const int Inc = P < End ? 1 : -1;
@@ -280,7 +280,7 @@ private:
     return P;
   }
 
-  PosPtr consumeName(PosPtr P, PosPtr End) const noexcept {
+  static PosPtr consumeName(PosPtr P, PosPtr End) noexcept {
     if (P == End || *P == '/')
       return nullptr;
     const int Inc = P < End ? 1 : -1;

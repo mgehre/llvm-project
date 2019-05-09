@@ -20,7 +20,7 @@ class LibCallsShrinkWrapPass : public PassInfoMixin<LibCallsShrinkWrapPass> {
 public:
   static StringRef name() { return "LibCallsShrinkWrapPass"; }
 
-  PreservedAnalyses run(Function &F, FunctionAnalysisManager &FAM);
+  static PreservedAnalyses run(Function &F, FunctionAnalysisManager &FAM);
 };
 } // end namespace llvm
 

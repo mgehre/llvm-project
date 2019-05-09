@@ -38,25 +38,25 @@ class ObjCContainersChecker : public Checker< check::PreStmt<CallExpr>,
                            categories::CoreFoundationObjectiveC));
   }
 
-  inline SymbolRef getArraySym(const Expr *E, CheckerContext &C) const {
+  static inline SymbolRef getArraySym(const Expr *E, CheckerContext &C) {
     SVal ArrayRef = C.getSVal(E);
     SymbolRef ArraySym = ArrayRef.getAsSymbol();
     return ArraySym;
   }
 
-  void addSizeInfo(const Expr *Array, const Expr *Size,
-                   CheckerContext &C) const;
+  static void addSizeInfo(const Expr *Array, const Expr *Size,
+                   CheckerContext &C) ;
 
 public:
   /// A tag to id this checker.
   static void *getTag() { static int Tag; return &Tag; }
 
-  void checkPostStmt(const CallExpr *CE, CheckerContext &C) const;
+  static void checkPostStmt(const CallExpr *CE, CheckerContext &C) ;
   void checkPreStmt(const CallExpr *CE, CheckerContext &C) const;
-  ProgramStateRef checkPointerEscape(ProgramStateRef State,
+  static ProgramStateRef checkPointerEscape(ProgramStateRef State,
                                      const InvalidatedSymbols &Escaped,
                                      const CallEvent *Call,
-                                     PointerEscapeKind Kind) const;
+                                     PointerEscapeKind Kind) ;
 
   void printState(raw_ostream &OS, ProgramStateRef State,
                   const char *NL, const char *Sep) const;
@@ -67,7 +67,7 @@ public:
 REGISTER_MAP_WITH_PROGRAMSTATE(ArraySizeMap, SymbolRef, DefinedSVal)
 
 void ObjCContainersChecker::addSizeInfo(const Expr *Array, const Expr *Size,
-                                        CheckerContext &C) const {
+                                        CheckerContext &C) {
   ProgramStateRef State = C.getState();
   SVal SizeV = C.getSVal(Size);
   // Undefined is reported by another checker.
@@ -85,7 +85,7 @@ void ObjCContainersChecker::addSizeInfo(const Expr *Array, const Expr *Size,
 }
 
 void ObjCContainersChecker::checkPostStmt(const CallExpr *CE,
-                                          CheckerContext &C) const {
+                                          CheckerContext &C) {
   StringRef Name = C.getCalleeName(CE);
   if (Name.empty() || CE->getNumArgs() < 1)
     return;
@@ -159,7 +159,7 @@ ProgramStateRef
 ObjCContainersChecker::checkPointerEscape(ProgramStateRef State,
                                           const InvalidatedSymbols &Escaped,
                                           const CallEvent *Call,
-                                          PointerEscapeKind Kind) const {
+                                          PointerEscapeKind Kind) {
   for (const auto &Sym : Escaped) {
     // When a symbol for a mutable array escapes, we can't reason precisely
     // about its size any more -- so remove it from the map.

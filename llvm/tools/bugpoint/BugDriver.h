@@ -126,7 +126,7 @@ public:
 
   /// isExecutingJIT - Returns true if bugpoint is currently testing the JIT
   ///
-  bool isExecutingJIT();
+  static bool isExecutingJIT();
 
   Module &getProgram() const { return *Program; }
 
@@ -254,10 +254,10 @@ public:
 
   /// This writes the current "Program" to the named bitcode file.  If an error
   /// occurs, true is returned.
-  bool writeProgramToFile(const std::string &Filename, const Module &M) const;
-  bool writeProgramToFile(const std::string &Filename, int FD,
-                          const Module &M) const;
-  bool writeProgramToFile(int FD, const Module &M) const;
+  static bool writeProgramToFile(const std::string &Filename, const Module &M) ;
+  static bool writeProgramToFile(const std::string &Filename, int FD,
+                          const Module &M) ;
+  static bool writeProgramToFile(int FD, const Module &M) ;
 
 private:
   /// initializeExecutionEnvironment - This method is used to set up the

@@ -875,7 +875,7 @@ class ClobberWalker {
     }
   }
 
-  void verifyOptResult(const OptznResult &R) const {
+  static void verifyOptResult(const OptznResult &R) {
     assert(all_of(R.OtherClobbers, [&](const TerminatedPath &P) {
       return MSSA.dominates(P.Clobber, R.PrimaryClobber.Clobber);
     }));
@@ -924,7 +924,7 @@ public:
     return Result;
   }
 
-  void verify(const MemorySSA *MSSA) { assert(MSSA == &this->MSSA); }
+  static void verify(const MemorySSA *MSSA) { assert(MSSA == &this->MSSA); }
 };
 
 struct RenamePassData {

@@ -368,7 +368,7 @@ class CHR {
                      SmallVectorImpl<CHRScope *> &Output);
   void setCHRRegions(CHRScope *Scope, CHRScope *OutermostScope);
 
-  void sortScopes(SmallVectorImpl<CHRScope *> &Input,
+  static void sortScopes(SmallVectorImpl<CHRScope *> &Input,
                   SmallVectorImpl<CHRScope *> &Output);
 
   void transformScopes(SmallVectorImpl<CHRScope *> &CHRScopes);

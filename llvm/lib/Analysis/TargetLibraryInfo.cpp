@@ -582,7 +582,7 @@ static StringRef sanitizeFunctionName(StringRef funcName) {
 }
 
 bool TargetLibraryInfoImpl::getLibFunc(StringRef funcName,
-                                       LibFunc &F) const {
+                                       LibFunc &F) {
   StringRef const *Start = &StandardNames[0];
   StringRef const *End = &StandardNames[NumLibFuncs];
 
@@ -603,7 +603,7 @@ bool TargetLibraryInfoImpl::getLibFunc(StringRef funcName,
 
 bool TargetLibraryInfoImpl::isValidProtoForLibFunc(const FunctionType &FTy,
                                                    LibFunc F,
-                                                   const DataLayout *DL) const {
+                                                   const DataLayout *DL) {
   LLVMContext &Ctx = FTy.getContext();
   Type *PCharTy = Type::getInt8PtrTy(Ctx);
   Type *SizeTTy = DL ? DL->getIntPtrType(Ctx, /*AS=*/0) : nullptr;
@@ -1390,7 +1390,7 @@ bool TargetLibraryInfoImpl::isValidProtoForLibFunc(const FunctionType &FTy,
 }
 
 bool TargetLibraryInfoImpl::getLibFunc(const Function &FDecl,
-                                       LibFunc &F) const {
+                                       LibFunc &F) {
   const DataLayout *DL =
       FDecl.getParent() ? &FDecl.getParent()->getDataLayout() : nullptr;
   return getLibFunc(FDecl.getName(), F) &&
@@ -1650,7 +1650,7 @@ TargetLibraryInfoImpl &TargetLibraryAnalysis::lookupInfoImpl(const Triple &T) {
   return *Impl;
 }
 
-unsigned TargetLibraryInfoImpl::getWCharSize(const Module &M) const {
+unsigned TargetLibraryInfoImpl::getWCharSize(const Module &M) {
   if (auto *ShortWChar = cast_or_null<ConstantAsMetadata>(
       M.getModuleFlag("wchar_size")))
     return cast<ConstantInt>(ShortWChar->getValue())->getZExtValue();

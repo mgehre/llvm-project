@@ -2429,7 +2429,7 @@ FastISel::createMachineMemOperandFor(const Instruction *I) const {
                                            Alignment, AAInfo, Ranges);
 }
 
-CmpInst::Predicate FastISel::optimizeCmpPredicate(const CmpInst *CI) const {
+CmpInst::Predicate FastISel::optimizeCmpPredicate(const CmpInst *CI) {
   // If both operands are the same, then try to optimize or fold the cmp.
   CmpInst::Predicate Predicate = CI->getPredicate();
   if (CI->getOperand(0) != CI->getOperand(1))

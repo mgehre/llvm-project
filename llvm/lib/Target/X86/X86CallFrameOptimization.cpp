@@ -112,7 +112,7 @@ private:
 
   enum InstClassification { Convert, Skip, Exit };
 
-  InstClassification classifyInstruction(MachineBasicBlock &MBB,
+  static InstClassification classifyInstruction(MachineBasicBlock &MBB,
                                          MachineBasicBlock::iterator MI,
                                          const X86RegisterInfo &RegInfo,
                                          DenseSet<unsigned int> &UsedRegs);

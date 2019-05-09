@@ -74,13 +74,13 @@ class NonLocalizedStringChecker
   void initUIMethods(ASTContext &Ctx) const;
   void initLocStringsMethods(ASTContext &Ctx) const;
 
-  bool hasNonLocalizedState(SVal S, CheckerContext &C) const;
-  bool hasLocalizedState(SVal S, CheckerContext &C) const;
-  void setNonLocalizedState(SVal S, CheckerContext &C) const;
-  void setLocalizedState(SVal S, CheckerContext &C) const;
+  static bool hasNonLocalizedState(SVal S, CheckerContext &C) ;
+  static bool hasLocalizedState(SVal S, CheckerContext &C) ;
+  static void setNonLocalizedState(SVal S, CheckerContext &C) ;
+  static void setLocalizedState(SVal S, CheckerContext &C) ;
 
-  bool isAnnotatedAsReturningLocalized(const Decl *D) const;
-  bool isAnnotatedAsTakingLocalized(const Decl *D) const;
+  static bool isAnnotatedAsReturningLocalized(const Decl *D) ;
+  static bool isAnnotatedAsTakingLocalized(const Decl *D) ;
   void reportLocalizationError(SVal S, const CallEvent &M, CheckerContext &C,
                                int argumentNumber = 0) const;
 
@@ -97,7 +97,7 @@ public:
 
   void checkPreObjCMessage(const ObjCMethodCall &msg, CheckerContext &C) const;
   void checkPostObjCMessage(const ObjCMethodCall &msg, CheckerContext &C) const;
-  void checkPostStmt(const ObjCStringLiteral *SL, CheckerContext &C) const;
+  static void checkPostStmt(const ObjCStringLiteral *SL, CheckerContext &C) ;
   void checkPreCall(const CallEvent &Call, CheckerContext &C) const;
   void checkPostCall(const CallEvent &Call, CheckerContext &C) const;
 };
@@ -645,7 +645,7 @@ void NonLocalizedStringChecker::initLocStringsMethods(ASTContext &Ctx) const {
 /// Checks to see if the method / function declaration includes
 /// __attribute__((annotate("returns_localized_nsstring")))
 bool NonLocalizedStringChecker::isAnnotatedAsReturningLocalized(
-    const Decl *D) const {
+    const Decl *D) {
   if (!D)
     return false;
   return std::any_of(
@@ -658,7 +658,7 @@ bool NonLocalizedStringChecker::isAnnotatedAsReturningLocalized(
 /// Checks to see if the method / function declaration includes
 /// __attribute__((annotate("takes_localized_nsstring")))
 bool NonLocalizedStringChecker::isAnnotatedAsTakingLocalized(
-    const Decl *D) const {
+    const Decl *D) {
   if (!D)
     return false;
   return std::any_of(
@@ -670,7 +670,7 @@ bool NonLocalizedStringChecker::isAnnotatedAsTakingLocalized(
 
 /// Returns true if the given SVal is marked as Localized in the program state
 bool NonLocalizedStringChecker::hasLocalizedState(SVal S,
-                                                  CheckerContext &C) const {
+                                                  CheckerContext &C) {
   const MemRegion *mt = S.getAsRegion();
   if (mt) {
     const LocalizedState *LS = C.getState()->get<LocalizedMemMap>(mt);
@@ -683,7 +683,7 @@ bool NonLocalizedStringChecker::hasLocalizedState(SVal S,
 /// Returns true if the given SVal is marked as NonLocalized in the program
 /// state
 bool NonLocalizedStringChecker::hasNonLocalizedState(SVal S,
-                                                     CheckerContext &C) const {
+                                                     CheckerContext &C) {
   const MemRegion *mt = S.getAsRegion();
   if (mt) {
     const LocalizedState *LS = C.getState()->get<LocalizedMemMap>(mt);
@@ -695,7 +695,7 @@ bool NonLocalizedStringChecker::hasNonLocalizedState(SVal S,
 
 /// Marks the given SVal as Localized in the program state
 void NonLocalizedStringChecker::setLocalizedState(const SVal S,
-                                                  CheckerContext &C) const {
+                                                  CheckerContext &C) {
   const MemRegion *mt = S.getAsRegion();
   if (mt) {
     ProgramStateRef State =
@@ -706,7 +706,7 @@ void NonLocalizedStringChecker::setLocalizedState(const SVal S,
 
 /// Marks the given SVal as NonLocalized in the program state
 void NonLocalizedStringChecker::setNonLocalizedState(const SVal S,
-                                                     CheckerContext &C) const {
+                                                     CheckerContext &C) {
   const MemRegion *mt = S.getAsRegion();
   if (mt) {
     ProgramStateRef State = C.getState()->set<LocalizedMemMap>(
@@ -995,7 +995,7 @@ void NonLocalizedStringChecker::checkPostObjCMessage(const ObjCMethodCall &msg,
 
 /// Marks all empty string literals as localized
 void NonLocalizedStringChecker::checkPostStmt(const ObjCStringLiteral *SL,
-                                              CheckerContext &C) const {
+                                              CheckerContext &C) {
   SVal sv = C.getSVal(SL);
   setNonLocalizedState(sv, C);
 }
@@ -1224,7 +1224,7 @@ class PluralMisuseChecker : public Checker<check::ASTCodeBody> {
 
   private:
     void reportPluralMisuseError(const Stmt *S) const;
-    bool isCheckingPlurality(const Expr *E) const;
+    static bool isCheckingPlurality(const Expr *E) ;
   };
 
 public:
@@ -1241,7 +1241,7 @@ public:
 // 1) The conidtion is a variable with "singular" or "plural" in the name
 // 2) The condition is a binary operator with 1 or 2 on the right-hand side
 bool PluralMisuseChecker::MethodCrawler::isCheckingPlurality(
-    const Expr *Condition) const {
+    const Expr *Condition) {
   const BinaryOperator *BO = nullptr;
   // Accounts for when a VarDecl represents a BinaryOperator
   if (const DeclRefExpr *DRE = dyn_cast<DeclRefExpr>(Condition)) {

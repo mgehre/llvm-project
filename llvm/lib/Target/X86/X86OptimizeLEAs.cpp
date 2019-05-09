@@ -265,8 +265,8 @@ private:
   /// Returns the difference between addresses' displacements of \p MI1
   /// and \p MI2. The numbers of the first memory operands for the instructions
   /// are specified through \p N1 and \p N2.
-  int64_t getAddrDispShift(const MachineInstr &MI1, unsigned N1,
-                           const MachineInstr &MI2, unsigned N2) const;
+  static int64_t getAddrDispShift(const MachineInstr &MI1, unsigned N1,
+                           const MachineInstr &MI2, unsigned N2) ;
 
   /// Returns true if the \p Last LEA instruction can be replaced by the
   /// \p First. The difference between displacements of the addresses calculated
@@ -390,7 +390,7 @@ bool OptimizeLEAPass::chooseBestLEA(const SmallVectorImpl<MachineInstr *> &List,
 // passed through \p N1 and \p N2.
 int64_t OptimizeLEAPass::getAddrDispShift(const MachineInstr &MI1, unsigned N1,
                                           const MachineInstr &MI2,
-                                          unsigned N2) const {
+                                          unsigned N2) {
   const MachineOperand &Op1 = MI1.getOperand(N1 + X86::AddrDisp);
   const MachineOperand &Op2 = MI2.getOperand(N2 + X86::AddrDisp);
 

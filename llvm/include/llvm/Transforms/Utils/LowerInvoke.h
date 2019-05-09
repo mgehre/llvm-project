@@ -22,7 +22,7 @@ namespace llvm {
 
 class LowerInvokePass : public PassInfoMixin<LowerInvokePass> {
 public:
-  PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
+  static PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
 };
 
 }

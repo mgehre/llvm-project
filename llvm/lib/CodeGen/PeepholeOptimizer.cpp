@@ -196,7 +196,7 @@ namespace {
                                    SmallPtrSetImpl<MachineInstr *> &LocalMIs);
     bool optimizeRecurrence(MachineInstr &PHI);
     bool findNextSource(RegSubRegPair RegSubReg, RewriteMapTy &RewriteMap);
-    bool isMoveImmediate(MachineInstr &MI,
+    static bool isMoveImmediate(MachineInstr &MI,
                          SmallSet<unsigned, 4> &ImmDefRegs,
                          DenseMap<unsigned, MachineInstr*> &ImmDefMIs);
     bool foldImmediate(MachineInstr &MI, SmallSet<unsigned, 4> &ImmDefRegs,
@@ -234,7 +234,7 @@ namespace {
 
     /// Check whether \p MI is understood by the register coalescer
     /// but may require some rewriting.
-    bool isCoalescableCopy(const MachineInstr &MI) {
+    static bool isCoalescableCopy(const MachineInstr &MI) {
       // SubregToRegs are not interesting, because they are already register
       // coalescer friendly.
       return MI.isCopy() || (!DisableAdvCopyOpt &&
@@ -244,7 +244,7 @@ namespace {
 
     /// Check whether \p MI is a copy like instruction that is
     /// not recognized by the register coalescer.
-    bool isUncoalescableCopy(const MachineInstr &MI) {
+    static bool isUncoalescableCopy(const MachineInstr &MI) {
       return MI.isBitcast() ||
              (!DisableAdvCopyOpt &&
               (MI.isRegSequenceLike() || MI.isInsertSubregLike() ||

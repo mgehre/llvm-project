@@ -532,7 +532,7 @@ private:
   };
   using HintsInfo = SmallVector<HintInfo, 4>;
 
-  BlockFrequency getBrokenHintFreq(const HintsInfo &, unsigned);
+  static BlockFrequency getBrokenHintFreq(const HintsInfo &, unsigned);
   void collectHintInfo(unsigned, HintsInfo &);
 
   bool isUnusedCalleeSavedReg(unsigned PhysReg) const;

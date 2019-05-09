@@ -85,7 +85,7 @@ LegalizeActionStep LegalizeRuleSet::apply(const LegalityQuery &Query) const {
   return {LegalizeAction::Unsupported, 0, LLT{}};
 }
 
-bool LegalizeRuleSet::verifyTypeIdxsCoverage(unsigned NumTypeIdxs) const {
+bool LegalizeRuleSet::verifyTypeIdxsCoverage(unsigned NumTypeIdxs) {
 #ifndef NDEBUG
   if (Rules.empty()) {
     LLVM_DEBUG(
@@ -263,7 +263,7 @@ static LLT getTypeFromTypeIdx(const MachineInstr &MI,
   return MRI.getType(MI.getOperand(OpIdx).getReg());
 }
 
-unsigned LegalizerInfo::getOpcodeIdxForOpcode(unsigned Opcode) const {
+unsigned LegalizerInfo::getOpcodeIdxForOpcode(unsigned Opcode) {
   assert(Opcode >= FirstOp && Opcode <= LastOp && "Unsupported opcode");
   return Opcode - FirstOp;
 }

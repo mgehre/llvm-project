@@ -930,9 +930,9 @@ public:
 private:
   // FIXME(ioeric): consider moving CodeCompletionString logic here to
   // CompletionString.h.
-  ScoredSignature processOverloadCandidate(const OverloadCandidate &Candidate,
+  static ScoredSignature processOverloadCandidate(const OverloadCandidate &Candidate,
                                            const CodeCompletionString &CCS,
-                                           llvm::StringRef DocComment) const {
+                                           llvm::StringRef DocComment) {
     SignatureInformation Signature;
     SignatureQualitySignals Signal;
     const char *ReturnType = nullptr;

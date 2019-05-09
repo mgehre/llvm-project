@@ -72,8 +72,8 @@ public:
   }
 
 private:
-  void insertPHIStores(PHINode *OriginalPHI, AllocaInst *SpillSlot);
-  void
+  static void insertPHIStores(PHINode *OriginalPHI, AllocaInst *SpillSlot);
+  static void
   insertPHIStore(BasicBlock *PredBlock, Value *PredVal, AllocaInst *SpillSlot,
                  SmallVectorImpl<std::pair<BasicBlock *, Value *>> &Worklist);
   AllocaInst *insertPHILoads(PHINode *PN, Function &F);
@@ -85,7 +85,7 @@ private:
   void demotePHIsOnFunclets(Function &F, bool DemoteCatchSwitchPHIOnly);
   void cloneCommonBlocks(Function &F);
   void removeImplausibleInstructions(Function &F);
-  void cleanupPreparedFunclets(Function &F);
+  static void cleanupPreparedFunclets(Function &F);
   void verifyPreparedFunclets(Function &F);
 
   bool DemoteCatchSwitchPHIOnly;

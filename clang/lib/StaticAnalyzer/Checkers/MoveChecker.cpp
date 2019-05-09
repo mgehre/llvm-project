@@ -51,13 +51,13 @@ public:
   void checkEndFunction(const ReturnStmt *RS, CheckerContext &C) const;
   void checkPreCall(const CallEvent &MC, CheckerContext &C) const;
   void checkPostCall(const CallEvent &MC, CheckerContext &C) const;
-  void checkDeadSymbols(SymbolReaper &SR, CheckerContext &C) const;
-  ProgramStateRef
+  static void checkDeadSymbols(SymbolReaper &SR, CheckerContext &C) ;
+  static ProgramStateRef
   checkRegionChanges(ProgramStateRef State,
                      const InvalidatedSymbols *Invalidated,
                      ArrayRef<const MemRegion *> RequestedRegions,
                      ArrayRef<const MemRegion *> InvalidatedRegions,
-                     const LocationContext *LCtx, const CallEvent *Call) const;
+                     const LocationContext *LCtx, const CallEvent *Call) ;
   void printState(raw_ostream &Out, ProgramStateRef State,
                   const char *NL, const char *Sep) const override;
 
@@ -151,7 +151,7 @@ private:
   void explainObject(llvm::raw_ostream &OS, const MemRegion *MR,
                      const CXXRecordDecl *RD, MisuseKind MK) const;
 
-  bool belongsTo(const CXXRecordDecl *RD, const llvm::StringSet<> &Set) const;
+  static bool belongsTo(const CXXRecordDecl *RD, const llvm::StringSet<> &Set) ;
 
   class MovedBugVisitor : public BugReporterVisitor {
   public:
@@ -212,12 +212,12 @@ private:
   ExplodedNode *reportBug(const MemRegion *Region, const CXXRecordDecl *RD,
                           CheckerContext &C, MisuseKind MK) const;
 
-  bool isInMoveSafeContext(const LocationContext *LC) const;
-  bool isStateResetMethod(const CXXMethodDecl *MethodDec) const;
-  bool isMoveSafeMethod(const CXXMethodDecl *MethodDec) const;
-  const ExplodedNode *getMoveLocation(const ExplodedNode *N,
+  static bool isInMoveSafeContext(const LocationContext *LC) ;
+  static bool isStateResetMethod(const CXXMethodDecl *MethodDec) ;
+  static bool isMoveSafeMethod(const CXXMethodDecl *MethodDec) ;
+  static const ExplodedNode *getMoveLocation(const ExplodedNode *N,
                                       const MemRegion *Region,
-                                      CheckerContext &C) const;
+                                      CheckerContext &C) ;
 };
 } // end anonymous namespace
 
@@ -314,7 +314,7 @@ MoveChecker::MovedBugVisitor::VisitNode(const ExplodedNode *N,
 
 const ExplodedNode *MoveChecker::getMoveLocation(const ExplodedNode *N,
                                                  const MemRegion *Region,
-                                                 CheckerContext &C) const {
+                                                 CheckerContext &C) {
   // Walk the ExplodedGraph backwards and find the first node that referred to
   // the tracked region.
   const ExplodedNode *MoveNode = N;
@@ -477,7 +477,7 @@ void MoveChecker::checkPostCall(const CallEvent &Call,
   assert(!C.isDifferent() && "Should not have made transitions on this path!");
 }
 
-bool MoveChecker::isMoveSafeMethod(const CXXMethodDecl *MethodDec) const {
+bool MoveChecker::isMoveSafeMethod(const CXXMethodDecl *MethodDec) {
   // We abandon the cases where bool/void/void* conversion happens.
   if (const auto *ConversionDec =
           dyn_cast_or_null<CXXConversionDecl>(MethodDec)) {
@@ -493,7 +493,7 @@ bool MoveChecker::isMoveSafeMethod(const CXXMethodDecl *MethodDec) const {
        MethodDec->getName().lower() == "isempty"));
 }
 
-bool MoveChecker::isStateResetMethod(const CXXMethodDecl *MethodDec) const {
+bool MoveChecker::isStateResetMethod(const CXXMethodDecl *MethodDec) {
   if (!MethodDec)
       return false;
   if (MethodDec->hasAttr<ReinitializesAttr>())
@@ -512,7 +512,7 @@ bool MoveChecker::isStateResetMethod(const CXXMethodDecl *MethodDec) const {
 
 // Don't report an error inside a move related operation.
 // We assume that the programmer knows what she does.
-bool MoveChecker::isInMoveSafeContext(const LocationContext *LC) const {
+bool MoveChecker::isInMoveSafeContext(const LocationContext *LC) {
   do {
     const auto *CtxDec = LC->getDecl();
     auto *CtorDec = dyn_cast_or_null<CXXConstructorDecl>(CtxDec);
@@ -528,7 +528,7 @@ bool MoveChecker::isInMoveSafeContext(const LocationContext *LC) const {
 }
 
 bool MoveChecker::belongsTo(const CXXRecordDecl *RD,
-                            const llvm::StringSet<> &Set) const {
+                            const llvm::StringSet<> &Set) {
   const IdentifierInfo *II = RD->getIdentifier();
   return II && Set.count(II->getName());
 }
@@ -665,7 +665,7 @@ void MoveChecker::checkPreCall(const CallEvent &Call, CheckerContext &C) const {
 }
 
 void MoveChecker::checkDeadSymbols(SymbolReaper &SymReaper,
-                                   CheckerContext &C) const {
+                                   CheckerContext &C) {
   ProgramStateRef State = C.getState();
   TrackedRegionMapTy TrackedRegions = State->get<TrackedRegionMap>();
   for (TrackedRegionMapTy::value_type E : TrackedRegions) {
@@ -684,7 +684,7 @@ ProgramStateRef MoveChecker::checkRegionChanges(
     ProgramStateRef State, const InvalidatedSymbols *Invalidated,
     ArrayRef<const MemRegion *> RequestedRegions,
     ArrayRef<const MemRegion *> InvalidatedRegions,
-    const LocationContext *LCtx, const CallEvent *Call) const {
+    const LocationContext *LCtx, const CallEvent *Call) {
   if (Call) {
     // Relax invalidation upon function calls: only invalidate parameters
     // that are passed directly via non-const pointers or non-const references

@@ -57,16 +57,16 @@ protected:
     return *Result;
   }
 
-  FormatStyle getStyleWithColumns(FormatStyle Style, unsigned ColumnLimit) {
+  static FormatStyle getStyleWithColumns(FormatStyle Style, unsigned ColumnLimit) {
     Style.ColumnLimit = ColumnLimit;
     return Style;
   }
 
-  FormatStyle getLLVMStyleWithColumns(unsigned ColumnLimit) {
+  static FormatStyle getLLVMStyleWithColumns(unsigned ColumnLimit) {
     return getStyleWithColumns(getLLVMStyle(), ColumnLimit);
   }
 
-  FormatStyle getGoogleStyleWithColumns(unsigned ColumnLimit) {
+  static FormatStyle getGoogleStyleWithColumns(unsigned ColumnLimit) {
     return getStyleWithColumns(getGoogleStyle(), ColumnLimit);
   }
 

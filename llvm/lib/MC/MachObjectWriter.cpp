@@ -322,7 +322,7 @@ MachObjectWriter::findSymbolData(const MCSymbol &Sym) {
   return nullptr;
 }
 
-const MCSymbol &MachObjectWriter::findAliasedSymbol(const MCSymbol &Sym) const {
+const MCSymbol &MachObjectWriter::findAliasedSymbol(const MCSymbol &Sym) {
   const MCSymbol *S = &Sym;
   while (S->isVariable()) {
     const MCExpr *Value = S->getVariableValue();

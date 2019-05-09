@@ -162,7 +162,7 @@ public:
   typedef OptimizationRemarkEmitter Result;
 
   /// Run the analysis pass over a function and produce BFI.
-  Result run(Function &F, FunctionAnalysisManager &AM);
+  static Result run(Function &F, FunctionAnalysisManager &AM);
 };
 }
 #endif // LLVM_IR_OPTIMIZATIONDIAGNOSTICINFO_H

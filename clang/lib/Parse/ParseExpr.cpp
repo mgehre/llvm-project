@@ -254,7 +254,7 @@ bool Parser::isNotExpressionStart() {
   return isKnownToBeDeclarationSpecifier();
 }
 
-bool Parser::isFoldOperator(prec::Level Level) const {
+bool Parser::isFoldOperator(prec::Level Level) {
   return Level > prec::Unknown && Level != prec::Conditional &&
          Level != prec::Spaceship;
 }

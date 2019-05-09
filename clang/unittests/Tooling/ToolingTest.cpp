@@ -135,7 +135,7 @@ TEST(newFrontendActionFactory, CreatesFrontendActionFactoryFromType) {
 }
 
 struct IndependentFrontendActionCreator {
-  std::unique_ptr<ASTConsumer> newASTConsumer() {
+  static std::unique_ptr<ASTConsumer> newASTConsumer() {
     return llvm::make_unique<FindTopLevelDeclConsumer>(nullptr);
   }
 };

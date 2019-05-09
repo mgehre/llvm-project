@@ -415,7 +415,7 @@ namespace {
     InterestingIdentifierMap InterestingIdentifiers;
 
     /// Write the block-info block for the global module index file.
-    void emitBlockInfoBlock(llvm::BitstreamWriter &Stream);
+    static void emitBlockInfoBlock(llvm::BitstreamWriter &Stream);
 
     /// Retrieve the module file information for the given file.
     ModuleFileInfo &getModuleFileInfo(const FileEntry *File) {
@@ -496,7 +496,7 @@ namespace {
     /// The identifier and whether it is "interesting".
     typedef std::pair<StringRef, bool> data_type;
 
-    data_type ReadData(const internal_key_type& k,
+    static data_type ReadData(const internal_key_type& k,
                        const unsigned char* d,
                        unsigned DataLen) {
       // The first bit indicates whether this identifier is interesting.
@@ -700,7 +700,7 @@ public:
     return llvm::djbHash(Key);
   }
 
-  std::pair<unsigned,unsigned>
+  static std::pair<unsigned,unsigned>
   EmitKeyDataLength(raw_ostream& Out, key_type_ref Key, data_type_ref Data) {
     using namespace llvm::support;
     endian::Writer LE(Out, little);
@@ -711,11 +711,11 @@ public:
     return std::make_pair(KeyLen, DataLen);
   }
 
-  void EmitKey(raw_ostream& Out, key_type_ref Key, unsigned KeyLen) {
+  static void EmitKey(raw_ostream& Out, key_type_ref Key, unsigned KeyLen) {
     Out.write(Key.data(), KeyLen);
   }
 
-  void EmitData(raw_ostream& Out, key_type_ref Key, data_type_ref Data,
+  static void EmitData(raw_ostream& Out, key_type_ref Key, data_type_ref Data,
                 unsigned DataLen) {
     using namespace llvm::support;
     for (unsigned I = 0, N = Data.size(); I != N; ++I)

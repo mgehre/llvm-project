@@ -29,7 +29,7 @@ class COFFReader {
   Error readExecutableHeaders(Object &Obj) const;
   Error readSections(Object &Obj) const;
   Error readSymbols(Object &Obj, bool IsBigObj) const;
-  Error setRelocTargets(Object &Obj) const;
+  static Error setRelocTargets(Object &Obj) ;
 
 public:
   explicit COFFReader(const COFFObjectFile &O) : COFFObj(O) {}

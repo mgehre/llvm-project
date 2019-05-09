@@ -193,7 +193,7 @@ class IVUsersAnalysis : public AnalysisInfoMixin<IVUsersAnalysis> {
 public:
   typedef IVUsers Result;
 
-  IVUsers run(Loop &L, LoopAnalysisManager &AM,
+  static IVUsers run(Loop &L, LoopAnalysisManager &AM,
               LoopStandardAnalysisResults &AR);
 };
 

@@ -72,7 +72,7 @@ void GISelCSEInfo::setMF(MachineFunction &MF) {
 GISelCSEInfo::~GISelCSEInfo() {}
 
 bool GISelCSEInfo::isUniqueMachineInstValid(
-    const UniqueMachineInstr &UMI) const {
+    const UniqueMachineInstr &UMI) {
   // Should we check here and assert that the instruction has been fully
   // constructed?
   // FIXME: Any other checks required to be done here? Remove this method if

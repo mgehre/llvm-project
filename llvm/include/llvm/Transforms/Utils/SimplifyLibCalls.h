@@ -128,14 +128,14 @@ private:
   Value *optimizeStrNCpy(CallInst *CI, IRBuilder<> &B);
   Value *optimizeStrLen(CallInst *CI, IRBuilder<> &B);
   Value *optimizeStrPBrk(CallInst *CI, IRBuilder<> &B);
-  Value *optimizeStrTo(CallInst *CI, IRBuilder<> &B);
-  Value *optimizeStrSpn(CallInst *CI, IRBuilder<> &B);
+  static Value *optimizeStrTo(CallInst *CI, IRBuilder<> &B);
+  static Value *optimizeStrSpn(CallInst *CI, IRBuilder<> &B);
   Value *optimizeStrCSpn(CallInst *CI, IRBuilder<> &B);
   Value *optimizeStrStr(CallInst *CI, IRBuilder<> &B);
   Value *optimizeMemChr(CallInst *CI, IRBuilder<> &B);
   Value *optimizeMemCmp(CallInst *CI, IRBuilder<> &B);
-  Value *optimizeMemCpy(CallInst *CI, IRBuilder<> &B);
-  Value *optimizeMemMove(CallInst *CI, IRBuilder<> &B);
+  static Value *optimizeMemCpy(CallInst *CI, IRBuilder<> &B);
+  static Value *optimizeMemMove(CallInst *CI, IRBuilder<> &B);
   Value *optimizeMemSet(CallInst *CI, IRBuilder<> &B);
   Value *optimizeRealloc(CallInst *CI, IRBuilder<> &B);
   Value *optimizeWcslen(CallInst *CI, IRBuilder<> &B);
@@ -143,7 +143,7 @@ private:
   Value *optimizeStringMemoryLibCall(CallInst *CI, IRBuilder<> &B);
 
   // Math Library Optimizations
-  Value *optimizeCAbs(CallInst *CI, IRBuilder<> &B);
+  static Value *optimizeCAbs(CallInst *CI, IRBuilder<> &B);
   Value *optimizePow(CallInst *CI, IRBuilder<> &B);
   Value *replacePowWithExp(CallInst *Pow, IRBuilder<> &B);
   Value *replacePowWithSqrt(CallInst *Pow, IRBuilder<> &B);
@@ -158,17 +158,17 @@ private:
                                       IRBuilder<> &B);
 
   // Integer Library Call Optimizations
-  Value *optimizeFFS(CallInst *CI, IRBuilder<> &B);
-  Value *optimizeFls(CallInst *CI, IRBuilder<> &B);
-  Value *optimizeAbs(CallInst *CI, IRBuilder<> &B);
-  Value *optimizeIsDigit(CallInst *CI, IRBuilder<> &B);
-  Value *optimizeIsAscii(CallInst *CI, IRBuilder<> &B);
-  Value *optimizeToAscii(CallInst *CI, IRBuilder<> &B);
-  Value *optimizeAtoi(CallInst *CI, IRBuilder<> &B);
-  Value *optimizeStrtol(CallInst *CI, IRBuilder<> &B);
+  static Value *optimizeFFS(CallInst *CI, IRBuilder<> &B);
+  static Value *optimizeFls(CallInst *CI, IRBuilder<> &B);
+  static Value *optimizeAbs(CallInst *CI, IRBuilder<> &B);
+  static Value *optimizeIsDigit(CallInst *CI, IRBuilder<> &B);
+  static Value *optimizeIsAscii(CallInst *CI, IRBuilder<> &B);
+  static Value *optimizeToAscii(CallInst *CI, IRBuilder<> &B);
+  static Value *optimizeAtoi(CallInst *CI, IRBuilder<> &B);
+  static Value *optimizeStrtol(CallInst *CI, IRBuilder<> &B);
 
   // Formatting and IO Library Call Optimizations
-  Value *optimizeErrorReporting(CallInst *CI, IRBuilder<> &B,
+  static Value *optimizeErrorReporting(CallInst *CI, IRBuilder<> &B,
                                 int StreamArg = -1);
   Value *optimizePrintF(CallInst *CI, IRBuilder<> &B);
   Value *optimizeSPrintF(CallInst *CI, IRBuilder<> &B);

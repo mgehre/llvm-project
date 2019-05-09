@@ -45,8 +45,8 @@ struct Builder : RecursiveASTVisitor<Builder> {
   }
 
   // Override default settings of base.
-  bool shouldVisitTemplateInstantiations() const { return true; }
-  bool shouldVisitImplicitCode() const { return true; }
+  static bool shouldVisitTemplateInstantiations() { return true; }
+  static bool shouldVisitImplicitCode() { return true; }
 };
 
 } // anonymous namespace

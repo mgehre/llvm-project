@@ -346,7 +346,7 @@ private:
   void mangleArgumentType(QualType T, SourceRange Range);
   void manglePassObjectSizeArg(const PassObjectSizeAttr *POSA);
 
-  bool isArtificialTagType(QualType T) const;
+  static bool isArtificialTagType(QualType T) ;
 
   // Declare manglers for every type class.
 #define ABSTRACT_TYPE(CLASS, PARENT)
@@ -2628,7 +2628,7 @@ void MicrosoftCXXNameMangler::mangleType(const ComplexType *T, Qualifiers,
 // mangling matters.
 // (It doesn't matter for Objective-C types and the like that cl.exe doesn't
 // support.)
-bool MicrosoftCXXNameMangler::isArtificialTagType(QualType T) const {
+bool MicrosoftCXXNameMangler::isArtificialTagType(QualType T) {
   const Type *ty = T.getTypePtr();
   switch (ty->getTypeClass()) {
   default:

@@ -248,7 +248,7 @@ __class_type_info::can_catch(const __shim_type_info* thrown_type,
 void
 __class_type_info::process_found_base_class(__dynamic_cast_info* info,
                                                void* adjustedPtr,
-                                               int path_below) const
+                                               int path_below) 
 {
     if (info->dst_ptr_leading_to_static_ptr == 0)
     {
@@ -724,7 +724,7 @@ void
 __class_type_info::process_static_type_above_dst(__dynamic_cast_info* info,
                                                  const void* dst_ptr,
                                                  const void* current_ptr,
-                                                 int path_below) const
+                                                 int path_below) 
 {
     // Record that we found a static_type
     info->found_any_static_type = true;
@@ -770,7 +770,7 @@ __class_type_info::process_static_type_above_dst(__dynamic_cast_info* info,
 void
 __class_type_info::process_static_type_below_dst(__dynamic_cast_info* info,
                                                  const void* current_ptr,
-                                                 int path_below) const
+                                                 int path_below) 
 {
     if (current_ptr == info->static_ptr)
     {

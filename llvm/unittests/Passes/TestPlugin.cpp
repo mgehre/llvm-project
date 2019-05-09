@@ -15,7 +15,7 @@
 using namespace llvm;
 
 struct TestModulePass : public PassInfoMixin<TestModulePass> {
-  PreservedAnalyses run(Module &M, ModuleAnalysisManager &MAM) {
+  static PreservedAnalyses run(Module &M, ModuleAnalysisManager &MAM) {
     return PreservedAnalyses::all();
   }
 };

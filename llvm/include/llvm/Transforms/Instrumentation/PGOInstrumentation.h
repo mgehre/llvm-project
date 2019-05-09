@@ -30,7 +30,7 @@ class Module;
 /// The instrumentation (profile-instr-gen) pass for IR based PGO.
 class PGOInstrumentationGen : public PassInfoMixin<PGOInstrumentationGen> {
 public:
-  PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
+  static PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
 };
 
 /// The profile annotation (profile-instr-use) pass for IR based PGO.
@@ -64,7 +64,7 @@ class PGOMemOPSizeOpt : public PassInfoMixin<PGOMemOPSizeOpt> {
 public:
   PGOMemOPSizeOpt() = default;
 
-  PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
+  static PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
 };
 
 void setProfMetadata(Module *M, Instruction *TI, ArrayRef<uint64_t> EdgeCounts,

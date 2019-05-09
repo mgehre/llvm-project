@@ -425,7 +425,7 @@ namespace {
                            SourceLocation StartLoc=SourceLocation(),
                            SourceLocation EndLoc=SourceLocation());
 
-    void SynthCountByEnumWithState(std::string &buf);
+    static void SynthCountByEnumWithState(std::string &buf);
     void SynthMsgSendFunctionDecl();
     void SynthMsgSendSuperFunctionDecl();
     void SynthMsgSendStretFunctionDecl();
@@ -470,7 +470,7 @@ namespace {
                                       StringRef funcName, std::string Tag);
     std::string SynthesizeBlockImpl(BlockExpr *CE,
                                     std::string Tag, std::string Desc);
-    std::string SynthesizeBlockDescriptor(std::string DescTag,
+    static std::string SynthesizeBlockDescriptor(std::string DescTag,
                                           std::string ImplTag,
                                           int i, StringRef funcName,
                                           unsigned hasCopy);
@@ -497,7 +497,7 @@ namespace {
 
     // We avoid calling Type::isBlockPointerType(), since it operates on the
     // canonical type. We only care if the top-level type is a closure pointer.
-    bool isTopLevelBlockPointerType(QualType T) {
+    static bool isTopLevelBlockPointerType(QualType T) {
       return isa<BlockPointerType>(T);
     }
 
@@ -558,12 +558,12 @@ namespace {
       return false;
     }
 
-    bool PointerTypeTakesAnyBlockArguments(QualType QT);
-    bool PointerTypeTakesAnyObjCQualifiedType(QualType QT);
-    void GetExtentOfArgList(const char *Name, const char *&LParen,
+    static bool PointerTypeTakesAnyBlockArguments(QualType QT);
+    static bool PointerTypeTakesAnyObjCQualifiedType(QualType QT);
+    static void GetExtentOfArgList(const char *Name, const char *&LParen,
                             const char *&RParen);
 
-    void QuoteDoublequotes(std::string &From, std::string &To) {
+    static void QuoteDoublequotes(std::string &From, std::string &To) {
       for (unsigned i = 0; i < From.length(); i++) {
         if (From[i] == '"')
           To += "\\\"";
@@ -583,7 +583,7 @@ namespace {
     }
 
     // Helper function: create a CStyleCastExpr with trivial type source info.
-    CStyleCastExpr* NoTypeInfoCStyleCastExpr(ASTContext *Ctx, QualType Ty,
+    static CStyleCastExpr* NoTypeInfoCStyleCastExpr(ASTContext *Ctx, QualType Ty,
                                              CastKind Kind, Expr *E) {
       TypeSourceInfo *TInfo = Ctx->getTrivialTypeSourceInfo(Ty, SourceLocation());
       return CStyleCastExpr::Create(*Ctx, Ty, VK_RValue, Kind, E, nullptr,

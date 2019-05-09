@@ -1606,12 +1606,12 @@ private:
   /// Choose the best candidate to use for the lane after \p Last. The set of
   /// candidates to choose from are values with an opcode matching \p Last's
   /// or loads consecutive to \p Last.
-  std::pair<OpMode, VPValue *> getBest(OpMode Mode, VPValue *Last,
+  static std::pair<OpMode, VPValue *> getBest(OpMode Mode, VPValue *Last,
                                        SmallPtrSetImpl<VPValue *> &Candidates,
                                        VPInterleavedAccessInfo &IAI);
 
   /// Print bundle \p Values to dbgs().
-  void dumpBundle(ArrayRef<VPValue *> Values);
+  static void dumpBundle(ArrayRef<VPValue *> Values);
 
 public:
   VPlanSlp(VPInterleavedAccessInfo &IAI, VPBasicBlock &BB) : IAI(IAI), BB(BB) {}

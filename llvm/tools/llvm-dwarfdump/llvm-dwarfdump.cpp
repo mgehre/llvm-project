@@ -50,7 +50,7 @@ public:
   parser(Option &O) : basic_parser(O) {}
 
   /// Return true on error.
-  bool parse(Option &O, StringRef ArgName, StringRef Arg, OffsetOption &Val) {
+  static bool parse(Option &O, StringRef ArgName, StringRef Arg, OffsetOption &Val) {
     if (Arg == "") {
       Val.Val = 0;
       Val.HasValue = false;
@@ -64,7 +64,7 @@ public:
     return false;
   }
 
-  enum ValueExpected getValueExpectedFlagDefault() const {
+  static enum ValueExpected getValueExpectedFlagDefault() {
     return ValueOptional;
   }
 
@@ -73,8 +73,8 @@ public:
     Option::printHelpStr(O.HelpStr, GlobalWidth, getOptionWidth(O));
   }
 
-  void printOptionDiff(const Option &O, OffsetOption V, OptVal Default,
-                       size_t GlobalWidth) const {
+  static void printOptionDiff(const Option &O, OffsetOption V, OptVal Default,
+                       size_t GlobalWidth) {
     printOptionName(O, GlobalWidth);
     outs() << "[=offset]";
   }

@@ -347,7 +347,7 @@ protected:
                      DeclContext *Parent, std::size_t Extra = 0);
 
 private:
-  bool AccessDeclContextSanity() const;
+  static bool AccessDeclContextSanity() ;
 
   /// Get the module ownership kind to use for a local lexical child of \p DC,
   /// which may be either a local or (rarely) an imported declaration.

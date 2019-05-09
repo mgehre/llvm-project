@@ -229,7 +229,7 @@ private:
   const Info &getRecord(unsigned ID) const;
 
   /// Is this builtin supported according to the given language options?
-  bool builtinIsSupported(const Builtin::Info &BuiltinInfo,
+  static bool builtinIsSupported(const Builtin::Info &BuiltinInfo,
                           const LangOptions &LangOpts);
 
   /// Helper function for isPrintfLike and isScanfLike.

@@ -139,12 +139,12 @@ public:
   bool FoundMSVCInstall() const { return !VCToolChainPath.empty(); }
 
 protected:
-  void AddSystemIncludeWithSubfolder(const llvm::opt::ArgList &DriverArgs,
+  static void AddSystemIncludeWithSubfolder(const llvm::opt::ArgList &DriverArgs,
                                      llvm::opt::ArgStringList &CC1Args,
                                      const std::string &folder,
                                      const Twine &subfolder1,
                                      const Twine &subfolder2 = "",
-                                     const Twine &subfolder3 = "") const;
+                                     const Twine &subfolder3 = "") ;
 
   Tool *buildLinker() const override;
   Tool *buildAssembler() const override;

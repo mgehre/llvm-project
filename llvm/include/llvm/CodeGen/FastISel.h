@@ -505,7 +505,7 @@ protected:
   /// Create a machine mem operand from the given instruction.
   MachineMemOperand *createMachineMemOperandFor(const Instruction *I) const;
 
-  CmpInst::Predicate optimizeCmpPredicate(const CmpInst *CI) const;
+  static CmpInst::Predicate optimizeCmpPredicate(const CmpInst *CI) ;
 
   bool lowerCallTo(const CallInst *CI, MCSymbol *Symbol, unsigned NumArgs);
   bool lowerCallTo(const CallInst *CI, const char *SymName,

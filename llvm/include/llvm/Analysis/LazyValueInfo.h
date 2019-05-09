@@ -132,7 +132,7 @@ public:
 class LazyValueAnalysis : public AnalysisInfoMixin<LazyValueAnalysis> {
 public:
   typedef LazyValueInfo Result;
-  Result run(Function &F, FunctionAnalysisManager &FAM);
+  static Result run(Function &F, FunctionAnalysisManager &FAM);
 
 private:
   static AnalysisKey Key;

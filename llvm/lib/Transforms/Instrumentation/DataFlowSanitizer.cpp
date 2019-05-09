@@ -361,9 +361,9 @@ class DataFlowSanitizer : public ModulePass {
   FunctionType *getArgsFunctionType(FunctionType *T);
   FunctionType *getTrampolineFunctionType(FunctionType *T);
   TransformedFunction getCustomFunctionType(FunctionType *T);
-  InstrumentedABI getInstrumentedABI();
+  static InstrumentedABI getInstrumentedABI();
   WrapperKind getWrapperKind(Function *F);
-  void addGlobalNamePrefix(GlobalValue *GV);
+  static void addGlobalNamePrefix(GlobalValue *GV);
   Function *buildWrapperFunction(Function *F, StringRef NewFName,
                                  GlobalValue::LinkageTypes NewFLink,
                                  FunctionType *NewFT);

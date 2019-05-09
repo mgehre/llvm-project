@@ -131,7 +131,7 @@ void Counter::start() {}
 
 void Counter::stop() {}
 
-int64_t Counter::read() const { return 42; }
+int64_t Counter::read() { return 42; }
 
 #endif
 

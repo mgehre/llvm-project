@@ -180,7 +180,7 @@ public:
     }
 
   private:
-    unsigned convReg(unsigned Reg, unsigned Size) const {
+    static unsigned convReg(unsigned Reg, unsigned Size) {
       return Reg == X86::NoRegister ? Reg : getX86SubSuperRegister(Reg, Size);
     }
 
@@ -242,7 +242,7 @@ public:
                      MCContext &Ctx, const MCInstrInfo &MII, MCStreamer &Out);
 
 protected:
-  void EmitLabel(MCStreamer &Out, MCSymbol *Label) { Out.EmitLabel(Label); }
+  static void EmitLabel(MCStreamer &Out, MCSymbol *Label) { Out.EmitLabel(Label); }
 
   void EmitLEA(X86Operand &Op, unsigned Size, unsigned Reg, MCStreamer &Out) {
     assert(Size == 32 || Size == 64);
@@ -259,7 +259,7 @@ protected:
   // Creates new memory operand with Displacement added to an original
   // displacement. Residue will contain a residue which could happen when the
   // total displacement exceeds 32-bit limitation.
-  std::unique_ptr<X86Operand> AddDisplacement(X86Operand &Op,
+  static std::unique_ptr<X86Operand> AddDisplacement(X86Operand &Op,
                                               int64_t Displacement,
                                               MCContext &Ctx, int64_t *Residue);
 

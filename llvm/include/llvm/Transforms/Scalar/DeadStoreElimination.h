@@ -28,7 +28,7 @@ class Function;
 /// only the redundant stores that are local to a single Basic Block.
 class DSEPass : public PassInfoMixin<DSEPass> {
 public:
-  PreservedAnalyses run(Function &F, FunctionAnalysisManager &FAM);
+  static PreservedAnalyses run(Function &F, FunctionAnalysisManager &FAM);
 };
 
 } // end namespace llvm

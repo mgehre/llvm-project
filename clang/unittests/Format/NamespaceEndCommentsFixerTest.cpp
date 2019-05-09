@@ -21,7 +21,7 @@ namespace {
 
 class NamespaceEndCommentsFixerTest : public ::testing::Test {
 protected:
-  std::string
+  static std::string
   fixNamespaceEndComments(llvm::StringRef Code,
                           const std::vector<tooling::Range> &Ranges,
                           const FormatStyle &Style = getLLVMStyle()) {
@@ -35,7 +35,7 @@ protected:
     return *Result;
   }
 
-  std::string
+  static std::string
   fixNamespaceEndComments(llvm::StringRef Code,
                           const FormatStyle &Style = getLLVMStyle()) {
     return fixNamespaceEndComments(

@@ -39,7 +39,7 @@ protected:
   RuntimeDyldCOFF(RuntimeDyld::MemoryManager &MemMgr,
                   JITSymbolResolver &Resolver)
     : RuntimeDyldImpl(MemMgr, Resolver) {}
-  uint64_t getSymbolOffset(const SymbolRef &Sym);
+  static uint64_t getSymbolOffset(const SymbolRef &Sym);
 };
 
 } // end namespace llvm

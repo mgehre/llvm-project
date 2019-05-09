@@ -30,25 +30,25 @@ namespace llvm {
 class CFGViewerPass
     : public PassInfoMixin<CFGViewerPass> {
 public:
-  PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
+  static PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
 };
 
 class CFGOnlyViewerPass
     : public PassInfoMixin<CFGOnlyViewerPass> {
 public:
-  PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
+  static PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
 };
 
 class CFGPrinterPass
     : public PassInfoMixin<CFGPrinterPass> {
 public:
-  PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
+  static PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
 };
 
 class CFGOnlyPrinterPass
     : public PassInfoMixin<CFGOnlyPrinterPass> {
 public:
-  PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
+  static PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
 };
 
 template<>

@@ -63,7 +63,7 @@ public:
 
   bool hasDebugSubsections() const;
 
-  Error commit();
+  static Error commit();
 
   Expected<codeview::DebugChecksumsSubsectionRef>
   findChecksumsSubsection() const;

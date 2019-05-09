@@ -38,7 +38,7 @@ public:
     }
   }
 
-  bool shouldWalkTypesOfTypeLocs() const { return false; }
+  static bool shouldWalkTypesOfTypeLocs() { return false; }
 
 #define TRY_TO(CALL_EXPR)                                                      \
   do {                                                                         \

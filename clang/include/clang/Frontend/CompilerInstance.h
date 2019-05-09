@@ -751,7 +751,7 @@ public:
                    bool CreateMissingDirectories, std::string *ResultPathName,
                    std::string *TempPathName);
 
-  std::unique_ptr<raw_pwrite_stream> createNullOutputFile();
+  static std::unique_ptr<raw_pwrite_stream> createNullOutputFile();
 
   /// }
   /// @name Initialization Utility Methods

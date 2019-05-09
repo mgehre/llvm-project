@@ -33,7 +33,7 @@ class ProcessImplicitDefs : public MachineFunctionPass {
   SmallSetVector<MachineInstr*, 16> WorkList;
 
   void processImplicitDef(MachineInstr *MI);
-  bool canTurnIntoImplicitDef(MachineInstr *MI);
+  static bool canTurnIntoImplicitDef(MachineInstr *MI);
 
 public:
   static char ID;

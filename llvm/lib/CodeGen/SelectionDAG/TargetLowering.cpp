@@ -76,7 +76,7 @@ bool TargetLowering::isInTailCallPosition(SelectionDAG &DAG, SDNode *Node,
 bool TargetLowering::parametersInCSRMatch(const MachineRegisterInfo &MRI,
     const uint32_t *CallerPreservedMask,
     const SmallVectorImpl<CCValAssign> &ArgLocs,
-    const SmallVectorImpl<SDValue> &OutVals) const {
+    const SmallVectorImpl<SDValue> &OutVals) {
   for (unsigned I = 0, E = ArgLocs.size(); I != E; ++I) {
     const CCValAssign &ArgLoc = ArgLocs[I];
     if (!ArgLoc.isRegLoc())
@@ -389,7 +389,7 @@ bool TargetLowering::ShrinkDemandedConstant(SDValue Op, const APInt &Demanded,
 /// generalized for targets with other types of implicit widening casts.
 bool TargetLowering::ShrinkDemandedOp(SDValue Op, unsigned BitWidth,
                                       const APInt &Demanded,
-                                      TargetLoweringOpt &TLO) const {
+                                      TargetLoweringOpt &TLO) {
   assert(Op.getNumOperands() == 2 &&
          "ShrinkDemandedOp only supports binary operators!");
   assert(Op.getNode()->getNumValues() == 1 &&
@@ -2115,7 +2115,7 @@ SDValue TargetLowering::simplifySetCCWithAnd(EVT VT, SDValue N0, SDValue N1,
 /// Where  C = bitwidth(x) - KeptBits  and  C u< bitwidth(x)
 SDValue TargetLowering::optimizeSetCCOfSignedTruncationCheck(
     EVT SCCVT, SDValue N0, SDValue N1, ISD::CondCode Cond, DAGCombinerInfo &DCI,
-    const SDLoc &DL) const {
+    const SDLoc &DL) {
   // We must be comparing with a constant.
   ConstantSDNode *C1;
   if (!(C1 = dyn_cast<ConstantSDNode>(N1)))
@@ -4001,7 +4001,7 @@ SDValue TargetLowering::BuildUDIV(SDNode *N, SelectionDAG &DAG,
 }
 
 bool TargetLowering::
-verifyReturnAddressArgumentIsConstant(SDValue Op, SelectionDAG &DAG) const {
+verifyReturnAddressArgumentIsConstant(SDValue Op, SelectionDAG &DAG) {
   if (!isa<ConstantSDNode>(Op.getOperand(0))) {
     DAG.getContext()->emitError("argument to '__builtin_return_address' must "
                                 "be a constant integer");
@@ -4737,7 +4737,7 @@ bool TargetLowering::expandABS(SDNode *N, SDValue &Result,
 }
 
 SDValue TargetLowering::scalarizeVectorLoad(LoadSDNode *LD,
-                                            SelectionDAG &DAG) const {
+                                            SelectionDAG &DAG) {
   SDLoc SL(LD);
   SDValue Chain = LD->getChain();
   SDValue BasePTR = LD->getBasePtr();
@@ -5138,7 +5138,7 @@ SDValue
 TargetLowering::IncrementMemoryAddress(SDValue Addr, SDValue Mask,
                                        const SDLoc &DL, EVT DataVT,
                                        SelectionDAG &DAG,
-                                       bool IsCompressedMemory) const {
+                                       bool IsCompressedMemory) {
   SDValue Increment;
   EVT AddrVT = Addr.getValueType();
   EVT MaskVT = Mask.getValueType();
@@ -5188,7 +5188,7 @@ static SDValue clampDynamicVectorIndex(SelectionDAG &DAG,
 
 SDValue TargetLowering::getVectorElementPointer(SelectionDAG &DAG,
                                                 SDValue VecPtr, EVT VecVT,
-                                                SDValue Index) const {
+                                                SDValue Index) {
   SDLoc dl(Index);
   // Make sure the index type is big enough to compute in.
   Index = DAG.getZExtOrTrunc(Index, dl, VecPtr.getValueType());

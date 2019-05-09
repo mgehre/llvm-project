@@ -703,7 +703,7 @@ public:
     /// If SourceN and TargetN in separate SCCs within this RefSCC, changing
     /// the call edge between them to a ref edge is a trivial operation that
     /// does not require any structural changes to the call graph.
-    void switchTrivialInternalEdgeToRef(Node &SourceN, Node &TargetN);
+    static void switchTrivialInternalEdgeToRef(Node &SourceN, Node &TargetN);
 
     /// Make an existing internal call edge within a single SCC into a ref
     /// edge.
@@ -730,13 +730,13 @@ public:
     ///
     /// Note that this is trivial as there are no cyclic impacts and there
     /// remains a reference edge.
-    void switchOutgoingEdgeToCall(Node &SourceN, Node &TargetN);
+    static void switchOutgoingEdgeToCall(Node &SourceN, Node &TargetN);
 
     /// Make an existing outgoing call edge into a ref edge.
     ///
     /// This is trivial as there are no cyclic impacts and there remains
     /// a reference edge.
-    void switchOutgoingEdgeToRef(Node &SourceN, Node &TargetN);
+    static void switchOutgoingEdgeToRef(Node &SourceN, Node &TargetN);
 
     /// Insert a ref edge from one node in this RefSCC to another in this
     /// RefSCC.
@@ -750,7 +750,7 @@ public:
     /// should be to first insert the necessary ref edge, and then to switch it
     /// to a call edge if needed and handle any invalidation that results. See
     /// the \c switchInternalEdgeToCall routine for details.
-    void insertInternalRefEdge(Node &SourceN, Node &TargetN);
+    static void insertInternalRefEdge(Node &SourceN, Node &TargetN);
 
     /// Insert an edge whose parent is in this RefSCC and child is in some
     /// child RefSCC.
@@ -758,7 +758,7 @@ public:
     /// There must be an existing path from the \p SourceN to the \p TargetN.
     /// This operation is inexpensive and does not change the set of SCCs and
     /// RefSCCs in the graph.
-    void insertOutgoingEdge(Node &SourceN, Node &TargetN, Edge::Kind EK);
+    static void insertOutgoingEdge(Node &SourceN, Node &TargetN, Edge::Kind EK);
 
     /// Insert an edge whose source is in a descendant RefSCC and target is in
     /// this RefSCC.
@@ -798,7 +798,7 @@ public:
     /// This operation does not change the cyclic structure of the graph and so
     /// is very inexpensive. It may change the connectivity graph of the SCCs
     /// though, so be careful calling this while iterating over them.
-    void removeOutgoingEdge(Node &SourceN, Node &TargetN);
+    static void removeOutgoingEdge(Node &SourceN, Node &TargetN);
 
     /// Remove a list of ref edges which are entirely within this RefSCC.
     ///
@@ -1017,7 +1017,7 @@ public:
   /// below.
 
   /// Update the call graph after inserting a new edge.
-  void insertEdge(Node &SourceN, Node &TargetN, Edge::Kind EK);
+  static void insertEdge(Node &SourceN, Node &TargetN, Edge::Kind EK);
 
   /// Update the call graph after inserting a new edge.
   void insertEdge(Function &Source, Function &Target, Edge::Kind EK) {
@@ -1025,7 +1025,7 @@ public:
   }
 
   /// Update the call graph after deleting an edge.
-  void removeEdge(Node &SourceN, Node &TargetN);
+  static void removeEdge(Node &SourceN, Node &TargetN);
 
   /// Update the call graph after deleting an edge.
   void removeEdge(Function &Source, Function &Target) {

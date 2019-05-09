@@ -127,7 +127,7 @@ namespace llvm {
 
 private:
     void adjustPriorityOfUnscheduledPreds(SUnit *SU);
-    SUnit *getSingleUnscheduledPred(SUnit *SU);
+    static SUnit *getSingleUnscheduledPred(SUnit *SU);
     unsigned numberRCValPredInSU (SUnit *SU, unsigned RCId);
     unsigned numberRCValSuccInSU (SUnit *SU, unsigned RCId);
   };

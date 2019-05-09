@@ -933,7 +933,7 @@ bool TargetLoweringBase::isLegalRC(const TargetRegisterInfo &TRI,
 /// sequence of memory operands that is recognized by PrologEpilogInserter.
 MachineBasicBlock *
 TargetLoweringBase::emitPatchPoint(MachineInstr &InitialMI,
-                                   MachineBasicBlock *MBB) const {
+                                   MachineBasicBlock *MBB) {
   MachineInstr *MI = &InitialMI;
   MachineFunction &MF = *MI->getMF();
   MachineFrameInfo &MFI = MF.getFrameInfo();
@@ -1014,7 +1014,7 @@ TargetLoweringBase::emitPatchPoint(MachineInstr &InitialMI,
 
 MachineBasicBlock *
 TargetLoweringBase::emitXRayCustomEvent(MachineInstr &MI,
-                                        MachineBasicBlock *MBB) const {
+                                        MachineBasicBlock *MBB) {
   assert(MI.getOpcode() == TargetOpcode::PATCHABLE_EVENT_CALL &&
          "Called emitXRayCustomEvent on the wrong MI!");
   auto &MF = *MI.getMF();
@@ -1029,7 +1029,7 @@ TargetLoweringBase::emitXRayCustomEvent(MachineInstr &MI,
 
 MachineBasicBlock *
 TargetLoweringBase::emitXRayTypedEvent(MachineInstr &MI,
-                                       MachineBasicBlock *MBB) const {
+                                       MachineBasicBlock *MBB) {
   assert(MI.getOpcode() == TargetOpcode::PATCHABLE_TYPED_EVENT_CALL &&
          "Called emitXRayTypedEvent on the wrong MI!");
   auto &MF = *MI.getMF();
@@ -1443,7 +1443,7 @@ BranchProbability TargetLoweringBase::getPredictableBranchThreshold() const {
 //  TargetTransformInfo Helpers
 //===----------------------------------------------------------------------===//
 
-int TargetLoweringBase::InstructionOpcodeToISD(unsigned Opcode) const {
+int TargetLoweringBase::InstructionOpcodeToISD(unsigned Opcode) {
   enum InstructionOpcodes {
 #define HANDLE_INST(NUM, OPCODE, CLASS) OPCODE = NUM,
 #define LAST_OTHER_INST(NUM) InstructionOpcodesCount = NUM
@@ -1549,7 +1549,7 @@ TargetLoweringBase::getTypeLegalizationCost(const DataLayout &DL,
 }
 
 Value *TargetLoweringBase::getDefaultSafeStackPointerLocation(IRBuilder<> &IRB,
-                                                              bool UseTLS) const {
+                                                              bool UseTLS) {
   // compiler-rt provides a variable with a magic name.  Targets that do not
   // link with compiler-rt may also provide such a variable.
   Module *M = IRB.GetInsertBlock()->getParent()->getParent();
@@ -1676,11 +1676,11 @@ void TargetLoweringBase::setMinimumJumpTableEntries(unsigned Val) {
   MinimumJumpTableEntries = Val;
 }
 
-unsigned TargetLoweringBase::getMinimumJumpTableDensity(bool OptForSize) const {
+unsigned TargetLoweringBase::getMinimumJumpTableDensity(bool OptForSize) {
   return OptForSize ? OptsizeJumpTableDensity : JumpTableDensity;
 }
 
-unsigned TargetLoweringBase::getMaximumJumpTableSize() const {
+unsigned TargetLoweringBase::getMaximumJumpTableSize() {
   return MaximumJumpTableSize;
 }
 
@@ -1853,22 +1853,22 @@ static int getOpRefinementSteps(bool IsSqrt, EVT VT, StringRef Override) {
 }
 
 int TargetLoweringBase::getRecipEstimateSqrtEnabled(EVT VT,
-                                                    MachineFunction &MF) const {
+                                                    MachineFunction &MF) {
   return getOpEnabled(true, VT, getRecipEstimateForFunc(MF));
 }
 
 int TargetLoweringBase::getRecipEstimateDivEnabled(EVT VT,
-                                                   MachineFunction &MF) const {
+                                                   MachineFunction &MF) {
   return getOpEnabled(false, VT, getRecipEstimateForFunc(MF));
 }
 
 int TargetLoweringBase::getSqrtRefinementSteps(EVT VT,
-                                               MachineFunction &MF) const {
+                                               MachineFunction &MF) {
   return getOpRefinementSteps(true, VT, getRecipEstimateForFunc(MF));
 }
 
 int TargetLoweringBase::getDivRefinementSteps(EVT VT,
-                                              MachineFunction &MF) const {
+                                              MachineFunction &MF) {
   return getOpRefinementSteps(false, VT, getRecipEstimateForFunc(MF));
 }
 

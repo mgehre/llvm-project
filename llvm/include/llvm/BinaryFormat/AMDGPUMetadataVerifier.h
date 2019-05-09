@@ -37,10 +37,10 @@ class MetadataVerifier {
   bool verifyScalar(msgpack::Node &Node, msgpack::ScalarNode::ScalarKind SKind,
                     function_ref<bool(msgpack::ScalarNode &)> verifyValue = {});
   bool verifyInteger(msgpack::Node &Node);
-  bool verifyArray(msgpack::Node &Node,
+  static bool verifyArray(msgpack::Node &Node,
                    function_ref<bool(msgpack::Node &)> verifyNode,
                    Optional<size_t> Size = None);
-  bool verifyEntry(msgpack::MapNode &MapNode, StringRef Key, bool Required,
+  static bool verifyEntry(msgpack::MapNode &MapNode, StringRef Key, bool Required,
                    function_ref<bool(msgpack::Node &)> verifyNode);
   bool
   verifyScalarEntry(msgpack::MapNode &MapNode, StringRef Key, bool Required,

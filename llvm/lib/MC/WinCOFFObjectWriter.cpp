@@ -177,7 +177,7 @@ public:
   void SetSymbolName(COFFSymbol &S);
   void SetSectionName(COFFSection &S);
 
-  bool IsPhysicalSection(COFFSection *S);
+  static bool IsPhysicalSection(COFFSection *S);
 
   // Entity writing methods.
 

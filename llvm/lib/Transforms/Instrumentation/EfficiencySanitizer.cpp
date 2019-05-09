@@ -158,8 +158,8 @@ public:
 private:
   bool initOnModule(Module &M);
   void initializeCallbacks(Module &M);
-  bool shouldIgnoreStructType(StructType *StructTy);
-  void createStructCounterName(
+  static bool shouldIgnoreStructType(StructType *StructTy);
+  static void createStructCounterName(
       StructType *StructTy, SmallString<MaxStructCounterNameSize> &NameStr);
   void createCacheFragAuxGV(
     Module &M, const DataLayout &DL, StructType *StructTy,
@@ -174,25 +174,25 @@ private:
   bool instrumentGetElementPtr(Instruction *I, Module &M);
   bool insertCounterUpdate(Instruction *I, StructType *StructTy,
                            unsigned CounterIdx);
-  unsigned getFieldCounterIdx(StructType *StructTy) {
+  static unsigned getFieldCounterIdx(StructType *StructTy) {
     return 0;
   }
-  unsigned getArrayCounterIdx(StructType *StructTy) {
+  static unsigned getArrayCounterIdx(StructType *StructTy) {
     return StructTy->getNumElements();
   }
-  unsigned getStructCounterSize(StructType *StructTy) {
+  static unsigned getStructCounterSize(StructType *StructTy) {
     // The struct counter array includes:
     // - one counter for each struct field,
     // - one counter for the struct access within an array.
     return (StructTy->getNumElements()/*field*/ + 1/*array*/);
   }
   bool shouldIgnoreMemoryAccess(Instruction *I);
-  int getMemoryAccessFuncIndex(Value *Addr, const DataLayout &DL);
+  static int getMemoryAccessFuncIndex(Value *Addr, const DataLayout &DL);
   Value *appToShadow(Value *Shadow, IRBuilder<> &IRB);
   bool instrumentFastpath(Instruction *I, const DataLayout &DL, bool IsStore,
                           Value *Addr, unsigned Alignment);
   // Each tool has its own fastpath routine:
-  bool instrumentFastpathCacheFrag(Instruction *I, const DataLayout &DL,
+  static bool instrumentFastpathCacheFrag(Instruction *I, const DataLayout &DL,
                                    Value *Addr, unsigned Alignment);
   bool instrumentFastpathWorkingSet(Instruction *I, const DataLayout &DL,
                                     Value *Addr, unsigned Alignment);

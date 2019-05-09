@@ -116,7 +116,7 @@ public:
   } StringTableData;
 
 private:
-  Error handleError(Error Err, const RCResource *Res);
+  static Error handleError(Error Err, const RCResource *Res);
 
   Error
   writeResource(const RCResource *Res,
@@ -157,7 +157,7 @@ private:
   // StringTableResource
   Error visitStringTableBundle(const RCResource *);
   Error writeStringTableBundleBody(const RCResource *);
-  Error insertStringIntoBundle(StringTableInfo::Bundle &Bundle,
+  static Error insertStringIntoBundle(StringTableInfo::Bundle &Bundle,
                                uint16_t StringID, StringRef String);
 
   // User defined resource

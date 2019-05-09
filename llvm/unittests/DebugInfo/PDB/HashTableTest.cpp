@@ -208,7 +208,7 @@ template <> struct PdbHashTraits<FooBar> {
 
   PdbHashTraits() { Buffer.push_back(0); }
 
-  uint32_t hashLookupKey(StringRef S) const {
+  static uint32_t hashLookupKey(StringRef S) {
     return llvm::pdb::hashStringV1(S);
   }
 

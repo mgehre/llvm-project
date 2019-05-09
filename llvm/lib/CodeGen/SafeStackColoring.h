@@ -110,7 +110,7 @@ private:
   void dumpBlockLiveness();
   void dumpLiveRanges();
 
-  bool readMarker(Instruction *I, bool *IsStart);
+  static bool readMarker(Instruction *I, bool *IsStart);
   void collectMarkers();
   void calculateLocalLiveness();
   void calculateLiveIntervals();

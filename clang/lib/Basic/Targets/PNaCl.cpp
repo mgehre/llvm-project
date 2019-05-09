@@ -24,7 +24,7 @@ ArrayRef<TargetInfo::GCCRegAlias> PNaClTargetInfo::getGCCRegAliases() const {
 }
 
 void PNaClTargetInfo::getArchDefines(const LangOptions &Opts,
-                                     MacroBuilder &Builder) const {
+                                     MacroBuilder &Builder) {
   Builder.defineMacro("__le32__");
   Builder.defineMacro("__pnacl__");
 }

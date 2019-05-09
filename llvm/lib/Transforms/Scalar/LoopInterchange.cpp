@@ -344,8 +344,8 @@ public:
   }
 
 private:
-  bool tightlyNested(Loop *Outer, Loop *Inner);
-  bool containsUnsafeInstructions(BasicBlock *BB);
+  static bool tightlyNested(Loop *Outer, Loop *Inner);
+  static bool containsUnsafeInstructions(BasicBlock *BB);
 
   /// Discover induction and reduction PHIs in the header of \p L. Induction
   /// PHIs are added to \p Inductions, reductions are added to
@@ -408,7 +408,7 @@ public:
   void restructureLoops(Loop *NewInner, Loop *NewOuter,
                         BasicBlock *OrigInnerPreHeader,
                         BasicBlock *OrigOuterPreHeader);
-  void removeChildLoop(Loop *OuterLoop, Loop *InnerLoop);
+  static void removeChildLoop(Loop *OuterLoop, Loop *InnerLoop);
 
 private:
   void splitInnerLoopLatch(Instruction *);
@@ -484,7 +484,7 @@ struct LoopInterchange : public LoopPass {
     return true;
   }
 
-  unsigned selectLoopForInterchange(const LoopVector &LoopList) {
+  static unsigned selectLoopForInterchange(const LoopVector &LoopList) {
     // TODO: Add a better heuristic to select the loop to be interchanged based
     // on the dependence matrix. Currently we select the innermost loop.
     return LoopList.size() - 1;

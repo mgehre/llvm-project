@@ -25,7 +25,7 @@ class Module;
 /// Optimize globals that never have their address taken.
 class GlobalOptPass : public PassInfoMixin<GlobalOptPass> {
 public:
-  PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
+  static PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
 };
 
 } // end namespace llvm

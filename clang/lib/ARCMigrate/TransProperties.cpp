@@ -339,11 +339,11 @@ private:
     return MigrateCtx.AtPropsWeak.count(atLoc.getRawEncoding());
   }
 
-  bool isUserDeclared(ObjCIvarDecl *ivarD) const {
+  static bool isUserDeclared(ObjCIvarDecl *ivarD) {
     return ivarD && !ivarD->getSynthesize();
   }
 
-  QualType getPropertyType(PropsTy &props) const {
+  static QualType getPropertyType(PropsTy &props) {
     assert(!props.empty());
     QualType ty = props[0].PropD->getType().getUnqualifiedType();
 
@@ -355,8 +355,8 @@ private:
     return ty;
   }
 
-  ObjCPropertyDecl::PropertyAttributeKind
-  getPropertyAttrs(PropsTy &props) const {
+  static ObjCPropertyDecl::PropertyAttributeKind
+  getPropertyAttrs(PropsTy &props) {
     assert(!props.empty());
     ObjCPropertyDecl::PropertyAttributeKind
       attrs = props[0].PropD->getPropertyAttributesAsWritten();

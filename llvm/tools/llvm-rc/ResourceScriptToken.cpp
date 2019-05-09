@@ -139,7 +139,7 @@ private:
 
   // Process the Kind::Identifier token - check if it is
   // an identifier describing a block start or end.
-  void processIdentifier(RCToken &token) const;
+  static void processIdentifier(RCToken &token) ;
 
   StringRef Data;
   size_t DataLength, Pos;
@@ -346,7 +346,7 @@ Kind Tokenizer::classifyCurrentToken() const {
   }
 }
 
-void Tokenizer::processIdentifier(RCToken &Token) const {
+void Tokenizer::processIdentifier(RCToken &Token) {
   assert(Token.kind() == Kind::Identifier);
   StringRef Name = Token.value();
 

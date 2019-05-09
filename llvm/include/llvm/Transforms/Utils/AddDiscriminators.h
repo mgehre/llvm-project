@@ -24,7 +24,7 @@ class Function;
 
 class AddDiscriminatorsPass : public PassInfoMixin<AddDiscriminatorsPass> {
 public:
-  PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
+  static PreservedAnalyses run(Function &F, FunctionAnalysisManager &AM);
 };
 
 } // end namespace llvm

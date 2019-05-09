@@ -49,10 +49,10 @@ public:
 
   /// \name Cache TTI Implementation
   /// @{
-  llvm::Optional<unsigned> getCacheSize(
-    TargetTransformInfo::CacheLevel Level) const;
-  llvm::Optional<unsigned> getCacheAssociativity(
-    TargetTransformInfo::CacheLevel Level) const;
+  static llvm::Optional<unsigned> getCacheSize(
+    TargetTransformInfo::CacheLevel Level) ;
+  static llvm::Optional<unsigned> getCacheAssociativity(
+    TargetTransformInfo::CacheLevel Level) ;
   /// @}
 
   /// \name Vector TTI Implementations
@@ -84,7 +84,7 @@ public:
   int getAddressComputationCost(Type *PtrTy, ScalarEvolution *SE,
                                 const SCEV *Ptr);
 
-  unsigned getAtomicMemIntrinsicMaxElementSize() const;
+  static unsigned getAtomicMemIntrinsicMaxElementSize() ;
 
   int getIntrinsicInstrCost(Intrinsic::ID IID, Type *RetTy,
                             ArrayRef<Type *> Tys, FastMathFlags FMF,
@@ -115,16 +115,16 @@ public:
                                  bool UseMaskForCond = false,
                                  bool UseMaskForGaps = false);
 
-  int getIntImmCost(int64_t);
+  static int getIntImmCost(int64_t);
 
-  int getIntImmCost(const APInt &Imm, Type *Ty);
+  static int getIntImmCost(const APInt &Imm, Type *Ty);
 
   unsigned getUserCost(const User *U, ArrayRef<const Value *> Operands);
 
-  int getIntImmCost(unsigned Opcode, unsigned Idx, const APInt &Imm, Type *Ty);
-  int getIntImmCost(Intrinsic::ID IID, unsigned Idx, const APInt &Imm,
+  static int getIntImmCost(unsigned Opcode, unsigned Idx, const APInt &Imm, Type *Ty);
+  static int getIntImmCost(Intrinsic::ID IID, unsigned Idx, const APInt &Imm,
                     Type *Ty);
-  bool isLSRCostLess(TargetTransformInfo::LSRCost &C1,
+  static bool isLSRCostLess(TargetTransformInfo::LSRCost &C1,
                      TargetTransformInfo::LSRCost &C2);
   bool canMacroFuseCmp();
   bool isLegalMaskedLoad(Type *DataType);
@@ -132,7 +132,7 @@ public:
   bool isLegalMaskedGather(Type *DataType);
   bool isLegalMaskedScatter(Type *DataType);
   bool hasDivRemOp(Type *DataType, bool IsSigned);
-  bool isFCmpOrdCheaperThanFCmpZero(Type *Ty);
+  static bool isFCmpOrdCheaperThanFCmpZero(Type *Ty);
   bool areInlineCompatible(const Function *Caller,
                            const Function *Callee) const;
   const TTI::MemCmpExpansionOptions *enableMemCmpExpansion(

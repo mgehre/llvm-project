@@ -26,7 +26,7 @@ using namespace ento;
 void RangeSet::IntersectInRange(BasicValueFactory &BV, Factory &F,
                       const llvm::APSInt &Lower, const llvm::APSInt &Upper,
                       PrimRangeSet &newRanges, PrimRangeSet::iterator &i,
-                      PrimRangeSet::iterator &e) const {
+                      PrimRangeSet::iterator &e) {
   // There are six cases for each range R in the set:
   //   1. R is entirely before the intersection range.
   //   2. R is entirely after the intersection range.
@@ -284,7 +284,7 @@ private:
   RangeSet::Factory F;
 
   RangeSet getRange(ProgramStateRef State, SymbolRef Sym);
-  const RangeSet* getRangeForMinusSymbol(ProgramStateRef State,
+  static const RangeSet* getRangeForMinusSymbol(ProgramStateRef State,
                                          SymbolRef Sym);
 
   RangeSet getSymLTRange(ProgramStateRef St, SymbolRef Sym,

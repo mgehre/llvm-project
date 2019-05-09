@@ -15,7 +15,7 @@ namespace {
 
 struct MockBaseLayer {
   typedef int ModuleHandleT;
-  ModuleHandleT addModule(llvm::orc::VModuleKey,
+  static ModuleHandleT addModule(llvm::orc::VModuleKey,
                           std::shared_ptr<llvm::Module>) {
     return 42;
   }

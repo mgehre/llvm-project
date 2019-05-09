@@ -38,9 +38,9 @@ private:
   void diagnoseThrowLocations(const CXXThrowExpr *throwExpr);
   void diagnoseCatchLocations(const CXXCatchStmt *catchStmt,
                               ASTContext &context);
-  bool isFunctionParameter(const DeclRefExpr *declRefExpr);
-  bool isCatchVariable(const DeclRefExpr *declRefExpr);
-  bool isFunctionOrCatchVar(const DeclRefExpr *declRefExpr);
+  static bool isFunctionParameter(const DeclRefExpr *declRefExpr);
+  static bool isCatchVariable(const DeclRefExpr *declRefExpr);
+  static bool isFunctionOrCatchVar(const DeclRefExpr *declRefExpr);
   const bool CheckAnonymousTemporaries;
 };
 

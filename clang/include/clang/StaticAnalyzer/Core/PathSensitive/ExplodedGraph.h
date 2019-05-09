@@ -415,7 +415,7 @@ public:
   static bool isInterestingLValueExpr(const Expr *Ex);
 
 private:
-  bool shouldCollect(const ExplodedNode *node);
+  static bool shouldCollect(const ExplodedNode *node);
   void collectNode(ExplodedNode *node);
 };
 

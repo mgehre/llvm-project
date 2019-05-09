@@ -137,7 +137,7 @@ private:
     return llvm::Error::success();
   }
 
-  bool shouldReplaceTargetWithGOTAtom(const Atom *target, bool canBypassGOT) {
+  static bool shouldReplaceTargetWithGOTAtom(const Atom *target, bool canBypassGOT) {
     // Accesses to shared library symbols must go through GOT.
     if (isa<SharedLibraryAtom>(target))
       return true;

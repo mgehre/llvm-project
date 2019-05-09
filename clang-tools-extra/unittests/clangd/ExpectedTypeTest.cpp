@@ -51,7 +51,7 @@ protected:
   /// OpaqueType::fromCompletionResult.
   using EquivClass = std::set<std::string>;
 
-  Matcher<std::map<std::string, EquivClass>>
+  static Matcher<std::map<std::string, EquivClass>>
   ClassesAre(llvm::ArrayRef<EquivClass> Classes) {
     using MapEntry = std::map<std::string, EquivClass>::value_type;
 

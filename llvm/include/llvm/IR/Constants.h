@@ -88,7 +88,7 @@ class ConstantInt final : public ConstantData {
 
   ConstantInt(IntegerType *Ty, const APInt& V);
 
-  void destroyConstantImpl();
+  static void destroyConstantImpl();
 
 public:
   ConstantInt(const ConstantInt &) = delete;
@@ -268,7 +268,7 @@ class ConstantFP final : public ConstantData {
 
   ConstantFP(Type *Ty, const APFloat& V);
 
-  void destroyConstantImpl();
+  static void destroyConstantImpl();
 
 public:
   ConstantFP(const ConstantFP &) = delete;
@@ -821,7 +821,7 @@ class ConstantTokenNone final : public ConstantData {
   explicit ConstantTokenNone(LLVMContext &Context)
       : ConstantData(Type::getTokenTy(Context), ConstantTokenNoneVal) {}
 
-  void destroyConstantImpl();
+  static void destroyConstantImpl();
 
 public:
   ConstantTokenNone(const ConstantTokenNone &) = delete;

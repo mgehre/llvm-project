@@ -67,7 +67,7 @@ public:
 
   BinarySubstreamRef getTypeRecordsSubstream() const;
 
-  Error commit();
+  static Error commit();
 
   void buildHashMap();
 

@@ -165,7 +165,7 @@ private:
                                                StorageClass SC);
   FunctionSymbolNode *demangleFunctionEncoding(StringView &MangledName);
 
-  Qualifiers demanglePointerExtQualifiers(StringView &MangledName);
+  static Qualifiers demanglePointerExtQualifiers(StringView &MangledName);
 
   // Parser functions. This is a recursive-descent parser.
   TypeNode *demangleType(StringView &MangledName, QualifierMangleMode QMM);
@@ -243,7 +243,7 @@ private:
   StringView demangleSimpleString(StringView &MangledName, bool Memorize);
 
   FuncClass demangleFunctionClass(StringView &MangledName);
-  CallingConv demangleCallingConvention(StringView &MangledName);
+  static CallingConv demangleCallingConvention(StringView &MangledName);
   StorageClass demangleVariableStorageClass(StringView &MangledName);
   bool demangleThrowSpecification(StringView &MangledName);
   wchar_t demangleWcharLiteral(StringView &MangledName);

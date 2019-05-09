@@ -222,16 +222,16 @@ class LinkerScript final {
 
   llvm::DenseMap<StringRef, OutputSection *> NameToOutputSection;
 
-  void addSymbol(SymbolAssignment *Cmd);
+  static void addSymbol(SymbolAssignment *Cmd);
   void assignSymbol(SymbolAssignment *Cmd, bool InSec);
   void setDot(Expr E, const Twine &Loc, bool InSec);
   void expandOutputSection(uint64_t Size);
   void expandMemoryRegions(uint64_t Size);
 
-  std::vector<InputSection *>
+  static std::vector<InputSection *>
   computeInputSections(const InputSectionDescription *);
 
-  std::vector<InputSection *> createInputSectionList(OutputSection &Cmd);
+  static std::vector<InputSection *> createInputSectionList(OutputSection &Cmd);
 
   std::vector<size_t> getPhdrIndices(OutputSection *Sec);
 

@@ -77,12 +77,12 @@ struct WasmEHFuncInfo;
 struct WinEHFuncInfo;
 
 template <> struct ilist_alloc_traits<MachineBasicBlock> {
-  void deleteNode(MachineBasicBlock *MBB);
+  static void deleteNode(MachineBasicBlock *MBB);
 };
 
 template <> struct ilist_callback_traits<MachineBasicBlock> {
-  void addNodeToList(MachineBasicBlock* N);
-  void removeNodeFromList(MachineBasicBlock* N);
+  static void addNodeToList(MachineBasicBlock* N);
+  static void removeNodeFromList(MachineBasicBlock* N);
 
   template <class Iterator>
   void transferNodesFromList(ilist_callback_traits &OldList, Iterator, Iterator) {
@@ -581,14 +581,14 @@ public:
   /// program, displaying the CFG of the current function with the code for each
   /// basic block inside.  This depends on there being a 'dot' and 'gv' program
   /// in your path.
-  void viewCFG() const;
+  static void viewCFG() ;
 
   /// viewCFGOnly - This function is meant for use from the debugger.  It works
   /// just like viewCFG, but it does not include the contents of basic blocks
   /// into the nodes, just the label.  If you are only interested in the CFG
   /// this can make the graph smaller.
   ///
-  void viewCFGOnly() const;
+  static void viewCFGOnly() ;
 
   /// dump - Print the current MachineFunction to cerr, useful for debugger use.
   void dump() const;

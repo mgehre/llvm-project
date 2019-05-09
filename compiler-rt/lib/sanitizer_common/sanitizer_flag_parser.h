@@ -120,13 +120,13 @@ class FlagParser {
   static LowLevelAllocator Alloc;
 
  private:
-  void fatal_error(const char *err);
-  bool is_space(char c);
+  static void fatal_error(const char *err);
+  static bool is_space(char c);
   void skip_whitespace();
   void parse_flags();
   void parse_flag();
   bool run_handler(const char *name, const char *value);
-  char *ll_strndup(const char *s, uptr n);
+  static char *ll_strndup(const char *s, uptr n);
 };
 
 template <typename T>

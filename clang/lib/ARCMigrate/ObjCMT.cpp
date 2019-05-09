@@ -316,8 +316,8 @@ public:
   ObjCMigrator(ObjCMigrateASTConsumer &consumer, ParentMap &PMap)
     : Consumer(consumer), PMap(PMap) { }
 
-  bool shouldVisitTemplateInstantiations() const { return false; }
-  bool shouldWalkTypesOfTypeLocs() const { return false; }
+  static bool shouldVisitTemplateInstantiations() { return false; }
+  static bool shouldWalkTypesOfTypeLocs() { return false; }
 
   bool VisitObjCMessageExpr(ObjCMessageExpr *E) {
     if (Consumer.ASTMigrateActions & FrontendOptions::ObjCMT_Literals) {
@@ -360,8 +360,8 @@ class BodyMigrator : public RecursiveASTVisitor<BodyMigrator> {
 public:
   BodyMigrator(ObjCMigrateASTConsumer &consumer) : Consumer(consumer) { }
 
-  bool shouldVisitTemplateInstantiations() const { return false; }
-  bool shouldWalkTypesOfTypeLocs() const { return false; }
+  static bool shouldVisitTemplateInstantiations() { return false; }
+  static bool shouldWalkTypesOfTypeLocs() { return false; }
 
   bool TraverseStmt(Stmt *S) {
     PMap.reset(new ParentMap(S));
@@ -1681,10 +1681,10 @@ void ObjCMigrateASTConsumer::migrateAddMethodAnnotation(
 namespace {
 class SuperInitChecker : public RecursiveASTVisitor<SuperInitChecker> {
 public:
-  bool shouldVisitTemplateInstantiations() const { return false; }
-  bool shouldWalkTypesOfTypeLocs() const { return false; }
+  static bool shouldVisitTemplateInstantiations() { return false; }
+  static bool shouldWalkTypesOfTypeLocs() { return false; }
 
-  bool VisitObjCMessageExpr(ObjCMessageExpr *E) {
+  static bool VisitObjCMessageExpr(ObjCMessageExpr *E) {
     if (E->getReceiverKind() == ObjCMessageExpr::SuperInstance) {
       if (E->getMethodFamily() == OMF_init)
         return false;

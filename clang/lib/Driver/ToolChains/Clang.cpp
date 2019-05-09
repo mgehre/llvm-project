@@ -1813,7 +1813,7 @@ void Clang::AddSparcTargetArgs(const ArgList &Args,
 }
 
 void Clang::AddSystemZTargetArgs(const ArgList &Args,
-                                 ArgStringList &CmdArgs) const {
+                                 ArgStringList &CmdArgs) {
   if (Args.hasFlag(options::OPT_mbackchain, options::OPT_mno_backchain, false))
     CmdArgs.push_back("-mbackchain");
 }
@@ -1866,7 +1866,7 @@ void Clang::AddX86TargetArgs(const ArgList &Args,
 }
 
 void Clang::AddHexagonTargetArgs(const ArgList &Args,
-                                 ArgStringList &CmdArgs) const {
+                                 ArgStringList &CmdArgs) {
   CmdArgs.push_back("-mqdsp6-compat");
   CmdArgs.push_back("-Wreturn-type");
 
@@ -1910,7 +1910,7 @@ void Clang::AddLanaiTargetArgs(const ArgList &Args,
 }
 
 void Clang::AddWebAssemblyTargetArgs(const ArgList &Args,
-                                     ArgStringList &CmdArgs) const {
+                                     ArgStringList &CmdArgs) {
   // Default to "hidden" visibility.
   if (!Args.hasArg(options::OPT_fvisibility_EQ,
                    options::OPT_fvisibility_ms_compat)) {

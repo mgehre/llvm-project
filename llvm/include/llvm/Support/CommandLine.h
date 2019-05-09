@@ -841,7 +841,7 @@ public:
 
   // printOptionNoValue - Print a placeholder for options that don't yet support
   // printOptionDiff().
-  void printOptionNoValue(const Option &O, size_t GlobalWidth) const;
+  static void printOptionNoValue(const Option &O, size_t GlobalWidth) ;
 
   // getValueName - Overload in subclass to provide a better default value.
   virtual StringRef getValueName() const { return "value"; }
@@ -853,7 +853,7 @@ protected:
   ~basic_parser_impl() = default;
 
   // A helper for basic_parser::printOptionDiff.
-  void printOptionName(const Option &O, size_t GlobalWidth) const;
+  static void printOptionName(const Option &O, size_t GlobalWidth) ;
 };
 
 // basic_parser - The real basic parser is just a template wrapper that provides
@@ -878,7 +878,7 @@ public:
   parser(Option &O) : basic_parser(O) {}
 
   // parse - Return true on error.
-  bool parse(Option &O, StringRef ArgName, StringRef Arg, bool &Val);
+  static bool parse(Option &O, StringRef ArgName, StringRef Arg, bool &Val);
 
   void initialize() {}
 
@@ -906,7 +906,7 @@ public:
   parser(Option &O) : basic_parser(O) {}
 
   // parse - Return true on error.
-  bool parse(Option &O, StringRef ArgName, StringRef Arg, boolOrDefault &Val);
+  static bool parse(Option &O, StringRef ArgName, StringRef Arg, boolOrDefault &Val);
 
   enum ValueExpected getValueExpectedFlagDefault() const {
     return ValueOptional;
@@ -932,7 +932,7 @@ public:
   parser(Option &O) : basic_parser(O) {}
 
   // parse - Return true on error.
-  bool parse(Option &O, StringRef ArgName, StringRef Arg, int &Val);
+  static bool parse(Option &O, StringRef ArgName, StringRef Arg, int &Val);
 
   // getValueName - Overload in subclass to provide a better default value.
   StringRef getValueName() const override { return "int"; }
@@ -954,7 +954,7 @@ public:
   parser(Option &O) : basic_parser(O) {}
 
   // parse - Return true on error.
-  bool parse(Option &O, StringRef ArgName, StringRef Arg, unsigned &Val);
+  static bool parse(Option &O, StringRef ArgName, StringRef Arg, unsigned &Val);
 
   // getValueName - Overload in subclass to provide a better default value.
   StringRef getValueName() const override { return "uint"; }
@@ -978,7 +978,7 @@ public:
   parser(Option &O) : basic_parser(O) {}
 
   // parse - Return true on error.
-  bool parse(Option &O, StringRef ArgName, StringRef Arg,
+  static bool parse(Option &O, StringRef ArgName, StringRef Arg,
              unsigned long long &Val);
 
   // getValueName - Overload in subclass to provide a better default value.
@@ -1001,7 +1001,7 @@ public:
   parser(Option &O) : basic_parser(O) {}
 
   // parse - Return true on error.
-  bool parse(Option &O, StringRef ArgName, StringRef Arg, double &Val);
+  static bool parse(Option &O, StringRef ArgName, StringRef Arg, double &Val);
 
   // getValueName - Overload in subclass to provide a better default value.
   StringRef getValueName() const override { return "number"; }
@@ -1023,7 +1023,7 @@ public:
   parser(Option &O) : basic_parser(O) {}
 
   // parse - Return true on error.
-  bool parse(Option &O, StringRef ArgName, StringRef Arg, float &Val);
+  static bool parse(Option &O, StringRef ArgName, StringRef Arg, float &Val);
 
   // getValueName - Overload in subclass to provide a better default value.
   StringRef getValueName() const override { return "number"; }
@@ -1053,8 +1053,8 @@ public:
   // getValueName - Overload in subclass to provide a better default value.
   StringRef getValueName() const override { return "string"; }
 
-  void printOptionDiff(const Option &O, StringRef V, const OptVal &Default,
-                       size_t GlobalWidth) const;
+  static void printOptionDiff(const Option &O, StringRef V, const OptVal &Default,
+                       size_t GlobalWidth) ;
 
   // An out-of-line virtual method to provide a 'home' for this class.
   void anchor() override;

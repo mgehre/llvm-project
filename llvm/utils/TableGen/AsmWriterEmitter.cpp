@@ -631,7 +631,7 @@ public:
   int getOpIndex(StringRef Op) { return OpMap[Op].first; }
   std::pair<int, int> &getOpData(StringRef Op) { return OpMap[Op]; }
 
-  std::pair<StringRef, StringRef::iterator> parseName(StringRef::iterator Start,
+  static std::pair<StringRef, StringRef::iterator> parseName(StringRef::iterator Start,
                                                       StringRef::iterator End) {
     StringRef::iterator I = Start;
     StringRef::iterator Next;

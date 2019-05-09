@@ -128,8 +128,8 @@ private:
   /// LexToken - Read the next token and return its code.
   tgtok::TokKind LexToken(bool FileOrLineStart = false);
 
-  tgtok::TokKind ReturnError(SMLoc Loc, const Twine &Msg);
-  tgtok::TokKind ReturnError(const char *Loc, const Twine &Msg);
+  static tgtok::TokKind ReturnError(SMLoc Loc, const Twine &Msg);
+  static tgtok::TokKind ReturnError(const char *Loc, const Twine &Msg);
 
   int getNextChar();
   int peekNextChar(int Index) const;

@@ -263,15 +263,15 @@ private:
 
   /// Fill PDIUnrelatedWL with instructions from the entry block that are
   /// unrelated to parameter related debug info.
-  void filterInstsUnrelatedToPDI(BasicBlock *GEntryBlock,
+  static void filterInstsUnrelatedToPDI(BasicBlock *GEntryBlock,
                                  std::vector<Instruction *> &PDIUnrelatedWL);
 
   /// Erase the rest of the CFG (i.e. barring the entry block).
-  void eraseTail(Function *G);
+  static void eraseTail(Function *G);
 
   /// Erase the instructions in PDIUnrelatedWL as they are unrelated to the
   /// parameter debug info, from the entry block.
-  void eraseInstsUnrelatedToPDI(std::vector<Instruction *> &PDIUnrelatedWL);
+  static void eraseInstsUnrelatedToPDI(std::vector<Instruction *> &PDIUnrelatedWL);
 
   /// Replace G with a simple tail call to bitcast(F). Also (unless
   /// MergeFunctionsPDI holds) replace direct uses of G with bitcast(F),

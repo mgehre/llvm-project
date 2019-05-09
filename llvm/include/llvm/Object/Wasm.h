@@ -326,7 +326,7 @@ private:
   int LastOrder = -1; // Lastly seen known section's order
 
   // Returns -1 for unknown sections.
-  int getSectionOrder(unsigned ID, StringRef CustomSectionName = "");
+  static int getSectionOrder(unsigned ID, StringRef CustomSectionName = "");
 };
 
 } // end namespace object

@@ -115,7 +115,7 @@ public:
 
   /// Run the analysis pass over a function and produce demanded bits
   /// information.
-  DemandedBits run(Function &F, FunctionAnalysisManager &AM);
+  static DemandedBits run(Function &F, FunctionAnalysisManager &AM);
 };
 
 /// Printer pass for DemandedBits

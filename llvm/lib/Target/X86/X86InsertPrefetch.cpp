@@ -48,8 +48,8 @@ class X86InsertPrefetch : public MachineFunctionPass {
     int64_t Delta;
   };
   typedef SmallVectorImpl<PrefetchInfo> Prefetches;
-  bool findPrefetchInfo(const FunctionSamples *Samples, const MachineInstr &MI,
-                        Prefetches &prefetches) const;
+  static bool findPrefetchInfo(const FunctionSamples *Samples, const MachineInstr &MI,
+                        Prefetches &prefetches) ;
 
 public:
   static char ID;
@@ -105,7 +105,7 @@ X86InsertPrefetch::X86InsertPrefetch(const std::string &PrefetchHintsFilename)
 /// vector.
 bool X86InsertPrefetch::findPrefetchInfo(const FunctionSamples *TopSamples,
                                          const MachineInstr &MI,
-                                         Prefetches &Prefetches) const {
+                                         Prefetches &Prefetches) {
   assert(Prefetches.empty() &&
          "Expected caller passed empty PrefetchInfo vector.");
   static const std::pair<const StringRef, unsigned> HintTypes[] = {

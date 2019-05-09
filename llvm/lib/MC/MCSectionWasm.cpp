@@ -20,7 +20,7 @@ MCSectionWasm::~MCSectionWasm() {} // anchor.
 // Decides whether a '.section' directive
 // should be printed before the section name.
 bool MCSectionWasm::ShouldOmitSectionDirective(StringRef Name,
-                                               const MCAsmInfo &MAI) const {
+                                               const MCAsmInfo &MAI) {
   return MAI.shouldOmitSectionDirective(Name);
 }
 

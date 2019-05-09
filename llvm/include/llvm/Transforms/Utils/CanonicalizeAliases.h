@@ -24,7 +24,7 @@ class CanonicalizeAliasesPass : public PassInfoMixin<CanonicalizeAliasesPass> {
 public:
   CanonicalizeAliasesPass() = default;
 
-  PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
+  static PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
 };
 
 } // end namespace llvm

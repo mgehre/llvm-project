@@ -136,7 +136,7 @@ bool llvm::isFunctionInPrintList(StringRef FunctionName) {
 }
 /// isPassDebuggingExecutionsOrMore - Return true if -debug-pass=Executions
 /// or higher is specified.
-bool PMDataManager::isPassDebuggingExecutionsOrMore() const {
+bool PMDataManager::isPassDebuggingExecutionsOrMore() {
   return PassDebugging >= Executions;
 }
 

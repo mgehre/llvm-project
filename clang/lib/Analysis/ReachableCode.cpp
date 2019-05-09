@@ -406,7 +406,7 @@ namespace {
 
     bool isDeadCodeRoot(const CFGBlock *Block);
 
-    const Stmt *findDeadCode(const CFGBlock *Block);
+    static const Stmt *findDeadCode(const CFGBlock *Block);
 
     void reportDeadCode(const CFGBlock *B,
                         const Stmt *S,

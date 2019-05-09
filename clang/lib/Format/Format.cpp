@@ -1314,7 +1314,7 @@ public:
   }
 
 private:
-  bool containsOnlyComments(const AnnotatedLine &Line) {
+  static bool containsOnlyComments(const AnnotatedLine &Line) {
     for (FormatToken *Tok = Line.First; Tok != nullptr; Tok = Tok->Next) {
       if (Tok->isNot(tok::comment))
         return false;

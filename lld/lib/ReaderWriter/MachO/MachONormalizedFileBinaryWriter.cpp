@@ -148,8 +148,8 @@ private:
   void        buildSectionRelocations();
   void        appendSymbols(const std::vector<Symbol> &symbols,
                                       uint32_t &symOffset, uint32_t &strOffset);
-  uint32_t    indirectSymbolIndex(const Section &sect, uint32_t &index);
-  uint32_t    indirectSymbolElementSize(const Section &sect);
+  static uint32_t    indirectSymbolIndex(const Section &sect, uint32_t &index);
+  static uint32_t    indirectSymbolElementSize(const Section &sect);
 
   // For use as template parameter to load command methods.
   struct MachO64Trait {

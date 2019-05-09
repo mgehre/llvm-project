@@ -115,7 +115,7 @@ class CFLSteensAA : public AnalysisInfoMixin<CFLSteensAA> {
 public:
   using Result = CFLSteensAAResult;
 
-  CFLSteensAAResult run(Function &F, FunctionAnalysisManager &AM);
+  static CFLSteensAAResult run(Function &F, FunctionAnalysisManager &AM);
 };
 
 /// Legacy wrapper pass to provide the CFLSteensAAResult object.

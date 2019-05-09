@@ -58,14 +58,14 @@ public:
   };
 
   void checkPreStmt(const CallExpr *S, CheckerContext &C) const;
-  void checkPostStmt(const CallExpr *S, CheckerContext &C) const;
+  static void checkPostStmt(const CallExpr *S, CheckerContext &C) ;
   void checkDeadSymbols(SymbolReaper &SR, CheckerContext &C) const;
-  ProgramStateRef checkPointerEscape(ProgramStateRef State,
+  static ProgramStateRef checkPointerEscape(ProgramStateRef State,
                                      const InvalidatedSymbols &Escaped,
                                      const CallEvent *Call,
-                                     PointerEscapeKind Kind) const;
-  ProgramStateRef evalAssume(ProgramStateRef state, SVal Cond,
-                             bool Assumption) const;
+                                     PointerEscapeKind Kind) ;
+  static ProgramStateRef evalAssume(ProgramStateRef state, SVal Cond,
+                             bool Assumption) ;
   void printState(raw_ostream &Out, ProgramStateRef State,
                   const char *NL, const char *Sep) const;
 
@@ -111,14 +111,14 @@ private:
                                          CheckerContext &C) const;
 
   /// Find the allocation site for Sym on the path leading to the node N.
-  const ExplodedNode *getAllocationNode(const ExplodedNode *N, SymbolRef Sym,
-                                        CheckerContext &C) const;
+  static const ExplodedNode *getAllocationNode(const ExplodedNode *N, SymbolRef Sym,
+                                        CheckerContext &C) ;
 
   std::unique_ptr<BugReport> generateAllocatedDataNotReleasedReport(
       const AllocationPair &AP, ExplodedNode *N, CheckerContext &C) const;
 
   /// Mark an AllocationPair interesting for diagnostic reporting.
-  void markInteresting(BugReport *R, const AllocationPair &AP) const {
+  static void markInteresting(BugReport *R, const AllocationPair &AP) {
     R->markInteresting(AP.first);
     R->markInteresting(AP.second->Region);
   }
@@ -397,7 +397,7 @@ void MacOSKeychainAPIChecker::checkPreStmt(const CallExpr *CE,
 }
 
 void MacOSKeychainAPIChecker::checkPostStmt(const CallExpr *CE,
-                                            CheckerContext &C) const {
+                                            CheckerContext &C) {
   ProgramStateRef State = C.getState();
   const FunctionDecl *FD = C.getCalleeDecl(CE);
   if (!FD || FD->getKind() != Decl::Function)
@@ -445,7 +445,7 @@ void MacOSKeychainAPIChecker::checkPostStmt(const CallExpr *CE,
 const ExplodedNode *
 MacOSKeychainAPIChecker::getAllocationNode(const ExplodedNode *N,
                                            SymbolRef Sym,
-                                           CheckerContext &C) const {
+                                           CheckerContext &C) {
   const LocationContext *LeakContext = N->getLocationContext();
   // Walk the ExplodedGraph backwards and find the first node that referred to
   // the tracked symbol.
@@ -501,7 +501,7 @@ MacOSKeychainAPIChecker::generateAllocatedDataNotReleasedReport(
 /// from consideration.
 ProgramStateRef MacOSKeychainAPIChecker::evalAssume(ProgramStateRef State,
                                                     SVal Cond,
-                                                    bool Assumption) const {
+                                                    bool Assumption) {
   AllocatedDataTy AMap = State->get<AllocatedData>();
   if (AMap.isEmpty())
     return State;
@@ -578,7 +578,7 @@ void MacOSKeychainAPIChecker::checkDeadSymbols(SymbolReaper &SR,
 
 ProgramStateRef MacOSKeychainAPIChecker::checkPointerEscape(
     ProgramStateRef State, const InvalidatedSymbols &Escaped,
-    const CallEvent *Call, PointerEscapeKind Kind) const {
+    const CallEvent *Call, PointerEscapeKind Kind) {
   // FIXME: This branch doesn't make any sense at all, but it is an overfitted
   // replacement for a previous overfitted code that was making even less sense.
   if (!Call || Call->getDecl())

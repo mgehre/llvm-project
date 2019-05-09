@@ -65,7 +65,7 @@ protected:
   Tool *buildAssembler() const override;
   Tool *buildLinker() const override;
 
-  unsigned getOptimizationLevel(const llvm::opt::ArgList &DriverArgs) const;
+  static unsigned getOptimizationLevel(const llvm::opt::ArgList &DriverArgs) ;
 
 public:
   HexagonToolChain(const Driver &D, const llvm::Triple &Triple,

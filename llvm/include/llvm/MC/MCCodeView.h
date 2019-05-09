@@ -183,7 +183,7 @@ public:
                                 const MCSymbol *FuncBegin,
                                 const MCSymbol *FuncEnd);
 
-  void emitInlineLineTableForFunction(MCObjectStreamer &OS,
+  static void emitInlineLineTableForFunction(MCObjectStreamer &OS,
                                       unsigned PrimaryFunctionId,
                                       unsigned SourceFileId,
                                       unsigned SourceLineNum,
@@ -194,12 +194,12 @@ public:
   void encodeInlineLineTable(MCAsmLayout &Layout,
                              MCCVInlineLineTableFragment &F);
 
-  MCFragment *
+  static MCFragment *
   emitDefRange(MCObjectStreamer &OS,
                ArrayRef<std::pair<const MCSymbol *, const MCSymbol *>> Ranges,
                StringRef FixedSizePortion);
 
-  void encodeDefRange(MCAsmLayout &Layout, MCCVDefRangeFragment &F);
+  static void encodeDefRange(MCAsmLayout &Layout, MCCVDefRangeFragment &F);
 
   /// Emits the string table substream.
   void emitStringTable(MCObjectStreamer &OS);

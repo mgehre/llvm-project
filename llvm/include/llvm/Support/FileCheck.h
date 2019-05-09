@@ -145,7 +145,7 @@ private:
   ComputeMatchDistance(StringRef Buffer,
                        const StringMap<StringRef> &VariableTable) const;
   bool EvaluateExpression(StringRef Expr, std::string &Value) const;
-  size_t FindRegexVarEnd(StringRef Str, SourceMgr &SM);
+  static size_t FindRegexVarEnd(StringRef Str, SourceMgr &SM);
 };
 
 //===----------------------------------------------------------------------===//

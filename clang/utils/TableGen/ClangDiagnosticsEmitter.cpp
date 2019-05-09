@@ -299,10 +299,10 @@ private:
                          llvm::StringRef RootGroupName);
 
   /// Determine if the diagnostic is an extension.
-  bool isExtension(const Record *Diag);
+  static bool isExtension(const Record *Diag);
 
   /// Determine if the diagnostic is off by default.
-  bool isOffByDefault(const Record *Diag);
+  static bool isOffByDefault(const Record *Diag);
 
   /// Increment the count for a group, and transitively marked
   /// parent groups when appropriate.

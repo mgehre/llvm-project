@@ -13,7 +13,7 @@ class Module;
 class SyntheticCountsPropagation
     : public PassInfoMixin<SyntheticCountsPropagation> {
 public:
-  PreservedAnalyses run(Module &M, ModuleAnalysisManager &MAM);
+  static PreservedAnalyses run(Module &M, ModuleAnalysisManager &MAM);
 };
 } // namespace llvm
 #endif

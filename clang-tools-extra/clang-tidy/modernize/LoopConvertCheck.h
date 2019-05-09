@@ -34,7 +34,7 @@ private:
     QualType ElemType;
   };
 
-  void getAliasRange(SourceManager &SM, SourceRange &DeclRange);
+  static void getAliasRange(SourceManager &SM, SourceRange &DeclRange);
 
   void doConversion(ASTContext *Context, const VarDecl *IndexVar,
                     const ValueDecl *MaybeContainer, const UsageResult &Usages,
@@ -42,20 +42,20 @@ private:
                     bool AliasFromForInit, const ForStmt *Loop,
                     RangeDescriptor Descriptor);
 
-  StringRef getContainerString(ASTContext *Context, const ForStmt *Loop,
+  static StringRef getContainerString(ASTContext *Context, const ForStmt *Loop,
                                const Expr *ContainerExpr);
 
-  void getArrayLoopQualifiers(ASTContext *Context,
+  static void getArrayLoopQualifiers(ASTContext *Context,
                               const ast_matchers::BoundNodes &Nodes,
                               const Expr *ContainerExpr,
                               const UsageResult &Usages,
                               RangeDescriptor &Descriptor);
 
-  void getIteratorLoopQualifiers(ASTContext *Context,
+  static void getIteratorLoopQualifiers(ASTContext *Context,
                                  const ast_matchers::BoundNodes &Nodes,
                                  RangeDescriptor &Descriptor);
 
-  void determineRangeDescriptor(ASTContext *Context,
+  static void determineRangeDescriptor(ASTContext *Context,
                                 const ast_matchers::BoundNodes &Nodes,
                                 const ForStmt *Loop, LoopFixerKind FixerKind,
                                 const Expr *ContainerExpr,

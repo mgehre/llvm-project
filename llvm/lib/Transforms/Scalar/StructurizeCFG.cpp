@@ -210,7 +210,7 @@ class StructurizeCFG : public RegionPass {
 
   void analyzeLoops(RegionNode *N);
 
-  Value *invert(Value *Condition);
+  static Value *invert(Value *Condition);
 
   Value *buildCondition(BranchInst *Term, unsigned Idx, bool Invert);
 

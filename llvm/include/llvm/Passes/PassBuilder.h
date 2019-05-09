@@ -186,7 +186,7 @@ public:
   ///
   /// This is an interface that can be used to cross register each
   // AnalysisManager with all the others analysis managers.
-  void crossRegisterProxies(LoopAnalysisManager &LAM,
+  static void crossRegisterProxies(LoopAnalysisManager &LAM,
                             FunctionAnalysisManager &FAM,
                             CGSCCAnalysisManager &CGAM,
                             ModuleAnalysisManager &MAM);
@@ -354,7 +354,7 @@ public:
 
   /// Build the default `AAManager` with the default alias analysis pipeline
   /// registered.
-  AAManager buildDefaultAAPipeline();
+  static AAManager buildDefaultAAPipeline();
 
   /// Parse a textual pass pipeline description into a \c
   /// ModulePassManager.

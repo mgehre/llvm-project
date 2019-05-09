@@ -120,7 +120,7 @@ public:
   bool addDynTlsEntry(Symbol &Sym);
   bool addTlsIndex();
   uint64_t getGlobalDynAddr(const Symbol &B) const;
-  uint64_t getGlobalDynOffset(const Symbol &B) const;
+  static uint64_t getGlobalDynOffset(const Symbol &B) ;
 
   uint64_t getTlsIndexVA() { return this->getVA() + TlsIndexOff; }
   uint32_t getTlsIndexOff() const { return TlsIndexOff; }
@@ -353,7 +353,7 @@ private:
   // Try to merge two GOTs. In case of success the `Dst` contains
   // result of merging and the function returns true. In case of
   // ovwerflow the `Dst` is unchanged and the function returns false.
-  bool tryMergeGots(FileGot & Dst, FileGot & Src, bool IsPrimary);
+  static bool tryMergeGots(FileGot & Dst, FileGot & Src, bool IsPrimary);
 };
 
 class GotPltSection final : public SyntheticSection {
@@ -765,7 +765,7 @@ public:
 
 private:
   enum { EntrySize = 28 };
-  void writeOne(uint8_t *Buf, uint32_t Index, StringRef Name, size_t NameOff);
+  static void writeOne(uint8_t *Buf, uint32_t Index, StringRef Name, size_t NameOff);
 
   unsigned FileDefNameOff;
 };

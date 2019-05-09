@@ -88,7 +88,7 @@ public:
 
   void EmitPredicateFunctions(raw_ostream &OS);
 
-  void EmitHistogram(const Matcher *N, raw_ostream &OS);
+  static void EmitHistogram(const Matcher *N, raw_ostream &OS);
 
   void EmitPatternMatchTable(raw_ostream &OS);
 

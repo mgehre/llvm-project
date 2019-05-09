@@ -35,7 +35,7 @@ public:
 
   ~MachinePostDominatorTree() override;
 
-  FunctionPass *createMachinePostDominatorTreePass();
+  static FunctionPass *createMachinePostDominatorTreePass();
 
   const SmallVectorImpl<MachineBasicBlock *> &getRoots() const {
     return DT->getRoots();

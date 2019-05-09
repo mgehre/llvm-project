@@ -700,7 +700,7 @@ static bool matchAccessTags(const MDNode *A, const MDNode *B,
 
 /// Aliases - Test whether the access represented by tag A may alias the
 /// access represented by tag B.
-bool TypeBasedAAResult::Aliases(const MDNode *A, const MDNode *B) const {
+bool TypeBasedAAResult::Aliases(const MDNode *A, const MDNode *B) {
   return matchAccessTags(A, B);
 }
 

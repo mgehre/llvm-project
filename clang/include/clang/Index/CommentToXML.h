@@ -27,15 +27,15 @@ public:
   CommentToXMLConverter();
   ~CommentToXMLConverter();
 
-  void convertCommentToHTML(const comments::FullComment *FC,
+  static void convertCommentToHTML(const comments::FullComment *FC,
                             SmallVectorImpl<char> &HTML,
                             const ASTContext &Context);
 
-  void convertHTMLTagNodeToText(const comments::HTMLTagComment *HTC,
+  static void convertHTMLTagNodeToText(const comments::HTMLTagComment *HTC,
                                 SmallVectorImpl<char> &Text,
                                 const ASTContext &Context);
 
-  void convertCommentToXML(const comments::FullComment *FC,
+  static void convertCommentToXML(const comments::FullComment *FC,
                            SmallVectorImpl<char> &XML,
                            const ASTContext &Context);
 };

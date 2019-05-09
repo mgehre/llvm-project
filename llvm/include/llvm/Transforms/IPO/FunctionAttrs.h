@@ -49,7 +49,7 @@ MemoryAccessKind computeFunctionBodyMemoryAccess(Function &F, AAResults &AAR);
 /// attribute. It also discovers function arguments that are not captured by
 /// the function and marks them with the nocapture attribute.
 struct PostOrderFunctionAttrsPass : PassInfoMixin<PostOrderFunctionAttrsPass> {
-  PreservedAnalyses run(LazyCallGraph::SCC &C, CGSCCAnalysisManager &AM,
+  static PreservedAnalyses run(LazyCallGraph::SCC &C, CGSCCAnalysisManager &AM,
                         LazyCallGraph &CG, CGSCCUpdateResult &UR);
 };
 
@@ -70,7 +70,7 @@ Pass *createPostOrderFunctionAttrsLegacyPass();
 class ReversePostOrderFunctionAttrsPass
     : public PassInfoMixin<ReversePostOrderFunctionAttrsPass> {
 public:
-  PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
+  static PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
 };
 
 } // end namespace llvm

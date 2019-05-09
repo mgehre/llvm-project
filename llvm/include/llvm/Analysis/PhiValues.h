@@ -68,7 +68,7 @@ public:
   void print(raw_ostream &OS) const;
 
   /// Handle invalidation events in the new pass manager.
-  bool invalidate(Function &, const PreservedAnalyses &,
+  static bool invalidate(Function &, const PreservedAnalyses &,
                   FunctionAnalysisManager::Invalidator &);
 
 private:
@@ -122,7 +122,7 @@ class PhiValuesAnalysis : public AnalysisInfoMixin<PhiValuesAnalysis> {
 
 public:
   using Result = PhiValues;
-  PhiValues run(Function &F, FunctionAnalysisManager &);
+  static PhiValues run(Function &F, FunctionAnalysisManager &);
 };
 
 /// A pass for printing the PhiValues for a function.

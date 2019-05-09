@@ -137,8 +137,8 @@ public:
   std::vector<NodeId> NodesBfs;
 
   int getSize() const { return Nodes.size(); }
-  NodeId getRootId() const { return 0; }
-  PreorderIterator begin() const { return getRootId(); }
+  static NodeId getRootId() { return 0; }
+  static PreorderIterator begin() { return getRootId(); }
   PreorderIterator end() const { return getSize(); }
 
   const Node &getNode(NodeId Id) const { return Nodes[Id]; }
@@ -247,7 +247,7 @@ struct PreorderVisitor : public RecursiveASTVisitor<PreorderVisitor> {
     PostTraverse(SavedState);
     return true;
   }
-  bool TraverseType(QualType T) { return true; }
+  static bool TraverseType(QualType T) { return true; }
   bool TraverseConstructorInitializer(CXXCtorInitializer *Init) {
     if (isNodeExcluded(Tree.AST.getSourceManager(), Init))
       return true;

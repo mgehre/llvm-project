@@ -481,7 +481,7 @@ private:
   ///
   /// An EH frame is considered unused if there is a corresponding compact
   /// unwind atom that doesn't require the EH frame.
-  void pruneUnusedEHFrames(
+  static void pruneUnusedEHFrames(
                    SimpleFile &mergedFile,
                    const std::vector<CompactUnwindEntry> &unwindInfos,
                    const std::map<const Atom *, CompactUnwindEntry> &unwindLocs,

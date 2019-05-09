@@ -108,12 +108,12 @@ void AArch64TargetInfo::fillValidCPUList(
 }
 
 void AArch64TargetInfo::getTargetDefinesARMV81A(const LangOptions &Opts,
-                                                MacroBuilder &Builder) const {
+                                                MacroBuilder &Builder) {
   Builder.defineMacro("__ARM_FEATURE_QRDMX", "1");
 }
 
 void AArch64TargetInfo::getTargetDefinesARMV82A(const LangOptions &Opts,
-                                                MacroBuilder &Builder) const {
+                                                MacroBuilder &Builder) {
   // Also include the ARMv8.1 defines
   getTargetDefinesARMV81A(Opts, Builder);
 }

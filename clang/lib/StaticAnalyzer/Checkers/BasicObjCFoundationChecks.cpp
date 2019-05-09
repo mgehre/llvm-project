@@ -817,13 +817,13 @@ class ObjCLoopChecker
 
 public:
   ObjCLoopChecker() : CountSelectorII(nullptr) {}
-  void checkPostStmt(const ObjCForCollectionStmt *FCS, CheckerContext &C) const;
+  static void checkPostStmt(const ObjCForCollectionStmt *FCS, CheckerContext &C) ;
   void checkPostObjCMessage(const ObjCMethodCall &M, CheckerContext &C) const;
-  void checkDeadSymbols(SymbolReaper &SymReaper, CheckerContext &C) const;
-  ProgramStateRef checkPointerEscape(ProgramStateRef State,
+  static void checkDeadSymbols(SymbolReaper &SymReaper, CheckerContext &C) ;
+  static ProgramStateRef checkPointerEscape(ProgramStateRef State,
                                      const InvalidatedSymbols &Escaped,
                                      const CallEvent *Call,
-                                     PointerEscapeKind Kind) const;
+                                     PointerEscapeKind Kind) ;
 };
 } // end anonymous namespace
 
@@ -974,7 +974,7 @@ static bool alreadyExecutedAtLeastOneLoopIteration(const ExplodedNode *N,
 }
 
 void ObjCLoopChecker::checkPostStmt(const ObjCForCollectionStmt *FCS,
-                                    CheckerContext &C) const {
+                                    CheckerContext &C) {
   ProgramStateRef State = C.getState();
 
   // Check if this is the branch for the end of the loop.
@@ -1092,7 +1092,7 @@ ProgramStateRef
 ObjCLoopChecker::checkPointerEscape(ProgramStateRef State,
                                     const InvalidatedSymbols &Escaped,
                                     const CallEvent *Call,
-                                    PointerEscapeKind Kind) const {
+                                    PointerEscapeKind Kind) {
   SymbolRef ImmutableReceiver = getMethodReceiverIfKnownImmutable(Call);
 
   // Remove the invalidated symbols form the collection count map.
@@ -1117,7 +1117,7 @@ ObjCLoopChecker::checkPointerEscape(ProgramStateRef State,
 }
 
 void ObjCLoopChecker::checkDeadSymbols(SymbolReaper &SymReaper,
-                                       CheckerContext &C) const {
+                                       CheckerContext &C) {
   ProgramStateRef State = C.getState();
 
   // Remove the dead symbols from the collection count map.
@@ -1151,20 +1151,20 @@ class ObjCNonNilReturnValueChecker
 public:
   ObjCNonNilReturnValueChecker() : Initialized(false) {}
 
-  ProgramStateRef assumeExprIsNonNull(const Expr *NonNullExpr,
+  static ProgramStateRef assumeExprIsNonNull(const Expr *NonNullExpr,
                                       ProgramStateRef State,
-                                      CheckerContext &C) const;
-  void assumeExprIsNonNull(const Expr *E, CheckerContext &C) const {
+                                      CheckerContext &C) ;
+  static void assumeExprIsNonNull(const Expr *E, CheckerContext &C) {
     C.addTransition(assumeExprIsNonNull(E, C.getState(), C));
   }
 
-  void checkPostStmt(const ObjCArrayLiteral *E, CheckerContext &C) const {
+  static void checkPostStmt(const ObjCArrayLiteral *E, CheckerContext &C) {
     assumeExprIsNonNull(E, C);
   }
-  void checkPostStmt(const ObjCDictionaryLiteral *E, CheckerContext &C) const {
+  static void checkPostStmt(const ObjCDictionaryLiteral *E, CheckerContext &C) {
     assumeExprIsNonNull(E, C);
   }
-  void checkPostStmt(const ObjCBoxedExpr *E, CheckerContext &C) const {
+  static void checkPostStmt(const ObjCBoxedExpr *E, CheckerContext &C) {
     assumeExprIsNonNull(E, C);
   }
 
@@ -1175,7 +1175,7 @@ public:
 ProgramStateRef
 ObjCNonNilReturnValueChecker::assumeExprIsNonNull(const Expr *NonNullExpr,
                                                   ProgramStateRef State,
-                                                  CheckerContext &C) const {
+                                                  CheckerContext &C) {
   SVal Val = C.getSVal(NonNullExpr);
   if (Optional<DefinedOrUnknownSVal> DV = Val.getAs<DefinedOrUnknownSVal>())
     return State->assume(*DV, true);

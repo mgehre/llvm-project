@@ -57,7 +57,7 @@ public:
 
 private:
   void loadFile();
-  void splitLandingPadPreds(Function &F);
+  static void splitLandingPadPreds(Function &F);
 };
 } // end anonymous namespace
 

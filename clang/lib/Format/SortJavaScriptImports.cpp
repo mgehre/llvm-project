@@ -214,7 +214,7 @@ private:
 
   void skipComments() { Current = skipComments(Current); }
 
-  FormatToken *skipComments(FormatToken *Tok) {
+  static FormatToken *skipComments(FormatToken *Tok) {
     while (Tok && Tok->is(tok::comment))
       Tok = Tok->Next;
     return Tok;

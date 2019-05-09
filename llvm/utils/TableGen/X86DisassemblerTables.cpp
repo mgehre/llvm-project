@@ -888,7 +888,7 @@ void DisassemblerTables::emitInstructionInfo(raw_ostream &o,
   o.indent(i * 2) << "};" << "\n";
 }
 
-void DisassemblerTables::emitContextTable(raw_ostream &o, unsigned &i) const {
+void DisassemblerTables::emitContextTable(raw_ostream &o, unsigned &i) {
   const unsigned int tableSize = 16384;
   o.indent(i * 2) << "static const uint8_t " CONTEXTS_STR
                      "[" << tableSize << "] = {\n";

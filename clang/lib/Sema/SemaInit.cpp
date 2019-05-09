@@ -327,7 +327,7 @@ class InitListChecker {
                                    unsigned &StructuredIndex,
                                    Expr *expr);
   int numArrayElements(QualType DeclType);
-  int numStructUnionElements(QualType DeclType);
+  static int numStructUnionElements(QualType DeclType);
 
   static ExprResult PerformEmptyInit(Sema &SemaRef,
                                      SourceLocation Loc,

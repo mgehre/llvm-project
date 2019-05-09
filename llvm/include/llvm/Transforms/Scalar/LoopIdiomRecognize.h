@@ -27,7 +27,7 @@ class LPMUpdater;
 /// Performs Loop Idiom Recognize Pass.
 class LoopIdiomRecognizePass : public PassInfoMixin<LoopIdiomRecognizePass> {
 public:
-  PreservedAnalyses run(Loop &L, LoopAnalysisManager &AM,
+  static PreservedAnalyses run(Loop &L, LoopAnalysisManager &AM,
                         LoopStandardAnalysisResults &AR, LPMUpdater &U);
 };
 

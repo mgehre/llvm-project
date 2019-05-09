@@ -166,7 +166,7 @@ private:
 /// An instruction for reading from memory. This uses the SubclassData field in
 /// Value to store whether or not the load is volatile.
 class LoadInst : public UnaryInstruction {
-  void AssertOK();
+  static void AssertOK();
 
 protected:
   // Note: Instruction needs to be a friend here to call cloneImpl.
@@ -319,7 +319,7 @@ private:
 
 /// An instruction for storing to memory.
 class StoreInst : public Instruction {
-  void AssertOK();
+  static void AssertOK();
 
 protected:
   // Note: Instruction needs to be a friend here to call cloneImpl.

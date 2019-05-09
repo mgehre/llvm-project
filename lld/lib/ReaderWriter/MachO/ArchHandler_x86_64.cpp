@@ -229,14 +229,14 @@ private:
                            /// within the __thread_data section.
   };
 
-  Reference::KindValue kindFromReloc(const normalized::Relocation &reloc);
+  static Reference::KindValue kindFromReloc(const normalized::Relocation &reloc);
 
-  void applyFixupFinal(const Reference &ref, uint8_t *location,
+  static void applyFixupFinal(const Reference &ref, uint8_t *location,
                        uint64_t fixupAddress, uint64_t targetAddress,
                        uint64_t inAtomAddress, uint64_t imageBaseAddress,
                        FindAddressForAtom findSectionAddress);
 
-  void applyFixupRelocatable(const Reference &ref, uint8_t *location,
+  static void applyFixupRelocatable(const Reference &ref, uint8_t *location,
                              uint64_t fixupAddress,
                              uint64_t targetAddress,
                              uint64_t inAtomAddress);

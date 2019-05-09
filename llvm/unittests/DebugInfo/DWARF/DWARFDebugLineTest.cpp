@@ -92,7 +92,7 @@ struct CommonFixture {
     Unrecoverable = joinErrors(std::move(Unrecoverable), std::move(Err));
   }
 
-  void checkError(ArrayRef<StringRef> ExpectedMsgs, Error Err) {
+  static void checkError(ArrayRef<StringRef> ExpectedMsgs, Error Err) {
     ASSERT_TRUE(Err.operator bool());
     size_t WhichMsg = 0;
     Error Remaining =
@@ -106,7 +106,7 @@ struct CommonFixture {
     EXPECT_FALSE(Remaining);
   }
 
-  void checkError(StringRef ExpectedMsg, Error Err) {
+  static void checkError(StringRef ExpectedMsg, Error Err) {
     checkError(ArrayRef<StringRef>{ExpectedMsg}, std::move(Err));
   }
 

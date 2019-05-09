@@ -108,14 +108,14 @@ public:
   bool run(Function &F, AliasAnalysis &AA);
 
 private:
-  BasicBlock *getDiamondTail(BasicBlock *BB);
-  bool isDiamondHead(BasicBlock *BB);
+  static BasicBlock *getDiamondTail(BasicBlock *BB);
+  static bool isDiamondHead(BasicBlock *BB);
   // Routines for sinking stores
   StoreInst *canSinkFromBlock(BasicBlock *BB, StoreInst *SI);
-  PHINode *getPHIOperand(BasicBlock *BB, StoreInst *S0, StoreInst *S1);
+  static PHINode *getPHIOperand(BasicBlock *BB, StoreInst *S0, StoreInst *S1);
   bool isStoreSinkBarrierInRange(const Instruction &Start,
                                  const Instruction &End, MemoryLocation Loc);
-  bool sinkStore(BasicBlock *BB, StoreInst *SinkCand, StoreInst *ElseInst);
+  static bool sinkStore(BasicBlock *BB, StoreInst *SinkCand, StoreInst *ElseInst);
   bool mergeStores(BasicBlock *BB);
 };
 } // end anonymous namespace

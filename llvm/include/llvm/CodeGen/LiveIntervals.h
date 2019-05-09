@@ -425,7 +425,7 @@ class VirtRegMap;
 
     /// Remove value number and related live segments of \p LI and its subranges
     /// that start at position \p Pos.
-    void removeVRegDefAt(LiveInterval &LI, SlotIndex Pos);
+    static void removeVRegDefAt(LiveInterval &LI, SlotIndex Pos);
 
     /// Split separate components in LiveInterval \p LI into separate intervals.
     void splitSeparateComponents(LiveInterval &LI,

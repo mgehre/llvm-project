@@ -202,7 +202,7 @@ public:
   bool VisitCXXRecordDecl(CXXRecordDecl *D);
   Optional<bool> shouldVisitCursor(CXCursor C);
   bool VisitDeclContext(DeclContext *DC);
-  bool VisitTranslationUnitDecl(TranslationUnitDecl *D);
+  static bool VisitTranslationUnitDecl(TranslationUnitDecl *D);
   bool VisitTypedefDecl(TypedefDecl *D);
   bool VisitTagDecl(TagDecl *D);
   bool VisitClassTemplateSpecializationDecl(ClassTemplateSpecializationDecl *D);

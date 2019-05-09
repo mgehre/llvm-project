@@ -114,9 +114,9 @@ private:
 
   PerDylibResources &getPerDylibResources(JITDylib &TargetD);
 
-  void cleanUpModule(Module &M);
+  static void cleanUpModule(Module &M);
 
-  void expandPartition(GlobalValueSet &Partition);
+  static void expandPartition(GlobalValueSet &Partition);
 
   void emitPartition(MaterializationResponsibility R, ThreadSafeModule TSM,
                      IRMaterializationUnit::SymbolNameToDefinitionMap Defs);

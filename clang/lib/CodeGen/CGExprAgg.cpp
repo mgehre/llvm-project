@@ -95,7 +95,7 @@ public:
     return AggValueSlot::DoesNotNeedGCBarriers;
   }
 
-  bool TypeRequiresGCollection(QualType T);
+  static bool TypeRequiresGCollection(QualType T);
 
   //===--------------------------------------------------------------------===//
   //                            Visitor Methods

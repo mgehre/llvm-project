@@ -486,7 +486,7 @@ Tool *HexagonToolChain::buildLinker() const {
 }
 
 unsigned HexagonToolChain::getOptimizationLevel(
-    const llvm::opt::ArgList &DriverArgs) const {
+    const llvm::opt::ArgList &DriverArgs) {
   // Copied in large part from lib/Frontend/CompilerInvocation.cpp.
   Arg *A = DriverArgs.getLastArg(options::OPT_O_Group);
   if (!A)

@@ -835,7 +835,7 @@ static inline int sizeOfSCEV(const SCEV *S) {
       return true;
     }
 
-    bool isDone() const {
+    static bool isDone() {
       return false;
     }
   };
@@ -3778,7 +3778,7 @@ const SCEV *ScalarEvolution::getUnknown(Value *V) {
 /// framework. This primarily includes integer types, and it can optionally
 /// include pointer types if the ScalarEvolution class has access to
 /// target-specific information.
-bool ScalarEvolution::isSCEVable(Type *Ty) const {
+bool ScalarEvolution::isSCEVable(Type *Ty) {
   // Integers and pointers are always SCEVable.
   return Ty->isIntOrPtrTy();
 }
@@ -3814,7 +3814,7 @@ const SCEV *ScalarEvolution::getCouldNotCompute() {
   return CouldNotCompute.get();
 }
 
-bool ScalarEvolution::checkValidity(const SCEV *S) const {
+bool ScalarEvolution::checkValidity(const SCEV *S) {
   bool ContainsNulls = SCEVExprContains(S, [](const SCEV *S) {
     auto *SU = dyn_cast<SCEVUnknown>(S);
     return SU && SU->getValue() == nullptr;
@@ -10828,7 +10828,7 @@ struct SCEVCollectStrides {
     return true;
   }
 
-  bool isDone() const { return false; }
+  static bool isDone() { return false; }
 };
 
 // Collect all SCEVUnknown and SCEVMulExpr expressions.
@@ -10851,7 +10851,7 @@ struct SCEVCollectTerms {
     return true;
   }
 
-  bool isDone() const { return false; }
+  static bool isDone() { return false; }
 };
 
 // Check if a SCEV contains an AddRecExpr.
@@ -10874,7 +10874,7 @@ struct SCEVHasAddRec {
     return true;
   }
 
-  bool isDone() const { return false; }
+  static bool isDone() { return false; }
 };
 
 // Find factors that are multiplied with an expression that (possibly as a
@@ -10928,7 +10928,7 @@ struct SCEVCollectAddRecMultiplies {
     return true;
   }
 
-  bool isDone() const { return false; }
+  static bool isDone() { return false; }
 };
 
 } // end anonymous namespace
@@ -11746,7 +11746,7 @@ bool ScalarEvolution::properlyDominates(const SCEV *S, const BasicBlock *BB) {
   return getBlockDisposition(S, BB) == ProperlyDominatesBlock;
 }
 
-bool ScalarEvolution::hasOperand(const SCEV *S, const SCEV *Op) const {
+bool ScalarEvolution::hasOperand(const SCEV *S, const SCEV *Op) {
   return SCEVExprContains(S, [&](const SCEV *Expr) { return Expr == Op; });
 }
 
@@ -11807,7 +11807,7 @@ ScalarEvolution::getUsedLoops(const SCEV *S,
       return true;
     }
 
-    bool isDone() const { return false; }
+    static bool isDone() { return false; }
   };
 
   FindUsedLoops F(LoopsUsed);

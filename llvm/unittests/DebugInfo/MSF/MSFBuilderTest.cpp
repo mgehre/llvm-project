@@ -22,13 +22,13 @@ using namespace testing;
 namespace {
 class MSFBuilderTest : public testing::Test {
 protected:
-  void initializeSimpleSuperBlock(msf::SuperBlock &SB) {
+  static void initializeSimpleSuperBlock(msf::SuperBlock &SB) {
     initializeSuperBlock(SB);
     SB.NumBlocks = 1000;
     SB.NumDirectoryBytes = 8192;
   }
 
-  void initializeSuperBlock(msf::SuperBlock &SB) {
+  static void initializeSuperBlock(msf::SuperBlock &SB) {
     ::memset(&SB, 0, sizeof(SB));
 
     ::memcpy(SB.MagicBytes, msf::Magic, sizeof(msf::Magic));

@@ -36,15 +36,15 @@ namespace {
   class InstCount : public FunctionPass, public InstVisitor<InstCount> {
     friend class InstVisitor<InstCount>;
 
-    void visitFunction  (Function &F) { ++TotalFuncs; }
-    void visitBasicBlock(BasicBlock &BB) { ++TotalBlocks; }
+    static void visitFunction  (Function &F) { ++TotalFuncs; }
+    static void visitBasicBlock(BasicBlock &BB) { ++TotalBlocks; }
 
 #define HANDLE_INST(N, OPCODE, CLASS) \
     void visit##OPCODE(CLASS &) { ++Num##OPCODE##Inst; ++TotalInsts; }
 
 #include "llvm/IR/Instruction.def"
 
-    void visitInstruction(Instruction &I) {
+    static void visitInstruction(Instruction &I) {
       errs() << "Instruction Count does not know about " << I;
       llvm_unreachable(nullptr);
     }

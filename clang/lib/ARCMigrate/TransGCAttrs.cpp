@@ -36,7 +36,7 @@ public:
     : MigrateCtx(ctx), FullyMigratable(false),
       AllProps(AllProps) { }
 
-  bool shouldWalkTypesOfTypeLocs() const { return false; }
+  static bool shouldWalkTypesOfTypeLocs() { return false; }
 
   bool VisitAttributedTypeLoc(AttributedTypeLoc TL) {
     handleAttr(TL);

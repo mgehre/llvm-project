@@ -46,9 +46,9 @@ public:
   void checkASTCodeBody(const Decl *D, AnalysisManager &mgr,
                         BugReporter &BR) const;
 
-  void CheckMallocArgument(
+  static void CheckMallocArgument(
     SmallVectorImpl<MallocOverflowCheck> &PossibleMallocOverflows,
-    const Expr *TheArgument, ASTContext &Context) const;
+    const Expr *TheArgument, ASTContext &Context) ;
 
   void OutputPossibleOverflows(
     SmallVectorImpl<MallocOverflowCheck> &PossibleMallocOverflows,
@@ -65,7 +65,7 @@ static inline bool EvaluatesToZero(APSInt &Val, BinaryOperatorKind op) {
 void MallocOverflowSecurityChecker::CheckMallocArgument(
   SmallVectorImpl<MallocOverflowCheck> &PossibleMallocOverflows,
   const Expr *TheArgument,
-  ASTContext &Context) const {
+  ASTContext &Context) {
 
   /* Look for a linear combination with a single variable, and at least
    one multiplication.

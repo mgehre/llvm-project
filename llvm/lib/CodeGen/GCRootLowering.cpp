@@ -38,7 +38,7 @@ namespace {
 /// directed by the GCStrategy. It also performs automatic root initialization
 /// and custom intrinsic lowering.
 class LowerIntrinsics : public FunctionPass {
-  bool DoLowering(Function &F, GCStrategy &S);
+  static bool DoLowering(Function &F, GCStrategy &S);
 
 public:
   static char ID;

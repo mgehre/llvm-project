@@ -1267,7 +1267,7 @@ public:
   QualType getBlockDescriptorExtendedType() const;
 
   /// Map an AST Type to an OpenCLTypeKind enum value.
-  TargetInfo::OpenCLTypeKind getOpenCLTypeKind(const Type *T) const;
+  static TargetInfo::OpenCLTypeKind getOpenCLTypeKind(const Type *T) ;
 
   /// Get address space for OpenCL type.
   LangAS getOpenCLTypeAddrSpace(const Type *T) const;
@@ -1496,7 +1496,7 @@ public:
                                 ArrayRef<ObjCProtocolDecl *> protocols,
                                 QualType Canonical = QualType()) const;
 
-  bool ObjCObjectAdoptsQTypeProtocols(QualType QT, ObjCInterfaceDecl *Decl);
+  static bool ObjCObjectAdoptsQTypeProtocols(QualType QT, ObjCInterfaceDecl *Decl);
 
   /// QIdProtocolsAdoptObjCObjectProtocols - Checks that protocols in
   /// QT's qualified-id protocol list adopt all protocols in IDecl's list
@@ -1801,8 +1801,8 @@ public:
   void getLegacyIntegralTypeEncoding(QualType &t) const;
 
   /// Put the string version of the type qualifiers \p QT into \p S.
-  void getObjCEncodingForTypeQualifier(Decl::ObjCDeclQualifier QT,
-                                       std::string &S) const;
+  static void getObjCEncodingForTypeQualifier(Decl::ObjCDeclQualifier QT,
+                                       std::string &S) ;
 
   /// Emit the encoded type for the function \p Decl into \p S.
   ///
@@ -1830,9 +1830,9 @@ public:
   bool ProtocolCompatibleWithProtocol(ObjCProtocolDecl *lProto,
                                       ObjCProtocolDecl *rProto) const;
 
-  ObjCPropertyImplDecl *getObjCPropertyImplDeclForPropertyDecl(
+  static ObjCPropertyImplDecl *getObjCPropertyImplDeclForPropertyDecl(
                                                   const ObjCPropertyDecl *PD,
-                                                  const Decl *Container) const;
+                                                  const Decl *Container) ;
 
   /// Return the size of type \p T for Objective-C encoding purpose,
   /// in characters.
@@ -2230,7 +2230,7 @@ public:
   void DeepCollectObjCIvars(const ObjCInterfaceDecl *OI, bool leafClass,
                             SmallVectorImpl<const ObjCIvarDecl*> &Ivars) const;
 
-  unsigned CountNonClassIvars(const ObjCInterfaceDecl *OI) const;
+  static unsigned CountNonClassIvars(const ObjCInterfaceDecl *OI) ;
   void CollectInheritedProtocols(const Decl *CDecl,
                           llvm::SmallPtrSet<ObjCProtocolDecl*, 8> &Protocols);
 
@@ -2434,7 +2434,7 @@ public:
   QualType getBaseElementType(QualType QT) const;
 
   /// Return number of constant array elements.
-  uint64_t getConstantArrayElementCount(const ConstantArrayType *CA) const;
+  static uint64_t getConstantArrayElementCount(const ConstantArrayType *CA) ;
 
   /// Perform adjustment on the parameter type of a function.
   ///
@@ -2486,7 +2486,7 @@ public:
   ///
   /// If \p LHS > \p RHS, returns 1.  If \p LHS == \p RHS, returns 0.  If
   /// \p LHS < \p RHS, return -1.
-  int getFloatingTypeOrder(QualType LHS, QualType RHS) const;
+  static int getFloatingTypeOrder(QualType LHS, QualType RHS) ;
 
   /// Return a real floating point or a complex type (based on
   /// \p typeDomain/\p typeSize).
@@ -2596,7 +2596,7 @@ public:
   /// \param NewParamInfos The composite list of ExtParameterInfo. The list is
   /// empty if none of the flags are set.
   ///
-  bool mergeExtParameterInfo(
+  static bool mergeExtParameterInfo(
       const FunctionProtoType *FirstFnType,
       const FunctionProtoType *SecondFnType,
       bool &CanUseFirst, bool &CanUseSecond,
@@ -2681,7 +2681,7 @@ public:
   /// Returns the Objective-C interface that \p ND belongs to if it is
   /// an Objective-C method/property/ivar etc. that is part of an interface,
   /// otherwise returns null.
-  const ObjCInterfaceDecl *getObjContainingInterface(const NamedDecl *ND) const;
+  static const ObjCInterfaceDecl *getObjContainingInterface(const NamedDecl *ND) ;
 
   /// Set the copy inialization expression of a block var decl. \p CanThrow
   /// indicates whether the copy expression can throw or not.
@@ -2893,8 +2893,8 @@ public:
   /// C++14 and before, for a constexpr static data member, if there is an
   /// out-of-line declaration of the member, we may promote it from weak to
   /// strong.
-  InlineVariableDefinitionKind
-  getInlineVariableDefinitionKind(const VarDecl *VD) const;
+  static InlineVariableDefinitionKind
+  getInlineVariableDefinitionKind(const VarDecl *VD) ;
 
 private:
   friend class DeclarationNameTable;

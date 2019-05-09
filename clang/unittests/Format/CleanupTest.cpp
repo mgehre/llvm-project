@@ -24,7 +24,7 @@ namespace {
 
 class CleanupTest : public ::testing::Test {
 protected:
-  std::string cleanup(llvm::StringRef Code,
+  static std::string cleanup(llvm::StringRef Code,
                       const std::vector<tooling::Range> &Ranges,
                       const FormatStyle &Style = getLLVMStyle()) {
     tooling::Replacements Replaces = format::cleanup(Style, Code, Ranges);
@@ -35,7 +35,7 @@ protected:
   }
 
   // Returns code after cleanup around \p Offsets.
-  std::string cleanupAroundOffsets(llvm::ArrayRef<unsigned> Offsets,
+  static std::string cleanupAroundOffsets(llvm::ArrayRef<unsigned> Offsets,
                                    llvm::StringRef Code,
                                    const FormatStyle &Style = getLLVMStyle()) {
     std::vector<tooling::Range> Ranges;

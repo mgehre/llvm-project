@@ -78,22 +78,22 @@ struct YamlContext {
   }
 
 private:
-  void serializeIntegerOperand(llvm::raw_ostream &OS, int64_t Value) {
+  static void serializeIntegerOperand(llvm::raw_ostream &OS, int64_t Value) {
     OS << kIntegerPrefix;
     OS.write_hex(llvm::bit_cast<uint64_t>(Value));
   }
 
-  bool tryDeserializeIntegerOperand(llvm::StringRef String, int64_t &Value) {
+  static bool tryDeserializeIntegerOperand(llvm::StringRef String, int64_t &Value) {
     if (!String.consume_front(kIntegerPrefix))
       return false;
     return !String.consumeInteger(16, Value);
   }
 
-  void serializeFPOperand(llvm::raw_ostream &OS, double Value) {
+  static void serializeFPOperand(llvm::raw_ostream &OS, double Value) {
     OS << kDoublePrefix << llvm::format("%la", Value);
   }
 
-  bool tryDeserializeFPOperand(llvm::StringRef String, double &Value) {
+  static bool tryDeserializeFPOperand(llvm::StringRef String, double &Value) {
     if (!String.consume_front(kDoublePrefix))
       return false;
     char *EndPointer = nullptr;

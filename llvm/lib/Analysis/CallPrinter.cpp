@@ -27,7 +27,7 @@ template <> struct DOTGraphTraits<CallGraph *> : public DefaultDOTGraphTraits {
 
   static std::string getGraphName(CallGraph *Graph) { return "Call graph"; }
 
-  std::string getNodeLabel(CallGraphNode *Node, CallGraph *Graph) {
+  static std::string getNodeLabel(CallGraphNode *Node, CallGraph *Graph) {
     if (Function *Func = Node->getFunction())
       return Func->getName();
 

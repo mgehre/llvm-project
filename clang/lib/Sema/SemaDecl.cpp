@@ -2854,7 +2854,7 @@ static bool canRedefineFunction(const FunctionDecl *FD,
           FD->getStorageClass() == SC_Extern);
 }
 
-const AttributedType *Sema::getCallingConvAttributedType(QualType T) const {
+const AttributedType *Sema::getCallingConvAttributedType(QualType T) {
   const AttributedType *AT = T->getAs<AttributedType>();
   while (AT && !AT->isCallingConv())
     AT = AT->getModifiedType()->getAs<AttributedType>();

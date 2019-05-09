@@ -1702,7 +1702,7 @@ struct MemorySanitizerVisitor : public InstVisitor<MemorySanitizerVisitor> {
     insertShadowCheck(Shadow, Origin, OrigIns);
   }
 
-  AtomicOrdering addReleaseOrdering(AtomicOrdering a) {
+  static AtomicOrdering addReleaseOrdering(AtomicOrdering a) {
     switch (a) {
       case AtomicOrdering::NotAtomic:
         return AtomicOrdering::NotAtomic;
@@ -1719,7 +1719,7 @@ struct MemorySanitizerVisitor : public InstVisitor<MemorySanitizerVisitor> {
     llvm_unreachable("Unknown ordering");
   }
 
-  AtomicOrdering addAcquireOrdering(AtomicOrdering a) {
+  static AtomicOrdering addAcquireOrdering(AtomicOrdering a) {
     switch (a) {
       case AtomicOrdering::NotAtomic:
         return AtomicOrdering::NotAtomic;
@@ -2040,7 +2040,7 @@ struct MemorySanitizerVisitor : public InstVisitor<MemorySanitizerVisitor> {
     OC.Done(&I);
   }
 
-  size_t VectorOrPrimitiveTypeSizeInBits(Type *Ty) {
+  static size_t VectorOrPrimitiveTypeSizeInBits(Type *Ty) {
     assert(!(Ty->isVectorTy() && Ty->getScalarType()->isPointerTy()) &&
            "Vector of pointers is not a valid shadow type");
     return Ty->isVectorTy() ?
@@ -2210,7 +2210,7 @@ struct MemorySanitizerVisitor : public InstVisitor<MemorySanitizerVisitor> {
 
   /// Build the lowest possible value of V, taking into account V's
   ///        uninitialized bits.
-  Value *getLowestPossibleValue(IRBuilder<> &IRB, Value *A, Value *Sa,
+  static Value *getLowestPossibleValue(IRBuilder<> &IRB, Value *A, Value *Sa,
                                 bool isSigned) {
     if (isSigned) {
       // Split shadow into sign bit and other bits.
@@ -2227,7 +2227,7 @@ struct MemorySanitizerVisitor : public InstVisitor<MemorySanitizerVisitor> {
 
   /// Build the highest possible value of V, taking into account V's
   ///        uninitialized bits.
-  Value *getHighestPossibleValue(IRBuilder<> &IRB, Value *A, Value *Sa,
+  static Value *getHighestPossibleValue(IRBuilder<> &IRB, Value *A, Value *Sa,
                                 bool isSigned) {
     if (isSigned) {
       // Split shadow into sign bit and other bits.
@@ -2686,7 +2686,7 @@ struct MemorySanitizerVisitor : public InstVisitor<MemorySanitizerVisitor> {
 
   // Returns a signed counterpart for an (un)signed-saturate-and-pack
   // intrinsic.
-  Intrinsic::ID getSignedPackIntrinsic(Intrinsic::ID id) {
+  static Intrinsic::ID getSignedPackIntrinsic(Intrinsic::ID id) {
     switch (id) {
       case Intrinsic::x86_sse2_packsswb_128:
       case Intrinsic::x86_sse2_packuswb_128:
@@ -3292,7 +3292,7 @@ struct MemorySanitizerVisitor : public InstVisitor<MemorySanitizerVisitor> {
       setOrigin(&I, IRBAfter.CreateLoad(getOriginPtrForRetval(IRBAfter)));
   }
 
-  bool isAMustTailRetVal(Value *RetVal) {
+  static bool isAMustTailRetVal(Value *RetVal) {
     if (auto *I = dyn_cast<BitCastInst>(RetVal)) {
       RetVal = I->getOperand(0);
     }
@@ -3498,7 +3498,7 @@ struct MemorySanitizerVisitor : public InstVisitor<MemorySanitizerVisitor> {
     setOriginForNaryOp(I);
   }
 
-  void dumpInst(Instruction &I) {
+  static void dumpInst(Instruction &I) {
     if (CallInst *CI = dyn_cast<CallInst>(&I)) {
       errs() << "ZZZ call " << CI->getCalledFunction()->getName() << "\n";
     } else {
@@ -3507,17 +3507,17 @@ struct MemorySanitizerVisitor : public InstVisitor<MemorySanitizerVisitor> {
     errs() << "QQQ " << I << "\n";
   }
 
-  void visitResumeInst(ResumeInst &I) {
+  static void visitResumeInst(ResumeInst &I) {
     LLVM_DEBUG(dbgs() << "Resume: " << I << "\n");
     // Nothing to do here.
   }
 
-  void visitCleanupReturnInst(CleanupReturnInst &CRI) {
+  static void visitCleanupReturnInst(CleanupReturnInst &CRI) {
     LLVM_DEBUG(dbgs() << "CleanupReturn: " << CRI << "\n");
     // Nothing to do here.
   }
 
-  void visitCatchReturnInst(CatchReturnInst &CRI) {
+  static void visitCatchReturnInst(CatchReturnInst &CRI) {
     LLVM_DEBUG(dbgs() << "CatchReturn: " << CRI << "\n");
     // Nothing to do here.
   }
@@ -3545,7 +3545,7 @@ struct MemorySanitizerVisitor : public InstVisitor<MemorySanitizerVisitor> {
   }
 
   /// Get the number of output arguments returned by pointers.
-  int getNumOutputArgs(InlineAsm *IA, CallInst *CI) {
+  static int getNumOutputArgs(InlineAsm *IA, CallInst *CI) {
     int NumRetOutputs = 0;
     int NumOutputs = 0;
     Type *RetTy = dyn_cast<Value>(CI)->getType();
@@ -3663,7 +3663,7 @@ struct VarArgAMD64Helper : public VarArgHelper {
     }
   }
 
-  ArgKind classifyArgument(Value* arg) {
+  static ArgKind classifyArgument(Value* arg) {
     // A very rough approximation of X86_64 argument classification rules.
     Type *T = arg->getType();
     if (T->isFPOrFPVectorTy() || T->isX86_MMXTy())
@@ -4035,7 +4035,7 @@ struct VarArgAArch64Helper : public VarArgHelper {
   VarArgAArch64Helper(Function &F, MemorySanitizer &MS,
                     MemorySanitizerVisitor &MSV) : F(F), MS(MS), MSV(MSV) {}
 
-  ArgKind classifyArgument(Value* arg) {
+  static ArgKind classifyArgument(Value* arg) {
     Type *T = arg->getType();
     if (T->isFPOrFPVectorTy())
       return AK_FloatingPoint;

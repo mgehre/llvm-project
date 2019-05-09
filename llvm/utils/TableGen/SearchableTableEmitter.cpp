@@ -126,7 +126,7 @@ private:
                     "', expected: string, bits, bit or code");
   }
 
-  bool isIntrinsic(Init *I) {
+  static bool isIntrinsic(Init *I) {
     if (DefInit *DI = dyn_cast<DefInit>(I))
       return DI->getDef()->isSubClassOf("Intrinsic");
     return false;
@@ -141,11 +141,11 @@ private:
 
   bool compareBy(Record *LHS, Record *RHS, const SearchIndex &Index);
 
-  bool isIntegral(Init *I) {
+  static bool isIntegral(Init *I) {
     return isa<BitsInit>(I) || isIntrinsic(I);
   }
 
-  std::string searchableFieldType(const GenericField &Field, TypeContext Ctx) {
+  static std::string searchableFieldType(const GenericField &Field, TypeContext Ctx) {
     if (isa<StringRecTy>(Field.RecType)) {
       if (Ctx == TypeInStaticStruct)
         return "const char *";
@@ -172,17 +172,17 @@ private:
 
   void emitGenericTable(const GenericTable &Table, raw_ostream &OS);
   void emitGenericEnum(const GenericEnum &Enum, raw_ostream &OS);
-  void emitLookupDeclaration(const GenericTable &Table,
+  static void emitLookupDeclaration(const GenericTable &Table,
                              const SearchIndex &Index, raw_ostream &OS);
   void emitLookupFunction(const GenericTable &Table, const SearchIndex &Index,
                           bool IsPrimary, raw_ostream &OS);
   void emitIfdef(StringRef Guard, raw_ostream &OS);
 
   bool parseFieldType(GenericField &Field, Init *II);
-  std::unique_ptr<SearchIndex>
+  static std::unique_ptr<SearchIndex>
   parseSearchIndex(GenericTable &Table, StringRef Name,
                    const std::vector<StringRef> &Key, bool EarlyOut);
-  void collectEnumEntries(GenericEnum &Enum, StringRef NameField,
+  static void collectEnumEntries(GenericEnum &Enum, StringRef NameField,
                           StringRef ValueField,
                           const std::vector<Record *> &Items);
   void collectTableEntries(GenericTable &Table,

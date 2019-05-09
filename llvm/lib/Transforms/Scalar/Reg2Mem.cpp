@@ -47,7 +47,7 @@ namespace {
       AU.addPreservedID(BreakCriticalEdgesID);
     }
 
-    bool valueEscapes(const Instruction *Inst) const {
+    static bool valueEscapes(const Instruction *Inst) {
       const BasicBlock *BB = Inst->getParent();
       for (const User *U : Inst->users()) {
         const Instruction *UI = cast<Instruction>(U);

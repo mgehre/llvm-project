@@ -508,7 +508,7 @@ private:
 
   /// Map entries which point to other entries to their destination.
   ///   A->B->C becomes A->C.
-  void expungeSlotMap(DenseMap<int, int> &SlotRemap, unsigned NumSlots);
+  static void expungeSlotMap(DenseMap<int, int> &SlotRemap, unsigned NumSlots);
 };
 
 } // end anonymous namespace

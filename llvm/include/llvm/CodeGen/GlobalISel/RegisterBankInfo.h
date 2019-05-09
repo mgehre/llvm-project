@@ -82,7 +82,7 @@ public:
     /// \note This method does not check anything when assertions are disabled.
     ///
     /// \return True is the check was successful.
-    bool verify() const;
+    static bool verify() ;
   };
 
   /// Helper struct that represents how a value is mapped through
@@ -720,7 +720,7 @@ public:
   /// \note This method does not check anything when assertions are disabled.
   ///
   /// \return True is the check was successful.
-  bool verify(const TargetRegisterInfo &TRI) const;
+  static bool verify(const TargetRegisterInfo &TRI) ;
 };
 
 inline raw_ostream &

@@ -171,7 +171,7 @@ private:
   };
 
   /// Called at the start of a debug object link.
-  void startDebugObject(LinkContext &Context);
+  static void startDebugObject(LinkContext &Context);
 
   /// Called at the end of a debug object link.
   void endDebugObject(LinkContext &Context);
@@ -382,7 +382,7 @@ private:
     /// described by \p Die and store them in \Info if they are not
     /// already there.
     /// \returns is a name was found.
-    bool getDIENames(const DWARFDie &Die, AttributesInfo &Info,
+    static bool getDIENames(const DWARFDie &Die, AttributesInfo &Info,
                      OffsetsStringPool &StringPool, bool StripTemplate = false);
 
     /// Create a copy of abbreviation Abbrev.
@@ -393,7 +393,7 @@ private:
                                     int RecurseDepth = 0);
 
     /// Helper for cloneDIE.
-    void addObjCAccelerator(CompileUnit &Unit, const DIE *Die,
+    static void addObjCAccelerator(CompileUnit &Unit, const DIE *Die,
                             DwarfStringPoolEntryRef Name,
                             OffsetsStringPool &StringPool, bool SkipPubSection);
   };

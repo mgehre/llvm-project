@@ -34,7 +34,7 @@ class RuntimeDyldELF : public RuntimeDyldImpl {
                                uint64_t Value, uint32_t Type, int64_t Addend,
                                uint64_t SymOffset);
 
-  void resolveX86Relocation(const SectionEntry &Section, uint64_t Offset,
+  static void resolveX86Relocation(const SectionEntry &Section, uint64_t Offset,
                             uint32_t Value, uint32_t Type, int32_t Addend);
 
   void resolveAArch64Relocation(const SectionEntry &Section, uint64_t Offset,
@@ -46,7 +46,7 @@ class RuntimeDyldELF : public RuntimeDyldImpl {
   void resolveAArch64Branch(unsigned SectionID, const RelocationValueRef &Value,
                             relocation_iterator RelI, StubMap &Stubs);
 
-  void resolveARMRelocation(const SectionEntry &Section, uint64_t Offset,
+  static void resolveARMRelocation(const SectionEntry &Section, uint64_t Offset,
                             uint32_t Value, uint32_t Type, int32_t Addend);
 
   void resolvePPC32Relocation(const SectionEntry &Section, uint64_t Offset,
@@ -126,8 +126,8 @@ private:
   void processSimpleRelocation(unsigned SectionID, uint64_t Offset, unsigned RelType, RelocationValueRef Value);
 
   // Return matching *LO16 relocation (Mips specific)
-  uint32_t getMatchingLoRelocation(uint32_t RelType,
-                                   bool IsLocal = false) const;
+  static uint32_t getMatchingLoRelocation(uint32_t RelType,
+                                   bool IsLocal = false) ;
 
   // The tentative ID for the GOT section
   unsigned GOTSectionID;

@@ -30,7 +30,7 @@ public:
       : FuncIdHelper(FuncIdHelper), Symbolize(Symbolize) {}
 
   void exportAsYAML(const Trace &Records, raw_ostream &OS);
-  void exportAsRAWv1(const Trace &Records, raw_ostream &OS);
+  static void exportAsRAWv1(const Trace &Records, raw_ostream &OS);
 
   /// For this conversion, the Function records within each thread are expected
   /// to be in sorted TSC order. The trace event format encodes stack traces, so

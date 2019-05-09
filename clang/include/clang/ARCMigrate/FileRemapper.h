@@ -65,9 +65,9 @@ private:
   const FileEntry *getOriginalFile(StringRef filePath);
   void resetTarget(Target &targ);
 
-  bool report(const Twine &err, DiagnosticsEngine &Diag);
+  static bool report(const Twine &err, DiagnosticsEngine &Diag);
 
-  std::string getRemapInfoFile(StringRef outputDir);
+  static std::string getRemapInfoFile(StringRef outputDir);
 };
 
 } // end namespace arcmt

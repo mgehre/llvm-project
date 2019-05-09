@@ -160,7 +160,7 @@ class LLVM_LIBRARY_VISIBILITY AggressiveAntiDepState {
 
     /// Return true if MO represents a register
     /// that is both implicitly used and defined in MI
-    bool IsImplicitDefUse(MachineInstr &MI, MachineOperand &MO);
+    static bool IsImplicitDefUse(MachineInstr &MI, MachineOperand &MO);
 
     /// If MI implicitly def/uses a register, then
     /// return that register and all subregisters.

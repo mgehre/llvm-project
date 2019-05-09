@@ -99,7 +99,7 @@ public:
 
   /// Returns the behavior when calling the given function. For use when the
   /// call site is not known.
-  FunctionModRefBehavior getModRefBehavior(const Function *Fn);
+  static FunctionModRefBehavior getModRefBehavior(const Function *Fn);
 
 private:
   // A linear transformation of a Value; this class represents ZExt(SExt(V,
@@ -227,7 +227,7 @@ class BasicAA : public AnalysisInfoMixin<BasicAA> {
 public:
   using Result = BasicAAResult;
 
-  BasicAAResult run(Function &F, FunctionAnalysisManager &AM);
+  static BasicAAResult run(Function &F, FunctionAnalysisManager &AM);
 };
 
 /// Legacy wrapper pass to provide the BasicAAResult object.

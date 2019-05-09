@@ -804,11 +804,11 @@ private:
     FunctionPass::getAnalysisUsage(AU);
   }
 
-  PreservedAnalyses runImpl(Function &F, const TargetLibraryInfo *TLI,
+  static PreservedAnalyses runImpl(Function &F, const TargetLibraryInfo *TLI,
                             const TargetTransformInfo *TTI,
                             const TargetLowering* TL);
   // Returns true if a change was made.
-  bool runOnBlock(BasicBlock &BB, const TargetLibraryInfo *TLI,
+  static bool runOnBlock(BasicBlock &BB, const TargetLibraryInfo *TLI,
                   const TargetTransformInfo *TTI, const TargetLowering* TL,
                   const DataLayout& DL);
 };

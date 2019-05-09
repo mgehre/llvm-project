@@ -3015,7 +3015,7 @@ private:
   /// Returns \c CXXNewExpr from given initialization expression.
   /// \param E Expression used for initializing pointee in delete-expression.
   /// E can be a single-element \c InitListExpr consisting of new-expression.
-  const CXXNewExpr *getNewExprFromInitListOrExpr(const Expr *E);
+  static const CXXNewExpr *getNewExprFromInitListOrExpr(const Expr *E);
   /// Returns whether member is initialized with mismatching form of
   /// \c new either by the member initializer or in-class initialization.
   ///
@@ -7672,9 +7672,9 @@ public:
     return Result;
   }
 
-  ExprResult TransformLambdaExpr(LambdaExpr *E) { return Owned(E); }
+  static ExprResult TransformLambdaExpr(LambdaExpr *E) { return Owned(E); }
 
-  ExprResult TransformBlockExpr(BlockExpr *E) { return Owned(E); }
+  static ExprResult TransformBlockExpr(BlockExpr *E) { return Owned(E); }
 
   ExprResult Transform(Expr *E) {
     ExprResult Res;

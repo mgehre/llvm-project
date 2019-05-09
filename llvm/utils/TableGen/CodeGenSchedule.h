@@ -595,7 +595,7 @@ private:
   std::string createSchedClassName(Record *ItinClassDef,
                                    ArrayRef<unsigned> OperWrites,
                                    ArrayRef<unsigned> OperReads);
-  std::string createSchedClassName(const RecVec &InstDefs);
+  static std::string createSchedClassName(const RecVec &InstDefs);
   void createInstRWClass(Record *InstRWDef);
 
   void collectProcItins();
@@ -621,8 +621,8 @@ private:
   void inferFromItinClass(Record *ItinClassDef, unsigned FromClassIdx);
   void inferFromInstRWs(unsigned SCIdx);
 
-  bool hasSuperGroup(RecVec &SubUnits, CodeGenProcModel &PM);
-  void verifyProcResourceGroups(CodeGenProcModel &PM);
+  static bool hasSuperGroup(RecVec &SubUnits, CodeGenProcModel &PM);
+  static void verifyProcResourceGroups(CodeGenProcModel &PM);
 
   void collectProcResources();
 

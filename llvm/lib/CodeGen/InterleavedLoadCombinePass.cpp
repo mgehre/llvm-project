@@ -91,7 +91,7 @@ private:
 
   /// Find the instruction in sets LIs that dominates all others, return nullptr
   /// if there is none.
-  LoadInst *findFirstLoad(const std::set<LoadInst *> &LIs);
+  static LoadInst *findFirstLoad(const std::set<LoadInst *> &LIs);
 
   /// Replace interleaved load candidates. It does additional
   /// analyses if this makes sense. Returns true on success and false
@@ -101,7 +101,7 @@ private:
 
   /// Given a set of VectorInfo containing candidates for a given interleave
   /// factor, find a set that represents a 'factor' interleaved load.
-  bool findPattern(std::list<VectorInfo> &Candidates,
+  static bool findPattern(std::list<VectorInfo> &Candidates,
                    std::list<VectorInfo> &InterleavedLoad, unsigned Factor,
                    const DataLayout &DL);
 }; // InterleavedLoadCombine

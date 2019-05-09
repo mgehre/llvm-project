@@ -66,7 +66,7 @@ private:
   //   and, in the end, issues the RET instruction.
   // This is the approach to go on CPUs which have a single RET instruction,
   //   like x86/x86_64.
-  void replaceRetWithPatchableRet(MachineFunction &MF,
+  static void replaceRetWithPatchableRet(MachineFunction &MF,
                                   const TargetInstrInfo *TII,
                                   InstrumentationOptions);
 
@@ -78,7 +78,7 @@ private:
   //   XRay trampoline and issue a single return instruction there. We rather
   //   have to call the trampoline and return from it to the original return
   //   instruction of the function being instrumented.
-  void prependRetWithPatchableExit(MachineFunction &MF,
+  static void prependRetWithPatchableExit(MachineFunction &MF,
                                    const TargetInstrInfo *TII,
                                    InstrumentationOptions);
 };

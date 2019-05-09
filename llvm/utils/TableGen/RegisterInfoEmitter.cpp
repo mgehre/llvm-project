@@ -65,13 +65,13 @@ public:
   }
 
   // runEnums - Print out enum values for all of the registers.
-  void runEnums(raw_ostream &o, CodeGenTarget &Target, CodeGenRegBank &Bank);
+  static void runEnums(raw_ostream &o, CodeGenTarget &Target, CodeGenRegBank &Bank);
 
   // runMCDesc - Print out MC register descriptions.
-  void runMCDesc(raw_ostream &o, CodeGenTarget &Target, CodeGenRegBank &Bank);
+  static void runMCDesc(raw_ostream &o, CodeGenTarget &Target, CodeGenRegBank &Bank);
 
   // runTargetHeader - Emit a header fragment for the register info emitter.
-  void runTargetHeader(raw_ostream &o, CodeGenTarget &Target,
+  static void runTargetHeader(raw_ostream &o, CodeGenTarget &Target,
                        CodeGenRegBank &Bank);
 
   // runTargetDesc - Output the target register and register file descriptions.
@@ -84,16 +84,16 @@ public:
   void debugDump(raw_ostream &OS);
 
 private:
-  void EmitRegMapping(raw_ostream &o, const std::deque<CodeGenRegister> &Regs,
+  static void EmitRegMapping(raw_ostream &o, const std::deque<CodeGenRegister> &Regs,
                       bool isCtor);
-  void EmitRegMappingTables(raw_ostream &o,
+  static void EmitRegMappingTables(raw_ostream &o,
                             const std::deque<CodeGenRegister> &Regs,
                             bool isCtor);
-  void EmitRegUnitPressure(raw_ostream &OS, const CodeGenRegBank &RegBank,
+  static void EmitRegUnitPressure(raw_ostream &OS, const CodeGenRegBank &RegBank,
                            const std::string &ClassName);
-  void emitComposeSubRegIndices(raw_ostream &OS, CodeGenRegBank &RegBank,
+  static void emitComposeSubRegIndices(raw_ostream &OS, CodeGenRegBank &RegBank,
                                 const std::string &ClassName);
-  void emitComposeSubRegIndexLaneMask(raw_ostream &OS, CodeGenRegBank &RegBank,
+  static void emitComposeSubRegIndexLaneMask(raw_ostream &OS, CodeGenRegBank &RegBank,
                                       const std::string &ClassName);
 };
 

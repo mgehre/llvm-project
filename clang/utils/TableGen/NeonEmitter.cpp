@@ -451,7 +451,7 @@ public:
   /// of the intrinsic's own type class.
   std::string getMangledName(bool ForceClassS = false) const;
   /// Return the type code for a builtin function call.
-  std::string getInstTypeCode(Type T, ClassKind CK) const;
+  static std::string getInstTypeCode(Type T, ClassKind CK) ;
   /// Return the type string for a BUILTIN() macro in Builtins.def.
   std::string getBuiltinTypeStr();
 
@@ -499,7 +499,7 @@ private:
     std::pair<Type, std::string> emitDagCast(DagInit *DI, bool IsBitCast);
     std::pair<Type, std::string> emitDagCall(DagInit *DI);
     std::pair<Type, std::string> emitDagNameReplace(DagInit *DI);
-    std::pair<Type, std::string> emitDagLiteral(DagInit *DI);
+    static std::pair<Type, std::string> emitDagLiteral(DagInit *DI);
     std::pair<Type, std::string> emitDagOp(DagInit *DI);
     std::pair<Type, std::string> emitDag(DagInit *DI);
   };
@@ -516,10 +516,10 @@ class NeonEmitter {
   unsigned UniqueNumber;
 
   void createIntrinsic(Record *R, SmallVectorImpl<Intrinsic *> &Out);
-  void genBuiltinsDef(raw_ostream &OS, SmallVectorImpl<Intrinsic *> &Defs);
-  void genOverloadTypeCheckCode(raw_ostream &OS,
+  static void genBuiltinsDef(raw_ostream &OS, SmallVectorImpl<Intrinsic *> &Defs);
+  static void genOverloadTypeCheckCode(raw_ostream &OS,
                                 SmallVectorImpl<Intrinsic *> &Defs);
-  void genIntrinsicRangeCheckCode(raw_ostream &OS,
+  static void genIntrinsicRangeCheckCode(raw_ostream &OS,
                                   SmallVectorImpl<Intrinsic *> &Defs);
 
 public:
@@ -1030,7 +1030,7 @@ void Type::applyModifier(char Mod) {
 // Intrinsic implementation
 //===----------------------------------------------------------------------===//
 
-std::string Intrinsic::getInstTypeCode(Type T, ClassKind CK) const {
+std::string Intrinsic::getInstTypeCode(Type T, ClassKind CK) {
   char typeCode = '\0';
   bool printNumber = true;
 

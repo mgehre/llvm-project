@@ -84,7 +84,7 @@ struct TestCustomAAResult : AAResultBase<TestCustomAAResult> {
   TestCustomAAResult(TestCustomAAResult &&Arg)
       : AAResultBase(std::move(Arg)), CB(std::move(Arg.CB)) {}
 
-  bool invalidate(Function &, const PreservedAnalyses &) { return false; }
+  static bool invalidate(Function &, const PreservedAnalyses &) { return false; }
 
   AliasResult alias(const MemoryLocation &LocA, const MemoryLocation &LocB) {
     CB();

@@ -60,7 +60,7 @@ struct LegacyInlinerBase : public CallGraphSCCPass {
   /// which restricts it to deleting functions with an 'AlwaysInline'
   /// attribute. This is useful for the InlineAlways pass that only wants to
   /// deal with that subset of the functions.
-  bool removeDeadFunctions(CallGraph &CG, bool AlwaysInlineOnly = false);
+  static bool removeDeadFunctions(CallGraph &CG, bool AlwaysInlineOnly = false);
 
   /// This function performs the main work of the pass.  The default of
   /// Inlinter::runOnSCC() calls skipSCC() before calling this method, but

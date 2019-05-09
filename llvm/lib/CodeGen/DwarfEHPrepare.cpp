@@ -52,7 +52,7 @@ namespace {
     const TargetLowering *TLI = nullptr;
 
     bool InsertUnwindResumeCalls(Function &Fn);
-    Value *GetExceptionObject(ResumeInst *RI);
+    static Value *GetExceptionObject(ResumeInst *RI);
     size_t
     pruneUnreachableResumes(Function &Fn,
                             SmallVectorImpl<ResumeInst *> &Resumes,

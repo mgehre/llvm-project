@@ -118,8 +118,8 @@ public:
   void checkPreCall(const CallEvent &Call, CheckerContext &C) const;
   void checkPostObjCMessage(const ObjCMethodCall &M, CheckerContext &C) const;
 
-  ProgramStateRef evalAssume(ProgramStateRef State, SVal Cond,
-                             bool Assumption) const;
+  static ProgramStateRef evalAssume(ProgramStateRef State, SVal Cond,
+                             bool Assumption) ;
 
   ProgramStateRef checkPointerEscape(ProgramStateRef State,
                                      const InvalidatedSymbols &Escaped,
@@ -138,11 +138,11 @@ private:
                                const ObjCMethodCall &M,
                                CheckerContext &C) const;
 
-  SymbolRef getValueReleasedByNillingOut(const ObjCMethodCall &M,
-                                         CheckerContext &C) const;
+  static SymbolRef getValueReleasedByNillingOut(const ObjCMethodCall &M,
+                                         CheckerContext &C) ;
 
-  const ObjCIvarRegion *getIvarRegionForIvarSymbol(SymbolRef IvarSym) const;
-  SymbolRef getInstanceSymbolFromIvarSymbol(SymbolRef IvarSym) const;
+  static const ObjCIvarRegion *getIvarRegionForIvarSymbol(SymbolRef IvarSym) ;
+  static SymbolRef getInstanceSymbolFromIvarSymbol(SymbolRef IvarSym) ;
 
   const ObjCPropertyImplDecl*
   findPropertyOnDeallocatingInstance(SymbolRef IvarSym,
@@ -159,22 +159,22 @@ private:
 
   bool isSuperDeallocMessage(const ObjCMethodCall &M) const;
 
-  const ObjCImplDecl *getContainingObjCImpl(const LocationContext *LCtx) const;
+  static const ObjCImplDecl *getContainingObjCImpl(const LocationContext *LCtx) ;
 
-  const ObjCPropertyDecl *
-  findShadowedPropertyDecl(const ObjCPropertyImplDecl *PropImpl) const;
+  static const ObjCPropertyDecl *
+  findShadowedPropertyDecl(const ObjCPropertyImplDecl *PropImpl) ;
 
-  void transitionToReleaseValue(CheckerContext &C, SymbolRef Value) const;
-  ProgramStateRef removeValueRequiringRelease(ProgramStateRef State,
+  static void transitionToReleaseValue(CheckerContext &C, SymbolRef Value) ;
+  static ProgramStateRef removeValueRequiringRelease(ProgramStateRef State,
                                               SymbolRef InstanceSym,
-                                              SymbolRef ValueSym) const;
+                                              SymbolRef ValueSym) ;
 
   void initIdentifierInfoAndSelectors(ASTContext &Ctx) const;
 
   bool classHasSeparateTeardown(const ObjCInterfaceDecl *ID) const;
 
   bool isReleasedByCIFilterDealloc(const ObjCPropertyImplDecl *PropImpl) const;
-  bool isNibLoadedIvarWithoutRetain(const ObjCPropertyImplDecl *PropImpl) const;
+  static bool isNibLoadedIvarWithoutRetain(const ObjCPropertyImplDecl *PropImpl) ;
 };
 } // End anonymous namespace.
 
@@ -308,14 +308,14 @@ void ObjCDeallocChecker::checkBeginFunction(
 /// Given a symbol for an ivar, return the ivar region it was loaded from.
 /// Returns nullptr if the instance symbol cannot be found.
 const ObjCIvarRegion *
-ObjCDeallocChecker::getIvarRegionForIvarSymbol(SymbolRef IvarSym) const {
+ObjCDeallocChecker::getIvarRegionForIvarSymbol(SymbolRef IvarSym) {
   return dyn_cast_or_null<ObjCIvarRegion>(IvarSym->getOriginRegion());
 }
 
 /// Given a symbol for an ivar, return a symbol for the instance containing
 /// the ivar. Returns nullptr if the instance symbol cannot be found.
 SymbolRef
-ObjCDeallocChecker::getInstanceSymbolFromIvarSymbol(SymbolRef IvarSym) const {
+ObjCDeallocChecker::getInstanceSymbolFromIvarSymbol(SymbolRef IvarSym) {
 
   const ObjCIvarRegion *IvarRegion = getIvarRegionForIvarSymbol(IvarSym);
   if (!IvarRegion)
@@ -403,7 +403,7 @@ void ObjCDeallocChecker::checkPreStmt(
 /// When a symbol is assumed to be nil, remove it from the set of symbols
 /// require to be nil.
 ProgramStateRef ObjCDeallocChecker::evalAssume(ProgramStateRef State, SVal Cond,
-                                               bool Assumption) const {
+                                               bool Assumption) {
   if (State->get<UnreleasedIvarMap>().isEmpty())
     return State;
 
@@ -796,7 +796,7 @@ bool ObjCDeallocChecker::isSuperDeallocMessage(
 
 /// Returns the ObjCImplDecl containing the method declaration in LCtx.
 const ObjCImplDecl *
-ObjCDeallocChecker::getContainingObjCImpl(const LocationContext *LCtx) const {
+ObjCDeallocChecker::getContainingObjCImpl(const LocationContext *LCtx) {
   auto *MD = cast<ObjCMethodDecl>(LCtx->getDecl());
   return cast<ObjCImplDecl>(MD->getDeclContext());
 }
@@ -804,7 +804,7 @@ ObjCDeallocChecker::getContainingObjCImpl(const LocationContext *LCtx) const {
 /// Returns the property that shadowed by PropImpl if one exists and
 /// nullptr otherwise.
 const ObjCPropertyDecl *ObjCDeallocChecker::findShadowedPropertyDecl(
-    const ObjCPropertyImplDecl *PropImpl) const {
+    const ObjCPropertyImplDecl *PropImpl) {
   const ObjCPropertyDecl *PropDecl = PropImpl->getPropertyDecl();
 
   // Only readwrite properties can shadow.
@@ -835,7 +835,7 @@ const ObjCPropertyDecl *ObjCDeallocChecker::findShadowedPropertyDecl(
 
 /// Add a transition noting the release of the given value.
 void ObjCDeallocChecker::transitionToReleaseValue(CheckerContext &C,
-                                                  SymbolRef Value) const {
+                                                  SymbolRef Value) {
   assert(Value);
   SymbolRef InstanceSym = getInstanceSymbolFromIvarSymbol(Value);
   if (!InstanceSym)
@@ -853,7 +853,7 @@ void ObjCDeallocChecker::transitionToReleaseValue(CheckerContext &C,
 /// Remove the Value requiring a release from the tracked set for
 /// Instance and return the resultant state.
 ProgramStateRef ObjCDeallocChecker::removeValueRequiringRelease(
-    ProgramStateRef State, SymbolRef Instance, SymbolRef Value) const {
+    ProgramStateRef State, SymbolRef Instance, SymbolRef Value) {
   assert(Instance);
   assert(Value);
   const ObjCIvarRegion *RemovedRegion = getIvarRegionForIvarSymbol(Value);
@@ -925,7 +925,7 @@ ReleaseRequirement ObjCDeallocChecker::getDeallocReleaseRequirement(
 /// and nils out its underlying instance variable.
 SymbolRef
 ObjCDeallocChecker::getValueReleasedByNillingOut(const ObjCMethodCall &M,
-                                                 CheckerContext &C) const {
+                                                 CheckerContext &C) {
   SVal ReceiverVal = M.getReceiverSVal();
   if (!ReceiverVal.isValid())
     return nullptr;
@@ -1069,7 +1069,7 @@ bool ObjCDeallocChecker::isReleasedByCIFilterDealloc(
 /// On iOS and its derivatives, the nib-loading code will call
 /// -setValue:forKey:, which retains the value before directly setting the ivar.
 bool ObjCDeallocChecker::isNibLoadedIvarWithoutRetain(
-    const ObjCPropertyImplDecl *PropImpl) const {
+    const ObjCPropertyImplDecl *PropImpl) {
   const ObjCIvarDecl *IvarDecl = PropImpl->getPropertyIvarDecl();
   if (!IvarDecl->hasAttr<IBOutletAttr>())
     return false;

@@ -159,7 +159,7 @@ private:
 
   // Print the given table as a static const C++ array of type
   // X86MemoryFoldTableEntry.
-  void printTable(const FoldTable &Table, StringRef TableName,
+  static void printTable(const FoldTable &Table, StringRef TableName,
                   raw_ostream &OS) {
     OS << "static const X86MemoryFoldTableEntry MemoryFold" << TableName
        << "[] = {\n";
@@ -407,7 +407,7 @@ public:
 
 private:
   // Return true of the 2 given forms are the opposite of each other.
-  bool areOppositeForms(const BitsInit *RegFormBits,
+  static bool areOppositeForms(const BitsInit *RegFormBits,
                         const BitsInit *MemFormBits) {
     uint64_t MemFormNum = getValueFromBitsInit(MemFormBits);
     uint64_t RegFormNum = getValueFromBitsInit(RegFormBits);

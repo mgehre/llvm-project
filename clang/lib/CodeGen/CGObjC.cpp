@@ -3060,7 +3060,7 @@ struct ARCRetainExprEmitter :
 
   ARCRetainExprEmitter(CodeGenFunction &CGF) : ARCExprEmitter(CGF) {}
 
-  llvm::Value *getValueOfResult(TryEmitResult result) {
+  static llvm::Value *getValueOfResult(TryEmitResult result) {
     return result.getPointer();
   }
 
@@ -3229,7 +3229,7 @@ struct ARCUnsafeUnretainedExprEmitter :
 
   ARCUnsafeUnretainedExprEmitter(CodeGenFunction &CGF) : ARCExprEmitter(CGF) {}
 
-  llvm::Value *getValueOfResult(llvm::Value *value) {
+  static llvm::Value *getValueOfResult(llvm::Value *value) {
     return value;
   }
 

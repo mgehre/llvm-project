@@ -64,7 +64,7 @@ namespace {
         SmallVectorImpl<UnexpandedParameterPack> &Unexpanded)
         : Unexpanded(Unexpanded) {}
 
-    bool shouldWalkTypesOfTypeLocs() const { return false; }
+    static bool shouldWalkTypesOfTypeLocs() { return false; }
 
     //------------------------------------------------------------------------
     // Recording occurrences of (unexpanded) parameter packs.
@@ -180,10 +180,10 @@ namespace {
 
     /// Suppress traversal of pack expansion expressions and types.
     ///@{
-    bool TraversePackExpansionType(PackExpansionType *T) { return true; }
-    bool TraversePackExpansionTypeLoc(PackExpansionTypeLoc TL) { return true; }
-    bool TraversePackExpansionExpr(PackExpansionExpr *E) { return true; }
-    bool TraverseCXXFoldExpr(CXXFoldExpr *E) { return true; }
+    static bool TraversePackExpansionType(PackExpansionType *T) { return true; }
+    static bool TraversePackExpansionTypeLoc(PackExpansionTypeLoc TL) { return true; }
+    static bool TraversePackExpansionExpr(PackExpansionExpr *E) { return true; }
+    static bool TraverseCXXFoldExpr(CXXFoldExpr *E) { return true; }
 
     ///@}
 

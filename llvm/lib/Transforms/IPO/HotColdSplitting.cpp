@@ -175,7 +175,7 @@ private:
                           BlockFrequencyInfo *BFI, TargetTransformInfo &TTI,
                           DominatorTree &DT, PostDomTree &PDT,
                           OptimizationRemarkEmitter &ORE);
-  Function *extractColdRegion(const BlockSequence &Region, DominatorTree &DT,
+  static Function *extractColdRegion(const BlockSequence &Region, DominatorTree &DT,
                               BlockFrequencyInfo *BFI, TargetTransformInfo &TTI,
                               OptimizationRemarkEmitter &ORE, unsigned Count);
   SmallPtrSet<const Function *, 2> OutlinedFunctions;

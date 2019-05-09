@@ -535,7 +535,7 @@ class DwarfDebug : public DebugHandlerBase {
 
   /// Flags to let the linker know we have emitted new style pubnames. Only
   /// emit it here if we don't have a skeleton CU for split dwarf.
-  void addGnuPubAttributes(DwarfCompileUnit &U, DIE &D) const;
+  static void addGnuPubAttributes(DwarfCompileUnit &U, DIE &D) ;
 
   /// Create new DwarfCompileUnit for the given metadata node with tag
   /// DW_TAG_compile_unit.
@@ -544,7 +544,7 @@ class DwarfDebug : public DebugHandlerBase {
                             DwarfCompileUnit &NewCU);
 
   /// Construct imported_module or imported_declaration DIE.
-  void constructAndAddImportedEntityDIE(DwarfCompileUnit &TheCU,
+  static void constructAndAddImportedEntityDIE(DwarfCompileUnit &TheCU,
                                         const DIImportedEntity *N);
 
   /// Register a source line with debug info. Returns the unique
@@ -665,7 +665,7 @@ public:
     return UseSegmentedStringOffsetsTable;
   }
 
-  bool shareAcrossDWOCUs() const;
+  static bool shareAcrossDWOCUs() ;
 
   /// Returns the Dwarf Version.
   uint16_t getDwarfVersion() const;

@@ -45,7 +45,7 @@ class StackSafetyAnalysis : public AnalysisInfoMixin<StackSafetyAnalysis> {
 
 public:
   using Result = StackSafetyInfo;
-  StackSafetyInfo run(Function &F, FunctionAnalysisManager &AM);
+  static StackSafetyInfo run(Function &F, FunctionAnalysisManager &AM);
 };
 
 /// Printer pass for the \c StackSafetyAnalysis results.
@@ -84,7 +84,7 @@ class StackSafetyGlobalAnalysis
 
 public:
   using Result = StackSafetyGlobalInfo;
-  Result run(Module &M, ModuleAnalysisManager &AM);
+  static Result run(Module &M, ModuleAnalysisManager &AM);
 };
 
 /// Printer pass for the \c StackSafetyGlobalAnalysis results.

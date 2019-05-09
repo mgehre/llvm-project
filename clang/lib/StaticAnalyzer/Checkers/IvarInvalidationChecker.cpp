@@ -119,7 +119,7 @@ class IvarInvalidationCheckerImpl {
     ASTContext &Ctx;
 
     /// Peel off parens, casts, OpaqueValueExpr, and PseudoObjectExpr.
-    const Expr *peel(const Expr *E) const;
+    static const Expr *peel(const Expr *E) ;
 
     /// Does this expression represent zero: '0'?
     bool isZero(const Expr *E) const;
@@ -587,7 +587,7 @@ void IvarInvalidationCheckerImpl::MethodCrawler::markInvalidated(
   }
 }
 
-const Expr *IvarInvalidationCheckerImpl::MethodCrawler::peel(const Expr *E) const {
+const Expr *IvarInvalidationCheckerImpl::MethodCrawler::peel(const Expr *E) {
   E = E->IgnoreParenCasts();
   if (const PseudoObjectExpr *POE = dyn_cast<PseudoObjectExpr>(E))
     E = POE->getSyntacticForm()->IgnoreParenCasts();

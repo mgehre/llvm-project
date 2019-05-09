@@ -45,15 +45,15 @@ public:
 
 private:
   // Find the preceding instruction that imp-defs eflags.
-  MachineInstr *findFlagsImpDef(MachineBasicBlock *MBB,
+  static MachineInstr *findFlagsImpDef(MachineBasicBlock *MBB,
                                 MachineBasicBlock::reverse_iterator MI);
 
   // Return true if MI imp-uses eflags.
-  bool impUsesFlags(MachineInstr *MI);
+  static bool impUsesFlags(MachineInstr *MI);
 
   // Return true if this is the opcode of a SetCC instruction with a register
   // output.
-  bool isSetCCr(unsigned Opode);
+  static bool isSetCCr(unsigned Opode);
 
   MachineRegisterInfo *MRI;
   const X86InstrInfo *TII;

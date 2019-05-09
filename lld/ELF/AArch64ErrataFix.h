@@ -32,7 +32,7 @@ private:
   std::vector<Patch843419Section *>
   patchInputSectionDescription(InputSectionDescription &ISD);
 
-  void insertPatches(InputSectionDescription &ISD,
+  static void insertPatches(InputSectionDescription &ISD,
                      std::vector<Patch843419Section *> &Patches);
 
   void init();

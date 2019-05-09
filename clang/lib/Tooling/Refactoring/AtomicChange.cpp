@@ -34,7 +34,7 @@ struct NormalizedAtomicChange {
         Replaces(E.getReplacements().begin(), E.getReplacements().end()) {}
 
   // This is not expected to be called but needed for template instantiation.
-  clang::tooling::AtomicChange denormalize(const llvm::yaml::IO &) {
+  static clang::tooling::AtomicChange denormalize(const llvm::yaml::IO &) {
     llvm_unreachable("Do not convert YAML to AtomicChange directly with '>>'. "
                      "Use AtomicChange::convertFromYAML instead.");
   }

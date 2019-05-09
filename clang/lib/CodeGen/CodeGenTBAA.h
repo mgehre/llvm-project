@@ -198,17 +198,17 @@ public:
 
   /// mergeTBAAInfoForCast - Get merged TBAA information for the purpose of
   /// type casts.
-  TBAAAccessInfo mergeTBAAInfoForCast(TBAAAccessInfo SourceInfo,
+  static TBAAAccessInfo mergeTBAAInfoForCast(TBAAAccessInfo SourceInfo,
                                       TBAAAccessInfo TargetInfo);
 
   /// mergeTBAAInfoForConditionalOperator - Get merged TBAA information for the
   /// purpose of conditional operator.
-  TBAAAccessInfo mergeTBAAInfoForConditionalOperator(TBAAAccessInfo InfoA,
+  static TBAAAccessInfo mergeTBAAInfoForConditionalOperator(TBAAAccessInfo InfoA,
                                                      TBAAAccessInfo InfoB);
 
   /// mergeTBAAInfoForMemoryTransfer - Get merged TBAA information for the
   /// purpose of memory transfer calls.
-  TBAAAccessInfo mergeTBAAInfoForMemoryTransfer(TBAAAccessInfo DestInfo,
+  static TBAAAccessInfo mergeTBAAInfoForMemoryTransfer(TBAAAccessInfo DestInfo,
                                                 TBAAAccessInfo SrcInfo);
 };
 

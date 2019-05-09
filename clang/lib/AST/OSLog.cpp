@@ -31,7 +31,7 @@ private:
   SmallVector<ArgData, 4> ArgsData;
   ArrayRef<const Expr *> Args;
 
-  OSLogBufferItem::Kind
+  static OSLogBufferItem::Kind
   getKind(analyze_format_string::ConversionSpecifier::Kind K) {
     switch (K) {
     case clang::analyze_format_string::ConversionSpecifier::sArg: // "%s"

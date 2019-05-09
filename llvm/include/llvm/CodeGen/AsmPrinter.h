@@ -463,7 +463,7 @@ public:
   //===------------------------------------------------------------------===//
 
   /// This is just convenient handler for printing offsets.
-  void printOffset(int64_t Offset, raw_ostream &OS) const;
+  static void printOffset(int64_t Offset, raw_ostream &OS) ;
 
   /// Emit a byte directive and value.
   void emitInt8(int Value) const;

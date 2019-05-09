@@ -119,13 +119,13 @@ public:
 
   void print(const MachineFunction &MF);
 
-  void convert(yaml::MachineFunction &MF, const MachineRegisterInfo &RegInfo,
+  static void convert(yaml::MachineFunction &MF, const MachineRegisterInfo &RegInfo,
                const TargetRegisterInfo *TRI);
-  void convert(ModuleSlotTracker &MST, yaml::MachineFrameInfo &YamlMFI,
+  static void convert(ModuleSlotTracker &MST, yaml::MachineFrameInfo &YamlMFI,
                const MachineFrameInfo &MFI);
-  void convert(yaml::MachineFunction &MF,
+  static void convert(yaml::MachineFunction &MF,
                const MachineConstantPool &ConstantPool);
-  void convert(ModuleSlotTracker &MST, yaml::MachineJumpTable &YamlJTI,
+  static void convert(ModuleSlotTracker &MST, yaml::MachineJumpTable &YamlJTI,
                const MachineJumpTableInfo &JTI);
   void convertStackObjects(yaml::MachineFunction &YMF,
                            const MachineFunction &MF, ModuleSlotTracker &MST);
@@ -144,7 +144,7 @@ class MIPrinter {
   /// Synchronization scope names registered with LLVMContext.
   SmallVector<StringRef, 8> SSNs;
 
-  bool canPredictBranchProbabilities(const MachineBasicBlock &MBB) const;
+  static bool canPredictBranchProbabilities(const MachineBasicBlock &MBB) ;
   bool canPredictSuccessors(const MachineBasicBlock &MBB) const;
 
 public:
@@ -522,7 +522,7 @@ void llvm::guessSuccessors(const MachineBasicBlock &MBB,
 }
 
 bool
-MIPrinter::canPredictBranchProbabilities(const MachineBasicBlock &MBB) const {
+MIPrinter::canPredictBranchProbabilities(const MachineBasicBlock &MBB) {
   if (MBB.succ_size() <= 1)
     return true;
   if (!MBB.hasSuccessorProbabilities())

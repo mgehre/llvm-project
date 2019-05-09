@@ -208,7 +208,7 @@ public:
   void generate(MCContext &MC, AsmPrinter &Asm) const;
 
 private:
-  void writeData(ArrayRef<ValueAndLength> Data, AsmPrinter &Asm) const;
+  static void writeData(ArrayRef<ValueAndLength> Data, AsmPrinter &Asm) ;
   MCSymbol *writeDefaultPrologue(AsmPrinter &Asm) const;
   void writePrologue(AsmPrinter &Asm) const;
 

@@ -434,7 +434,7 @@ LayoutPass::decorate(File::AtomRange<DefinedAtom> &atomRange) const {
 }
 
 void LayoutPass::undecorate(File::AtomRange<DefinedAtom> &atomRange,
-                            std::vector<SortKey> &keys) const {
+                            std::vector<SortKey> &keys) {
   size_t i = 0;
   for (SortKey &k : keys)
     atomRange[i++] = std::move(k._atom);

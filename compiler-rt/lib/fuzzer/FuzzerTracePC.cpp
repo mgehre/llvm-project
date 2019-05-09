@@ -40,11 +40,11 @@ namespace fuzzer {
 
 TracePC TPC;
 
-uint8_t *TracePC::Counters() const {
+uint8_t *TracePC::Counters() {
   return __sancov_trace_pc_guard_8bit_counters;
 }
 
-uintptr_t *TracePC::PCs() const {
+uintptr_t *TracePC::PCs() {
   return __sancov_trace_pc_pcs;
 }
 
