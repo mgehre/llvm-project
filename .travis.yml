@@ -12,6 +12,8 @@ cache: ccache
 matrix:
   include:
 
+    - os: windows
+
     ##########################################################################
     # Clang on OSX
     # Travis seems to take longer to start OSX instances,
