@@ -179,8 +179,10 @@ install:
       CMAKE_URL="https://cmake.org/files/v${CMAKE_VERSION%.[0-9]}/cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz"
       mkdir cmake && travis_retry wget --no-check-certificate -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
       export PATH=${DEPS_DIR}/cmake/bin:${PATH}
-    else
+    fi
+    if [[ "${TRAVIS_OS_NAME}" == "osx" ]];
       brew install cmake || brew upgrade cmake
+      brew install --HEAD ccache
     fi
   - cmake --version
 
@@ -215,6 +217,7 @@ before_script:
   # have CMake to generate build files
   - cd "${TRAVIS_BUILD_DIR}"
   - mkdir build && cd build
+  # -DLLVM_CCACHE_BUILD=ON
   - cmake ../llvm -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLLVM_ENABLE_ASSERTIONS=ON -DLLVM_APPEND_VC_REV=OFF -DBUILD_SHARED_LIBS=ON -DLLVM_TARGETS_TO_BUILD="X86" -DLLVM_OPTIMIZED_TABLEGEN=ON -DLLVM_CCACHE_BUILD=ON '-DLLVM_ENABLE_PROJECTS=clang;compiler-rt' -DLLVM_USE_SPLIT_DWARF=ON -DLLVM_ENABLE_LLD=ON
   
 script:
