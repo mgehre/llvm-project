@@ -18,12 +18,12 @@ matrix:
     - os: osx
       osx_image: xcode9.1
       compiler: clang
-      env: BUILD_OPTIONS="-j3"
+      env: BUILD_OPTIONS="-j3 clang"
 
     - os: linux
       dist: xenial
       compiler: clang
-      env: BUILD_OPTIONS="-j3" CMAKE_OPTIONS="-DLLVM_CCACHE_BUILD=ON"
+      env: BUILD_OPTIONS="-j3 clang" CMAKE_OPTIONS="-DLLVM_CCACHE_BUILD=ON"
 
 install:
   # Set the ${CXX} variable properly
@@ -91,6 +91,6 @@ before_script:
   
 script:
   # build and run tests
-  - cmake --build . -- ${BUILD_OPTIONS} clang
+  - cmake --build . -- ${BUILD_OPTIONS}
   #- make check-clang
   - ./bin/clang -v -fsyntax-only ../lifetime-attr-test.cpp
