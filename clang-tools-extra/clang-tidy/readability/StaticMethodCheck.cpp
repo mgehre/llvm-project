@@ -22,7 +22,6 @@ namespace readability {
 
 class FindUsageOfThis : public RecursiveASTVisitor<FindUsageOfThis> {
 public:
-  FindUsageOfThis() {}
   bool Used = false;
 
   bool VisitCXXThisExpr(const CXXThisExpr *E) {
@@ -53,19 +52,17 @@ static StringRef getStringFromRange(SourceManager &SourceMgr,
 static SourceRange getLocationOfConst(const TypeSourceInfo *TSI,
                                       SourceManager &SourceMgr,
                                       const LangOptions &LangOpts) {
-  if (!TSI)
-    return {};
-  FunctionTypeLoc FTL =
-      TSI->getTypeLoc().IgnoreParens().getAs<FunctionTypeLoc>();
+  assert(TSI);
+  auto FTL = TSI->getTypeLoc().IgnoreParens().getAs<FunctionTypeLoc>();
   if (!FTL)
     return {};
 
-  auto Range = SourceRange{FTL.getRParenLoc().getLocWithOffset(1),
-                           FTL.getLocalRangeEnd()};
+  SourceRange Range{FTL.getRParenLoc().getLocWithOffset(1),
+                    FTL.getLocalRangeEnd()};
   // Inside Range, there might be other keywords and trailing return types.
   // Find the exact position of "const".
   StringRef Text = getStringFromRange(SourceMgr, LangOpts, Range);
-  auto Offset = Text.find("const");
+  size_t Offset = Text.find("const");
   if (Offset == StringRef::npos)
     return {};
 
@@ -113,7 +110,7 @@ void StaticMethodCheck::check(const MatchFinder::MatchResult &Result) {
           Definition->getTypeSourceInfo()->getTypeLoc().getSourceRange()))
     return;
 
-  const CXXMethodDecl* Declaration = Definition->getCanonicalDecl();
+  const CXXMethodDecl *Declaration = Definition->getCanonicalDecl();
 
   if (Declaration != Definition &&
       insideMacroDefinition(
@@ -130,23 +127,28 @@ void StaticMethodCheck::check(const MatchFinder::MatchResult &Result) {
 
   // TODO: For out-of-line declarations, don't modify the source if the header
   // is excluded by the -header-filter option.
-  DiagnosticBuilder Diag = diag(Definition->getLocation(), "method %0 can be made static")
-              << Definition;
+  DiagnosticBuilder Diag =
+      diag(Definition->getLocation(), "method %0 can be made static")
+      << Definition;
+
+  // TODO: Would need to remove those in a fix-it.
+  if (Definition->isVolatile() || Definition->getRefQualifier() != RQ_None)
+    return;
 
   if (Definition->isConst()) {
     // Make sure that we either remove 'const' on both declaration and
     // definition or emit no fix-it at all.
     SourceRange DefConst = getLocationOfConst(Definition->getTypeSourceInfo(),
-                                       *Result.SourceManager,
-                                       Result.Context->getLangOpts());
+                                              *Result.SourceManager,
+                                              Result.Context->getLangOpts());
 
     if (DefConst.isInvalid())
       return;
 
     if (Declaration != Definition) {
-      SourceRange DeclConst = getLocationOfConst(Declaration->getTypeSourceInfo(),
-                                          *Result.SourceManager,
-                                          Result.Context->getLangOpts());
+      SourceRange DeclConst = getLocationOfConst(
+          Declaration->getTypeSourceInfo(), *Result.SourceManager,
+          Result.Context->getLangOpts());
 
       if (DeclConst.isInvalid())
         return;

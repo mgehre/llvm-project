@@ -96,7 +96,8 @@ struct KeepSpecial {
 };
 
 void KeepLambdas() {
-  auto F = +[]() { return 0; };
+  using FT = int (*)();
+  auto F = static_cast<FT>([]() { return 0; });
   auto F2 = []() { return 0; };
 }
 
@@ -136,12 +137,32 @@ void instantiate() {
   I3.static_f<int>();
 }
 
-struct TrailingReturn {
+struct Trailing {
   auto g() const -> int {
     // CHECK-MESSAGES: :[[@LINE-1]]:8: warning: method 'g' can be made static
     // CHECK-FIXES: {{^}}  static auto g() -> int {
     return 0;
   }
+
+  void vol() volatile {
+    // CHECK-MESSAGES: :[[@LINE-1]]:8: warning: method 'vol' can be made static
+    return;
+  }
+
+  void ref() const & {
+    // CHECK-MESSAGES: :[[@LINE-1]]:8: warning: method 'ref' can be made static
+    return;
+  }
+  void refref() const && {
+    // CHECK-MESSAGES: :[[@LINE-1]]:8: warning: method 'refref' can be made static
+    return;
+  }
+};
+
+struct UnevaluatedContext {
+  void f() { sizeof(this); }
+
+  void noex() noexcept(noexcept(this));
 };
 
 struct NoFixitInMacro {
