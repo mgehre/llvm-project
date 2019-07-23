@@ -382,7 +382,7 @@ unsigned Parser::ParseAttributeArgsCommon(
         }
         if (T.isUsable())
           TheParsedType = T.get();
-        break; // Multiple type arguments are not implemented.
+        break; // FIXME: Multiple type arguments are not implemented.
       } else if (Tok.is(tok::identifier) &&
                  attributeHasVariadicIdentifierArg(*AttrName)) {
         ArgExprs.push_back(ParseIdentifierLoc());

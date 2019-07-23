@@ -2514,7 +2514,7 @@ def err_nsobject_attribute : Error<
 def err_attributes_are_not_compatible : Error<
   "%0 and %1 attributes are not compatible">;
 def err_attribute_invalid_argument : Error<
-  "%0 is an invalid argument to attribute %1">;
+  "%select{'void'|a reference type|an array type}0 is an invalid argument to attribute %1">;
 def err_attribute_wrong_number_arguments : Error<
   "%0 attribute %plural{0:takes no arguments|1:takes one argument|"
   ":requires exactly %1 arguments}1">;
@@ -2929,7 +2929,8 @@ def warn_attribute_wrong_decl_type : Warning<
   "|types and namespaces"
   "|variables, functions and classes"
   "|kernel functions"
-  "|non-K&R-style functions}1">,
+  "|non-K&R-style functions"
+  "|classes}1">,
   InGroup<IgnoredAttributes>;
 def err_attribute_wrong_decl_type : Error<warn_attribute_wrong_decl_type.Text>;
 def warn_type_attribute_wrong_type : Warning<

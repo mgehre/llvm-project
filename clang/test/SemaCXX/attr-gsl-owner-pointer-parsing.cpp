@@ -44,7 +44,10 @@ class [[gsl::Owner()]] [[gsl::Owner(int)]] WithAndWithoutParameter{};
 // expected-note@-2 {{conflicting attribute is here}}
 
 class [[gsl::Owner(int &)]] ReferenceType{};
-// expected-error@-1 {{A reference type is an invalid argument to attribute 'Owner'}}
+// expected-error@-1 {{a reference type is an invalid argument to attribute 'Owner'}}
 
 class [[gsl::Pointer(int[])]] ArrayType{};
-// expected-error@-1 {{An array type is an invalid argument to attribute 'Pointer'}}
+// expected-error@-1 {{an array type is an invalid argument to attribute 'Pointer'}}
+
+union [[gsl::Owner(int)]] Union{};
+// expected-warning@-1 {{'Owner' attribute only applies to classes}}

@@ -1034,6 +1034,7 @@ enum AttributeDeclKind {
   ExpectedFunctionVariableOrClass,
   ExpectedKernelFunction,
   ExpectedFunctionWithProtoType,
+  ExpectedClass,
 };
 
 inline const DiagnosticBuilder &operator<<(const DiagnosticBuilder &DB,

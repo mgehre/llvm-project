@@ -4534,26 +4534,29 @@ static void handleSuppressAttr(Sema &S, Decl *D, const ParsedAttr &AL) {
 }
 
 static void handleLifetimeCategoryAttr(Sema &S, Decl *D, const ParsedAttr &AL) {
+  auto *RD = dyn_cast<RecordDecl>(D);
+  if (!RD || RD->isUnion()) {
+    S.Diag(AL.getLoc(), diag::warn_attribute_wrong_decl_type)
+        << AL << ExpectedClass;
+    return;
+  }
+
   TypeSourceInfo *DerefTypeLoc = nullptr;
   QualType ParmType;
   if (AL.hasParsedType()) {
     ParmType = S.GetTypeFromParser(AL.getTypeArg(), &DerefTypeLoc);
 
-    if (ParmType->isVoidType()) {
-      S.Diag(AL.getLoc(), diag::err_attribute_invalid_argument)
-          << "'void'" << AL;
-      return;
-    }
+    unsigned SelectIdx = ~0U;
+    if (ParmType->isVoidType())
+      SelectIdx = 0;
+    else if (ParmType->isReferenceType())
+      SelectIdx = 1;
+    else if (ParmType->isArrayType())
+      SelectIdx = 2;
 
-    if (ParmType->isReferenceType()) {
+    if (SelectIdx != ~0U) {
       S.Diag(AL.getLoc(), diag::err_attribute_invalid_argument)
-          << "A reference type" << AL;
-      return;
-    }
-
-    if (ParmType->isArrayType()) {
-      S.Diag(AL.getLoc(), diag::err_attribute_invalid_argument)
-          << "An array type" << AL;
+          << SelectIdx << AL;
       return;
     }
   }
