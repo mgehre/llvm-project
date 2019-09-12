@@ -1531,16 +1531,16 @@ Instruction *InstCombiner::visitFPTrunc(FPTruncInst &FPT) {
   // what we can and cannot do safely varies from operation to operation, and
   // is explained below in the various case statements.
   Type *Ty = FPT.getType();
-  BinaryOperator *OpI = dyn_cast<BinaryOperator>(FPT.getOperand(0));
-  if (OpI && OpI->hasOneUse()) {
-    Type *LHSMinType = getMinimumFPType(OpI->getOperand(0));
-    Type *RHSMinType = getMinimumFPType(OpI->getOperand(1));
-    unsigned OpWidth = OpI->getType()->getFPMantissaWidth();
+  auto *BO = dyn_cast<BinaryOperator>(FPT.getOperand(0));
+  if (BO && BO->hasOneUse()) {
+    Type *LHSMinType = getMinimumFPType(BO->getOperand(0));
+    Type *RHSMinType = getMinimumFPType(BO->getOperand(1));
+    unsigned OpWidth = BO->getType()->getFPMantissaWidth();
     unsigned LHSWidth = LHSMinType->getFPMantissaWidth();
     unsigned RHSWidth = RHSMinType->getFPMantissaWidth();
     unsigned SrcWidth = std::max(LHSWidth, RHSWidth);
     unsigned DstWidth = Ty->getFPMantissaWidth();
-    switch (OpI->getOpcode()) {
+    switch (BO->getOpcode()) {
       default: break;
       case Instruction::FAdd:
       case Instruction::FSub:
@@ -1563,10 +1563,10 @@ Instruction *InstCombiner::visitFPTrunc(FPTruncInst &FPT) {
         // could be tightened for those cases, but they are rare (the main
         // case of interest here is (float)((double)float + float)).
         if (OpWidth >= 2*DstWidth+1 && DstWidth >= SrcWidth) {
-          Value *LHS = Builder.CreateFPTrunc(OpI->getOperand(0), Ty);
-          Value *RHS = Builder.CreateFPTrunc(OpI->getOperand(1), Ty);
-          Instruction *RI = BinaryOperator::Create(OpI->getOpcode(), LHS, RHS);
-          RI->copyFastMathFlags(OpI);
+          Value *LHS = Builder.CreateFPTrunc(BO->getOperand(0), Ty);
+          Value *RHS = Builder.CreateFPTrunc(BO->getOperand(1), Ty);
+          Instruction *RI = BinaryOperator::Create(BO->getOpcode(), LHS, RHS);
+          RI->copyFastMathFlags(BO);
           return RI;
         }
         break;
@@ -1577,9 +1577,9 @@ Instruction *InstCombiner::visitFPTrunc(FPTruncInst &FPT) {
         // rounding can possibly occur; we can safely perform the operation
         // in the destination format if it can represent both sources.
         if (OpWidth >= LHSWidth + RHSWidth && DstWidth >= SrcWidth) {
-          Value *LHS = Builder.CreateFPTrunc(OpI->getOperand(0), Ty);
-          Value *RHS = Builder.CreateFPTrunc(OpI->getOperand(1), Ty);
-          return BinaryOperator::CreateFMulFMF(LHS, RHS, OpI);
+          Value *LHS = Builder.CreateFPTrunc(BO->getOperand(0), Ty);
+          Value *RHS = Builder.CreateFPTrunc(BO->getOperand(1), Ty);
+          return BinaryOperator::CreateFMulFMF(LHS, RHS, BO);
         }
         break;
       case Instruction::FDiv:
@@ -1590,9 +1590,9 @@ Instruction *InstCombiner::visitFPTrunc(FPTruncInst &FPT) {
         // condition used here is a good conservative first pass.
         // TODO: Tighten bound via rigorous analysis of the unbalanced case.
         if (OpWidth >= 2*DstWidth && DstWidth >= SrcWidth) {
-          Value *LHS = Builder.CreateFPTrunc(OpI->getOperand(0), Ty);
-          Value *RHS = Builder.CreateFPTrunc(OpI->getOperand(1), Ty);
-          return BinaryOperator::CreateFDivFMF(LHS, RHS, OpI);
+          Value *LHS = Builder.CreateFPTrunc(BO->getOperand(0), Ty);
+          Value *RHS = Builder.CreateFPTrunc(BO->getOperand(1), Ty);
+          return BinaryOperator::CreateFDivFMF(LHS, RHS, BO);
         }
         break;
       case Instruction::FRem: {
@@ -1604,14 +1604,14 @@ Instruction *InstCombiner::visitFPTrunc(FPTruncInst &FPT) {
           break;
         Value *LHS, *RHS;
         if (LHSWidth == SrcWidth) {
-           LHS = Builder.CreateFPTrunc(OpI->getOperand(0), LHSMinType);
-           RHS = Builder.CreateFPTrunc(OpI->getOperand(1), LHSMinType);
+           LHS = Builder.CreateFPTrunc(BO->getOperand(0), LHSMinType);
+           RHS = Builder.CreateFPTrunc(BO->getOperand(1), LHSMinType);
         } else {
-           LHS = Builder.CreateFPTrunc(OpI->getOperand(0), RHSMinType);
-           RHS = Builder.CreateFPTrunc(OpI->getOperand(1), RHSMinType);
+           LHS = Builder.CreateFPTrunc(BO->getOperand(0), RHSMinType);
+           RHS = Builder.CreateFPTrunc(BO->getOperand(1), RHSMinType);
         }
 
-        Value *ExactResult = Builder.CreateFRemFMF(LHS, RHS, OpI);
+        Value *ExactResult = Builder.CreateFRemFMF(LHS, RHS, BO);
         return CastInst::CreateFPCast(ExactResult, Ty);
       }
     }
@@ -2415,6 +2415,22 @@ Instruction *InstCombiner::visitBitCast(BitCastInst &CI) {
         // know the vector types match #elts.
         return new ShuffleVectorInst(LHS, RHS, Shuf->getOperand(2));
       }
+    }
+
+    // A bitcasted-to-scalar and byte-reversing shuffle is better recognized as
+    // a byte-swap:
+    // bitcast <N x i8> (shuf X, undef, <N, N-1,...0>) --> bswap (bitcast X)
+    // TODO: We should match the related pattern for bitreverse.
+    if (DestTy->isIntegerTy() &&
+        DL.isLegalInteger(DestTy->getScalarSizeInBits()) &&
+        SrcTy->getScalarSizeInBits() == 8 && NumShufElts % 2 == 0 &&
+        Shuf->hasOneUse() && Shuf->isReverse()) {
+      assert(ShufOp0->getType() == SrcTy && "Unexpected shuffle mask");
+      assert(isa<UndefValue>(ShufOp1) && "Unexpected shuffle op");
+      Function *Bswap =
+          Intrinsic::getDeclaration(CI.getModule(), Intrinsic::bswap, DestTy);
+      Value *ScalarX = Builder.CreateBitCast(ShufOp0, DestTy);
+      return IntrinsicInst::Create(Bswap, { ScalarX });
     }
   }
 

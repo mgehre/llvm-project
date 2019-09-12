@@ -11,6 +11,7 @@
 #include "FuzzyMatch.h"
 #include "Logger.h"
 #include "Protocol.h"
+#include "refactor/Tweak.h"
 #include "clang/AST/ASTContext.h"
 #include "clang/Basic/LangOptions.h"
 #include "clang/Basic/SourceLocation.h"
@@ -19,14 +20,21 @@
 #include "clang/Format/Format.h"
 #include "clang/Lex/Lexer.h"
 #include "clang/Lex/Preprocessor.h"
+#include "clang/Tooling/Core/Replacement.h"
+#include "llvm/ADT/ArrayRef.h"
 #include "llvm/ADT/None.h"
 #include "llvm/ADT/StringExtras.h"
+#include "llvm/ADT/StringMap.h"
 #include "llvm/ADT/StringRef.h"
 #include "llvm/Support/Compiler.h"
 #include "llvm/Support/Errc.h"
 #include "llvm/Support/Error.h"
 #include "llvm/Support/ErrorHandling.h"
+#include "llvm/Support/LineIterator.h"
+#include "llvm/Support/MemoryBuffer.h"
 #include "llvm/Support/Path.h"
+#include "llvm/Support/SHA1.h"
+#include "llvm/Support/VirtualFileSystem.h"
 #include "llvm/Support/xxhash.h"
 #include <algorithm>
 
@@ -227,6 +235,39 @@ llvm::Optional<Range> getTokenRange(const SourceManager &SM,
   if (!End.isValid())
     return llvm::None;
   return halfOpenToRange(SM, CharSourceRange::getCharRange(TokLoc, End));
+}
+
+SourceLocation getBeginningOfIdentifier(const Position &Pos,
+                                        const SourceManager &SM,
+                                        const LangOptions &LangOpts) {
+  FileID FID = SM.getMainFileID();
+  auto Offset = positionToOffset(SM.getBufferData(FID), Pos);
+  if (!Offset) {
+    log("getBeginningOfIdentifier: {0}", Offset.takeError());
+    return SourceLocation();
+  }
+
+  // GetBeginningOfToken(pos) is almost what we want, but does the wrong thing
+  // if the cursor is at the end of the identifier.
+  // Instead, we lex at GetBeginningOfToken(pos - 1). The cases are:
+  //  1) at the beginning of an identifier, we'll be looking at something
+  //  that isn't an identifier.
+  //  2) at the middle or end of an identifier, we get the identifier.
+  //  3) anywhere outside an identifier, we'll get some non-identifier thing.
+  // We can't actually distinguish cases 1 and 3, but returning the original
+  // location is correct for both!
+  SourceLocation InputLoc = SM.getComposedLoc(FID, *Offset);
+  if (*Offset == 0) // Case 1 or 3.
+    return InputLoc;
+  SourceLocation Before = SM.getComposedLoc(FID, *Offset - 1);
+
+  Before = Lexer::GetBeginningOfToken(Before, SM, LangOpts);
+  Token Tok;
+  if (Before.isValid() &&
+      !Lexer::getRawToken(Before, Tok, SM, LangOpts, false) &&
+      Tok.is(tok::raw_identifier))
+    return Before; // Case 2.
+  return InputLoc; // Case 1 or 3.
 }
 
 bool isValidFileRange(const SourceManager &Mgr, SourceRange R) {
@@ -529,7 +570,7 @@ llvm::Optional<std::string> getCanonicalPath(const FileEntry *F,
   }
 
   // Handle the symbolic link path case where the current working directory
-  // (getCurrentWorkingDirectory) is a symlink./ We always want to the real
+  // (getCurrentWorkingDirectory) is a symlink. We always want to the real
   // file path (instead of the symlink path) for the  C++ symbols.
   //
   // Consider the following example:
@@ -873,6 +914,58 @@ llvm::Optional<DefinedMacro> locateMacroAt(SourceLocation Loc,
   if (auto *MI = MacroDef.getMacroInfo())
     return DefinedMacro{IdentifierInfo->getName(), MI};
   return None;
+}
+
+llvm::Expected<std::string> Edit::apply() const {
+  return tooling::applyAllReplacements(InitialCode, Replacements);
+}
+
+std::vector<TextEdit> Edit::asTextEdits() const {
+  return replacementsToEdits(InitialCode, Replacements);
+}
+
+bool Edit::canApplyTo(llvm::StringRef Code) const {
+  // Create line iterators, since line numbers are important while applying our
+  // edit we cannot skip blank lines.
+  auto LHS = llvm::MemoryBuffer::getMemBuffer(Code);
+  llvm::line_iterator LHSIt(*LHS, /*SkipBlanks=*/false);
+
+  auto RHS = llvm::MemoryBuffer::getMemBuffer(InitialCode);
+  llvm::line_iterator RHSIt(*RHS, /*SkipBlanks=*/false);
+
+  // Compare the InitialCode we prepared the edit for with the Code we received
+  // line by line to make sure there are no differences.
+  // FIXME: This check is too conservative now, it should be enough to only
+  // check lines around the replacements contained inside the Edit.
+  while (!LHSIt.is_at_eof() && !RHSIt.is_at_eof()) {
+    if (*LHSIt != *RHSIt)
+      return false;
+    ++LHSIt;
+    ++RHSIt;
+  }
+
+  // After we reach EOF for any of the files we make sure the other one doesn't
+  // contain any additional content except empty lines, they should not
+  // interfere with the edit we produced.
+  while (!LHSIt.is_at_eof()) {
+    if (!LHSIt->empty())
+      return false;
+    ++LHSIt;
+  }
+  while (!RHSIt.is_at_eof()) {
+    if (!RHSIt->empty())
+      return false;
+    ++RHSIt;
+  }
+  return true;
+}
+
+llvm::Error reformatEdit(Edit &E, const format::FormatStyle &Style) {
+  if (auto NewEdits = cleanupAndFormat(E.InitialCode, E.Replacements, Style))
+    E.Replacements = std::move(*NewEdits);
+  else
+    return NewEdits.takeError();
+  return llvm::Error::success();
 }
 
 } // namespace clangd

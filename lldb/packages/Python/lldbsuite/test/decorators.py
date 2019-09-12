@@ -641,6 +641,16 @@ def skipUnlessPlatform(oslist):
     return unittest2.skipUnless(lldbplatformutil.getPlatform() in oslist,
                                 "requires one of %s" % (", ".join(oslist)))
 
+def skipUnlessArch(arch):
+    """Decorate the item to skip tests unless running on the specified architecture."""
+
+    def arch_doesnt_match(self):
+        target_arch = self.getArchitecture()
+        if arch != target_arch:
+            return "Test only runs on " + arch + ", but target arch is " + target_arch
+        return None
+
+    return skipTestIfFn(arch_doesnt_match)
 
 def skipIfTargetAndroid(bugnumber=None, api_levels=None, archs=None):
     """Decorator to skip tests when the target is Android.
@@ -682,7 +692,7 @@ def skipUnlessHasCallSiteInfo(func):
 
         f = tempfile.NamedTemporaryFile()
         cmd = "echo 'int main() {}' | " \
-              "%s -g -glldb -O1 -S -emit-llvm -x c -o %s -" % (compiler_path, f.name)
+              "%s -g -glldb -O1 -Xclang -femit-debug-entry-values -S -emit-llvm -x c -o %s -" % (compiler_path, f.name)
         if os.popen(cmd).close() is not None:
             return "Compiler can't compile with call site info enabled"
 
@@ -783,13 +793,18 @@ def skipUnlessAddressSanitizer(func):
         return None
     return skipTestIfFn(is_compiler_with_address_sanitizer)(func)
 
-def skipIfXmlSupportMissing(func):
+def _get_bool_config_skip_if_decorator(key):
     config = lldb.SBDebugger.GetBuildConfiguration()
-    xml = config.GetValueForKey("xml")
-
+    value_node = config.GetValueForKey(key)
     fail_value = True # More likely to notice if something goes wrong
-    have_xml = xml.GetValueForKey("value").GetBooleanValue(fail_value)
-    return unittest2.skipIf(not have_xml, "requires xml support")(func)
+    have = value_node.GetValueForKey("value").GetBooleanValue(fail_value)
+    return unittest2.skipIf(not have, "requires " + key)
+
+def skipIfCursesSupportMissing(func):
+    return _get_bool_config_skip_if_decorator("curses")(func)
+
+def skipIfXmlSupportMissing(func):
+    return _get_bool_config_skip_if_decorator("xml")(func)
 
 def skipIfLLVMTargetMissing(target):
     config = lldb.SBDebugger.GetBuildConfiguration()

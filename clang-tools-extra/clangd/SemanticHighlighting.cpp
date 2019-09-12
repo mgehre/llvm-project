@@ -8,12 +8,16 @@
 
 #include "SemanticHighlighting.h"
 #include "Logger.h"
+#include "ParsedAST.h"
 #include "Protocol.h"
 #include "SourceCode.h"
 #include "clang/AST/ASTContext.h"
 #include "clang/AST/Decl.h"
 #include "clang/AST/DeclCXX.h"
 #include "clang/AST/RecursiveASTVisitor.h"
+#include "clang/AST/Type.h"
+#include "clang/AST/TypeLoc.h"
+#include "clang/Basic/SourceLocation.h"
 #include <algorithm>
 
 namespace clang {
@@ -24,16 +28,18 @@ namespace {
 class HighlightingTokenCollector
     : public RecursiveASTVisitor<HighlightingTokenCollector> {
   std::vector<HighlightingToken> Tokens;
-  ASTContext &Ctx;
-  const SourceManager &SM;
+  ParsedAST &AST;
 
 public:
-  HighlightingTokenCollector(ParsedAST &AST)
-      : Ctx(AST.getASTContext()), SM(AST.getSourceManager()) {}
+  HighlightingTokenCollector(ParsedAST &AST) : AST(AST) {}
 
   std::vector<HighlightingToken> collectTokens() {
     Tokens.clear();
-    TraverseAST(Ctx);
+    TraverseAST(AST.getASTContext());
+    // Add highlightings for macro expansions as they are not traversed by the
+    // visitor.
+    for (SourceLocation Loc : AST.getMacros())
+      addToken(Loc, HighlightingKind::Macro);
     // Initializer lists can give duplicates of tokens, therefore all tokens
     // must be deduplicated.
     llvm::sort(Tokens);
@@ -118,18 +124,16 @@ public:
   }
 
   bool VisitTypedefNameDecl(TypedefNameDecl *TD) {
-    if (const auto *TSI = TD->getTypeSourceInfo())
-      addType(TD->getLocation(), TSI->getTypeLoc().getTypePtr());
+    addTokenForTypedef(TD->getLocation(), TD);
     return true;
   }
 
-  bool VisitTemplateTypeParmTypeLoc(TemplateTypeParmTypeLoc &TL) {
-    // TemplateTypeParmTypeLoc does not have a TagDecl in its type ptr.
-    addToken(TL.getBeginLoc(), TL.getDecl());
+  bool VisitTypedefTypeLoc(TypedefTypeLoc TL) {
+    addTokenForTypedef(TL.getBeginLoc(), TL.getTypedefNameDecl());
     return true;
   }
 
-  bool VisitTemplateSpecializationTypeLoc(TemplateSpecializationTypeLoc &TL) {
+  bool VisitTemplateSpecializationTypeLoc(TemplateSpecializationTypeLoc TL) {
     if (const TemplateDecl *TD =
             TL.getTypePtr()->getTemplateName().getAsTemplateDecl())
       addToken(TL.getBeginLoc(), TD);
@@ -176,14 +180,35 @@ public:
   }
 
 private:
-  void addType(SourceLocation Loc, const Type *TP) {
-    if (!TP)
+  void addTokenForTypedef(SourceLocation Loc, const TypedefNameDecl *TD) {
+    auto *TSI = TD->getTypeSourceInfo();
+    if (!TSI)
       return;
-    if (TP->isBuiltinType())
+    // Try to highlight as underlying type.
+    if (addType(Loc, TSI->getType().getTypePtrOrNull()))
+      return;
+    // Fallback to the typedef highlighting kind.
+    addToken(Loc, HighlightingKind::Typedef);
+  }
+
+  bool addType(SourceLocation Loc, const Type *TP) {
+    if (!TP)
+      return false;
+    if (TP->isBuiltinType()) {
       // Builtins must be special cased as they do not have a TagDecl.
       addToken(Loc, HighlightingKind::Primitive);
-    if (const TagDecl *TD = TP->getAsTagDecl())
+      return true;
+    }
+    if (auto *TD = dyn_cast<TemplateTypeParmType>(TP)) {
+      // TemplateTypeParmType also do not have a TagDecl.
+      addToken(Loc, TD->getDecl());
+      return true;
+    }
+    if (auto *TD = TP->getAsTagDecl()) {
       addToken(Loc, TD);
+      return true;
+    }
+    return false;
   }
 
   void addToken(SourceLocation Loc, const NamedDecl *D) {
@@ -205,8 +230,9 @@ private:
       addToken(Loc, HighlightingKind::Class);
       return;
     }
-    if (isa<CXXMethodDecl>(D)) {
-      addToken(Loc, HighlightingKind::Method);
+    if (auto *MD = dyn_cast<CXXMethodDecl>(D)) {
+      addToken(Loc, MD->isStatic() ? HighlightingKind::StaticMethod
+                                   : HighlightingKind::Method);
       return;
     }
     if (isa<FieldDecl>(D)) {
@@ -226,8 +252,14 @@ private:
       return;
     }
     if (const VarDecl *VD = dyn_cast<VarDecl>(D)) {
-      addToken(Loc, VD->isLocalVarDecl() ? HighlightingKind::LocalVariable
-                                         : HighlightingKind::Variable);
+      addToken(Loc, VD->isStaticDataMember()
+                        ? HighlightingKind::StaticField
+                        : VD->isLocalVarDecl() ? HighlightingKind::LocalVariable
+                                               : HighlightingKind::Variable);
+      return;
+    }
+    if (isa<BindingDecl>(D)) {
+      addToken(Loc, HighlightingKind::Variable);
       return;
     }
     if (isa<FunctionDecl>(D)) {
@@ -257,6 +289,7 @@ private:
   }
 
   void addToken(SourceLocation Loc, HighlightingKind Kind) {
+    const auto &SM = AST.getSourceManager();
     if (Loc.isMacroID()) {
       // Only intereseted in highlighting arguments in macros (DEF_X(arg)).
       if (!SM.isMacroArgExpansion(Loc))
@@ -272,7 +305,7 @@ private:
     if (!isInsideMainFile(Loc, SM))
       return;
 
-    auto R = getTokenRange(SM, Ctx.getLangOpts(), Loc);
+    auto R = getTokenRange(SM, AST.getASTContext().getLangOpts(), Loc);
     if (!R) {
       // R should always have a value, if it doesn't something is very wrong.
       elog("Tried to add semantic token with an invalid range");
@@ -337,6 +370,44 @@ takeLine(ArrayRef<HighlightingToken> AllTokens,
       });
 }
 } // namespace
+
+llvm::raw_ostream &operator<<(llvm::raw_ostream &OS, HighlightingKind K) {
+  switch (K) {
+  case HighlightingKind::Variable:
+    return OS << "Variable";
+  case HighlightingKind::LocalVariable:
+    return OS << "LocalVariable";
+  case HighlightingKind::Parameter:
+    return OS << "Parameter";
+  case HighlightingKind::Function:
+    return OS << "Function";
+  case HighlightingKind::Method:
+    return OS << "Method";
+  case HighlightingKind::StaticMethod:
+    return OS << "StaticMethod";
+  case HighlightingKind::Field:
+    return OS << "Field";
+  case HighlightingKind::StaticField:
+    return OS << "StaticField";
+  case HighlightingKind::Class:
+    return OS << "Class";
+  case HighlightingKind::Enum:
+    return OS << "Enum";
+  case HighlightingKind::EnumConstant:
+    return OS << "EnumConstant";
+  case HighlightingKind::Typedef:
+    return OS << "Typedef";
+  case HighlightingKind::Namespace:
+    return OS << "Namespace";
+  case HighlightingKind::TemplateParameter:
+    return OS << "TemplateParameter";
+  case HighlightingKind::Primitive:
+    return OS << "Primitive";
+  case HighlightingKind::Macro:
+    return OS << "Macro";
+  }
+  llvm_unreachable("invalid HighlightingKind");
+}
 
 std::vector<LineHighlightings>
 diffHighlightings(ArrayRef<HighlightingToken> New,
@@ -435,6 +506,8 @@ llvm::StringRef toTextMateScope(HighlightingKind Kind) {
     return "entity.name.function.cpp";
   case HighlightingKind::Method:
     return "entity.name.function.method.cpp";
+  case HighlightingKind::StaticMethod:
+    return "entity.name.function.method.static.cpp";
   case HighlightingKind::Variable:
     return "variable.other.cpp";
   case HighlightingKind::LocalVariable:
@@ -443,20 +516,24 @@ llvm::StringRef toTextMateScope(HighlightingKind Kind) {
     return "variable.parameter.cpp";
   case HighlightingKind::Field:
     return "variable.other.field.cpp";
+  case HighlightingKind::StaticField:
+    return "variable.other.field.static.cpp";
   case HighlightingKind::Class:
     return "entity.name.type.class.cpp";
   case HighlightingKind::Enum:
     return "entity.name.type.enum.cpp";
   case HighlightingKind::EnumConstant:
     return "variable.other.enummember.cpp";
+  case HighlightingKind::Typedef:
+    return "entity.name.type.typedef.cpp";
   case HighlightingKind::Namespace:
     return "entity.name.namespace.cpp";
   case HighlightingKind::TemplateParameter:
     return "entity.name.type.template.cpp";
   case HighlightingKind::Primitive:
     return "storage.type.primitive.cpp";
-  case HighlightingKind::NumKinds:
-    llvm_unreachable("must not pass NumKinds to the function");
+  case HighlightingKind::Macro:
+    return "entity.name.function.preprocessor.cpp";
   }
   llvm_unreachable("unhandled HighlightingKind");
 }

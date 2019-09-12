@@ -50,7 +50,7 @@
 using namespace llvm;
 using namespace llvm::object;
 using namespace llvm::COFF;
-using llvm::sys::Process;
+using namespace llvm::sys;
 
 namespace lld {
 namespace coff {
@@ -170,7 +170,7 @@ MemoryBufferRef LinkerDriver::takeBuffer(std::unique_ptr<MemoryBuffer> mb) {
 }
 
 void LinkerDriver::addBuffer(std::unique_ptr<MemoryBuffer> mb,
-                             bool wholeArchive) {
+                             bool wholeArchive, bool lazy) {
   StringRef filename = mb->getBufferIdentifier();
 
   MemoryBufferRef mbref = takeBuffer(std::move(mb));
@@ -188,18 +188,25 @@ void LinkerDriver::addBuffer(std::unique_ptr<MemoryBuffer> mb,
       Archive *archive = file.get();
       make<std::unique_ptr<Archive>>(std::move(file)); // take ownership
 
+      int memberIndex = 0;
       for (MemoryBufferRef m : getArchiveMembers(archive))
-        addArchiveBuffer(m, "<whole-archive>", filename, 0);
+        addArchiveBuffer(m, "<whole-archive>", filename, memberIndex++);
       return;
     }
     symtab->addFile(make<ArchiveFile>(mbref));
     break;
   case file_magic::bitcode:
-    symtab->addFile(make<BitcodeFile>(mbref, "", 0));
+    if (lazy)
+      symtab->addFile(make<LazyObjFile>(mbref));
+    else
+      symtab->addFile(make<BitcodeFile>(mbref, "", 0));
     break;
   case file_magic::coff_object:
   case file_magic::coff_import_library:
-    symtab->addFile(make<ObjFile>(mbref));
+    if (lazy)
+      symtab->addFile(make<LazyObjFile>(mbref));
+    else
+      symtab->addFile(make<ObjFile>(mbref));
     break;
   case file_magic::pdb:
     loadTypeServerSource(mbref);
@@ -220,7 +227,7 @@ void LinkerDriver::addBuffer(std::unique_ptr<MemoryBuffer> mb,
   }
 }
 
-void LinkerDriver::enqueuePath(StringRef path, bool wholeArchive) {
+void LinkerDriver::enqueuePath(StringRef path, bool wholeArchive, bool lazy) {
   auto future =
       std::make_shared<std::future<MBErrPair>>(createFutureForFile(path));
   std::string pathStr = path;
@@ -240,7 +247,7 @@ void LinkerDriver::enqueuePath(StringRef path, bool wholeArchive) {
       else
         error(msg + "; did you mean '" + nearest + "'");
     } else
-      driver->addBuffer(std::move(mbOrErr.first), wholeArchive);
+      driver->addBuffer(std::move(mbOrErr.first), wholeArchive, lazy);
   });
 }
 
@@ -359,7 +366,7 @@ void LinkerDriver::parseDirectives(InputFile *file) {
       break;
     case OPT_defaultlib:
       if (Optional<StringRef> path = findLib(arg->getValue()))
-        enqueuePath(*path, false);
+        enqueuePath(*path, false, false);
       break;
     case OPT_entry:
       config->entry = addUndefined(mangle(arg->getValue()));
@@ -991,30 +998,37 @@ static void parsePDBAltPath(StringRef altPath) {
   config->pdbAltPath = buf;
 }
 
-/// Check that at most one resource obj file was used.
+/// Convert resource files and potentially merge input resource object
+/// trees into one resource tree.
 /// Call after ObjFile::Instances is complete.
-static void diagnoseMultipleResourceObjFiles() {
-  // The .rsrc$01 section in a resource obj file contains a tree description
-  // of resources.  Merging multiple resource obj files would require merging
-  // the trees instead of using usual linker section merging semantics.
-  // Since link.exe disallows linking more than one resource obj file with
-  // LNK4078, mirror that.  The normal use of resource files is to give the
-  // linker many .res files, which are then converted to a single resource obj
-  // file internally, so this is not a big restriction in practice.
-  ObjFile *resourceObjFile = nullptr;
+void LinkerDriver::convertResources() {
+  std::vector<ObjFile *> resourceObjFiles;
+
   for (ObjFile *f : ObjFile::instances) {
-    if (!f->isResourceObjFile)
-      continue;
-
-    if (!resourceObjFile) {
-      resourceObjFile = f;
-      continue;
-    }
-
-    error(toString(f) +
-          ": more than one resource obj file not allowed, already got " +
-          toString(resourceObjFile));
+    if (f->isResourceObjFile())
+      resourceObjFiles.push_back(f);
   }
+
+  if (!config->mingw &&
+      (resourceObjFiles.size() > 1 ||
+       (resourceObjFiles.size() == 1 && !resources.empty()))) {
+    error((!resources.empty() ? "internal .obj file created from .res files"
+                              : toString(resourceObjFiles[1])) +
+          ": more than one resource obj file not allowed, already got " +
+          toString(resourceObjFiles.front()));
+    return;
+  }
+
+  if (resources.empty() && resourceObjFiles.size() <= 1) {
+    // No resources to convert, and max one resource object file in
+    // the input. Keep that preconverted resource section as is.
+    for (ObjFile *f : resourceObjFiles)
+      f->includeResourceChunks();
+    return;
+  }
+  ObjFile *f = make<ObjFile>(convertResToCOFF(resources, resourceObjFiles));
+  symtab->addFile(f);
+  f->includeResourceChunks();
 }
 
 // In MinGW, if no symbols are chosen to be exported, then all symbols are
@@ -1124,17 +1138,15 @@ void LinkerDriver::link(ArrayRef<const char *> argsArr) {
   config->mingw = args.hasArg(OPT_lldmingw);
 
   if (auto *arg = args.getLastArg(OPT_linkrepro)) {
-    SmallString<64> path = StringRef(arg->getValue());
-    sys::path::append(path, "repro.tar");
+    const char *path = arg->getValue();
 
     Expected<std::unique_ptr<TarWriter>> errOrWriter =
-        TarWriter::create(path, "repro");
-
+        TarWriter::create(path, path::stem(path));
     if (errOrWriter) {
       tar = std::move(*errOrWriter);
+      tar->append("version.txt", getLLDVersion() + "\n");
     } else {
-      error("/linkrepro: failed to open " + path + ": " +
-            toString(errOrWriter.takeError()));
+      error("/linkrepro: " + toString(errOrWriter.takeError()));
     }
   }
 
@@ -1546,19 +1558,45 @@ void LinkerDriver::link(ArrayRef<const char *> argsArr) {
     return false;
   };
 
-  // Create a list of input files. Files can be given as arguments
-  // for /defaultlib option.
-  for (auto *arg : args.filtered(OPT_INPUT, OPT_wholearchive_file))
-    if (Optional<StringRef> path = findFile(arg->getValue()))
-      enqueuePath(*path, isWholeArchive(*path));
+  // Create a list of input files. These can be given as OPT_INPUT options
+  // and OPT_wholearchive_file options, and we also need to track OPT_start_lib
+  // and OPT_end_lib.
+  bool inLib = false;
+  for (auto *arg : args) {
+    switch (arg->getOption().getID()) {
+    case OPT_end_lib:
+      if (!inLib)
+        error("stray " + arg->getSpelling());
+      inLib = false;
+      break;
+    case OPT_start_lib:
+      if (inLib)
+        error("nested " + arg->getSpelling());
+      inLib = true;
+      break;
+    case OPT_wholearchive_file:
+      if (Optional<StringRef> path = findFile(arg->getValue()))
+        enqueuePath(*path, true, inLib);
+      break;
+    case OPT_INPUT:
+      if (Optional<StringRef> path = findFile(arg->getValue()))
+        enqueuePath(*path, isWholeArchive(*path), inLib);
+      break;
+    default:
+      // Ignore other options.
+      break;
+    }
+  }
 
+  // Process files specified as /defaultlib. These should be enequeued after
+  // other files, which is why they are in a separate loop.
   for (auto *arg : args.filtered(OPT_defaultlib))
     if (Optional<StringRef> path = findLib(arg->getValue()))
-      enqueuePath(*path, false);
+      enqueuePath(*path, false, false);
 
   // Windows specific -- Create a resource file containing a manifest file.
   if (config->manifest == Configuration::Embed)
-    addBuffer(createManifestRes(), false);
+    addBuffer(createManifestRes(), false, false);
 
   // Read all input files given via the command line.
   run();
@@ -1582,12 +1620,6 @@ void LinkerDriver::link(ArrayRef<const char *> argsArr) {
   // Handle /functionpadmin
   for (auto *arg : args.filtered(OPT_functionpadmin, OPT_functionpadmin_opt))
     parseFunctionPadMin(arg, config->machine);
-
-  // Input files can be Windows resource files (.res files). We use
-  // WindowsResource to convert resource files to a regular COFF file,
-  // then link the resulting file normally.
-  if (!resources.empty())
-    symtab->addFile(make<ObjFile>(convertResToCOFF(resources)));
 
   if (tar)
     tar->append("response.txt",
@@ -1781,7 +1813,7 @@ void LinkerDriver::link(ArrayRef<const char *> argsArr) {
   if (args.hasArg(OPT_include_optional)) {
     // Handle /includeoptional
     for (auto *arg : args.filtered(OPT_include_optional))
-      if (dyn_cast_or_null<Lazy>(symtab->find(arg->getValue())))
+      if (dyn_cast_or_null<LazyArchive>(symtab->find(arg->getValue())))
         addUndefined(arg->getValue());
     while (run());
   }
@@ -1906,7 +1938,7 @@ void LinkerDriver::link(ArrayRef<const char *> argsArr) {
     markLive(symtab->getChunks());
 
   // Needs to happen after the last call to addFile().
-  diagnoseMultipleResourceObjFiles();
+  convertResources();
 
   // Identify identical COMDAT sections to merge them.
   if (config->doICF) {

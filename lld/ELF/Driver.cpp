@@ -386,8 +386,8 @@ static bool isKnownZFlag(StringRef s) {
          s == "noexecstack" || s == "nokeep-text-section-prefix" ||
          s == "norelro" || s == "noseparate-code" || s == "notext" ||
          s == "now" || s == "origin" || s == "relro" || s == "retpolineplt" ||
-         s == "rodynamic" || s == "text" || s == "wxneeded" ||
-         s.startswith("common-page-size") || s.startswith("max-page-size=") ||
+         s == "rodynamic" || s == "text" || s == "undefs" || s == "wxneeded" ||
+         s.startswith("common-page-size=") || s.startswith("max-page-size=") ||
          s.startswith("stack-size=");
 }
 
@@ -517,6 +517,8 @@ static UnresolvedPolicy getUnresolvedSymbolPolicy(opt::InputArgList &args) {
     case OPT_z:
       if (StringRef(arg->getValue()) == "defs")
         return errorOrWarn;
+      if (StringRef(arg->getValue()) == "undefs")
+        return UnresolvedPolicy::Ignore;
       continue;
     }
   }
@@ -1901,6 +1903,31 @@ template <class ELFT> void LinkerDriver::link(opt::InputArgList &args) {
   markLive<ELFT>();
   demoteSharedSymbols();
   mergeSections();
+
+  // Make copies of any input sections that need to be copied into each
+  // partition.
+  copySectionsIntoPartitions();
+
+  // Create synthesized sections such as .got and .plt. This is called before
+  // processSectionCommands() so that they can be placed by SECTIONS commands.
+  createSyntheticSections<ELFT>();
+
+  // Some input sections that are used for exception handling need to be moved
+  // into synthetic sections. Do that now so that they aren't assigned to
+  // output sections in the usual way.
+  if (!config->relocatable)
+    combineEhSections();
+
+  // Create output sections described by SECTIONS commands.
+  script->processSectionCommands();
+
+  // Linker scripts control how input sections are assigned to output sections.
+  // Input sections that were not handled by scripts are called "orphans", and
+  // they are assigned to output sections by the default rule. Process that.
+  script->addOrphanSections();
+
+  // Two input sections with different output sections should not be folded.
+  // ICF runs after processSectionCommands() so that we know the output sections.
   if (config->icf != ICFLevel::None) {
     findKeepUniqueSections<ELFT>(args);
     doIcf<ELFT>();

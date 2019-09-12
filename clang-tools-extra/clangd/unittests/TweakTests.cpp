@@ -8,15 +8,26 @@
 
 #include "Annotations.h"
 #include "SourceCode.h"
+#include "TestFS.h"
 #include "TestTU.h"
 #include "TweakTesting.h"
 #include "refactor/Tweak.h"
 #include "clang/AST/Expr.h"
+#include "clang/Basic/Diagnostic.h"
+#include "clang/Basic/DiagnosticIDs.h"
+#include "clang/Basic/DiagnosticOptions.h"
+#include "clang/Basic/FileManager.h"
+#include "clang/Basic/FileSystemOptions.h"
 #include "clang/Basic/LLVM.h"
+#include "clang/Basic/SourceLocation.h"
+#include "clang/Basic/SourceManager.h"
 #include "clang/Rewrite/Core/Rewriter.h"
 #include "clang/Tooling/Core/Replacement.h"
+#include "llvm/ADT/IntrusiveRefCntPtr.h"
 #include "llvm/ADT/StringRef.h"
 #include "llvm/Support/Error.h"
+#include "llvm/Support/MemoryBuffer.h"
+#include "llvm/Support/VirtualFileSystem.h"
 #include "llvm/Testing/Support/Error.h"
 #include "gmock/gmock-matchers.h"
 #include "gmock/gmock.h"
@@ -30,6 +41,27 @@ using ::testing::StartsWith;
 namespace clang {
 namespace clangd {
 namespace {
+
+TEST(FileEdits, AbsolutePath) {
+  auto RelPaths = {"a.h", "foo.cpp", "test/test.cpp"};
+
+  llvm::IntrusiveRefCntPtr<llvm::vfs::InMemoryFileSystem> MemFS(
+      new llvm::vfs::InMemoryFileSystem);
+  MemFS->setCurrentWorkingDirectory(testRoot());
+  for (auto Path : RelPaths)
+    MemFS->addFile(Path, 0, llvm::MemoryBuffer::getMemBuffer("", Path));
+  FileManager FM(FileSystemOptions(), MemFS);
+  DiagnosticsEngine DE(new DiagnosticIDs, new DiagnosticOptions);
+  SourceManager SM(DE, FM);
+
+  for (auto Path : RelPaths) {
+    auto FID = SM.createFileID(*FM.getFile(Path), SourceLocation(),
+                               clang::SrcMgr::C_User);
+    auto Res = Tweak::Effect::fileEdit(SM, FID, tooling::Replacements());
+    ASSERT_THAT_EXPECTED(Res, llvm::Succeeded());
+    EXPECT_EQ(Res->first, testPath(Path));
+  }
+}
 
 TWEAK_TEST(SwapIfBranches);
 TEST_F(SwapIfBranchesTest, Test) {
@@ -522,10 +554,7 @@ TEST_F(ExtractFunctionTest, FunctionTest) {
   EXPECT_THAT(apply(" [[int a = 5;]] a++; "), StartsWith("fail"));
   // Don't extract return
   EXPECT_THAT(apply(" if(true) [[return;]] "), StartsWith("fail"));
-  // Don't extract break and continue.
-  // FIXME: We should be able to extract this since it's non broken.
-  EXPECT_THAT(apply(" [[for(;;) break;]] "), StartsWith("fail"));
-  EXPECT_THAT(apply(" for(;;) [[continue;]] "), StartsWith("fail"));
+  
 }
 
 TEST_F(ExtractFunctionTest, FileTest) {
@@ -604,6 +633,21 @@ void f(const int c) {
   EXPECT_EQ(apply(MacroFailInput), "unavailable");
 }
 
+TEST_F(ExtractFunctionTest, ControlFlow) {
+  Context = Function;
+  // We should be able to extract break/continue with a parent loop/switch.
+  EXPECT_THAT(apply(" [[for(;;) if(1) break;]] "), HasSubstr("extracted"));
+  EXPECT_THAT(apply(" for(;;) [[while(1) break;]] "), HasSubstr("extracted"));
+  EXPECT_THAT(apply(" [[switch(1) { break; }]]"), HasSubstr("extracted"));
+  EXPECT_THAT(apply(" [[while(1) switch(1) { continue; }]]"),
+              HasSubstr("extracted"));
+  // Don't extract break and continue without a loop/switch parent.
+  EXPECT_THAT(apply(" for(;;) [[if(1) continue;]] "), StartsWith("fail"));
+  EXPECT_THAT(apply(" while(1) [[if(1) break;]] "), StartsWith("fail"));
+  EXPECT_THAT(apply(" switch(1) { [[break;]] }"), StartsWith("fail"));
+  EXPECT_THAT(apply(" for(;;) { [[while(1) break; break;]] }"),
+              StartsWith("fail"));
+}
 } // namespace
 } // namespace clangd
 } // namespace clang

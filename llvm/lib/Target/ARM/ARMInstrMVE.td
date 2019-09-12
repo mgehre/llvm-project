@@ -373,6 +373,8 @@ class MVE_ScalarShiftSRegReg<string iname, bits<2> op5_4, list<dag> pattern=[]>
   let Inst{7-6} = 0b00;
   let Inst{5-4} = op5_4{1-0};
   let Inst{3-0} = 0b1101;
+
+  let Unpredictable{8-6} = 0b111;
 }
 
 def MVE_SQRSHR : MVE_ScalarShiftSRegReg<"sqrshr", 0b10>;
@@ -698,56 +700,56 @@ class MVE_VMLAMLSDAV<string iname, string suffix, dag iops, string cstr,
   let Inst{0} = bit_0;
 }
 
-multiclass MVE_VMLAMLSDAV_X<string iname, string suffix, dag iops, string cstr,
-                          bit sz, bit bit_28, bit A, bit bit_8, bit bit_0,
-                          list<dag> pattern=[]> {
-  def _noexch : MVE_VMLAMLSDAV<iname, suffix, iops, cstr, sz,
-                            bit_28, A, 0b0, bit_8, bit_0, pattern>;
-  def _exch   : MVE_VMLAMLSDAV<iname # "x", suffix, iops, cstr, sz,
-                            bit_28, A, 0b1, bit_8, bit_0, pattern>;
+multiclass MVE_VMLAMLSDAV_A<string iname, string x, string suffix,
+                            bit sz, bit bit_28, bit X, bit bit_8, bit bit_0,
+                            list<dag> pattern=[]> {
+  def ""#x#suffix : MVE_VMLAMLSDAV<iname # x, suffix,
+                                   (ins MQPR:$Qn, MQPR:$Qm), "",
+                                   sz, bit_28, 0b0, X, bit_8, bit_0, pattern>;
+  def "a"#x#suffix : MVE_VMLAMLSDAV<iname # "a" # x, suffix,
+                                    (ins tGPREven:$RdaSrc, MQPR:$Qn, MQPR:$Qm),
+                                    "$RdaDest = $RdaSrc",
+                                    sz, bit_28, 0b1, X, bit_8, bit_0, pattern>;
 }
 
-multiclass MVE_VMLAMLSDAV_XA<string iname, string suffix, bit sz, bit bit_28,
-                           bit bit_8, bit bit_0, list<dag> pattern=[]> {
-  defm _noacc : MVE_VMLAMLSDAV_X<iname, suffix, (ins MQPR:$Qn, MQPR:$Qm), "",
-                              sz, bit_28, 0b0, bit_8, bit_0, pattern>;
-  defm _acc   : MVE_VMLAMLSDAV_X<iname # "a", suffix,
-                             (ins tGPREven:$RdaSrc, MQPR:$Qn, MQPR:$Qm),
-                             "$RdaDest = $RdaSrc",
-                              sz, bit_28, 0b1, bit_8, bit_0, pattern>;
+multiclass MVE_VMLAMLSDAV_AX<string iname, string suffix, bit sz, bit bit_28,
+                             bit bit_8, bit bit_0, list<dag> pattern=[]> {
+  defm "" : MVE_VMLAMLSDAV_A<iname, "", suffix, sz, bit_28,
+                             0b0, bit_8, bit_0, pattern>;
+  defm "" : MVE_VMLAMLSDAV_A<iname, "x", suffix, sz, bit_28,
+                             0b1, bit_8, bit_0, pattern>;
 }
 
-multiclass MVE_VMLADAV_multi<string suffix, bit sz, bit U, bit bit_8,
-                           list<dag> pattern=[]> {
-  defm "" : MVE_VMLAMLSDAV_XA<"vmladav", suffix, sz, U, bit_8, 0b0, pattern>;
-}
-
-defm MVE_VMLADAVs16 : MVE_VMLADAV_multi<"s16", 0b0, 0b0, 0b0>;
-defm MVE_VMLADAVs32 : MVE_VMLADAV_multi<"s32", 0b1, 0b0, 0b0>;
-defm MVE_VMLADAVu16 : MVE_VMLADAV_multi<"u16", 0b0, 0b1, 0b0>;
-defm MVE_VMLADAVu32 : MVE_VMLADAV_multi<"u32", 0b1, 0b1, 0b0>;
-
-defm MVE_VMLADAVs8 : MVE_VMLADAV_multi<"s8", 0b0, 0b0, 0b1>;
-defm MVE_VMLADAVu8 : MVE_VMLADAV_multi<"u8", 0b0, 0b1, 0b1>;
-
-// vmlav aliases vmladav
-foreach acc = ["_acc", "_noacc"] in {
-  foreach suffix = ["s8", "s16", "s32", "u8", "u16", "u32"] in {
-    def : MVEInstAlias<!strconcat("vmlav", !if(!eq(acc, "_acc"), "a", ""),
-                       "${vp}.", suffix, "\t$RdaDest, $Qn, $Qm"),
-                       (!cast<Instruction>("MVE_VMLADAV"#suffix#acc#"_noexch")
-                        tGPREven:$RdaDest, MQPR:$Qn, MQPR:$Qm, vpred_n:$vp)>;
-  }
+multiclass MVE_VMLADAV_multi<string suffix, bit sz, bit bit_8,
+                             list<dag> pattern=[]> {
+  defm "" : MVE_VMLAMLSDAV_AX<"vmladav", "s"#suffix,
+                              sz, 0b0, bit_8, 0b0, pattern>;
+  defm "" : MVE_VMLAMLSDAV_A<"vmladav", "", "u"#suffix,
+                             sz, 0b1, 0b0, bit_8, 0b0, pattern>;
 }
 
 multiclass MVE_VMLSDAV_multi<string suffix, bit sz, bit bit_28,
-                           list<dag> pattern=[]> {
-  defm "" : MVE_VMLAMLSDAV_XA<"vmlsdav", suffix, sz, bit_28, 0b0, 0b1, pattern>;
+                             list<dag> pattern=[]> {
+  defm "" : MVE_VMLAMLSDAV_AX<"vmlsdav", "s"#suffix,
+                              sz, bit_28, 0b0, 0b1, pattern>;
 }
 
-defm MVE_VMLSDAVs8  : MVE_VMLSDAV_multi<"s8", 0, 0b1>;
-defm MVE_VMLSDAVs16 : MVE_VMLSDAV_multi<"s16", 0, 0b0>;
-defm MVE_VMLSDAVs32 : MVE_VMLSDAV_multi<"s32", 1, 0b0>;
+defm MVE_VMLADAV : MVE_VMLADAV_multi< "8", 0b0, 0b1>;
+defm MVE_VMLADAV : MVE_VMLADAV_multi<"16", 0b0, 0b0>;
+defm MVE_VMLADAV : MVE_VMLADAV_multi<"32", 0b1, 0b0>;
+
+defm MVE_VMLSDAV : MVE_VMLSDAV_multi< "8", 0b0, 0b1>;
+defm MVE_VMLSDAV : MVE_VMLSDAV_multi<"16", 0b0, 0b0>;
+defm MVE_VMLSDAV : MVE_VMLSDAV_multi<"32", 0b1, 0b0>;
+
+// vmlav aliases vmladav
+foreach acc = ["", "a"] in {
+  foreach suffix = ["s8", "s16", "s32", "u8", "u16", "u32"] in {
+    def : MVEInstAlias<"vmlav"#acc#"${vp}."#suffix#"\t$RdaDest, $Qn, $Qm",
+                       (!cast<Instruction>("MVE_VMLADAV"#acc#suffix)
+                        tGPREven:$RdaDest, MQPR:$Qn, MQPR:$Qm, vpred_n:$vp)>;
+  }
+}
 
 // Base class for VMLALDAV and VMLSLDAV, VRMLALDAVH, VRMLSLDAVH
 class MVE_VMLALDAVBase<string iname, string suffix, dag iops, string cstr,
@@ -773,82 +775,83 @@ class MVE_VMLALDAVBase<string iname, string suffix, dag iops, string cstr,
   let Inst{0} = bit_0;
 }
 
-multiclass MVE_VMLALDAVBase_X<string iname, string suffix, dag iops,
-                              string cstr, bit sz, bit bit_28, bit A,
-                              bit bit_8, bit bit_0, list<dag> pattern=[]> {
-  def _noexch : MVE_VMLALDAVBase<iname, suffix, iops, cstr, sz,
-                               bit_28, A, 0b0, bit_8, bit_0, pattern>;
-  def _exch   : MVE_VMLALDAVBase<iname # "x", suffix, iops, cstr, sz,
-                               bit_28, A, 0b1, bit_8, bit_0, pattern>;
-}
-
-multiclass MVE_VMLALDAVBase_XA<string iname, string suffix, bit sz, bit bit_28,
-                             bit bit_8, bit bit_0, list<dag> pattern=[]> {
-  defm _noacc : MVE_VMLALDAVBase_X<
-     iname, suffix, (ins MQPR:$Qn, MQPR:$Qm), "",
-     sz, bit_28, 0b0, bit_8, bit_0, pattern>;
-  defm _acc   : MVE_VMLALDAVBase_X<
-     iname # "a", suffix, (ins tGPREven:$RdaLoSrc, tGPROdd:$RdaHiSrc,
-                               MQPR:$Qn, MQPR:$Qm),
+multiclass MVE_VMLALDAVBase_A<string iname, string x, string suffix,
+                               bit sz, bit bit_28, bit X, bit bit_8, bit bit_0,
+                               list<dag> pattern=[]> {
+  def ""#x#suffix : MVE_VMLALDAVBase<
+     iname # x, suffix, (ins MQPR:$Qn, MQPR:$Qm), "",
+     sz, bit_28, 0b0, X, bit_8, bit_0, pattern>;
+  def "a"#x#suffix : MVE_VMLALDAVBase<
+     iname # "a" # x, suffix,
+     (ins tGPREven:$RdaLoSrc, tGPROdd:$RdaHiSrc, MQPR:$Qn, MQPR:$Qm),
      "$RdaLoDest = $RdaLoSrc,$RdaHiDest = $RdaHiSrc",
-     sz, bit_28, 0b1, bit_8, bit_0, pattern>;
+     sz, bit_28, 0b1, X, bit_8, bit_0, pattern>;
 }
 
-multiclass MVE_VRMLALDAVH_multi<string suffix, bit U, list<dag> pattern=[]> {
-  defm "" : MVE_VMLALDAVBase_XA<
-     "vrmlaldavh", suffix, 0b0, U, 0b1, 0b0, pattern>;
+
+multiclass MVE_VMLALDAVBase_AX<string iname, string suffix, bit sz, bit bit_28,
+                               bit bit_8, bit bit_0, list<dag> pattern=[]> {
+  defm "" : MVE_VMLALDAVBase_A<iname, "", suffix, sz,
+                               bit_28, 0b0, bit_8, bit_0, pattern>;
+  defm "" : MVE_VMLALDAVBase_A<iname, "x", suffix, sz,
+                               bit_28, 0b1, bit_8, bit_0, pattern>;
 }
 
-defm MVE_VRMLALDAVHs32 : MVE_VRMLALDAVH_multi<"s32", 0>;
-defm MVE_VRMLALDAVHu32 : MVE_VRMLALDAVH_multi<"u32", 1>;
+multiclass MVE_VRMLALDAVH_multi<string suffix, list<dag> pattern=[]> {
+  defm "" : MVE_VMLALDAVBase_AX<"vrmlaldavh", "s"#suffix,
+                                0b0, 0b0, 0b1, 0b0, pattern>;
+  defm "" : MVE_VMLALDAVBase_A<"vrmlaldavh", "", "u"#suffix,
+                               0b0, 0b1, 0b0, 0b1, 0b0, pattern>;
+}
+
+defm MVE_VRMLALDAVH : MVE_VRMLALDAVH_multi<"32">;
 
 // vrmlalvh aliases for vrmlaldavh
 def : MVEInstAlias<"vrmlalvh${vp}.s32\t$RdaLo, $RdaHi, $Qn, $Qm",
-                  (MVE_VRMLALDAVHs32_noacc_noexch
+                  (MVE_VRMLALDAVHs32
                    tGPREven:$RdaLo, tGPROdd:$RdaHi,
                    MQPR:$Qn, MQPR:$Qm, vpred_n:$vp)>;
 def : MVEInstAlias<"vrmlalvha${vp}.s32\t$RdaLo, $RdaHi, $Qn, $Qm",
-                  (MVE_VRMLALDAVHs32_acc_noexch
+                  (MVE_VRMLALDAVHas32
                    tGPREven:$RdaLo, tGPROdd:$RdaHi,
                    MQPR:$Qn, MQPR:$Qm, vpred_n:$vp)>;
 def : MVEInstAlias<"vrmlalvh${vp}.u32\t$RdaLo, $RdaHi, $Qn, $Qm",
-                  (MVE_VRMLALDAVHu32_noacc_noexch
+                  (MVE_VRMLALDAVHu32
                    tGPREven:$RdaLo, tGPROdd:$RdaHi,
                    MQPR:$Qn, MQPR:$Qm, vpred_n:$vp)>;
 def : MVEInstAlias<"vrmlalvha${vp}.u32\t$RdaLo, $RdaHi, $Qn, $Qm",
-                  (MVE_VRMLALDAVHu32_acc_noexch
+                  (MVE_VRMLALDAVHau32
                    tGPREven:$RdaLo, tGPROdd:$RdaHi,
                    MQPR:$Qn, MQPR:$Qm, vpred_n:$vp)>;
 
-multiclass MVE_VMLALDAV_multi<string suffix, bit sz, bit U,
-                              list<dag> pattern=[]> {
-  defm "" : MVE_VMLALDAVBase_XA<"vmlaldav", suffix, sz, U, 0b0, 0b0, pattern>;
+multiclass MVE_VMLALDAV_multi<string suffix, bit sz, list<dag> pattern=[]> {
+  defm "" : MVE_VMLALDAVBase_AX<"vmlaldav", "s"#suffix, sz, 0b0, 0b0, 0b0, pattern>;
+  defm "" : MVE_VMLALDAVBase_A<"vmlaldav", "", "u"#suffix,
+                               sz, 0b1, 0b0, 0b0, 0b0, pattern>;
 }
 
-defm MVE_VMLALDAVs16 : MVE_VMLALDAV_multi<"s16", 0b0, 0b0>;
-defm MVE_VMLALDAVs32 : MVE_VMLALDAV_multi<"s32", 0b1, 0b0>;
-defm MVE_VMLALDAVu16 : MVE_VMLALDAV_multi<"u16", 0b0, 0b1>;
-defm MVE_VMLALDAVu32 : MVE_VMLALDAV_multi<"u32", 0b1, 0b1>;
+defm MVE_VMLALDAV : MVE_VMLALDAV_multi<"16", 0b0>;
+defm MVE_VMLALDAV : MVE_VMLALDAV_multi<"32", 0b1>;
 
 // vmlalv aliases vmlaldav
-foreach acc = ["_acc", "_noacc"] in {
+foreach acc = ["", "a"] in {
   foreach suffix = ["s16", "s32", "u16", "u32"] in {
-    def : MVEInstAlias<!strconcat("vmlalv", !if(!eq(acc, "_acc"), "a", ""),
-                       "${vp}.", suffix, "\t$RdaLoDest, $RdaHiDest, $Qn, $Qm"),
-                       (!cast<Instruction>("MVE_VMLALDAV"#suffix#acc#"_noexch")
+    def : MVEInstAlias<"vmlalv" # acc # "${vp}." # suffix #
+                          "\t$RdaLoDest, $RdaHiDest, $Qn, $Qm",
+                       (!cast<Instruction>("MVE_VMLALDAV"#acc#suffix)
                        tGPREven:$RdaLoDest, tGPROdd:$RdaHiDest,
                        MQPR:$Qn, MQPR:$Qm, vpred_n:$vp)>;
   }
 }
 
 multiclass MVE_VMLSLDAV_multi<string iname, string suffix, bit sz,
-                            bit bit_28, list<dag> pattern=[]> {
-  defm "" : MVE_VMLALDAVBase_XA<iname, suffix, sz, bit_28, 0b0, 0b1, pattern>;
+                              bit bit_28, list<dag> pattern=[]> {
+  defm "" : MVE_VMLALDAVBase_AX<iname, suffix, sz, bit_28, 0b0, 0b1, pattern>;
 }
 
-defm MVE_VMLSLDAVs16   : MVE_VMLSLDAV_multi<"vmlsldav", "s16", 0b0, 0b0>;
-defm MVE_VMLSLDAVs32   : MVE_VMLSLDAV_multi<"vmlsldav", "s32", 0b1, 0b0>;
-defm MVE_VRMLSLDAVHs32 : MVE_VMLSLDAV_multi<"vrmlsldavh", "s32", 0b0, 0b1>;
+defm MVE_VMLSLDAV   : MVE_VMLSLDAV_multi<"vmlsldav", "s16", 0b0, 0b0>;
+defm MVE_VMLSLDAV   : MVE_VMLSLDAV_multi<"vmlsldav", "s32", 0b1, 0b0>;
+defm MVE_VRMLSLDAVH : MVE_VMLSLDAV_multi<"vrmlsldavh", "s32", 0b0, 0b1>;
 
 // end of mve_rDest instructions
 
@@ -3599,6 +3602,24 @@ defm MVE_VSUB_qr_i  : MVE_VADDSUB_qr_sizes<"vsub",  "i", 0b0, 0b1, 0b1, 0b0>;
 defm MVE_VQSUB_qr_s : MVE_VADDSUB_qr_sizes<"vqsub", "s", 0b1, 0b1, 0b0, 0b0>;
 defm MVE_VQSUB_qr_u : MVE_VADDSUB_qr_sizes<"vqsub", "u", 0b1, 0b1, 0b0, 0b1>;
 
+let Predicates = [HasMVEInt] in {
+  def : Pat<(v16i8 (add (v16i8 MQPR:$val1), (v16i8 (ARMvdup GPR:$val2)))),
+            (v16i8 (MVE_VADD_qr_i8 (v16i8 MQPR:$val1), (i32 GPR:$val2)))>;
+  def : Pat<(v8i16 (add (v8i16 MQPR:$val1), (v8i16 (ARMvdup GPR:$val2)))),
+            (v8i16 (MVE_VADD_qr_i16 (v8i16 MQPR:$val1), (i32 GPR:$val2)))>;
+  def : Pat<(v4i32 (add (v4i32 MQPR:$val1), (v4i32 (ARMvdup GPR:$val2)))),
+            (v4i32 (MVE_VADD_qr_i32 (v4i32 MQPR:$val1), (i32 GPR:$val2)))>;
+}
+
+let Predicates = [HasMVEInt] in {
+  def : Pat<(v16i8 (sub (v16i8 MQPR:$val1), (v16i8 (ARMvdup GPR:$val2)))),
+            (v16i8 (MVE_VSUB_qr_i8 (v16i8 MQPR:$val1), (i32 GPR:$val2)))>;
+  def : Pat<(v8i16 (sub (v8i16 MQPR:$val1), (v8i16 (ARMvdup GPR:$val2)))),
+            (v8i16 (MVE_VSUB_qr_i16 (v8i16 MQPR:$val1), (i32 GPR:$val2)))>;
+  def : Pat<(v4i32 (sub (v4i32 MQPR:$val1), (v4i32 (ARMvdup GPR:$val2)))),
+            (v4i32 (MVE_VSUB_qr_i32 (v4i32 MQPR:$val1), (i32 GPR:$val2)))>;
+}
+
 class MVE_VQDMULL_qr<string iname, string suffix, bit size,
                      bit T, list<dag> pattern=[]>
   : MVE_qDest_rSrc<iname, suffix, pattern> {
@@ -3730,6 +3751,15 @@ def MVE_VMUL_qr_i8  : MVE_VMUL_qr_int<"vmul", "i8",  0b00>;
 def MVE_VMUL_qr_i16 : MVE_VMUL_qr_int<"vmul", "i16", 0b01>;
 def MVE_VMUL_qr_i32 : MVE_VMUL_qr_int<"vmul", "i32", 0b10>;
 
+let Predicates = [HasMVEInt] in {
+  def : Pat<(v16i8 (mul (v16i8 MQPR:$val1), (v16i8 (ARMvdup GPR:$val2)))),
+            (v16i8 (MVE_VMUL_qr_i8 (v16i8 MQPR:$val1), (i32 GPR:$val2)))>;
+  def : Pat<(v8i16 (mul (v8i16 MQPR:$val1), (v8i16 (ARMvdup GPR:$val2)))),
+            (v8i16 (MVE_VMUL_qr_i16 (v8i16 MQPR:$val1), (i32 GPR:$val2)))>;
+  def : Pat<(v4i32 (mul (v4i32 MQPR:$val1), (v4i32 (ARMvdup GPR:$val2)))),
+            (v4i32 (MVE_VMUL_qr_i32 (v4i32 MQPR:$val1), (i32 GPR:$val2)))>;
+}
+
 class MVE_VxxMUL_qr<string iname, string suffix,
                     bit bit_28, bits<2> bits_21_20, list<dag> pattern=[]>
   : MVE_qDest_rSrc<iname, suffix, pattern> {
@@ -3781,6 +3811,21 @@ def MVE_VMLAS_qr_s32   : MVE_VFMAMLA_qr<"vmlas", "s32", 0b0, 0b10, 0b1>;
 def MVE_VMLAS_qr_u8    : MVE_VFMAMLA_qr<"vmlas", "u8",  0b1, 0b00, 0b1>;
 def MVE_VMLAS_qr_u16   : MVE_VFMAMLA_qr<"vmlas", "u16", 0b1, 0b01, 0b1>;
 def MVE_VMLAS_qr_u32   : MVE_VFMAMLA_qr<"vmlas", "u32", 0b1, 0b10, 0b1>;
+
+let Predicates = [HasMVEInt] in {
+  def : Pat<(v4i32 (add (v4i32 MQPR:$src1),
+                        (v4i32 (mul (v4i32 MQPR:$src2),
+                                    (v4i32 (ARMvdup (i32 rGPR:$x))))))),
+            (v4i32 (MVE_VMLA_qr_u32 $src1, $src2, $x))>;
+  def : Pat<(v8i16 (add (v8i16 MQPR:$src1),
+                        (v8i16 (mul (v8i16 MQPR:$src2),
+                                    (v8i16 (ARMvdup (i32 rGPR:$x))))))),
+            (v8i16 (MVE_VMLA_qr_u16 $src1, $src2, $x))>;
+  def : Pat<(v16i8 (add (v16i8 MQPR:$src1),
+                        (v16i8 (mul (v16i8 MQPR:$src2),
+                                    (v16i8 (ARMvdup (i32 rGPR:$x))))))),
+            (v16i8 (MVE_VMLA_qr_u8 $src1, $src2, $x))>;
+}
 
 let Predicates = [HasMVEFloat] in {
   def MVE_VFMA_qr_f16  : MVE_VFMAMLA_qr<"vfma",  "f16", 0b1, 0b11, 0b0>;
@@ -3899,6 +3944,15 @@ def MVE_VCTP8  : MVE_VCTP<"8",  0b00>;
 def MVE_VCTP16 : MVE_VCTP<"16", 0b01>;
 def MVE_VCTP32 : MVE_VCTP<"32", 0b10>;
 def MVE_VCTP64 : MVE_VCTP<"64", 0b11>;
+
+let Predicates = [HasMVEInt] in {
+  def : Pat<(int_arm_vctp8 rGPR:$Rn),
+            (v16i1 (MVE_VCTP8 rGPR:$Rn))>;
+  def : Pat<(int_arm_vctp16 rGPR:$Rn),
+            (v8i1 (MVE_VCTP16 rGPR:$Rn))>;
+  def : Pat<(int_arm_vctp32 rGPR:$Rn),
+            (v4i1 (MVE_VCTP32 rGPR:$Rn))>;
+}
 
 // end of mve_qDest_rSrc
 
@@ -4810,10 +4864,6 @@ class MVE_vector_store_typed<ValueType Ty, Instruction RegImmInst,
                              PatFrag StoreKind, int shift>
   : Pat<(StoreKind (Ty MQPR:$val), t2addrmode_imm7<shift>:$addr),
         (RegImmInst (Ty MQPR:$val), t2addrmode_imm7<shift>:$addr)>;
-class MVE_vector_maskedstore_typed<ValueType Ty, Instruction RegImmInst,
-                                   PatFrag StoreKind, int shift>
-  : Pat<(StoreKind (Ty MQPR:$val), t2addrmode_imm7<shift>:$addr, VCCR:$pred),
-        (RegImmInst (Ty MQPR:$val), t2addrmode_imm7<shift>:$addr, (i32 1), VCCR:$pred)>;
 
 multiclass MVE_vector_store<Instruction RegImmInst, PatFrag StoreKind,
                             int shift> {
@@ -4830,10 +4880,6 @@ class MVE_vector_load_typed<ValueType Ty, Instruction RegImmInst,
                             PatFrag LoadKind, int shift>
   : Pat<(Ty (LoadKind t2addrmode_imm7<shift>:$addr)),
         (Ty (RegImmInst t2addrmode_imm7<shift>:$addr))>;
-class MVE_vector_maskedload_typed<ValueType Ty, Instruction RegImmInst,
-                                  PatFrag LoadKind, int shift>
-  : Pat<(Ty (LoadKind t2addrmode_imm7<shift>:$addr, VCCR:$pred, (Ty NEONimmAllZerosV))),
-        (Ty (RegImmInst t2addrmode_imm7<shift>:$addr, (i32 1), VCCR:$pred))>;
 
 multiclass MVE_vector_load<Instruction RegImmInst, PatFrag LoadKind,
                            int shift> {
@@ -4879,28 +4925,6 @@ def aligned16_post_store : PatFrag<(ops node:$val, node:$ptr, node:$offset),
   return cast<StoreSDNode>(N)->getAlignment() >= 2;
 }]>;
 
-def alignedmaskedload32 : PatFrag<(ops node:$ptr, node:$pred, node:$passthru),
-                                  (masked_ld node:$ptr, node:$pred, node:$passthru), [{
-  return cast<MaskedLoadSDNode>(N)->getAlignment() >= 4;
-}]>;
-def alignedmaskedload16 : PatFrag<(ops node:$ptr, node:$pred, node:$passthru),
-                                  (masked_ld node:$ptr, node:$pred, node:$passthru), [{
-  return cast<MaskedLoadSDNode>(N)->getAlignment() >= 2;
-}]>;
-def maskedload : PatFrag<(ops node:$ptr, node:$pred, node:$passthru),
-                         (masked_ld node:$ptr, node:$pred, node:$passthru)>;
-
-def alignedmaskedstore32 : PatFrag<(ops node:$val, node:$ptr, node:$pred),
-                                   (masked_st node:$val, node:$ptr, node:$pred), [{
-  return cast<MaskedStoreSDNode>(N)->getAlignment() >= 4;
-}]>;
-def alignedmaskedstore16 : PatFrag<(ops node:$val, node:$ptr, node:$pred),
-                                   (masked_st node:$val, node:$ptr, node:$pred), [{
-  return cast<MaskedStoreSDNode>(N)->getAlignment() >= 2;
-}]>;
-def maskedstore : PatFrag<(ops node:$val, node:$ptr, node:$pred),
-                          (masked_st node:$val, node:$ptr, node:$pred)>;
-
 let Predicates = [HasMVEInt, IsLE] in {
   // Stores
   defm : MVE_vector_store<MVE_VSTRBU8, byte_alignedstore, 0>;
@@ -4919,26 +4943,6 @@ let Predicates = [HasMVEInt, IsLE] in {
   defm : MVE_vector_offset_store<MVE_VSTRHU16_post, aligned16_post_store, 1>;
   defm : MVE_vector_offset_store<MVE_VSTRWU32_pre, aligned32_pre_store, 2>;
   defm : MVE_vector_offset_store<MVE_VSTRWU32_post, aligned32_post_store, 2>;
-
-  // Unaligned masked stores (aligned are below)
-  def : Pat<(maskedstore (v4i32 MQPR:$val), t2addrmode_imm7<0>:$addr, VCCR:$pred),
-            (MVE_VSTRBU8 MQPR:$val, t2addrmode_imm7<0>:$addr, (i32 1), VCCR:$pred)>;
-  def : Pat<(maskedstore (v4f32 MQPR:$val), t2addrmode_imm7<0>:$addr, VCCR:$pred),
-            (MVE_VSTRBU8 MQPR:$val, t2addrmode_imm7<0>:$addr, (i32 1), VCCR:$pred)>;
-  def : Pat<(maskedstore (v8i16 MQPR:$val), t2addrmode_imm7<0>:$addr, VCCR:$pred),
-            (MVE_VSTRBU8 MQPR:$val, t2addrmode_imm7<0>:$addr, (i32 1), VCCR:$pred)>;
-  def : Pat<(maskedstore (v8f16 MQPR:$val), t2addrmode_imm7<0>:$addr, VCCR:$pred),
-            (MVE_VSTRBU8 MQPR:$val, t2addrmode_imm7<0>:$addr, (i32 1), VCCR:$pred)>;
-
-  // Unaligned masked loads
-  def : Pat<(v4i32 (maskedload t2addrmode_imm7<0>:$addr, VCCR:$pred, (v4i32 NEONimmAllZerosV))),
-            (v4i32 (MVE_VLDRBU8 t2addrmode_imm7<0>:$addr, (i32 1), VCCR:$pred))>;
-  def : Pat<(v4f32 (maskedload t2addrmode_imm7<0>:$addr, VCCR:$pred, (v4f32 NEONimmAllZerosV))),
-            (v4f32 (MVE_VLDRBU8 t2addrmode_imm7<0>:$addr, (i32 1), VCCR:$pred))>;
-  def : Pat<(v8i16 (maskedload t2addrmode_imm7<0>:$addr, VCCR:$pred, (v8i16 NEONimmAllZerosV))),
-            (v8i16 (MVE_VLDRBU8 t2addrmode_imm7<0>:$addr, (i32 1), VCCR:$pred))>;
-  def : Pat<(v8f16 (maskedload t2addrmode_imm7<0>:$addr, VCCR:$pred, (v8f16 NEONimmAllZerosV))),
-            (v8f16 (MVE_VLDRBU8 t2addrmode_imm7<0>:$addr, (i32 1), VCCR:$pred))>;
 }
 
 let Predicates = [HasMVEInt, IsBE] in {
@@ -4993,56 +4997,6 @@ let Predicates = [HasMVEInt, IsBE] in {
   def : MVE_vector_offset_store_typed<v4i32, MVE_VSTRWU32_post, aligned32_post_store, 2>;
   def : MVE_vector_offset_store_typed<v4f32, MVE_VSTRWU32_pre, aligned32_pre_store, 2>;
   def : MVE_vector_offset_store_typed<v4f32, MVE_VSTRWU32_post, aligned32_post_store, 2>;
-
-  // Unaligned masked stores (aligned are below)
-  def : Pat<(maskedstore (v4i32 MQPR:$val), t2addrmode_imm7<0>:$addr, VCCR:$pred),
-            (MVE_VSTRBU8 (MVE_VREV32_8 MQPR:$val), t2addrmode_imm7<0>:$addr, (i32 1), VCCR:$pred)>;
-  def : Pat<(maskedstore (v4f32 MQPR:$val), t2addrmode_imm7<0>:$addr, VCCR:$pred),
-            (MVE_VSTRBU8 (MVE_VREV32_8 MQPR:$val), t2addrmode_imm7<0>:$addr, (i32 1), VCCR:$pred)>;
-  def : Pat<(maskedstore (v8i16 MQPR:$val), t2addrmode_imm7<0>:$addr, VCCR:$pred),
-            (MVE_VSTRBU8 (MVE_VREV16_8 MQPR:$val), t2addrmode_imm7<0>:$addr, (i32 1), VCCR:$pred)>;
-  def : Pat<(maskedstore (v8f16 MQPR:$val), t2addrmode_imm7<0>:$addr, VCCR:$pred),
-            (MVE_VSTRBU8 (MVE_VREV16_8 MQPR:$val), t2addrmode_imm7<0>:$addr, (i32 1), VCCR:$pred)>;
-  // Unaligned masked loads
-  def : Pat<(v4i32 (maskedload t2addrmode_imm7<0>:$addr, VCCR:$pred, (v4i32 NEONimmAllZerosV))),
-            (v4i32 (MVE_VREV32_8 (MVE_VLDRBU8 t2addrmode_imm7<0>:$addr, (i32 1), VCCR:$pred)))>;
-  def : Pat<(v4f32 (maskedload t2addrmode_imm7<0>:$addr, VCCR:$pred, (v4f32 NEONimmAllZerosV))),
-            (v4f32 (MVE_VREV32_8 (MVE_VLDRBU8 t2addrmode_imm7<0>:$addr, (i32 1), VCCR:$pred)))>;
-  def : Pat<(v8i16 (maskedload t2addrmode_imm7<0>:$addr, VCCR:$pred, (v8i16 NEONimmAllZerosV))),
-            (v8i16 (MVE_VREV16_8 (MVE_VLDRBU8 t2addrmode_imm7<0>:$addr, (i32 1), VCCR:$pred)))>;
-  def : Pat<(v8f16 (maskedload t2addrmode_imm7<0>:$addr, VCCR:$pred, (v8f16 NEONimmAllZerosV))),
-            (v8f16 (MVE_VREV16_8 (MVE_VLDRBU8 t2addrmode_imm7<0>:$addr, (i32 1), VCCR:$pred)))>;
-}
-
-let Predicates = [HasMVEInt] in {
-  // Aligned masked store, shared between LE and BE
-  def : MVE_vector_maskedstore_typed<v16i8, MVE_VSTRBU8, maskedstore, 0>;
-  def : MVE_vector_maskedstore_typed<v8i16, MVE_VSTRHU16, alignedmaskedstore16, 1>;
-  def : MVE_vector_maskedstore_typed<v8f16, MVE_VSTRHU16, alignedmaskedstore16, 1>;
-  def : MVE_vector_maskedstore_typed<v4i32, MVE_VSTRWU32, alignedmaskedstore32, 2>;
-  def : MVE_vector_maskedstore_typed<v4f32, MVE_VSTRWU32, alignedmaskedstore32, 2>;
-  // Aligned masked loads
-  def : MVE_vector_maskedload_typed<v16i8, MVE_VLDRBU8, maskedload, 0>;
-  def : MVE_vector_maskedload_typed<v8i16, MVE_VLDRHU16, alignedmaskedload16, 1>;
-  def : MVE_vector_maskedload_typed<v8f16, MVE_VLDRHU16, alignedmaskedload16, 1>;
-  def : MVE_vector_maskedload_typed<v4i32, MVE_VLDRWU32, alignedmaskedload32, 2>;
-  def : MVE_vector_maskedload_typed<v4f32, MVE_VLDRWU32, alignedmaskedload32, 2>;
-
-  // Predicate loads
-  def  : Pat<(v16i1 (load t2addrmode_imm7<2>:$addr)),
-             (v16i1 (VLDR_P0_off t2addrmode_imm7<2>:$addr))>;
-  def  : Pat<(v8i1 (load t2addrmode_imm7<2>:$addr)),
-             (v8i1 (VLDR_P0_off t2addrmode_imm7<2>:$addr))>;
-  def  : Pat<(v4i1 (load t2addrmode_imm7<2>:$addr)),
-             (v4i1 (VLDR_P0_off t2addrmode_imm7<2>:$addr))>;
-
-  // Predicate stores
-  def  : Pat<(store (v4i1 VCCR:$val), t2addrmode_imm7<2>:$addr),
-             (VSTR_P0_off VCCR:$val, t2addrmode_imm7<2>:$addr)>;
-  def  : Pat<(store (v8i1 VCCR:$val), t2addrmode_imm7<2>:$addr),
-             (VSTR_P0_off VCCR:$val, t2addrmode_imm7<2>:$addr)>;
-  def  : Pat<(store (v16i1 VCCR:$val), t2addrmode_imm7<2>:$addr),
-             (VSTR_P0_off VCCR:$val, t2addrmode_imm7<2>:$addr)>;
 }
 
 
@@ -5114,102 +5068,102 @@ let Predicates = [HasMVEInt] in {
 // Bit convert patterns
 
 let Predicates = [HasMVEInt] in {
-  def : Pat<(v2f64 (bitconvert (v2i64 QPR:$src))), (v2f64 QPR:$src)>;
-  def : Pat<(v2i64 (bitconvert (v2f64 QPR:$src))), (v2i64 QPR:$src)>;
+  def : Pat<(v2f64 (bitconvert (v2i64 MQPR:$src))), (v2f64 MQPR:$src)>;
+  def : Pat<(v2i64 (bitconvert (v2f64 MQPR:$src))), (v2i64 MQPR:$src)>;
 
-  def : Pat<(v4i32 (bitconvert (v4f32 QPR:$src))), (v4i32 QPR:$src)>;
-  def : Pat<(v4f32 (bitconvert (v4i32 QPR:$src))), (v4f32 QPR:$src)>;
+  def : Pat<(v4i32 (bitconvert (v4f32 MQPR:$src))), (v4i32 MQPR:$src)>;
+  def : Pat<(v4f32 (bitconvert (v4i32 MQPR:$src))), (v4f32 MQPR:$src)>;
 
-  def : Pat<(v8i16 (bitconvert (v8f16 QPR:$src))), (v8i16  QPR:$src)>;
-  def : Pat<(v8f16 (bitconvert (v8i16 QPR:$src))), (v8f16  QPR:$src)>;
+  def : Pat<(v8i16 (bitconvert (v8f16 MQPR:$src))), (v8i16  MQPR:$src)>;
+  def : Pat<(v8f16 (bitconvert (v8i16 MQPR:$src))), (v8f16  MQPR:$src)>;
 }
 
 let Predicates = [IsLE,HasMVEInt] in {
-  def : Pat<(v2f64 (bitconvert (v4f32 QPR:$src))), (v2f64 QPR:$src)>;
-  def : Pat<(v2f64 (bitconvert (v4i32 QPR:$src))), (v2f64 QPR:$src)>;
-  def : Pat<(v2f64 (bitconvert (v8f16 QPR:$src))), (v2f64 QPR:$src)>;
-  def : Pat<(v2f64 (bitconvert (v8i16 QPR:$src))), (v2f64 QPR:$src)>;
-  def : Pat<(v2f64 (bitconvert (v16i8 QPR:$src))), (v2f64 QPR:$src)>;
+  def : Pat<(v2f64 (bitconvert (v4f32 MQPR:$src))), (v2f64 MQPR:$src)>;
+  def : Pat<(v2f64 (bitconvert (v4i32 MQPR:$src))), (v2f64 MQPR:$src)>;
+  def : Pat<(v2f64 (bitconvert (v8f16 MQPR:$src))), (v2f64 MQPR:$src)>;
+  def : Pat<(v2f64 (bitconvert (v8i16 MQPR:$src))), (v2f64 MQPR:$src)>;
+  def : Pat<(v2f64 (bitconvert (v16i8 MQPR:$src))), (v2f64 MQPR:$src)>;
 
-  def : Pat<(v2i64 (bitconvert (v4f32 QPR:$src))), (v2i64 QPR:$src)>;
-  def : Pat<(v2i64 (bitconvert (v4i32 QPR:$src))), (v2i64 QPR:$src)>;
-  def : Pat<(v2i64 (bitconvert (v8f16 QPR:$src))), (v2i64 QPR:$src)>;
-  def : Pat<(v2i64 (bitconvert (v8i16 QPR:$src))), (v2i64 QPR:$src)>;
-  def : Pat<(v2i64 (bitconvert (v16i8 QPR:$src))), (v2i64 QPR:$src)>;
+  def : Pat<(v2i64 (bitconvert (v4f32 MQPR:$src))), (v2i64 MQPR:$src)>;
+  def : Pat<(v2i64 (bitconvert (v4i32 MQPR:$src))), (v2i64 MQPR:$src)>;
+  def : Pat<(v2i64 (bitconvert (v8f16 MQPR:$src))), (v2i64 MQPR:$src)>;
+  def : Pat<(v2i64 (bitconvert (v8i16 MQPR:$src))), (v2i64 MQPR:$src)>;
+  def : Pat<(v2i64 (bitconvert (v16i8 MQPR:$src))), (v2i64 MQPR:$src)>;
 
-  def : Pat<(v4f32 (bitconvert (v2f64 QPR:$src))), (v4f32 QPR:$src)>;
-  def : Pat<(v4f32 (bitconvert (v2i64 QPR:$src))), (v4f32 QPR:$src)>;
-  def : Pat<(v4f32 (bitconvert (v8f16 QPR:$src))), (v4f32 QPR:$src)>;
-  def : Pat<(v4f32 (bitconvert (v8i16 QPR:$src))), (v4f32 QPR:$src)>;
-  def : Pat<(v4f32 (bitconvert (v16i8 QPR:$src))), (v4f32 QPR:$src)>;
+  def : Pat<(v4f32 (bitconvert (v2f64 MQPR:$src))), (v4f32 MQPR:$src)>;
+  def : Pat<(v4f32 (bitconvert (v2i64 MQPR:$src))), (v4f32 MQPR:$src)>;
+  def : Pat<(v4f32 (bitconvert (v8f16 MQPR:$src))), (v4f32 MQPR:$src)>;
+  def : Pat<(v4f32 (bitconvert (v8i16 MQPR:$src))), (v4f32 MQPR:$src)>;
+  def : Pat<(v4f32 (bitconvert (v16i8 MQPR:$src))), (v4f32 MQPR:$src)>;
 
-  def : Pat<(v4i32 (bitconvert (v2f64 QPR:$src))), (v4i32 QPR:$src)>;
-  def : Pat<(v4i32 (bitconvert (v2i64 QPR:$src))), (v4i32 QPR:$src)>;
-  def : Pat<(v4i32 (bitconvert (v8f16 QPR:$src))), (v4i32 QPR:$src)>;
-  def : Pat<(v4i32 (bitconvert (v8i16 QPR:$src))), (v4i32 QPR:$src)>;
-  def : Pat<(v4i32 (bitconvert (v16i8 QPR:$src))), (v4i32 QPR:$src)>;
+  def : Pat<(v4i32 (bitconvert (v2f64 MQPR:$src))), (v4i32 MQPR:$src)>;
+  def : Pat<(v4i32 (bitconvert (v2i64 MQPR:$src))), (v4i32 MQPR:$src)>;
+  def : Pat<(v4i32 (bitconvert (v8f16 MQPR:$src))), (v4i32 MQPR:$src)>;
+  def : Pat<(v4i32 (bitconvert (v8i16 MQPR:$src))), (v4i32 MQPR:$src)>;
+  def : Pat<(v4i32 (bitconvert (v16i8 MQPR:$src))), (v4i32 MQPR:$src)>;
 
-  def : Pat<(v8f16 (bitconvert (v2f64 QPR:$src))), (v8f16 QPR:$src)>;
-  def : Pat<(v8f16 (bitconvert (v2i64 QPR:$src))), (v8f16 QPR:$src)>;
-  def : Pat<(v8f16 (bitconvert (v4f32 QPR:$src))), (v8f16 QPR:$src)>;
-  def : Pat<(v8f16 (bitconvert (v4i32 QPR:$src))), (v8f16 QPR:$src)>;
-  def : Pat<(v8f16 (bitconvert (v16i8 QPR:$src))), (v8f16 QPR:$src)>;
+  def : Pat<(v8f16 (bitconvert (v2f64 MQPR:$src))), (v8f16 MQPR:$src)>;
+  def : Pat<(v8f16 (bitconvert (v2i64 MQPR:$src))), (v8f16 MQPR:$src)>;
+  def : Pat<(v8f16 (bitconvert (v4f32 MQPR:$src))), (v8f16 MQPR:$src)>;
+  def : Pat<(v8f16 (bitconvert (v4i32 MQPR:$src))), (v8f16 MQPR:$src)>;
+  def : Pat<(v8f16 (bitconvert (v16i8 MQPR:$src))), (v8f16 MQPR:$src)>;
 
-  def : Pat<(v8i16 (bitconvert (v2f64 QPR:$src))), (v8i16 QPR:$src)>;
-  def : Pat<(v8i16 (bitconvert (v2i64 QPR:$src))), (v8i16 QPR:$src)>;
-  def : Pat<(v8i16 (bitconvert (v4f32 QPR:$src))), (v8i16 QPR:$src)>;
-  def : Pat<(v8i16 (bitconvert (v4i32 QPR:$src))), (v8i16 QPR:$src)>;
-  def : Pat<(v8i16 (bitconvert (v16i8 QPR:$src))), (v8i16 QPR:$src)>;
+  def : Pat<(v8i16 (bitconvert (v2f64 MQPR:$src))), (v8i16 MQPR:$src)>;
+  def : Pat<(v8i16 (bitconvert (v2i64 MQPR:$src))), (v8i16 MQPR:$src)>;
+  def : Pat<(v8i16 (bitconvert (v4f32 MQPR:$src))), (v8i16 MQPR:$src)>;
+  def : Pat<(v8i16 (bitconvert (v4i32 MQPR:$src))), (v8i16 MQPR:$src)>;
+  def : Pat<(v8i16 (bitconvert (v16i8 MQPR:$src))), (v8i16 MQPR:$src)>;
 
-  def : Pat<(v16i8 (bitconvert (v2f64 QPR:$src))), (v16i8 QPR:$src)>;
-  def : Pat<(v16i8 (bitconvert (v2i64 QPR:$src))), (v16i8 QPR:$src)>;
-  def : Pat<(v16i8 (bitconvert (v4f32 QPR:$src))), (v16i8 QPR:$src)>;
-  def : Pat<(v16i8 (bitconvert (v4i32 QPR:$src))), (v16i8 QPR:$src)>;
-  def : Pat<(v16i8 (bitconvert (v8f16 QPR:$src))), (v16i8 QPR:$src)>;
-  def : Pat<(v16i8 (bitconvert (v8i16 QPR:$src))), (v16i8 QPR:$src)>;
+  def : Pat<(v16i8 (bitconvert (v2f64 MQPR:$src))), (v16i8 MQPR:$src)>;
+  def : Pat<(v16i8 (bitconvert (v2i64 MQPR:$src))), (v16i8 MQPR:$src)>;
+  def : Pat<(v16i8 (bitconvert (v4f32 MQPR:$src))), (v16i8 MQPR:$src)>;
+  def : Pat<(v16i8 (bitconvert (v4i32 MQPR:$src))), (v16i8 MQPR:$src)>;
+  def : Pat<(v16i8 (bitconvert (v8f16 MQPR:$src))), (v16i8 MQPR:$src)>;
+  def : Pat<(v16i8 (bitconvert (v8i16 MQPR:$src))), (v16i8 MQPR:$src)>;
 }
 
 let Predicates = [IsBE,HasMVEInt] in {
-  def : Pat<(v2f64 (bitconvert (v4f32 QPR:$src))), (v2f64 (MVE_VREV64_32 QPR:$src))>;
-  def : Pat<(v2f64 (bitconvert (v4i32 QPR:$src))), (v2f64 (MVE_VREV64_32 QPR:$src))>;
-  def : Pat<(v2f64 (bitconvert (v8f16 QPR:$src))), (v2f64 (MVE_VREV64_16 QPR:$src))>;
-  def : Pat<(v2f64 (bitconvert (v8i16 QPR:$src))), (v2f64 (MVE_VREV64_16 QPR:$src))>;
-  def : Pat<(v2f64 (bitconvert (v16i8 QPR:$src))), (v2f64 (MVE_VREV64_8 QPR:$src))>;
+  def : Pat<(v2f64 (bitconvert (v4f32 MQPR:$src))), (v2f64 (MVE_VREV64_32 MQPR:$src))>;
+  def : Pat<(v2f64 (bitconvert (v4i32 MQPR:$src))), (v2f64 (MVE_VREV64_32 MQPR:$src))>;
+  def : Pat<(v2f64 (bitconvert (v8f16 MQPR:$src))), (v2f64 (MVE_VREV64_16 MQPR:$src))>;
+  def : Pat<(v2f64 (bitconvert (v8i16 MQPR:$src))), (v2f64 (MVE_VREV64_16 MQPR:$src))>;
+  def : Pat<(v2f64 (bitconvert (v16i8 MQPR:$src))), (v2f64 (MVE_VREV64_8 MQPR:$src))>;
 
-  def : Pat<(v2i64 (bitconvert (v4f32 QPR:$src))), (v2i64 (MVE_VREV64_32 QPR:$src))>;
-  def : Pat<(v2i64 (bitconvert (v4i32 QPR:$src))), (v2i64 (MVE_VREV64_32 QPR:$src))>;
-  def : Pat<(v2i64 (bitconvert (v8f16 QPR:$src))), (v2i64 (MVE_VREV64_16 QPR:$src))>;
-  def : Pat<(v2i64 (bitconvert (v8i16 QPR:$src))), (v2i64 (MVE_VREV64_16 QPR:$src))>;
-  def : Pat<(v2i64 (bitconvert (v16i8 QPR:$src))), (v2i64 (MVE_VREV64_8 QPR:$src))>;
+  def : Pat<(v2i64 (bitconvert (v4f32 MQPR:$src))), (v2i64 (MVE_VREV64_32 MQPR:$src))>;
+  def : Pat<(v2i64 (bitconvert (v4i32 MQPR:$src))), (v2i64 (MVE_VREV64_32 MQPR:$src))>;
+  def : Pat<(v2i64 (bitconvert (v8f16 MQPR:$src))), (v2i64 (MVE_VREV64_16 MQPR:$src))>;
+  def : Pat<(v2i64 (bitconvert (v8i16 MQPR:$src))), (v2i64 (MVE_VREV64_16 MQPR:$src))>;
+  def : Pat<(v2i64 (bitconvert (v16i8 MQPR:$src))), (v2i64 (MVE_VREV64_8 MQPR:$src))>;
 
-  def : Pat<(v4f32 (bitconvert (v2f64 QPR:$src))), (v4f32 (MVE_VREV64_32 QPR:$src))>;
-  def : Pat<(v4f32 (bitconvert (v2i64 QPR:$src))), (v4f32 (MVE_VREV64_32 QPR:$src))>;
-  def : Pat<(v4f32 (bitconvert (v8f16 QPR:$src))), (v4f32 (MVE_VREV32_16 QPR:$src))>;
-  def : Pat<(v4f32 (bitconvert (v8i16 QPR:$src))), (v4f32 (MVE_VREV32_16 QPR:$src))>;
-  def : Pat<(v4f32 (bitconvert (v16i8 QPR:$src))), (v4f32 (MVE_VREV32_8 QPR:$src))>;
+  def : Pat<(v4f32 (bitconvert (v2f64 MQPR:$src))), (v4f32 (MVE_VREV64_32 MQPR:$src))>;
+  def : Pat<(v4f32 (bitconvert (v2i64 MQPR:$src))), (v4f32 (MVE_VREV64_32 MQPR:$src))>;
+  def : Pat<(v4f32 (bitconvert (v8f16 MQPR:$src))), (v4f32 (MVE_VREV32_16 MQPR:$src))>;
+  def : Pat<(v4f32 (bitconvert (v8i16 MQPR:$src))), (v4f32 (MVE_VREV32_16 MQPR:$src))>;
+  def : Pat<(v4f32 (bitconvert (v16i8 MQPR:$src))), (v4f32 (MVE_VREV32_8 MQPR:$src))>;
 
-  def : Pat<(v4i32 (bitconvert (v2f64 QPR:$src))), (v4i32 (MVE_VREV64_32 QPR:$src))>;
-  def : Pat<(v4i32 (bitconvert (v2i64 QPR:$src))), (v4i32 (MVE_VREV64_32 QPR:$src))>;
-  def : Pat<(v4i32 (bitconvert (v8f16 QPR:$src))), (v4i32 (MVE_VREV32_16 QPR:$src))>;
-  def : Pat<(v4i32 (bitconvert (v8i16 QPR:$src))), (v4i32 (MVE_VREV32_16 QPR:$src))>;
-  def : Pat<(v4i32 (bitconvert (v16i8 QPR:$src))), (v4i32 (MVE_VREV32_8 QPR:$src))>;
+  def : Pat<(v4i32 (bitconvert (v2f64 MQPR:$src))), (v4i32 (MVE_VREV64_32 MQPR:$src))>;
+  def : Pat<(v4i32 (bitconvert (v2i64 MQPR:$src))), (v4i32 (MVE_VREV64_32 MQPR:$src))>;
+  def : Pat<(v4i32 (bitconvert (v8f16 MQPR:$src))), (v4i32 (MVE_VREV32_16 MQPR:$src))>;
+  def : Pat<(v4i32 (bitconvert (v8i16 MQPR:$src))), (v4i32 (MVE_VREV32_16 MQPR:$src))>;
+  def : Pat<(v4i32 (bitconvert (v16i8 MQPR:$src))), (v4i32 (MVE_VREV32_8 MQPR:$src))>;
 
-  def : Pat<(v8f16 (bitconvert (v2f64 QPR:$src))), (v8f16 (MVE_VREV64_16 QPR:$src))>;
-  def : Pat<(v8f16 (bitconvert (v2i64 QPR:$src))), (v8f16 (MVE_VREV64_16 QPR:$src))>;
-  def : Pat<(v8f16 (bitconvert (v4f32 QPR:$src))), (v8f16 (MVE_VREV32_16 QPR:$src))>;
-  def : Pat<(v8f16 (bitconvert (v4i32 QPR:$src))), (v8f16 (MVE_VREV32_16 QPR:$src))>;
-  def : Pat<(v8f16 (bitconvert (v16i8 QPR:$src))), (v8f16 (MVE_VREV16_8 QPR:$src))>;
+  def : Pat<(v8f16 (bitconvert (v2f64 MQPR:$src))), (v8f16 (MVE_VREV64_16 MQPR:$src))>;
+  def : Pat<(v8f16 (bitconvert (v2i64 MQPR:$src))), (v8f16 (MVE_VREV64_16 MQPR:$src))>;
+  def : Pat<(v8f16 (bitconvert (v4f32 MQPR:$src))), (v8f16 (MVE_VREV32_16 MQPR:$src))>;
+  def : Pat<(v8f16 (bitconvert (v4i32 MQPR:$src))), (v8f16 (MVE_VREV32_16 MQPR:$src))>;
+  def : Pat<(v8f16 (bitconvert (v16i8 MQPR:$src))), (v8f16 (MVE_VREV16_8 MQPR:$src))>;
 
-  def : Pat<(v8i16 (bitconvert (v2f64 QPR:$src))), (v8i16 (MVE_VREV64_16 QPR:$src))>;
-  def : Pat<(v8i16 (bitconvert (v2i64 QPR:$src))), (v8i16 (MVE_VREV64_16 QPR:$src))>;
-  def : Pat<(v8i16 (bitconvert (v4f32 QPR:$src))), (v8i16 (MVE_VREV32_16 QPR:$src))>;
-  def : Pat<(v8i16 (bitconvert (v4i32 QPR:$src))), (v8i16 (MVE_VREV32_16 QPR:$src))>;
-  def : Pat<(v8i16 (bitconvert (v16i8 QPR:$src))), (v8i16 (MVE_VREV16_8 QPR:$src))>;
+  def : Pat<(v8i16 (bitconvert (v2f64 MQPR:$src))), (v8i16 (MVE_VREV64_16 MQPR:$src))>;
+  def : Pat<(v8i16 (bitconvert (v2i64 MQPR:$src))), (v8i16 (MVE_VREV64_16 MQPR:$src))>;
+  def : Pat<(v8i16 (bitconvert (v4f32 MQPR:$src))), (v8i16 (MVE_VREV32_16 MQPR:$src))>;
+  def : Pat<(v8i16 (bitconvert (v4i32 MQPR:$src))), (v8i16 (MVE_VREV32_16 MQPR:$src))>;
+  def : Pat<(v8i16 (bitconvert (v16i8 MQPR:$src))), (v8i16 (MVE_VREV16_8 MQPR:$src))>;
 
-  def : Pat<(v16i8 (bitconvert (v2f64 QPR:$src))), (v16i8 (MVE_VREV64_8 QPR:$src))>;
-  def : Pat<(v16i8 (bitconvert (v2i64 QPR:$src))), (v16i8 (MVE_VREV64_8 QPR:$src))>;
-  def : Pat<(v16i8 (bitconvert (v4f32 QPR:$src))), (v16i8 (MVE_VREV32_8 QPR:$src))>;
-  def : Pat<(v16i8 (bitconvert (v4i32 QPR:$src))), (v16i8 (MVE_VREV32_8 QPR:$src))>;
-  def : Pat<(v16i8 (bitconvert (v8f16 QPR:$src))), (v16i8 (MVE_VREV16_8 QPR:$src))>;
-  def : Pat<(v16i8 (bitconvert (v8i16 QPR:$src))), (v16i8 (MVE_VREV16_8 QPR:$src))>;
+  def : Pat<(v16i8 (bitconvert (v2f64 MQPR:$src))), (v16i8 (MVE_VREV64_8 MQPR:$src))>;
+  def : Pat<(v16i8 (bitconvert (v2i64 MQPR:$src))), (v16i8 (MVE_VREV64_8 MQPR:$src))>;
+  def : Pat<(v16i8 (bitconvert (v4f32 MQPR:$src))), (v16i8 (MVE_VREV32_8 MQPR:$src))>;
+  def : Pat<(v16i8 (bitconvert (v4i32 MQPR:$src))), (v16i8 (MVE_VREV32_8 MQPR:$src))>;
+  def : Pat<(v16i8 (bitconvert (v8f16 MQPR:$src))), (v16i8 (MVE_VREV16_8 MQPR:$src))>;
+  def : Pat<(v16i8 (bitconvert (v8i16 MQPR:$src))), (v16i8 (MVE_VREV16_8 MQPR:$src))>;
 }

@@ -511,7 +511,6 @@ void PPCAsmPrinter::EmitTlsCall(const MachineInstr *MI,
 ///
 void PPCAsmPrinter::EmitInstruction(const MachineInstr *MI) {
   MCInst TmpInst;
-  bool isPPC64 = Subtarget->isPPC64();
   bool isDarwin = TM.getTargetTriple().isOSDarwin();
   const Module *M = MF->getFunction().getParent();
   PICLevel::Level PL = M->getPICLevel();
@@ -865,13 +864,15 @@ void PPCAsmPrinter::EmitInstruction(const MachineInstr *MI) {
     LowerPPCMachineInstrToMCInst(MI, TmpInst, *this, isDarwin);
 
     // Change the opcode to LD.
-    TmpInst.setOpcode(isPPC64 ? PPC::LD : PPC::LWZ);
+    TmpInst.setOpcode(Subtarget->isPPC64() ? PPC::LD : PPC::LWZ);
     const MachineOperand &MO = MI->getOperand(1);
     const GlobalValue *GValue = MO.getGlobal();
     MCSymbol *MOSymbol = getSymbol(GValue);
-    const MCExpr *Exp =
-      MCSymbolRefExpr::create(MOSymbol, MCSymbolRefExpr::VK_PPC_GOT_TPREL_LO,
-                              OutContext);
+    const MCExpr *Exp = MCSymbolRefExpr::create(
+        MOSymbol,
+        Subtarget->isPPC64() ? MCSymbolRefExpr::VK_PPC_GOT_TPREL_LO
+                             : MCSymbolRefExpr::VK_PPC_GOT_TPREL,
+        OutContext);
     TmpInst.getOperand(1) = MCOperand::createExpr(Exp);
     EmitToStreamer(*OutStreamer, TmpInst);
     return;
@@ -1606,7 +1607,7 @@ bool PPCDarwinAsmPrinter::doFinalization(Module &M) {
     if (!Stubs.empty()) {
       // Switch with ".non_lazy_symbol_pointer" directive.
       OutStreamer->SwitchSection(TLOFMacho.getNonLazySymbolPointerSection());
-      EmitAlignment(isPPC64 ? 3 : 2);
+      EmitAlignment(isPPC64 ? llvm::Align(8) : llvm::Align(4));
 
       for (unsigned i = 0, e = Stubs.size(); i != e; ++i) {
         // L_foo$stub:
@@ -1689,12 +1690,9 @@ void PPCAIXAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV) {
     return;
   }
 
-  // Get the alignment in the log2 form.
-  const unsigned AlignLog = getGVAlignmentLog2(GV, DL);
-
   MCSymbol *EmittedInitSym = GVSym;
   EmitLinkage(GV, EmittedInitSym);
-  EmitAlignment(AlignLog, GV);
+  EmitAlignment(getGVAlignment(GV, DL), GV);
   OutStreamer->EmitLabel(EmittedInitSym);
   EmitGlobalConstant(GV->getParent()->getDataLayout(), GV->getInitializer());
 }

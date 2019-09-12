@@ -69,16 +69,16 @@ void dangligGslPtrFromTemporary() {
 }
 
 struct DanglingGslPtrField {
-  MyIntPointer p; // expected-note 2{{pointer member declared here}}
+  MyIntPointer p; // expected-note {{pointer member declared here}}
   MyLongPointerFromConversion p2; // expected-note {{pointer member declared here}}
-  DanglingGslPtrField(int i) : p(&i) {} // expected-warning {{initializing pointer member 'p' with the stack address of parameter 'i'}}
+  DanglingGslPtrField(int i) : p(&i) {} // TODO
   DanglingGslPtrField() : p2(MyLongOwnerWithConversion{}) {} // expected-warning {{initializing pointer member 'p2' to point to a temporary object whose lifetime is shorter than the lifetime of the constructed object}}
   DanglingGslPtrField(double) : p(MyIntOwner{}) {} // expected-warning {{initializing pointer member 'p' to point to a temporary object whose lifetime is shorter than the lifetime of the constructed object}}
 };
 
 MyIntPointer danglingGslPtrFromLocal() {
   int j;
-  return &j; // expected-warning {{address of stack memory associated with local variable 'j' returned}}
+  return &j; // TODO
 }
 
 MyIntPointer returningLocalPointer() {
