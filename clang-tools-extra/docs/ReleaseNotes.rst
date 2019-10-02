@@ -121,6 +121,11 @@ Improvements to clang-tidy
 - The 'objc-avoid-spinlock' check was renamed to :doc:`darwin-avoid-spinlock
   <clang-tidy/checks/darwin-avoid-spinlock>`
 
+- New :doc:`readability-use-algorithm
+  <clang-tidy/checks/readability-use-algorithm>` check.
+
+  Finds raw loops that can be replaced by a standard algorithm.
+
 Improvements to include-fixer
 -----------------------------
 
