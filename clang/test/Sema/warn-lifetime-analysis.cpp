@@ -425,6 +425,9 @@ void sj5() {
 // https://github.com/mgehre/llvm-project/issues/62
 namespace bug_report_63 {
 
+template <typename T>
+bool __lifetime_pset(const T &) { return true; }
+
 int printf(const char *format, ...);
 
 const char *longer(std::string const &s1, std::string const &s2) {

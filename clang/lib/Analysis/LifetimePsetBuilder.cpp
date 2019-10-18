@@ -14,6 +14,9 @@
 #include "clang/Analysis/Analyses/Lifetime.h"
 #include "clang/Analysis/CFG.h"
 #include "clang/Lex/Lexer.h"
+#include "llvm/Support/Casting.h"
+#include "llvm/Support/Debug.h"
+#include "llvm/Support/raw_ostream.h"
 
 namespace clang {
 namespace lifetime {
@@ -541,10 +544,24 @@ public:
 
     unsigned Pos = 0;
     for (const Expr *Arg : Args) {
-      if (Pos >= FD->getNumParams())
-        break;
-      const ParmVarDecl *PVD = FD->getParamDecl(Pos);
-      ParamCallback(Variable(PVD), Arg, Pos);
+      // This can happen for variadic functions
+      if (Pos >= FD->getNumParams()) {
+        const Expr *currExpr = Arg->IgnoreImplicit();
+        if (auto DRE = dyn_cast<const DeclRefExpr>(currExpr)) {
+          if (auto VD = dyn_cast<const VarDecl>(DRE->getDecl())) {
+            ParamCallback(Variable(VD), Arg, Pos);
+            currExpr = IgnoreTransparentExprs(VD->getInit());
+            currExpr->dump();
+            if (const MaterializeTemporaryExpr *MTE =
+                    dyn_cast<MaterializeTemporaryExpr>(currExpr)) {
+              ParamCallback(Variable(MTE), Arg, Pos);
+            }
+          }
+        }
+      } else {
+        const ParmVarDecl *PVD = FD->getParamDecl(Pos);
+        ParamCallback(Variable(PVD), Arg, Pos);
+      }
       ++Pos;
     }
     if (ObjectArg) {
@@ -578,6 +595,7 @@ public:
         CE,
         [&](Variable V, const Expr *Arg, int Pos) {
           PSet ArgPS = getPSet(Arg, /*AllowNonExisting=*/true);
+          ArgPS.print(llvm::outs());
           if (ArgPS.isUnknown())
             return;
           V.deref();
