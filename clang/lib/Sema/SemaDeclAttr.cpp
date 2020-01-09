@@ -22,6 +22,7 @@
 #include "clang/AST/Mangle.h"
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/Basic/CharInfo.h"
+#include "clang/Basic/SourceLocation.h"
 #include "clang/Basic/SourceManager.h"
 #include "clang/Basic/TargetBuiltins.h"
 #include "clang/Basic/TargetInfo.h"
@@ -4513,6 +4514,167 @@ static void handleLifetimeCategoryAttr(Sema &S, Decl *D, const ParsedAttr &AL) {
   }
 }
 
+namespace process_lifetime_contracts {
+// Easier access the attribute's representation.
+using AttrPointsToMap = LifetimeContractAttr::PointsToMap;
+
+static const Expr *ignoreReturnValues(const Expr *E) {
+  const Expr *Original;
+  do {
+    Original = E;
+    E = E->IgnoreImplicit();
+    if (const auto *CE = dyn_cast<CXXConstructExpr>(E)) {
+      const auto *Ctor = CE->getConstructor();
+      if (Ctor->getParent()->getName() == "PSet")
+        return CE;
+      E = CE->getArg(0);
+    }
+    if (const auto *MCE = dyn_cast<CXXMemberCallExpr>(E)) {
+      const auto *CD =
+          dyn_cast_or_null<CXXConversionDecl>(MCE->getDirectCallee());
+      if (CD)
+        E = MCE->getImplicitObjectArgument();
+    }
+  } while (E != Original);
+  return E;
+}
+
+static const ParmVarDecl *toCanonicalParmVar(const ParmVarDecl *PVD) {
+  const auto *FD = dyn_cast<FunctionDecl>(PVD->getDeclContext());
+  return FD->getCanonicalDecl()->getParamDecl(PVD->getFunctionScopeIndex());
+}
+
+// This function can either collect the PSets of the symbols based on a lookup
+// table or just the symbols into a pset if the lookup table is nullptr.
+static ContractPSet collectPSet(const Expr *E, const AttrPointsToMap *Lookup,
+                                SourceRange *FailRange) {
+  ContractPSet Result;
+  if (const auto *DRE = dyn_cast<DeclRefExpr>(E)) {
+    const auto *VD = dyn_cast<VarDecl>(DRE->getDecl());
+    if (!VD) {
+      *FailRange = DRE->getSourceRange();
+      return Result;
+    }
+    StringRef Name = VD->getName();
+    if (Name == "Null") {
+      Result.ContainsNull = true;
+      return Result;
+    } else if (Name == "Static") {
+      Result.ContainsStatic = true;
+      return Result;
+    } else if (Name == "Invalid") {
+      Result.ContainsInvalid = true;
+      return Result;
+    } else if (Name == "Return") {
+      // TODO: function name, but what about overloads?
+      Result.Vars.insert(ContractVariable::returnVal());
+      return Result;
+    } else {
+      const auto *PVD = dyn_cast<ParmVarDecl>(VD);
+      if (!PVD) {
+        *FailRange = DRE->getSourceRange();
+        return Result;
+      }
+      if (Lookup) {
+        auto it = Lookup->find(toCanonicalParmVar(PVD));
+        if (it != Lookup->end())
+          return it->second;
+      }
+      Result.Vars.insert(toCanonicalParmVar(PVD));
+      return Result;
+    }
+    *FailRange = DRE->getSourceRange();
+    return Result;
+  } else if (const auto *CE = dyn_cast<CXXConstructExpr>(E)) {
+    for (const auto *Arg : CE->arguments()) {
+      ContractPSet Elem =
+          collectPSet(ignoreReturnValues(Arg), Lookup, FailRange);
+      if (Elem.isEmpty())
+        return Elem;
+      Result.merge(Elem);
+    }
+    return Result;
+  } else if (const auto *CE = dyn_cast<CallExpr>(E)) {
+    const FunctionDecl *FD = CE->getDirectCallee();
+    if (!FD || !FD->getIdentifier() || FD->getName() != "deref") {
+      *FailRange = CE->getSourceRange();
+      return Result;
+    }
+    Result = collectPSet(ignoreReturnValues(CE->getArg(0)), Lookup, FailRange);
+    auto VarsCopy = Result.Vars;
+    Result.Vars.clear();
+    for (auto Var : VarsCopy)
+      Result.Vars.insert(Var.deref());
+    return Result;
+  }
+  *FailRange = E->getSourceRange();
+  return Result;
+}
+
+// This function and the callees are have the sole purpose of matching the
+// AST that describes the contracts. We are only interested in identifier names
+// of function calls and variables. The AST, however, has a lot of other
+// information such as casts, termporary objects and so on. They do not have
+// any semantic meaning for contracts so much of the code is just skipping
+// these unwanted nodes. The rest is collecting the identifiers and their
+// hierarchy. 
+// Also, the code might be rewritten a more simple way in the future
+// piggybacking this work: https://reviews.llvm.org/rL365355
+static SourceRange fillContractFromExpr(const Expr *E, AttrPointsToMap &Fill) {
+  const auto *CE = dyn_cast<CallExpr>(E);
+  if (!CE)
+    return E->getSourceRange();
+  const FunctionDecl *FD = CE->getDirectCallee();
+  if (!FD || !FD->getIdentifier() || FD->getName() != "lifetime")
+    return E->getSourceRange();
+
+  const Expr *LHS = ignoreReturnValues(CE->getArg(0));
+  if (!LHS)
+    return CE->getArg(0)->getSourceRange();
+  const Expr *RHS = ignoreReturnValues(CE->getArg(1));
+  if (!RHS)
+    return CE->getArg(1)->getSourceRange();
+
+  SourceRange ErrorRange;
+  ContractPSet LhsPSet = collectPSet(LHS, nullptr, &ErrorRange);
+  if (LhsPSet.Vars.size() != 1)
+    return LHS->getSourceRange();
+  if (ErrorRange.isValid())
+    return ErrorRange;
+
+  ContractVariable VD = *LhsPSet.Vars.begin();
+  ContractPSet RhsPSet = collectPSet(RHS, &Fill, &ErrorRange);
+  if (ErrorRange.isValid())
+    return ErrorRange;
+  Fill[VD] = RhsPSet;
+  return SourceRange();
+}
+} // namespace process_lifetime_contracts
+
+static void handleLifetimeContractAttr(Sema &S, Decl *D, const ParsedAttr &AL) {
+  LifetimeContractAttr *PAttr;
+  if (auto *Existing = D->getAttr<LifetimeContractAttr>())
+    PAttr = Existing;
+  else {
+    PAttr = LifetimeContractAttr::Create(S.Context, AL.getArgAsExpr(0), AL);
+    D->addAttr(PAttr);
+    PAttr->PrePSets = new (S.Context) LifetimeContractAttr::PointsToMap{};
+    PAttr->PostPSets = new (S.Context) LifetimeContractAttr::PointsToMap{};
+  }
+
+  using namespace process_lifetime_contracts;
+
+  SourceRange ErrorRange;
+  if (PAttr->isPre())
+    ErrorRange = fillContractFromExpr(AL.getArgAsExpr(0), *PAttr->PrePSets);
+  else
+    ErrorRange = fillContractFromExpr(AL.getArgAsExpr(0), *PAttr->PostPSets);
+
+  if (ErrorRange.isValid())
+    S.Diag(ErrorRange.getBegin(), diag::warn_unsupported_expression)
+        << ErrorRange;
+}
+
 bool Sema::CheckCallingConvAttr(const ParsedAttr &Attrs, CallingConv &CC,
                                 const FunctionDecl *FD) {
   if (Attrs.isInvalid())
@@ -7266,6 +7428,9 @@ static void ProcessDeclAttribute(Sema &S, Scope *scope, Decl *D,
   case ParsedAttr::AT_Pointer:
     handleLifetimeCategoryAttr(S, D, AL);
     break;
+  case ParsedAttr::AT_LifetimeContract:
+    handleLifetimeContractAttr(S, D, AL);
+    break;
   case ParsedAttr::AT_OpenCLKernel:
     handleSimpleAttribute<OpenCLKernelAttr>(S, D, AL);
     break;
@@ -7521,6 +7686,13 @@ void Sema::ProcessDeclAttributeList(Scope *S, Decl *D,
         << cast<NamedDecl>(D);
     D->dropAttr<WeakRefAttr>();
     return;
+  }
+
+  if (const auto *LCAttr = D->getAttr<LifetimeContractAttr>()) {
+    if (!getDiagnostics().isIgnored(diag::warn_dump_lifetime_contracts,
+                                      D->getBeginLoc()))
+      Diag(D->getBeginLoc(), diag::warn_dump_lifetime_contracts)
+          << LCAttr->dumpContracts();
   }
 
   // FIXME: We should be able to handle this in TableGen as well. It would be

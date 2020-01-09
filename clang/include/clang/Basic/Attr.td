@@ -2921,6 +2921,35 @@ def Pointer : InheritableAttr {
   let Documentation = [LifetimePointerDocs];
 }
 
+def LifetimeContract : InheritableAttr {
+  let Spellings = [CXX11<"gsl", "pre">, CXX11<"gsl", "post">];
+  let Accessors = [Accessor<"isPre", [CXX11<"gsl", "pre">]>,
+                   Accessor<"isPost", [CXX11<"gsl", "post">]>];
+  let Subjects = SubjectList<[Function]>; // TODO: HasFunctionProto?
+  let Args = [ExprArgument<"Expr">];
+  let AdditionalMembers = [{
+public:
+  using PointsToMap = std::map<ContractVariable, ContractPSet>;
+  PointsToMap *PrePSets;
+  PointsToMap *PostPSets;
+
+  std::string dumpContracts() const {
+    std::string Buffer;
+    llvm::raw_string_ostream OS(Buffer);
+    OS << "Pre {";
+    for (const auto &P : *PrePSets)
+      OS << " " << P.first.dump() << " -> " << P.second.dump() << ";";
+    OS << " }";
+    OS << "  Post {";
+    for (const auto &P : *PostPSets)
+      OS << " " << P.first.dump() << " -> " << P.second.dump() << ";";
+    OS << " }";
+    return OS.str();
+  }
+  }];
+  let Documentation = [Undocumented]; // FIXME
+}
+
 // Microsoft-related attributes
 
 def MSNoVTable : InheritableAttr, TargetSpecificAttr<TargetMicrosoftCXXABI> {

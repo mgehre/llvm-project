@@ -3464,6 +3464,11 @@ def warn_param_typestate_mismatch : Warning<
   "argument not in expected state; expected '%0', observed '%1'">,
   InGroup<Consumed>, DefaultIgnore;
 
+// Lifetime Analysis
+def warn_unsupported_expression : Warning<"this pre/postcondition is not supported">,
+  InGroup<LifetimeAnalysis>, DefaultIgnore;
+def warn_dump_lifetime_contracts : Warning<"%0">, InGroup<LifetimeDumpContracts>, DefaultIgnore;
+
 // no_sanitize attribute
 def warn_unknown_sanitizer_ignored : Warning<
   "unknown sanitizer '%0' ignored">, InGroup<UnknownSanitizers>;
