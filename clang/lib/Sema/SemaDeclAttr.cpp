@@ -4530,18 +4530,12 @@ static const Expr *ignoreReturnValues(const Expr *E) {
       E = CE->getArg(0);
     }
     if (const auto *MCE = dyn_cast<CXXMemberCallExpr>(E)) {
-      const auto *CD =
-          dyn_cast_or_null<CXXConversionDecl>(MCE->getDirectCallee());
-      if (CD)
+      if (llvm::isa_and_nonnull<CXXConversionDecl>(
+          MCE->getDirectCallee()))
         E = MCE->getImplicitObjectArgument();
     }
   } while (E != Original);
   return E;
-}
-
-static const ParmVarDecl *toCanonicalParmVar(const ParmVarDecl *PVD) {
-  const auto *FD = dyn_cast<FunctionDecl>(PVD->getDeclContext());
-  return FD->getCanonicalDecl()->getParamDecl(PVD->getFunctionScopeIndex());
 }
 
 // This function can either collect the PSets of the symbols based on a lookup
@@ -4557,17 +4551,17 @@ static ContractPSet collectPSet(const Expr *E, const AttrPointsToMap *Lookup,
     }
     StringRef Name = VD->getName();
     if (Name == "Null") {
-      Result.ContainsNull = true;
+      Result.insert(ContractVariable::nullVal());
       return Result;
     } else if (Name == "Static") {
-      Result.ContainsStatic = true;
+      Result.insert(ContractVariable::staticVal());
       return Result;
     } else if (Name == "Invalid") {
-      Result.ContainsInvalid = true;
+      Result.insert(ContractVariable::invalid());
       return Result;
     } else if (Name == "Return") {
       // TODO: function name, but what about overloads?
-      Result.Vars.insert(ContractVariable::returnVal());
+      Result.insert(ContractVariable::returnVal());
       return Result;
     } else {
       const auto *PVD = dyn_cast<ParmVarDecl>(VD);
@@ -4576,11 +4570,11 @@ static ContractPSet collectPSet(const Expr *E, const AttrPointsToMap *Lookup,
         return Result;
       }
       if (Lookup) {
-        auto it = Lookup->find(toCanonicalParmVar(PVD));
+        auto it = Lookup->find(ContractVariable(PVD));
         if (it != Lookup->end())
           return it->second;
       }
-      Result.Vars.insert(toCanonicalParmVar(PVD));
+      Result.insert(PVD);
       return Result;
     }
     *FailRange = DRE->getSourceRange();
@@ -4589,9 +4583,9 @@ static ContractPSet collectPSet(const Expr *E, const AttrPointsToMap *Lookup,
     for (const auto *Arg : CE->arguments()) {
       ContractPSet Elem =
           collectPSet(ignoreReturnValues(Arg), Lookup, FailRange);
-      if (Elem.isEmpty())
+      if (Elem.empty())
         return Elem;
-      Result.merge(Elem);
+      Result.insert(Elem.begin(), Elem.end());
     }
     return Result;
   } else if (const auto *CE = dyn_cast<CallExpr>(E)) {
@@ -4601,10 +4595,10 @@ static ContractPSet collectPSet(const Expr *E, const AttrPointsToMap *Lookup,
       return Result;
     }
     Result = collectPSet(ignoreReturnValues(CE->getArg(0)), Lookup, FailRange);
-    auto VarsCopy = Result.Vars;
-    Result.Vars.clear();
+    auto VarsCopy = Result;
+    Result.clear();
     for (auto Var : VarsCopy)
-      Result.Vars.insert(Var.deref());
+      Result.insert(Var.deref());
     return Result;
   }
   *FailRange = E->getSourceRange();
@@ -4637,12 +4631,12 @@ static SourceRange fillContractFromExpr(const Expr *E, AttrPointsToMap &Fill) {
 
   SourceRange ErrorRange;
   ContractPSet LhsPSet = collectPSet(LHS, nullptr, &ErrorRange);
-  if (LhsPSet.Vars.size() != 1)
+  if (LhsPSet.size() != 1)
     return LHS->getSourceRange();
   if (ErrorRange.isValid())
     return ErrorRange;
 
-  ContractVariable VD = *LhsPSet.Vars.begin();
+  ContractVariable VD = *LhsPSet.begin();
   ContractPSet RhsPSet = collectPSet(RHS, &Fill, &ErrorRange);
   if (ErrorRange.isValid())
     return ErrorRange;
@@ -7690,9 +7684,11 @@ void Sema::ProcessDeclAttributeList(Scope *S, Decl *D,
 
   if (const auto *LCAttr = D->getAttr<LifetimeContractAttr>()) {
     if (!getDiagnostics().isIgnored(diag::warn_dump_lifetime_contracts,
-                                      D->getBeginLoc()))
-      Diag(D->getBeginLoc(), diag::warn_dump_lifetime_contracts)
-          << LCAttr->dumpContracts();
+                                      D->getBeginLoc())) {
+      if (const auto *FD = dyn_cast<FunctionDecl>(D))
+        Diag(D->getBeginLoc(), diag::warn_dump_lifetime_contracts)
+            << LCAttr->dumpContracts(FD);
+    }
   }
 
   // FIXME: We should be able to handle this in TableGen as well. It would be

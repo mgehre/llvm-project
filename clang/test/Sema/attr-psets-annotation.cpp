@@ -86,3 +86,5 @@ void deref_ref_pointee(int *a, int *b, int *&c)
     [[gsl::pre(lifetime(a, {deref(c)}))]];
 // expected-warning@-2 {{Pre { a -> { *c }; }}}
 
+
+// TODO: return, this

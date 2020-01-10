@@ -22,28 +22,43 @@ namespace clang {
 /// This represents an abstract memory location that is used in the lifetime
 /// contract representation.
 struct ContractVariable {
-  ContractVariable(const VarDecl *PVD, int Deref = 0) : Var(PVD) {
-    assert(PVD);
+  ContractVariable(const ParmVarDecl *PVD, int Deref = 0) :
+    ParamIdx(PVD->getFunctionScopeIndex()), Tag(Param) {
     deref(Deref);
   }
-  ContractVariable(const Expr *E) : Var(E) {}
-  ContractVariable(const RecordDecl *RD) : Var(RD) { assert(RD); }
 
-  static ContractVariable returnVal() {
-    return ContractVariable(static_cast<const Expr *>(nullptr));
-  }
+  ContractVariable(const RecordDecl *RD) : RD(RD), Tag(This) {}
+
+  static ContractVariable returnVal() { return ContractVariable(Return); }
+  static ContractVariable staticVal() { return ContractVariable(Static); }
+  static ContractVariable nullVal() { return ContractVariable(Null); }
+  static ContractVariable invalid() { return ContractVariable(Invalid); }
 
   bool operator==(const ContractVariable &O) const {
-    return Var == O.Var && FDs == O.FDs;
+    if (Tag != O.Tag)
+      return false;
+    if (FDs != O.FDs)
+      return false;
+    if (Tag == Param)
+      return ParamIdx == O.ParamIdx;
+    if (Tag == This)
+      return RD == O.RD;
+    return true;
   }
 
   bool operator!=(const ContractVariable &O) const { return !(*this == O); }
 
   bool operator<(const ContractVariable &O) const {
-    if (Var != O.Var)
-      return Var < O.Var;
+    if (Tag != O.Tag)
+      return Tag < O.Tag;
     if (FDs.size() != O.FDs.size())
       return FDs.size() < O.FDs.size();
+    if (Tag == Param)
+      if (ParamIdx != O.ParamIdx)
+        return ParamIdx < O.ParamIdx;
+    if (Tag == This)
+      if (RD != O.RD)
+        return std::less<const RecordDecl *>()(RD, O.RD);
 
     for (auto I = FDs.begin(), J = O.FDs.begin(); I != FDs.end(); ++I, ++J) {
       if (*I != *J)
@@ -52,19 +67,13 @@ struct ContractVariable {
     return false;
   }
 
-  bool isThisPointer() const { return Var.is<const RecordDecl *>(); }
+  bool isThisPointer() const { return Tag == This; }
 
-  const ParmVarDecl *asParmVarDecl() const {
-    return dyn_cast_or_null<ParmVarDecl>(Var.dyn_cast<const VarDecl *>());
+  const ParmVarDecl *asParmVarDecl(const FunctionDecl *FD) const {
+    return Tag == Param ? FD->getParamDecl(ParamIdx) : nullptr;
   }
 
-  const RecordDecl *asThis() const {
-    return Var.dyn_cast<const RecordDecl *>();
-  }
-
-  bool isReturnVal() const {
-    return Var.is<const Expr *>() && Var.get<const Expr *>() == nullptr;
-  }
+  bool isReturnVal() const { return Tag == Return; }
 
   // Chain of field accesses starting from VD. Types must match.
   void addFieldRef(const FieldDecl *FD) { FDs.push_back(FD); }
@@ -75,16 +84,25 @@ struct ContractVariable {
     return *this;
   }
 
-  std::string dump() const {
+  std::string dump(const FunctionDecl *FD) const {
     std::string Result;
-    if (auto *PVD = asParmVarDecl())
-      Result = PVD->getName();
-    else if (isThisPointer())
-      Result = "this";
-    else if (isReturnVal())
-      Result = "(return value)";
-    else
-      llvm_unreachable("Invalid state");
+    switch(Tag) {
+      case Null:
+        return "Null";
+      case Static:
+        return "Static";
+      case Invalid:
+        return "Invalid";
+      case This:
+        Result = "this";
+        break;
+      case Return:
+        Result = "(return value)";
+        break;
+      case Param:
+        Result = FD->getParamDecl(ParamIdx)->getName();
+        break;
+    }
 
     for (unsigned I = 0; I < FDs.size(); ++I) {
       if (FDs[I]) {
@@ -97,58 +115,30 @@ struct ContractVariable {
     return Result;
   }
 
-protected:
-  llvm::PointerUnion<const VarDecl *, const Expr *, const RecordDecl *> Var;
+private:
+  union {
+    const RecordDecl *RD;
+    unsigned ParamIdx;
+  };
+
+  enum TagType {
+    Static,
+    Null,
+    Invalid,
+    This,
+    Return,
+    Param,
+  } Tag;
+
+  ContractVariable(TagType T) : Tag(T) {}
 
   /// Possibly empty list of fields and deref operations on the base.
   /// The First entry is the field on base, next entry is the field inside
   /// there, etc. Null pointers represent a deref operation.
-  llvm::SmallVector<const FieldDecl *, 4> FDs;
+  llvm::SmallVector<const FieldDecl *, 3> FDs;
 };
 
-/// A points-to set that can contain the following locations:
-/// - null
-/// - static
-/// - invalid
-/// - variables
-/// If a PSet contains none of that, it is "unknown".
-struct ContractPSet {
-  ContractPSet(const std::set<ContractVariable> &Vs = {},
-               bool ContainsNull = false)
-      : ContainsNull(ContainsNull), ContainsInvalid(false),
-        ContainsStatic(false), Vars(Vs) {}
-  unsigned ContainsNull : 1;
-  unsigned ContainsInvalid : 1;
-  unsigned ContainsStatic : 1;
-  std::set<ContractVariable> Vars;
-
-  void merge(const ContractPSet &RHS) {
-    ContainsNull |= RHS.ContainsNull;
-    ContainsStatic |= RHS.ContainsStatic;
-    ContainsInvalid |= RHS.ContainsInvalid;
-    Vars.insert(RHS.Vars.begin(), RHS.Vars.end());
-  }
-
-  bool isEmpty() const {
-    return Vars.empty() && !ContainsNull && !ContainsInvalid && !ContainsStatic;
-  }
-
-  std::string dump() const {
-    std::string Buffer;
-    llvm::raw_string_ostream OS(Buffer);
-    OS << "{ ";
-    if (ContainsNull)
-      OS << "Null ";
-    if (ContainsInvalid)
-      OS << "Invalid ";
-    if (ContainsStatic)
-      OS << "Static ";
-    for (const ContractVariable &V : Vars)
-      OS << V.dump() << " ";
-    OS << "}";
-    return OS.str();
-  }
-};
+using ContractPSet = std::set<ContractVariable>;
 } // namespace clang
 
 #endif // LLVM_CLANG_AST_LIFETIMEATTR_H

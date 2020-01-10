@@ -2933,16 +2933,27 @@ public:
   PointsToMap *PrePSets;
   PointsToMap *PostPSets;
 
-  std::string dumpContracts() const {
+  static std::string dumpSet(const ContractPSet &PSet,
+                             const FunctionDecl *FD) {
+    std::string Buffer;
+    llvm::raw_string_ostream OS(Buffer);
+    OS << "{ ";
+    for (const auto &CV : PSet)
+      OS << CV.dump(FD) << " ";
+    OS << "}";
+    return OS.str();
+  }
+
+  std::string dumpContracts(const FunctionDecl *FD) const {
     std::string Buffer;
     llvm::raw_string_ostream OS(Buffer);
     OS << "Pre {";
     for (const auto &P : *PrePSets)
-      OS << " " << P.first.dump() << " -> " << P.second.dump() << ";";
+      OS << " " << P.first.dump(FD) << " -> " << dumpSet(P.second, FD) << ";";
     OS << " }";
     OS << "  Post {";
     for (const auto &P : *PostPSets)
-      OS << " " << P.first.dump() << " -> " << P.second.dump() << ";";
+      OS << " " << P.first.dump(FD) << " -> " << dumpSet(P.second, FD) << ";";
     OS << " }";
     return OS.str();
   }
