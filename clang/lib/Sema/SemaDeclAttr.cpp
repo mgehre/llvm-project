@@ -4542,44 +4542,38 @@ static const Expr *ignoreReturnValues(const Expr *E) {
 // table or just the symbols into a pset if the lookup table is nullptr.
 static ContractPSet collectPSet(const Expr *E, const AttrPointsToMap *Lookup,
                                 SourceRange *FailRange) {
-  ContractPSet Result;
   if (const auto *DRE = dyn_cast<DeclRefExpr>(E)) {
     const auto *VD = dyn_cast<VarDecl>(DRE->getDecl());
     if (!VD) {
       *FailRange = DRE->getSourceRange();
-      return Result;
+      return ContractPSet{};
     }
     StringRef Name = VD->getName();
-    if (Name == "Null") {
-      Result.insert(ContractVariable::nullVal());
-      return Result;
-    } else if (Name == "Static") {
-      Result.insert(ContractVariable::staticVal());
-      return Result;
-    } else if (Name == "Invalid") {
-      Result.insert(ContractVariable::invalid());
-      return Result;
-    } else if (Name == "Return") {
-      // TODO: function name, but what about overloads?
-      Result.insert(ContractVariable::returnVal());
-      return Result;
-    } else {
+    if (Name == "Null")
+      return ContractPSet{ContractVariable::nullVal()};
+    else if (Name == "Static")
+      return ContractPSet{ContractVariable::staticVal()};
+    else if (Name == "Invalid")
+      return ContractPSet{ContractVariable::invalid()};
+    else if (Name == "Return") // TODO: function name, but overloads?
+      return ContractPSet{ContractVariable::returnVal()};
+    else {
       const auto *PVD = dyn_cast<ParmVarDecl>(VD);
       if (!PVD) {
         *FailRange = DRE->getSourceRange();
-        return Result;
+        return ContractPSet{};
       }
       if (Lookup) {
         auto it = Lookup->find(ContractVariable(PVD));
         if (it != Lookup->end())
           return it->second;
       }
-      Result.insert(PVD);
-      return Result;
+      return ContractPSet{ContractVariable{PVD}};
     }
     *FailRange = DRE->getSourceRange();
-    return Result;
+    return ContractPSet{};
   } else if (const auto *CE = dyn_cast<CXXConstructExpr>(E)) {
+    ContractPSet Result;
     for (const auto *Arg : CE->arguments()) {
       ContractPSet Elem =
           collectPSet(ignoreReturnValues(Arg), Lookup, FailRange);
@@ -4592,9 +4586,10 @@ static ContractPSet collectPSet(const Expr *E, const AttrPointsToMap *Lookup,
     const FunctionDecl *FD = CE->getDirectCallee();
     if (!FD || !FD->getIdentifier() || FD->getName() != "deref") {
       *FailRange = CE->getSourceRange();
-      return Result;
+      return ContractPSet{};
     }
-    Result = collectPSet(ignoreReturnValues(CE->getArg(0)), Lookup, FailRange);
+    ContractPSet Result =
+        collectPSet(ignoreReturnValues(CE->getArg(0)), Lookup, FailRange);
     auto VarsCopy = Result;
     Result.clear();
     for (auto Var : VarsCopy)
@@ -4602,7 +4597,7 @@ static ContractPSet collectPSet(const Expr *E, const AttrPointsToMap *Lookup,
     return Result;
   }
   *FailRange = E->getSourceRange();
-  return Result;
+  return ContractPSet{};
 }
 
 // This function and the callees are have the sole purpose of matching the
