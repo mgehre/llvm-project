@@ -4529,10 +4529,10 @@ static void handleLifetimeContractAttr(Sema &S, Decl *D, const ParsedAttr &AL) {
   using namespace process_lifetime_contracts;
 
   SourceRange ErrorRange;
-  if (PAttr->isPre())
-    ErrorRange = fillContractFromExpr(AL.getArgAsExpr(0), *PAttr->PrePSets);
-  else
+  if (AL.getAttributeSpellingListIndex())
     ErrorRange = fillContractFromExpr(AL.getArgAsExpr(0), *PAttr->PostPSets);
+  else
+    ErrorRange = fillContractFromExpr(AL.getArgAsExpr(0), *PAttr->PrePSets);
 
   if (ErrorRange.isValid())
     S.Diag(ErrorRange.getBegin(), diag::warn_unsupported_expression)

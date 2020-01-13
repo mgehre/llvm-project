@@ -6788,12 +6788,16 @@ static bool shouldTrackFirstArgument(const FunctionDecl *FD) {
   return false;
 }
 
-static bool shouldTrackArgument(const FunctionDecl *FD, unsigned Arg) {
-  const auto LCAttr = FD->getAttr<LifetimeContractAttr>();
-  if (!LCAttr)
+static bool shouldTrackContract(const LifetimeContractAttr *LCAttr,
+                                const FunctionDecl *FD, ContractVariable CV) {
+  if (!LCAttr->PostPSets) // TODO: get rid of this.
     return false;
-
-  return false;
+  const PointsToMap &PM = *LCAttr->PostPSets;
+  auto It = PM.find(ContractVariable::returnVal());
+  if (It == PM.end())
+    return false;
+  // TODO: might be off by one for operators?
+  return It->second.count(CV);
 }
 
 static void handleGslAnnotatedTypes(IndirectLocalPath &Path, Expr *Call,
@@ -6825,6 +6829,23 @@ static void handleGslAnnotatedTypes(IndirectLocalPath &Path, Expr *Call,
                                        /*EnableLifetimeWarnings=*/true);
     Path.pop_back();
   };
+
+  if (auto *CE = dyn_cast<CallExpr>(Call)) {
+    if (FunctionDecl *FD = CE->getDirectCallee())
+      if (const auto LCAttr = FD->getAttr<LifetimeContractAttr>()) {
+        for (unsigned I = 0; I < CE->getNumArgs() && I < FD->getNumParams();
+             ++I)
+          if (shouldTrackContract(LCAttr, FD, FD->getParamDecl(I)))
+            VisitPointerArg(FD, CE->getArg(I),
+                            !FD->getReturnType()->isReferenceType());
+        if (auto *MCE = dyn_cast<CXXMemberCallExpr>(Call)) {
+          const auto *MD = cast_or_null<CXXMethodDecl>(MCE->getDirectCallee());
+          if (shouldTrackContract(LCAttr, FD, MD->getParent()))
+            VisitPointerArg(MD, MCE->getImplicitObjectArgument(),
+                            !MD->getReturnType()->isReferenceType());
+        }
+      }
+  }
 
   if (auto *MCE = dyn_cast<CXXMemberCallExpr>(Call)) {
     const auto *MD = cast_or_null<CXXMethodDecl>(MCE->getDirectCallee());

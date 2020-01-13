@@ -102,12 +102,24 @@ It find(It begin, It end, const T &val)
     [[gsl::post(lifetime(Return, {begin}))]];
 // expected-warning@-3 {{Pre { }  Post { }}}
 
+int *find_nontemp(int *begin, int *end, const int &val)
+    [[gsl::pre(lifetime(end, {begin}))]]
+    [[gsl::post(lifetime(Return, {begin}))]];
+// expected-warning@-3 {{Pre { end -> { begin }; }  Post { (return value) -> { begin }; }}}
+
 struct [[gsl::Owner(int)]] MyOwner {
-  int *begin();
-  int *end();
+  int *begin()
+      [[gsl::post(lifetime(Return, {this}))]];
+  // expected-warning@-2 {{Pre { }  Post { (return value) -> { this }; }}}
+  int *end()
+      [[gsl::post(lifetime(Return, {this}))]];
+  // expected-warning@-2 {{Pre { }  Post { (return value) -> { this }; }}}
 };
 
 void testGslWarning() {
   int *res = find(MyOwner{}.begin(), MyOwner{}.end(), 5);
   (void)res;
+  int *res2 = find_nontemp(MyOwner{}.begin(), MyOwner{}.end(), 5);
+  // expected-warning@-1 {{object backing the pointer will be destroyed at the end of the full-expression}}
+  (void)res2;
 }
