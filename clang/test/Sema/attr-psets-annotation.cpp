@@ -55,7 +55,6 @@ void variadic(int *a, int *b, int *c)
     [[gsl::pre(lifetime(b, {a, c}))]];
 // expected-warning@-2 {{Pre { b -> { a c }; }}}
 
-
 void variadic_special(int *a, int *b, int *c)
     [[gsl::pre(lifetime(b, {a, Null}))]];
 // expected-warning@-2 {{Pre { b -> { Null a }; }}}
@@ -85,6 +84,5 @@ void deref_ref(int *a, int *b, int *&c)
 void deref_ref_pointee(int *a, int *b, int *&c)
     [[gsl::pre(lifetime(a, {deref(c)}))]];
 // expected-warning@-2 {{Pre { a -> { *c }; }}}
-
 
 // TODO: return, this

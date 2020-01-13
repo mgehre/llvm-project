@@ -4530,8 +4530,7 @@ static const Expr *ignoreReturnValues(const Expr *E) {
       E = CE->getArg(0);
     }
     if (const auto *MCE = dyn_cast<CXXMemberCallExpr>(E)) {
-      if (llvm::isa_and_nonnull<CXXConversionDecl>(
-          MCE->getDirectCallee()))
+      if (llvm::isa_and_nonnull<CXXConversionDecl>(MCE->getDirectCallee()))
         E = MCE->getImplicitObjectArgument();
     }
   } while (E != Original);
@@ -4606,7 +4605,7 @@ static ContractPSet collectPSet(const Expr *E, const AttrPointsToMap *Lookup,
 // information such as casts, termporary objects and so on. They do not have
 // any semantic meaning for contracts so much of the code is just skipping
 // these unwanted nodes. The rest is collecting the identifiers and their
-// hierarchy. 
+// hierarchy.
 // Also, the code might be rewritten a more simple way in the future
 // piggybacking this work: https://reviews.llvm.org/rL365355
 static SourceRange fillContractFromExpr(const Expr *E, AttrPointsToMap &Fill) {
@@ -7679,7 +7678,7 @@ void Sema::ProcessDeclAttributeList(Scope *S, Decl *D,
 
   if (const auto *LCAttr = D->getAttr<LifetimeContractAttr>()) {
     if (!getDiagnostics().isIgnored(diag::warn_dump_lifetime_contracts,
-                                      D->getBeginLoc())) {
+                                    D->getBeginLoc())) {
       if (const auto *FD = dyn_cast<FunctionDecl>(D))
         Diag(D->getBeginLoc(), diag::warn_dump_lifetime_contracts)
             << LCAttr->dumpContracts(FD);

@@ -22,8 +22,8 @@ namespace clang {
 /// This represents an abstract memory location that is used in the lifetime
 /// contract representation.
 struct ContractVariable {
-  ContractVariable(const ParmVarDecl *PVD, int Deref = 0) :
-    ParamIdx(PVD->getFunctionScopeIndex()), Tag(Param) {
+  ContractVariable(const ParmVarDecl *PVD, int Deref = 0)
+      : ParamIdx(PVD->getFunctionScopeIndex()), Tag(Param) {
     deref(Deref);
   }
 
@@ -86,22 +86,22 @@ struct ContractVariable {
 
   std::string dump(const FunctionDecl *FD) const {
     std::string Result;
-    switch(Tag) {
-      case Null:
-        return "Null";
-      case Static:
-        return "Static";
-      case Invalid:
-        return "Invalid";
-      case This:
-        Result = "this";
-        break;
-      case Return:
-        Result = "(return value)";
-        break;
-      case Param:
-        Result = FD->getParamDecl(ParamIdx)->getName();
-        break;
+    switch (Tag) {
+    case Null:
+      return "Null";
+    case Static:
+      return "Static";
+    case Invalid:
+      return "Invalid";
+    case This:
+      Result = "this";
+      break;
+    case Return:
+      Result = "(return value)";
+      break;
+    case Param:
+      Result = FD->getParamDecl(ParamIdx)->getName();
+      break;
     }
 
     for (unsigned I = 0; I < FDs.size(); ++I) {
