@@ -85,4 +85,10 @@ void deref_ref_pointee(int *a, int *b, int *&c)
     [[gsl::pre(lifetime(a, {deref(c)}))]];
 // expected-warning@-2 {{Pre { a -> { *c }; }}}
 
+struct X {
+  void f(X **out)
+      [[gsl::post(lifetime(deref(out), this))]];
+  // expected-warning@-2 {{Pre { }  Post { *out -> { this }; }}}
+};
+
 // TODO: return, this

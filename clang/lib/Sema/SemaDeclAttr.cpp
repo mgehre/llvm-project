@@ -4541,6 +4541,9 @@ static const Expr *ignoreReturnValues(const Expr *E) {
 // table or just the symbols into a pset if the lookup table is nullptr.
 static ContractPSet collectPSet(const Expr *E, const AttrPointsToMap *Lookup,
                                 SourceRange *FailRange) {
+  if (const auto *TE = dyn_cast<CXXThisExpr>(E))
+    return ContractPSet{
+        ContractVariable(TE->getType()->getPointeeCXXRecordDecl())};
   if (const auto *DRE = dyn_cast<DeclRefExpr>(E)) {
     const auto *VD = dyn_cast<VarDecl>(DRE->getDecl());
     if (!VD) {
