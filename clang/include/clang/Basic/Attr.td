@@ -2927,9 +2927,11 @@ def LifetimeContract : InheritableAttr {
                    Accessor<"isPost", [CXX11<"gsl", "post">]>];
   let Subjects = SubjectList<[Function]>; // TODO: HasFunctionProto?
   let Args = [ExprArgument<"Expr">];
+  let LateParsed = 1;
+  let TemplateDependent = 1;
+  let ParseArgumentsAsUnevaluated = 1;
   let AdditionalMembers = [{
 public:
-  using PointsToMap = std::map<ContractVariable, ContractPSet>;
   PointsToMap *PrePSets;
   PointsToMap *PostPSets;
 

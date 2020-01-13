@@ -14,6 +14,11 @@ struct invalid_t {
   operator T() const;
 } Invalid;
 
+struct return_t {
+  template <typename T>
+  operator T() const;
+} Return;
+
 template <typename T>
 struct PointerTraits {
   static auto deref(const T &t) -> decltype(*t);
@@ -91,4 +96,18 @@ struct X {
   // expected-warning@-2 {{Pre { }  Post { *out -> { this }; }}}
 };
 
-// TODO: return, this
+template <typename It, typename T>
+It find(It begin, It end, const T &val)
+    [[gsl::pre(lifetime(end, {begin}))]]
+    [[gsl::post(lifetime(Return, {begin}))]];
+// expected-warning@-3 {{Pre { }  Post { }}}
+
+struct [[gsl::Owner(int)]] MyOwner {
+  int *begin();
+  int *end();
+};
+
+void testGslWarning() {
+  int *res = find(MyOwner{}.begin(), MyOwner{}.end(), 5);
+  (void)res;
+}

@@ -6788,6 +6788,14 @@ static bool shouldTrackFirstArgument(const FunctionDecl *FD) {
   return false;
 }
 
+static bool shouldTrackArgument(const FunctionDecl *FD, unsigned Arg) {
+  const auto LCAttr = FD->getAttr<LifetimeContractAttr>();
+  if (!LCAttr)
+    return false;
+
+  return false;
+}
+
 static void handleGslAnnotatedTypes(IndirectLocalPath &Path, Expr *Call,
                                     LocalVisitor Visit) {
   auto VisitPointerArg = [&](const Decl *D, Expr *Arg, bool Value) {

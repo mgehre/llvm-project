@@ -4514,133 +4514,6 @@ static void handleLifetimeCategoryAttr(Sema &S, Decl *D, const ParsedAttr &AL) {
   }
 }
 
-namespace process_lifetime_contracts {
-// Easier access the attribute's representation.
-using AttrPointsToMap = LifetimeContractAttr::PointsToMap;
-
-static const Expr *ignoreReturnValues(const Expr *E) {
-  const Expr *Original;
-  do {
-    Original = E;
-    E = E->IgnoreImplicit();
-    if (const auto *CE = dyn_cast<CXXConstructExpr>(E)) {
-      const auto *Ctor = CE->getConstructor();
-      if (Ctor->getParent()->getName() == "PSet")
-        return CE;
-      E = CE->getArg(0);
-    }
-    if (const auto *MCE = dyn_cast<CXXMemberCallExpr>(E)) {
-      if (llvm::isa_and_nonnull<CXXConversionDecl>(MCE->getDirectCallee()))
-        E = MCE->getImplicitObjectArgument();
-    }
-  } while (E != Original);
-  return E;
-}
-
-// This function can either collect the PSets of the symbols based on a lookup
-// table or just the symbols into a pset if the lookup table is nullptr.
-static ContractPSet collectPSet(const Expr *E, const AttrPointsToMap *Lookup,
-                                SourceRange *FailRange) {
-  if (const auto *TE = dyn_cast<CXXThisExpr>(E))
-    return ContractPSet{
-        ContractVariable(TE->getType()->getPointeeCXXRecordDecl())};
-  if (const auto *DRE = dyn_cast<DeclRefExpr>(E)) {
-    const auto *VD = dyn_cast<VarDecl>(DRE->getDecl());
-    if (!VD) {
-      *FailRange = DRE->getSourceRange();
-      return ContractPSet{};
-    }
-    StringRef Name = VD->getName();
-    if (Name == "Null")
-      return ContractPSet{ContractVariable::nullVal()};
-    else if (Name == "Static")
-      return ContractPSet{ContractVariable::staticVal()};
-    else if (Name == "Invalid")
-      return ContractPSet{ContractVariable::invalid()};
-    else if (Name == "Return") // TODO: function name, but overloads?
-      return ContractPSet{ContractVariable::returnVal()};
-    else {
-      const auto *PVD = dyn_cast<ParmVarDecl>(VD);
-      if (!PVD) {
-        *FailRange = DRE->getSourceRange();
-        return ContractPSet{};
-      }
-      if (Lookup) {
-        auto it = Lookup->find(ContractVariable(PVD));
-        if (it != Lookup->end())
-          return it->second;
-      }
-      return ContractPSet{ContractVariable{PVD}};
-    }
-    *FailRange = DRE->getSourceRange();
-    return ContractPSet{};
-  } else if (const auto *CE = dyn_cast<CXXConstructExpr>(E)) {
-    ContractPSet Result;
-    for (const auto *Arg : CE->arguments()) {
-      ContractPSet Elem =
-          collectPSet(ignoreReturnValues(Arg), Lookup, FailRange);
-      if (Elem.empty())
-        return Elem;
-      Result.insert(Elem.begin(), Elem.end());
-    }
-    return Result;
-  } else if (const auto *CE = dyn_cast<CallExpr>(E)) {
-    const FunctionDecl *FD = CE->getDirectCallee();
-    if (!FD || !FD->getIdentifier() || FD->getName() != "deref") {
-      *FailRange = CE->getSourceRange();
-      return ContractPSet{};
-    }
-    ContractPSet Result =
-        collectPSet(ignoreReturnValues(CE->getArg(0)), Lookup, FailRange);
-    auto VarsCopy = Result;
-    Result.clear();
-    for (auto Var : VarsCopy)
-      Result.insert(Var.deref());
-    return Result;
-  }
-  *FailRange = E->getSourceRange();
-  return ContractPSet{};
-}
-
-// This function and the callees are have the sole purpose of matching the
-// AST that describes the contracts. We are only interested in identifier names
-// of function calls and variables. The AST, however, has a lot of other
-// information such as casts, termporary objects and so on. They do not have
-// any semantic meaning for contracts so much of the code is just skipping
-// these unwanted nodes. The rest is collecting the identifiers and their
-// hierarchy.
-// Also, the code might be rewritten a more simple way in the future
-// piggybacking this work: https://reviews.llvm.org/rL365355
-static SourceRange fillContractFromExpr(const Expr *E, AttrPointsToMap &Fill) {
-  const auto *CE = dyn_cast<CallExpr>(E);
-  if (!CE)
-    return E->getSourceRange();
-  const FunctionDecl *FD = CE->getDirectCallee();
-  if (!FD || !FD->getIdentifier() || FD->getName() != "lifetime")
-    return E->getSourceRange();
-
-  const Expr *LHS = ignoreReturnValues(CE->getArg(0));
-  if (!LHS)
-    return CE->getArg(0)->getSourceRange();
-  const Expr *RHS = ignoreReturnValues(CE->getArg(1));
-  if (!RHS)
-    return CE->getArg(1)->getSourceRange();
-
-  SourceRange ErrorRange;
-  ContractPSet LhsPSet = collectPSet(LHS, nullptr, &ErrorRange);
-  if (LhsPSet.size() != 1)
-    return LHS->getSourceRange();
-  if (ErrorRange.isValid())
-    return ErrorRange;
-
-  ContractVariable VD = *LhsPSet.begin();
-  ContractPSet RhsPSet = collectPSet(RHS, &Fill, &ErrorRange);
-  if (ErrorRange.isValid())
-    return ErrorRange;
-  Fill[VD] = RhsPSet;
-  return SourceRange();
-}
-} // namespace process_lifetime_contracts
 
 static void handleLifetimeContractAttr(Sema &S, Decl *D, const ParsedAttr &AL) {
   LifetimeContractAttr *PAttr;
@@ -4649,8 +4522,8 @@ static void handleLifetimeContractAttr(Sema &S, Decl *D, const ParsedAttr &AL) {
   else {
     PAttr = LifetimeContractAttr::Create(S.Context, AL.getArgAsExpr(0), AL);
     D->addAttr(PAttr);
-    PAttr->PrePSets = new (S.Context) LifetimeContractAttr::PointsToMap{};
-    PAttr->PostPSets = new (S.Context) LifetimeContractAttr::PointsToMap{};
+    PAttr->PrePSets = new (S.Context) PointsToMap{};
+    PAttr->PostPSets = new (S.Context) PointsToMap{};
   }
 
   using namespace process_lifetime_contracts;

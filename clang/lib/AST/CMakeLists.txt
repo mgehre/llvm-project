@@ -80,6 +80,7 @@ add_clang_library(clangAST
   ItaniumCXXABI.cpp
   ItaniumMangle.cpp
   JSONNodeDumper.cpp
+  LifetimeAttr.cpp
   Mangle.cpp
   MicrosoftCXXABI.cpp
   MicrosoftMangle.cpp

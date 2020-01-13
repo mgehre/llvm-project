@@ -139,6 +139,20 @@ private:
 };
 
 using ContractPSet = std::set<ContractVariable>;
+using PointsToMap = std::map<ContractVariable, ContractPSet>;
+
+namespace process_lifetime_contracts {
+// This function and the callees are have the sole purpose of matching the
+// AST that describes the contracts. We are only interested in identifier names
+// of function calls and variables. The AST, however, has a lot of other
+// information such as casts, termporary objects and so on. They do not have
+// any semantic meaning for contracts so much of the code is just skipping
+// these unwanted nodes. The rest is collecting the identifiers and their
+// hierarchy.
+// Also, the code might be rewritten a more simple way in the future
+// piggybacking this work: https://reviews.llvm.org/rL365355
+SourceRange fillContractFromExpr(const Expr *E, PointsToMap &Fill);
+} // namespace process_lifetime_contracts
 } // namespace clang
 
 #endif // LLVM_CLANG_AST_LIFETIMEATTR_H
