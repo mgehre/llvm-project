@@ -15,7 +15,7 @@ namespace clang {
 namespace process_lifetime_contracts {
 // Easier access the attribute's representation.
 
-const Expr *ignoreReturnValues(const Expr *E) {
+static const Expr *ignoreReturnValues(const Expr *E) {
   const Expr *Original;
   do {
     Original = E;
@@ -36,49 +36,50 @@ const Expr *ignoreReturnValues(const Expr *E) {
 
 // This function can either collect the PSets of the symbols based on a lookup
 // table or just the symbols into a pset if the lookup table is nullptr.
-ContractPSet collectPSet(const Expr *E, const PointsToMap *Lookup,
-                         SourceRange *FailRange) {
+static LifetimeContractSet collectPSet(const Expr *E,
+                                       const LifetimeContractMap *Lookup,
+                                       SourceRange *FailRange) {
   if (const auto *TE = dyn_cast<CXXThisExpr>(E))
-    return ContractPSet{
+    return LifetimeContractSet{
         ContractVariable(TE->getType()->getPointeeCXXRecordDecl())};
   if (const auto *DRE = dyn_cast<DeclRefExpr>(E)) {
     const auto *VD = dyn_cast<VarDecl>(DRE->getDecl());
     if (!VD) {
       *FailRange = DRE->getSourceRange();
-      return ContractPSet{};
+      return LifetimeContractSet{};
     }
     StringRef Name = VD->getName();
     if (Name == "Null")
-      return ContractPSet{ContractVariable::nullVal()};
+      return LifetimeContractSet{ContractVariable::nullVal()};
     else if (Name == "Static")
-      return ContractPSet{ContractVariable::staticVal()};
+      return LifetimeContractSet{ContractVariable::staticVal()};
     else if (Name == "Invalid")
-      return ContractPSet{ContractVariable::invalid()};
+      return LifetimeContractSet{ContractVariable::invalid()};
     else if (Name == "Return") // TODO: function name, but overloads?
-      return ContractPSet{ContractVariable::returnVal()};
+      return LifetimeContractSet{ContractVariable::returnVal()};
     else {
       const auto *PVD = dyn_cast<ParmVarDecl>(VD);
       if (!PVD) {
         *FailRange = DRE->getSourceRange();
-        return ContractPSet{};
+        return LifetimeContractSet{};
       }
       if (Lookup) {
         auto it = Lookup->find(ContractVariable(PVD));
         if (it != Lookup->end())
           return it->second;
       }
-      return ContractPSet{ContractVariable{PVD}};
+      return LifetimeContractSet{ContractVariable{PVD}};
     }
     *FailRange = DRE->getSourceRange();
-    return ContractPSet{};
+    return LifetimeContractSet{};
   }
   if (const auto *CE = dyn_cast<CallExpr>(E)) {
     const FunctionDecl *FD = CE->getDirectCallee();
     if (!FD || !FD->getIdentifier() || FD->getName() != "deref") {
       *FailRange = CE->getSourceRange();
-      return ContractPSet{};
+      return LifetimeContractSet{};
     }
-    ContractPSet Result =
+    LifetimeContractSet Result =
         collectPSet(ignoreReturnValues(CE->getArg(0)), Lookup, FailRange);
     auto VarsCopy = Result;
     Result.clear();
@@ -87,9 +88,9 @@ ContractPSet collectPSet(const Expr *E, const PointsToMap *Lookup,
     return Result;
   }
   auto processArgs = [&](ArrayRef<const Expr *> Args) {
-    ContractPSet Result;
+    LifetimeContractSet Result;
     for (const auto *Arg : Args) {
-      ContractPSet Elem =
+      LifetimeContractSet Elem =
           collectPSet(ignoreReturnValues(Arg), Lookup, FailRange);
       if (Elem.empty())
         return Elem;
@@ -102,19 +103,10 @@ ContractPSet collectPSet(const Expr *E, const PointsToMap *Lookup,
   if (const auto *IE = dyn_cast<InitListExpr>(E))
     return processArgs(IE->inits());
   *FailRange = E->getSourceRange();
-  return ContractPSet{};
+  return LifetimeContractSet{};
 }
 
-// This function and the callees are have the sole purpose of matching the
-// AST that describes the contracts. We are only interested in identifier names
-// of function calls and variables. The AST, however, has a lot of other
-// information such as casts, termporary objects and so on. They do not have
-// any semantic meaning for contracts so much of the code is just skipping
-// these unwanted nodes. The rest is collecting the identifiers and their
-// hierarchy.
-// Also, the code might be rewritten a more simple way in the future
-// piggybacking this work: https://reviews.llvm.org/rL365355
-SourceRange fillContractFromExpr(const Expr *E, PointsToMap &Fill) {
+SourceRange fillContractFromExpr(const Expr *E, LifetimeContractMap &Fill) {
   const auto *CE = dyn_cast<CallExpr>(E);
   if (!CE)
     return E->getSourceRange();
@@ -137,14 +129,14 @@ SourceRange fillContractFromExpr(const Expr *E, PointsToMap &Fill) {
     return CE->getArg(1)->getSourceRange();
 
   SourceRange ErrorRange;
-  ContractPSet LhsPSet = collectPSet(LHS, nullptr, &ErrorRange);
+  LifetimeContractSet LhsPSet = collectPSet(LHS, nullptr, &ErrorRange);
   if (LhsPSet.size() != 1)
     return LHS->getSourceRange();
   if (ErrorRange.isValid())
     return ErrorRange;
 
   ContractVariable VD = *LhsPSet.begin();
-  ContractPSet RhsPSet = collectPSet(RHS, &Fill, &ErrorRange);
+  LifetimeContractSet RhsPSet = collectPSet(RHS, &Fill, &ErrorRange);
   if (ErrorRange.isValid())
     return ErrorRange;
   Fill[VD] = RhsPSet;

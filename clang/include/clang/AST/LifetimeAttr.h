@@ -21,7 +21,8 @@ namespace clang {
 
 /// This represents an abstract memory location that is used in the lifetime
 /// contract representation.
-struct ContractVariable {
+class ContractVariable {
+public:
   ContractVariable(const ParmVarDecl *PVD, int Deref = 0)
       : ParamIdx(PVD->getFunctionScopeIndex()), Tag(Param) {
     deref(Deref);
@@ -138,8 +139,8 @@ private:
   llvm::SmallVector<const FieldDecl *, 3> FDs;
 };
 
-using ContractPSet = std::set<ContractVariable>;
-using PointsToMap = std::map<ContractVariable, ContractPSet>;
+using LifetimeContractSet = std::set<ContractVariable>;
+using LifetimeContractMap = std::map<ContractVariable, LifetimeContractSet>;
 
 namespace process_lifetime_contracts {
 // This function and the callees are have the sole purpose of matching the
@@ -151,7 +152,7 @@ namespace process_lifetime_contracts {
 // hierarchy.
 // Also, the code might be rewritten a more simple way in the future
 // piggybacking this work: https://reviews.llvm.org/rL365355
-SourceRange fillContractFromExpr(const Expr *E, PointsToMap &Fill);
+SourceRange fillContractFromExpr(const Expr *E, LifetimeContractMap &Fill);
 } // namespace process_lifetime_contracts
 } // namespace clang
 

@@ -2932,10 +2932,10 @@ def LifetimeContract : InheritableAttr {
   let ParseArgumentsAsUnevaluated = 1;
   let AdditionalMembers = [{
 public:
-  PointsToMap *PrePSets;
-  PointsToMap *PostPSets;
+  LifetimeContractMap *PreContracts;
+  LifetimeContractMap *PostContracts;
 
-  static std::string dumpSet(const ContractPSet &PSet,
+  static std::string dumpSet(const LifetimeContractSet &PSet,
                              const FunctionDecl *FD) {
     std::string Buffer;
     llvm::raw_string_ostream OS(Buffer);
@@ -2950,11 +2950,11 @@ public:
     std::string Buffer;
     llvm::raw_string_ostream OS(Buffer);
     OS << "Pre {";
-    for (const auto &P : *PrePSets)
+    for (const auto &P : *PreContracts)
       OS << " " << P.first.dump(FD) << " -> " << dumpSet(P.second, FD) << ";";
     OS << " }";
     OS << "  Post {";
-    for (const auto &P : *PostPSets)
+    for (const auto &P : *PostContracts)
       OS << " " << P.first.dump(FD) << " -> " << dumpSet(P.second, FD) << ";";
     OS << " }";
     return OS.str();

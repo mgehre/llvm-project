@@ -15,6 +15,7 @@
 #include "clang/AST/ExprCXX.h"
 #include "clang/AST/ExprObjC.h"
 #include "clang/AST/ExprOpenMP.h"
+#include "clang/AST/LifetimeAttr.h"
 #include "clang/AST/TypeLoc.h"
 #include "clang/Basic/CharInfo.h"
 #include "clang/Basic/SourceManager.h"
@@ -6790,9 +6791,9 @@ static bool shouldTrackFirstArgument(const FunctionDecl *FD) {
 
 static bool shouldTrackContract(const LifetimeContractAttr *LCAttr,
                                 const FunctionDecl *FD, ContractVariable CV) {
-  if (!LCAttr || !LCAttr->PostPSets)
+  if (!LCAttr || !LCAttr->PostContracts)
     return false;
-  const PointsToMap &PM = *LCAttr->PostPSets;
+  const LifetimeContractMap &PM = *LCAttr->PostContracts;
   auto It = PM.find(ContractVariable::returnVal());
   if (It == PM.end())
     return false;

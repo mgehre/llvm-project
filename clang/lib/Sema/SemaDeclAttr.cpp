@@ -4516,23 +4516,23 @@ static void handleLifetimeCategoryAttr(Sema &S, Decl *D, const ParsedAttr &AL) {
 
 
 static void handleLifetimeContractAttr(Sema &S, Decl *D, const ParsedAttr &AL) {
-  LifetimeContractAttr *PAttr;
+  LifetimeContractAttr *LCAttr;
   if (auto *Existing = D->getAttr<LifetimeContractAttr>())
-    PAttr = Existing;
+    LCAttr = Existing;
   else {
-    PAttr = LifetimeContractAttr::Create(S.Context, AL.getArgAsExpr(0), AL);
-    D->addAttr(PAttr);
-    PAttr->PrePSets = new (S.Context) PointsToMap{};
-    PAttr->PostPSets = new (S.Context) PointsToMap{};
+    LCAttr = LifetimeContractAttr::Create(S.Context, AL.getArgAsExpr(0), AL);
+    D->addAttr(LCAttr);
+    LCAttr->PreContracts = new (S.Context) LifetimeContractMap{};
+    LCAttr->PostContracts = new (S.Context) LifetimeContractMap{};
   }
 
   using namespace process_lifetime_contracts;
 
   SourceRange ErrorRange;
   if (AL.getAttributeSpellingListIndex())
-    ErrorRange = fillContractFromExpr(AL.getArgAsExpr(0), *PAttr->PostPSets);
+    ErrorRange = fillContractFromExpr(AL.getArgAsExpr(0), *LCAttr->PostContracts);
   else
-    ErrorRange = fillContractFromExpr(AL.getArgAsExpr(0), *PAttr->PrePSets);
+    ErrorRange = fillContractFromExpr(AL.getArgAsExpr(0), *LCAttr->PreContracts);
 
   if (ErrorRange.isValid())
     S.Diag(ErrorRange.getBegin(), diag::warn_unsupported_expression)
