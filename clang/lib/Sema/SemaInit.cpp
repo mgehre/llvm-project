@@ -6790,7 +6790,7 @@ static bool shouldTrackFirstArgument(const FunctionDecl *FD) {
 
 static bool shouldTrackContract(const LifetimeContractAttr *LCAttr,
                                 const FunctionDecl *FD, ContractVariable CV) {
-  if (!LCAttr->PostPSets)
+  if (!LCAttr || !LCAttr->PostPSets)
     return false;
   const PointsToMap &PM = *LCAttr->PostPSets;
   auto It = PM.find(ContractVariable::returnVal());
@@ -6810,6 +6810,33 @@ static LifetimeContractAttr *getLifetimeAttr(const FunctionDecl *FD) {
     return LCAttr;
   }
   return nullptr;
+}
+
+namespace {
+struct CallInfo {
+  FunctionDecl *Callee = nullptr;
+  ArrayRef<Expr *> Args;
+  Expr *ObjectArg = nullptr;
+};
+} // namespace
+
+static CallInfo getCallInfo(Expr *Call) {
+  CallInfo Info;
+  if (auto *CE = dyn_cast<CallExpr>(Call)) {
+    Info.Callee = CE->getDirectCallee();
+    Info.Args = llvm::makeArrayRef(CE->getArgs(), CE->getNumArgs());
+  } else {
+    auto *CCE = cast<CXXConstructExpr>(Call);
+    Info.Callee = CCE->getConstructor();
+    Info.Args = llvm::makeArrayRef(CCE->getArgs(), CCE->getNumArgs());
+  }
+  if (isa<CXXOperatorCallExpr>(Call) && Info.Callee->isCXXInstanceMember()) {
+    Info.ObjectArg = Info.Args[0];
+    Info.Args = Info.Args.slice(1);
+  } else if (auto *MCE = dyn_cast<CXXMemberCallExpr>(Call)) {
+    Info.ObjectArg = MCE->getImplicitObjectArgument();
+  }
+  return Info;
 }
 
 static void handleGslAnnotatedTypes(IndirectLocalPath &Path, Expr *Call,
@@ -6842,50 +6869,35 @@ static void handleGslAnnotatedTypes(IndirectLocalPath &Path, Expr *Call,
     Path.pop_back();
   };
 
-  if (auto *CE = dyn_cast<CallExpr>(Call)) {
-    if (FunctionDecl *FD = CE->getDirectCallee())
-      if (const auto LCAttr = getLifetimeAttr(FD)) {
-        for (unsigned I = 0; I < CE->getNumArgs() && I < FD->getNumParams();
-             ++I)
-          if (shouldTrackContract(LCAttr, FD, FD->getParamDecl(I)))
-            VisitPointerArg(
-                FD, CE->getArg(I), // TODO: might be off by one for operators?
-                !FD->getReturnType()->isReferenceType());
-        if (auto *MCE = dyn_cast<CXXMemberCallExpr>(Call)) {
-          const auto *MD = cast_or_null<CXXMethodDecl>(MCE->getDirectCallee());
-          if (shouldTrackContract(LCAttr, FD, MD->getParent()))
-            VisitPointerArg(MD, MCE->getImplicitObjectArgument(),
-                            !MD->getReturnType()->isReferenceType());
-        }
-      }
-  }
+  CallInfo CI = getCallInfo(Call);
+  if (!CI.Callee)
+    return;
 
-  if (auto *MCE = dyn_cast<CXXMemberCallExpr>(Call)) {
-    const auto *MD = cast_or_null<CXXMethodDecl>(MCE->getDirectCallee());
-    if (MD && shouldTrackImplicitObjectArg(MD))
-      VisitPointerArg(MD, MCE->getImplicitObjectArgument(),
-                      !MD->getReturnType()->isReferenceType());
-    return;
-  } else if (auto *OCE = dyn_cast<CXXOperatorCallExpr>(Call)) {
-    FunctionDecl *Callee = OCE->getDirectCallee();
-    if (Callee && Callee->isCXXInstanceMember() &&
-        shouldTrackImplicitObjectArg(cast<CXXMethodDecl>(Callee)))
-      VisitPointerArg(Callee, OCE->getArg(0),
-                      !Callee->getReturnType()->isReferenceType());
-    return;
-  } else if (auto *CE = dyn_cast<CallExpr>(Call)) {
-    FunctionDecl *Callee = CE->getDirectCallee();
-    if (Callee && shouldTrackFirstArgument(Callee))
-      VisitPointerArg(Callee, CE->getArg(0),
-                      !Callee->getReturnType()->isReferenceType());
-    return;
-  }
+  bool ReturnsRef = CI.Callee->getReturnType()->isReferenceType();
 
   if (auto *CCE = dyn_cast<CXXConstructExpr>(Call)) {
-    const auto *Ctor = CCE->getConstructor();
-    const CXXRecordDecl *RD = Ctor->getParent();
-    if (CCE->getNumArgs() > 0 && RD->hasAttr<PointerAttr>())
-      VisitPointerArg(Ctor->getParamDecl(0), CCE->getArgs()[0], true);
+    const CXXRecordDecl *RD = CCE->getConstructor()->getParent();
+    if (CI.Args.size() > 0 && RD->hasAttr<PointerAttr>())
+      VisitPointerArg(CI.Callee->getParamDecl(0), CI.Args[0], true);
+    return;
+  }
+
+  const auto LCAttr = getLifetimeAttr(CI.Callee);
+  for (unsigned I = 0; I < CI.Args.size() && I < CI.Callee->getNumParams(); ++I)
+    if (shouldTrackContract(LCAttr, CI.Callee, CI.Callee->getParamDecl(I)))
+      VisitPointerArg(CI.Callee, CI.Args[I], !ReturnsRef);
+
+  if (auto *MD = dyn_cast<CXXMethodDecl>(CI.Callee)) {
+    if (shouldTrackImplicitObjectArg(MD) ||
+        shouldTrackContract(LCAttr, CI.Callee, MD->getParent()))
+      VisitPointerArg(MD, CI.ObjectArg, !ReturnsRef);
+    return;
+  }
+
+  if (auto *CE = dyn_cast<CallExpr>(Call)) {
+    if (shouldTrackFirstArgument(CI.Callee))
+      VisitPointerArg(CI.Callee, CI.Args[0], !ReturnsRef);
+    return;
   }
 }
 
@@ -6908,27 +6920,9 @@ static bool implicitObjectParamIsLifetimeBound(const FunctionDecl *FD) {
 
 static void visitLifetimeBoundArguments(IndirectLocalPath &Path, Expr *Call,
                                         LocalVisitor Visit) {
-  const FunctionDecl *Callee;
-  ArrayRef<Expr*> Args;
-
-  if (auto *CE = dyn_cast<CallExpr>(Call)) {
-    Callee = CE->getDirectCallee();
-    Args = llvm::makeArrayRef(CE->getArgs(), CE->getNumArgs());
-  } else {
-    auto *CCE = cast<CXXConstructExpr>(Call);
-    Callee = CCE->getConstructor();
-    Args = llvm::makeArrayRef(CCE->getArgs(), CCE->getNumArgs());
-  }
-  if (!Callee)
+  CallInfo CI = getCallInfo(Call);
+  if (!CI.Callee)
     return;
-
-  Expr *ObjectArg = nullptr;
-  if (isa<CXXOperatorCallExpr>(Call) && Callee->isCXXInstanceMember()) {
-    ObjectArg = Args[0];
-    Args = Args.slice(1);
-  } else if (auto *MCE = dyn_cast<CXXMemberCallExpr>(Call)) {
-    ObjectArg = MCE->getImplicitObjectArgument();
-  }
 
   auto VisitLifetimeBoundArg = [&](const Decl *D, Expr *Arg) {
     Path.push_back({IndirectLocalPathEntry::LifetimeBoundCall, Arg, D});
@@ -6942,14 +6936,14 @@ static void visitLifetimeBoundArguments(IndirectLocalPath &Path, Expr *Call,
     Path.pop_back();
   };
 
-  if (ObjectArg && implicitObjectParamIsLifetimeBound(Callee))
-    VisitLifetimeBoundArg(Callee, ObjectArg);
+  if (CI.ObjectArg && implicitObjectParamIsLifetimeBound(CI.Callee))
+    VisitLifetimeBoundArg(CI.Callee, CI.ObjectArg);
 
-  for (unsigned I = 0,
-                N = std::min<unsigned>(Callee->getNumParams(), Args.size());
+  for (unsigned I = 0, N = std::min<unsigned>(CI.Callee->getNumParams(),
+                                              CI.Args.size());
        I != N; ++I) {
-    if (Callee->getParamDecl(I)->hasAttr<LifetimeBoundAttr>())
-      VisitLifetimeBoundArg(Callee->getParamDecl(I), Args[I]);
+    if (CI.Callee->getParamDecl(I)->hasAttr<LifetimeBoundAttr>())
+      VisitLifetimeBoundArg(CI.Callee->getParamDecl(I), CI.Args[I]);
   }
 }
 

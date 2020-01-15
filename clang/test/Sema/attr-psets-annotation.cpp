@@ -92,8 +92,11 @@ void deref_ref_pointee(int *a, int *b, int *&c)
 
 struct X {
   void f(X **out)
-      [[gsl::post(lifetime(deref(out), this))]];
+      [[gsl::post(lifetime(deref(out), {this}))]];
   // expected-warning@-2 {{Pre { }  Post { *out -> { this }; }}}
+  X *operator+(const X& other)
+      [[gsl::post(lifetime(Return, {other}))]];
+  // expected-warning@-2 {{Pre { }  Post { (return value) -> { other }; }}}
 };
 
 template <typename It, typename T>
@@ -123,4 +126,7 @@ void testGslWarning() {
   int *res2 = find_nontemp(MyOwner{}.begin(), MyOwner{}.end(), 5);
   // expected-warning@-1 {{object backing the pointer will be destroyed at the end of the full-expression}}
   (void)res2;
+  X x;
+  X *xp = x + X{};
+  (void)xp;
 }
