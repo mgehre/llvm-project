@@ -90,7 +90,7 @@ void deref_ref_pointee(int *a, int *b, int *&c)
     [[gsl::pre(lifetime(a, {deref(c)}))]];
 // expected-warning@-2 {{Pre { a -> { *c }; }}}
 
-struct X {
+struct [[gsl::Owner(void)]] X {
   void f(X **out)
       [[gsl::post(lifetime(deref(out), {this}))]];
   // expected-warning@-2 {{Pre { }  Post { *out -> { this }; }}}
@@ -127,6 +127,8 @@ void testGslWarning() {
   // expected-warning@-1 {{object backing the pointer will be destroyed at the end of the full-expression}}
   (void)res2;
   X x;
+  // TODO: this should work without X annotated as owner.
   X *xp = x + X{};
+  // expected-warning@-1 {{object backing the pointer will be destroyed at the end of the full-expression}}
   (void)xp;
 }
