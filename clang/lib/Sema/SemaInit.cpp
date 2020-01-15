@@ -6790,14 +6790,26 @@ static bool shouldTrackFirstArgument(const FunctionDecl *FD) {
 
 static bool shouldTrackContract(const LifetimeContractAttr *LCAttr,
                                 const FunctionDecl *FD, ContractVariable CV) {
-  if (!LCAttr->PostPSets) // TODO: get rid of this.
+  if (!LCAttr->PostPSets)
     return false;
   const PointsToMap &PM = *LCAttr->PostPSets;
   auto It = PM.find(ContractVariable::returnVal());
   if (It == PM.end())
     return false;
-  // TODO: might be off by one for operators?
   return It->second.count(CV);
+}
+
+static LifetimeContractAttr *getLifetimeAttr(const FunctionDecl *FD) {
+  if (const auto LCAttr = FD->getAttr<LifetimeContractAttr>()) {
+    // The actual information is stored at primary templates for
+    // specializations.
+    if (const auto *FTD = FD->getPrimaryTemplate()) {
+      assert(FTD->getTemplatedDecl()->hasAttr<LifetimeContractAttr>());
+      return FTD->getTemplatedDecl()->getAttr<LifetimeContractAttr>();
+    }
+    return LCAttr;
+  }
+  return nullptr;
 }
 
 static void handleGslAnnotatedTypes(IndirectLocalPath &Path, Expr *Call,
@@ -6832,12 +6844,13 @@ static void handleGslAnnotatedTypes(IndirectLocalPath &Path, Expr *Call,
 
   if (auto *CE = dyn_cast<CallExpr>(Call)) {
     if (FunctionDecl *FD = CE->getDirectCallee())
-      if (const auto LCAttr = FD->getAttr<LifetimeContractAttr>()) {
+      if (const auto LCAttr = getLifetimeAttr(FD)) {
         for (unsigned I = 0; I < CE->getNumArgs() && I < FD->getNumParams();
              ++I)
           if (shouldTrackContract(LCAttr, FD, FD->getParamDecl(I)))
-            VisitPointerArg(FD, CE->getArg(I),
-                            !FD->getReturnType()->isReferenceType());
+            VisitPointerArg(
+                FD, CE->getArg(I), // TODO: might be off by one for operators?
+                !FD->getReturnType()->isReferenceType());
         if (auto *MCE = dyn_cast<CXXMemberCallExpr>(Call)) {
           const auto *MD = cast_or_null<CXXMethodDecl>(MCE->getDirectCallee());
           if (shouldTrackContract(LCAttr, FD, MD->getParent()))

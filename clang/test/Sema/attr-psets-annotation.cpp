@@ -100,7 +100,7 @@ template <typename It, typename T>
 It find(It begin, It end, const T &val)
     [[gsl::pre(lifetime(end, {begin}))]]
     [[gsl::post(lifetime(Return, {begin}))]];
-// expected-warning@-3 {{Pre { }  Post { }}}
+// expected-warning@-3 {{Pre { end -> { begin }; }  Post { (return value) -> { begin }; }}}
 
 int *find_nontemp(int *begin, int *end, const int &val)
     [[gsl::pre(lifetime(end, {begin}))]]
@@ -118,6 +118,7 @@ struct [[gsl::Owner(int)]] MyOwner {
 
 void testGslWarning() {
   int *res = find(MyOwner{}.begin(), MyOwner{}.end(), 5);
+  // expected-warning@-1 {{object backing the pointer will be destroyed at the end of the full-expression}}
   (void)res;
   int *res2 = find_nontemp(MyOwner{}.begin(), MyOwner{}.end(), 5);
   // expected-warning@-1 {{object backing the pointer will be destroyed at the end of the full-expression}}

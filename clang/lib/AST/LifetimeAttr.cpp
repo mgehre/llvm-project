@@ -7,7 +7,9 @@
 //===----------------------------------------------------------------------===//
 
 #include "clang/AST/LifetimeAttr.h"
+#include "clang/AST/Expr.h"
 #include "clang/AST/ExprCXX.h"
+#include "clang/Basic/SourceLocation.h"
 
 namespace clang {
 namespace process_lifetime_contracts {
@@ -69,17 +71,8 @@ ContractPSet collectPSet(const Expr *E, const PointsToMap *Lookup,
     }
     *FailRange = DRE->getSourceRange();
     return ContractPSet{};
-  } else if (const auto *CE = dyn_cast<CXXConstructExpr>(E)) {
-    ContractPSet Result;
-    for (const auto *Arg : CE->arguments()) {
-      ContractPSet Elem =
-          collectPSet(ignoreReturnValues(Arg), Lookup, FailRange);
-      if (Elem.empty())
-        return Elem;
-      Result.insert(Elem.begin(), Elem.end());
-    }
-    return Result;
-  } else if (const auto *CE = dyn_cast<CallExpr>(E)) {
+  }
+  if (const auto *CE = dyn_cast<CallExpr>(E)) {
     const FunctionDecl *FD = CE->getDirectCallee();
     if (!FD || !FD->getIdentifier() || FD->getName() != "deref") {
       *FailRange = CE->getSourceRange();
@@ -93,6 +86,21 @@ ContractPSet collectPSet(const Expr *E, const PointsToMap *Lookup,
       Result.insert(Var.deref());
     return Result;
   }
+  auto processArgs = [&](ArrayRef<const Expr *> Args) {
+    ContractPSet Result;
+    for (const auto *Arg : Args) {
+      ContractPSet Elem =
+          collectPSet(ignoreReturnValues(Arg), Lookup, FailRange);
+      if (Elem.empty())
+        return Elem;
+      Result.insert(Elem.begin(), Elem.end());
+    }
+    return Result;
+  };
+  if (const auto *CE = dyn_cast<CXXConstructExpr>(E))
+    return processArgs({CE->getArgs(), CE->getNumArgs()});
+  if (const auto *IE = dyn_cast<InitListExpr>(E))
+    return processArgs(IE->inits());
   *FailRange = E->getSourceRange();
   return ContractPSet{};
 }
@@ -107,14 +115,19 @@ ContractPSet collectPSet(const Expr *E, const PointsToMap *Lookup,
 // Also, the code might be rewritten a more simple way in the future
 // piggybacking this work: https://reviews.llvm.org/rL365355
 SourceRange fillContractFromExpr(const Expr *E, PointsToMap &Fill) {
-  if (E->isTypeDependent())
-    return SourceRange();
   const auto *CE = dyn_cast<CallExpr>(E);
   if (!CE)
     return E->getSourceRange();
-  const FunctionDecl *FD = CE->getDirectCallee();
-  if (!FD || !FD->getIdentifier() || FD->getName() != "lifetime")
-    return E->getSourceRange();
+  do {
+    if (const auto *ULE = dyn_cast<UnresolvedLookupExpr>(CE->getCallee())) {
+      if (ULE->getName().isIdentifier() &&
+          ULE->getName().getAsIdentifierInfo()->getName() == "lifetime")
+        break;
+    }
+    const FunctionDecl *FD = CE->getDirectCallee();
+    if (!FD || !FD->getIdentifier() || FD->getName() != "lifetime")
+      return E->getSourceRange();
+  } while (false);
 
   const Expr *LHS = ignoreReturnValues(CE->getArg(0));
   if (!LHS)
