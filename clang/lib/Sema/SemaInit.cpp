@@ -6790,11 +6790,12 @@ static bool shouldTrackFirstArgument(const FunctionDecl *FD) {
 }
 
 static bool shouldTrackContract(const LifetimeContractAttr *LCAttr,
-                                const FunctionDecl *FD, ContractVariable CV) {
+                                const FunctionDecl *FD,
+                                LifetimeContractVariable CV) {
   if (!LCAttr || !LCAttr->PostContracts)
     return false;
-  const LifetimeContractMap &PM = *LCAttr->PostContracts;
-  auto It = PM.find(ContractVariable::returnVal());
+  const LifetimeContracts &PM = *LCAttr->PostContracts;
+  auto It = PM.find(LifetimeContractVariable::returnVal());
   if (It == PM.end())
     return false;
   return It->second.count(CV);
@@ -6885,12 +6886,15 @@ static void handleGslAnnotatedTypes(IndirectLocalPath &Path, Expr *Call,
 
   const auto LCAttr = getLifetimeAttr(CI.Callee);
   for (unsigned I = 0; I < CI.Args.size() && I < CI.Callee->getNumParams(); ++I)
-    if (shouldTrackContract(LCAttr, CI.Callee, CI.Callee->getParamDecl(I)))
+    if (shouldTrackContract(LCAttr, CI.Callee,
+                            LifetimeContractVariable::paramBasedVal(
+                                CI.Callee->getParamDecl(I))))
       VisitPointerArg(CI.Callee, CI.Args[I], !ReturnsRef);
 
   if (auto *MD = dyn_cast<CXXMethodDecl>(CI.Callee)) {
     if (shouldTrackImplicitObjectArg(MD) ||
-        shouldTrackContract(LCAttr, CI.Callee, MD->getParent()))
+        shouldTrackContract(LCAttr, CI.Callee,
+                            LifetimeContractVariable::thisVal(MD->getParent())))
       VisitPointerArg(MD, CI.ObjectArg, !ReturnsRef);
     return;
   }

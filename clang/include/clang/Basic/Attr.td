@@ -2926,21 +2926,21 @@ def LifetimeContract : InheritableAttr {
   let Accessors = [Accessor<"isPre", [CXX11<"gsl", "pre">]>,
                    Accessor<"isPost", [CXX11<"gsl", "post">]>];
   let Subjects = SubjectList<[Function]>; // TODO: HasFunctionProto?
-  let Args = [ExprArgument<"Expr">];
+  let Args = [ExprArgument<"ContractExpr">];
   let LateParsed = 1;
   let TemplateDependent = 1;
   let ParseArgumentsAsUnevaluated = 1;
   let AdditionalMembers = [{
 public:
-  LifetimeContractMap *PreContracts;
-  LifetimeContractMap *PostContracts;
+  LifetimeContracts *PreContracts;
+  LifetimeContracts *PostContracts;
 
-  static std::string dumpSet(const LifetimeContractSet &PSet,
+  static std::string dumpSet(const ObjectLifetimeSet &Set,
                              const FunctionDecl *FD) {
     std::string Buffer;
     llvm::raw_string_ostream OS(Buffer);
     OS << "{ ";
-    for (const auto &CV : PSet)
+    for (const auto &CV : Set)
       OS << CV.dump(FD) << " ";
     OS << "}";
     return OS.str();

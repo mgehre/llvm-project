@@ -15,27 +15,42 @@
 
 #include "clang/AST/Decl.h"
 #include "clang/AST/Expr.h"
+#include "llvm/ADT/Optional.h"
 #include <set>
 
 namespace clang {
 
-/// This represents an abstract memory location that is used in the lifetime
-/// contract representation.
-class ContractVariable {
+/// An abstract memory location that participates in defining a lifetime
+/// contract. A lifetime contract constrains lifetime of a
+/// LifetimeContractVariable to be at least as big as the lifetime of other
+/// LifetimeContractVariables.
+///
+/// The memory locations that we can describe are: return values of a function,
+/// this pointer, any function parameter, a "drilldown" expression based on
+/// function parameters, null etc.
+class LifetimeContractVariable {
 public:
-  ContractVariable(const ParmVarDecl *PVD, int Deref = 0)
-      : ParamIdx(PVD->getFunctionScopeIndex()), Tag(Param) {
-    deref(Deref);
+  static LifetimeContractVariable paramBasedVal(const ParmVarDecl *PVD,
+                                                int Deref = 0) {
+    return LifetimeContractVariable(PVD, Deref);
+  }
+  static LifetimeContractVariable thisVal(const RecordDecl *RD) {
+    return LifetimeContractVariable(RD);
+  }
+  static LifetimeContractVariable returnVal() {
+    return LifetimeContractVariable(Return);
+  }
+  static LifetimeContractVariable globalVal() {
+    return LifetimeContractVariable(Global);
+  }
+  static LifetimeContractVariable nullVal() {
+    return LifetimeContractVariable(Null);
+  }
+  static LifetimeContractVariable invalid() {
+    return LifetimeContractVariable(Invalid);
   }
 
-  ContractVariable(const RecordDecl *RD) : RD(RD), Tag(This) {}
-
-  static ContractVariable returnVal() { return ContractVariable(Return); }
-  static ContractVariable staticVal() { return ContractVariable(Static); }
-  static ContractVariable nullVal() { return ContractVariable(Null); }
-  static ContractVariable invalid() { return ContractVariable(Invalid); }
-
-  bool operator==(const ContractVariable &O) const {
+  bool operator==(const LifetimeContractVariable &O) const {
     if (Tag != O.Tag)
       return false;
     if (FDs != O.FDs)
@@ -47,9 +62,11 @@ public:
     return true;
   }
 
-  bool operator!=(const ContractVariable &O) const { return !(*this == O); }
+  bool operator!=(const LifetimeContractVariable &O) const {
+    return !(*this == O);
+  }
 
-  bool operator<(const ContractVariable &O) const {
+  bool operator<(const LifetimeContractVariable &O) const {
     if (Tag != O.Tag)
       return Tag < O.Tag;
     if (FDs.size() != O.FDs.size())
@@ -69,17 +86,19 @@ public:
   }
 
   bool isThisPointer() const { return Tag == This; }
+  bool isReturnVal() const { return Tag == Return; }
+  bool isNull() const { return Tag == Null; }
+  bool isInvalid() const { return Tag == Invalid; }
+  bool isGlobal() const { return Tag == Global; }
 
   const ParmVarDecl *asParmVarDecl(const FunctionDecl *FD) const {
     return Tag == Param ? FD->getParamDecl(ParamIdx) : nullptr;
   }
 
-  bool isReturnVal() const { return Tag == Return; }
-
   // Chain of field accesses starting from VD. Types must match.
   void addFieldRef(const FieldDecl *FD) { FDs.push_back(FD); }
 
-  ContractVariable &deref(int Num = 1) {
+  LifetimeContractVariable &deref(int Num = 1) {
     while (Num--)
       FDs.push_back(nullptr);
     return *this;
@@ -89,11 +108,11 @@ public:
     std::string Result;
     switch (Tag) {
     case Null:
-      return "Null";
-    case Static:
-      return "Static";
+      return "null";
+    case Global:
+      return "global";
     case Invalid:
-      return "Invalid";
+      return "invalid";
     case This:
       Result = "this";
       break;
@@ -123,7 +142,7 @@ private:
   };
 
   enum TagType {
-    Static,
+    Global,
     Null,
     Invalid,
     This,
@@ -131,7 +150,12 @@ private:
     Param,
   } Tag;
 
-  ContractVariable(TagType T) : Tag(T) {}
+  LifetimeContractVariable(TagType T) : Tag(T) {}
+  LifetimeContractVariable(const RecordDecl *RD) : RD(RD), Tag(This) {}
+  LifetimeContractVariable(const ParmVarDecl *PVD, int Deref)
+      : ParamIdx(PVD->getFunctionScopeIndex()), Tag(Param) {
+    deref(Deref);
+  }
 
   /// Possibly empty list of fields and deref operations on the base.
   /// The First entry is the field on base, next entry is the field inside
@@ -139,20 +163,27 @@ private:
   llvm::SmallVector<const FieldDecl *, 3> FDs;
 };
 
-using LifetimeContractSet = std::set<ContractVariable>;
-using LifetimeContractMap = std::map<ContractVariable, LifetimeContractSet>;
+/// A lifetime of a pointee of a specific pointer-like C++ object. This
+/// lifetime is represented as a disjunction of different lifetime possibilities
+/// (set elements). Each lifetime possibility is specified by naming another
+/// object that the pointee can point at.
+using ObjectLifetimeSet = std::set<LifetimeContractVariable>;
+
+/// Lifetime constraints for multiple objects. The key of the map is the
+/// pointer-like object, the value is the lifetime of the pointee.
+/// Can be used to describe all lifetime constraints required by a given
+/// function, or all lifetimes inferred at a specific program point etc..
+using LifetimeContracts = std::map<LifetimeContractVariable, ObjectLifetimeSet>;
 
 namespace process_lifetime_contracts {
-// This function and the callees are have the sole purpose of matching the
-// AST that describes the contracts. We are only interested in identifier names
-// of function calls and variables. The AST, however, has a lot of other
-// information such as casts, termporary objects and so on. They do not have
-// any semantic meaning for contracts so much of the code is just skipping
-// these unwanted nodes. The rest is collecting the identifiers and their
-// hierarchy.
-// Also, the code might be rewritten a more simple way in the future
-// piggybacking this work: https://reviews.llvm.org/rL365355
-SourceRange fillContractFromExpr(const Expr *E, LifetimeContractMap &Fill);
+/// Converts an AST of a lifetime contract (that is, the `gtl::lifetime(...)
+/// call expression) to a LifetimeContracts object that is used throughout the
+/// lifetime analysis.
+///
+/// If the AST does not describe a valid contract, the source range of the
+/// erroneous part is returned.
+llvm::Optional<SourceRange> fillContractFromExpr(const Expr *E,
+                                                 LifetimeContracts &Fill);
 } // namespace process_lifetime_contracts
 } // namespace clang
 

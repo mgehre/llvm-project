@@ -13,9 +13,7 @@
 
 namespace clang {
 namespace process_lifetime_contracts {
-// Easier access the attribute's representation.
-
-static const Expr *ignoreReturnValues(const Expr *E) {
+static const Expr *ignoreWrapperASTNodes(const Expr *E) {
   const Expr *Original;
   do {
     Original = E;
@@ -36,51 +34,51 @@ static const Expr *ignoreReturnValues(const Expr *E) {
 
 // This function can either collect the PSets of the symbols based on a lookup
 // table or just the symbols into a pset if the lookup table is nullptr.
-static LifetimeContractSet collectPSet(const Expr *E,
-                                       const LifetimeContractMap *Lookup,
-                                       SourceRange *FailRange) {
+static ObjectLifetimeSet collectPSet(const Expr *E,
+                                     const LifetimeContracts *Lookup,
+                                     SourceRange *FailRange) {
   if (const auto *TE = dyn_cast<CXXThisExpr>(E))
-    return LifetimeContractSet{
-        ContractVariable(TE->getType()->getPointeeCXXRecordDecl())};
+    return ObjectLifetimeSet{LifetimeContractVariable::thisVal(
+        TE->getType()->getPointeeCXXRecordDecl())};
   if (const auto *DRE = dyn_cast<DeclRefExpr>(E)) {
     const auto *VD = dyn_cast<VarDecl>(DRE->getDecl());
     if (!VD) {
       *FailRange = DRE->getSourceRange();
-      return LifetimeContractSet{};
+      return ObjectLifetimeSet{};
     }
     StringRef Name = VD->getName();
-    if (Name == "Null")
-      return LifetimeContractSet{ContractVariable::nullVal()};
-    else if (Name == "Static")
-      return LifetimeContractSet{ContractVariable::staticVal()};
-    else if (Name == "Invalid")
-      return LifetimeContractSet{ContractVariable::invalid()};
-    else if (Name == "Return") // TODO: function name, but overloads?
-      return LifetimeContractSet{ContractVariable::returnVal()};
+    if (Name == "null")
+      return ObjectLifetimeSet{LifetimeContractVariable::nullVal()};
+    else if (Name == "global")
+      return ObjectLifetimeSet{LifetimeContractVariable::globalVal()};
+    else if (Name == "invalid")
+      return ObjectLifetimeSet{LifetimeContractVariable::invalid()};
+    else if (Name == "Return")
+      return ObjectLifetimeSet{LifetimeContractVariable::returnVal()};
     else {
       const auto *PVD = dyn_cast<ParmVarDecl>(VD);
       if (!PVD) {
         *FailRange = DRE->getSourceRange();
-        return LifetimeContractSet{};
+        return ObjectLifetimeSet{};
       }
       if (Lookup) {
-        auto it = Lookup->find(ContractVariable(PVD));
+        auto it = Lookup->find(LifetimeContractVariable::paramBasedVal(PVD));
         if (it != Lookup->end())
           return it->second;
       }
-      return LifetimeContractSet{ContractVariable{PVD}};
+      return ObjectLifetimeSet{LifetimeContractVariable::paramBasedVal(PVD)};
     }
     *FailRange = DRE->getSourceRange();
-    return LifetimeContractSet{};
+    return ObjectLifetimeSet{};
   }
   if (const auto *CE = dyn_cast<CallExpr>(E)) {
     const FunctionDecl *FD = CE->getDirectCallee();
     if (!FD || !FD->getIdentifier() || FD->getName() != "deref") {
       *FailRange = CE->getSourceRange();
-      return LifetimeContractSet{};
+      return ObjectLifetimeSet{};
     }
-    LifetimeContractSet Result =
-        collectPSet(ignoreReturnValues(CE->getArg(0)), Lookup, FailRange);
+    ObjectLifetimeSet Result =
+        collectPSet(ignoreWrapperASTNodes(CE->getArg(0)), Lookup, FailRange);
     auto VarsCopy = Result;
     Result.clear();
     for (auto Var : VarsCopy)
@@ -88,10 +86,10 @@ static LifetimeContractSet collectPSet(const Expr *E,
     return Result;
   }
   auto processArgs = [&](ArrayRef<const Expr *> Args) {
-    LifetimeContractSet Result;
+    ObjectLifetimeSet Result;
     for (const auto *Arg : Args) {
-      LifetimeContractSet Elem =
-          collectPSet(ignoreReturnValues(Arg), Lookup, FailRange);
+      ObjectLifetimeSet Elem =
+          collectPSet(ignoreWrapperASTNodes(Arg), Lookup, FailRange);
       if (Elem.empty())
         return Elem;
       Result.insert(Elem.begin(), Elem.end());
@@ -103,10 +101,19 @@ static LifetimeContractSet collectPSet(const Expr *E,
   if (const auto *IE = dyn_cast<InitListExpr>(E))
     return processArgs(IE->inits());
   *FailRange = E->getSourceRange();
-  return LifetimeContractSet{};
+  return ObjectLifetimeSet{};
 }
 
-SourceRange fillContractFromExpr(const Expr *E, LifetimeContractMap &Fill) {
+// We are only interested in identifier names
+// of function calls and variables. The AST, however, has a lot of other
+// information such as casts, termporary objects and so on. They do not have
+// any semantic meaning for contracts so much of the code is just skipping
+// these unwanted nodes. The rest is collecting the identifiers and their
+// hierarchy.
+// Also, the code might be rewritten a more simple way in the future
+// piggybacking this work: https://reviews.llvm.org/rL365355
+llvm::Optional<SourceRange> fillContractFromExpr(const Expr *E,
+                                                 LifetimeContracts &Fill) {
   const auto *CE = dyn_cast<CallExpr>(E);
   if (!CE)
     return E->getSourceRange();
@@ -121,26 +128,26 @@ SourceRange fillContractFromExpr(const Expr *E, LifetimeContractMap &Fill) {
       return E->getSourceRange();
   } while (false);
 
-  const Expr *LHS = ignoreReturnValues(CE->getArg(0));
+  const Expr *LHS = ignoreWrapperASTNodes(CE->getArg(0));
   if (!LHS)
     return CE->getArg(0)->getSourceRange();
-  const Expr *RHS = ignoreReturnValues(CE->getArg(1));
+  const Expr *RHS = ignoreWrapperASTNodes(CE->getArg(1));
   if (!RHS)
     return CE->getArg(1)->getSourceRange();
 
   SourceRange ErrorRange;
-  LifetimeContractSet LhsPSet = collectPSet(LHS, nullptr, &ErrorRange);
+  ObjectLifetimeSet LhsPSet = collectPSet(LHS, nullptr, &ErrorRange);
   if (LhsPSet.size() != 1)
     return LHS->getSourceRange();
   if (ErrorRange.isValid())
     return ErrorRange;
 
-  ContractVariable VD = *LhsPSet.begin();
-  LifetimeContractSet RhsPSet = collectPSet(RHS, &Fill, &ErrorRange);
+  LifetimeContractVariable VD = *LhsPSet.begin();
+  ObjectLifetimeSet RhsPSet = collectPSet(RHS, &Fill, &ErrorRange);
   if (ErrorRange.isValid())
     return ErrorRange;
   Fill[VD] = RhsPSet;
-  return SourceRange();
+  return {};
 }
 } // namespace process_lifetime_contracts
 } // namespace clang

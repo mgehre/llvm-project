@@ -4522,21 +4522,23 @@ static void handleLifetimeContractAttr(Sema &S, Decl *D, const ParsedAttr &AL) {
   else {
     LCAttr = LifetimeContractAttr::Create(S.Context, AL.getArgAsExpr(0), AL);
     D->addAttr(LCAttr);
-    LCAttr->PreContracts = new (S.Context) LifetimeContractMap{};
-    LCAttr->PostContracts = new (S.Context) LifetimeContractMap{};
+    LCAttr->PreContracts = new (S.Context) LifetimeContracts{};
+    LCAttr->PostContracts = new (S.Context) LifetimeContracts{};
   }
 
   using namespace process_lifetime_contracts;
 
-  SourceRange ErrorRange;
+  Optional<SourceRange> ErrorRange;
   if (AL.getAttributeSpellingListIndex())
     ErrorRange = fillContractFromExpr(AL.getArgAsExpr(0), *LCAttr->PostContracts);
   else
     ErrorRange = fillContractFromExpr(AL.getArgAsExpr(0), *LCAttr->PreContracts);
 
-  if (ErrorRange.isValid())
-    S.Diag(ErrorRange.getBegin(), diag::warn_unsupported_expression)
-        << ErrorRange;
+  if (ErrorRange) {
+    S.Diag(ErrorRange->getBegin(), diag::warn_unsupported_expression)
+        << *ErrorRange;
+    D->dropAttr<LifetimeContractAttr>();
+  }
 }
 
 bool Sema::CheckCallingConvAttr(const ParsedAttr &Attrs, CallingConv &CC,
