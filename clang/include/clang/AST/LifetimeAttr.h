@@ -21,13 +21,13 @@
 namespace clang {
 
 /// An abstract memory location that participates in defining a lifetime
-/// contract. A lifetime contract constrains lifetime of a
-/// LifetimeContractVariable to be at least as big as the lifetime of other
+/// contract. A lifetime contract constrains the lifetime of a
+/// LifetimeContractVariable to be at least as long as the lifetime of other
 /// LifetimeContractVariables.
 ///
 /// The memory locations that we can describe are: return values of a function,
-/// this pointer, any function parameter, a "drilldown" expression based on
-/// function parameters, null etc.
+/// this pointer, any function parameter, an expression based on
+/// function parameters and field selectors, null etc.
 class LifetimeContractVariable {
 public:
   static LifetimeContractVariable paramBasedVal(const ParmVarDecl *PVD,
@@ -79,8 +79,8 @@ public:
         return std::less<const RecordDecl *>()(RD, O.RD);
 
     for (auto I = FDs.begin(), J = O.FDs.begin(); I != FDs.end(); ++I, ++J) {
-      if (*I != *J)
-        return std::less<const FieldDecl *>()(*I, *J);
+      if ((*I)->getFieldIndex() != (*J)->getFieldIndex())
+        return (*I)->getFieldIndex() < (*J)->getFieldIndex();
     }
     return false;
   }
@@ -120,7 +120,7 @@ public:
       Result = "(return value)";
       break;
     case Param:
-      Result = FD->getParamDecl(ParamIdx)->getName();
+      Result = FD->getParamDecl(ParamIdx)->getName().str();
       break;
     }
 
@@ -128,7 +128,7 @@ public:
       if (FDs[I]) {
         if (I > 0 && !FDs[I - 1])
           Result = "(" + Result + ")";
-        Result += "." + std::string(FDs[I]->getName());
+        Result += "." + FDs[I]->getName().str();
       } else
         Result.insert(0, 1, '*');
     }
@@ -150,9 +150,9 @@ private:
     Param,
   } Tag;
 
-  LifetimeContractVariable(TagType T) : Tag(T) {}
-  LifetimeContractVariable(const RecordDecl *RD) : RD(RD), Tag(This) {}
-  LifetimeContractVariable(const ParmVarDecl *PVD, int Deref)
+  explicit LifetimeContractVariable(TagType T) : Tag(T) {}
+  explicit LifetimeContractVariable(const RecordDecl *RD) : RD(RD), Tag(This) {}
+  explicit LifetimeContractVariable(const ParmVarDecl *PVD, int Deref)
       : ParamIdx(PVD->getFunctionScopeIndex()), Tag(Param) {
     deref(Deref);
   }

@@ -2923,6 +2923,7 @@ def Pointer : InheritableAttr {
 
 def LifetimeContract : InheritableAttr {
   let Spellings = [CXX11<"gsl", "pre">, CXX11<"gsl", "post">];
+  let LangOpts = [CPlusPlus]; 
   let Accessors = [Accessor<"isPre", [CXX11<"gsl", "pre">]>,
                    Accessor<"isPost", [CXX11<"gsl", "post">]>];
   let Subjects = SubjectList<[Function]>; // TODO: HasFunctionProto?

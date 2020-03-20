@@ -1,4 +1,4 @@
-//===--- SemaType.cpp - Semantic Analysis for Types -----------------------===//
+//===--- LifetimeAttr.cpp - Lifetime Contract Attributes ------------------===//
 //
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
@@ -12,6 +12,10 @@
 #include "clang/Basic/SourceLocation.h"
 
 namespace clang {
+
+// FIXME: There are several identifier checks below. 
+//   1. Optimize them to cache the IdentifierInfo.
+//   2. Also check for the `gsl` namespace to avoid collisions.
 namespace process_lifetime_contracts {
 static const Expr *ignoreWrapperASTNodes(const Expr *E) {
   const Expr *Original;
